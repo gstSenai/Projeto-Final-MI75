@@ -1,5 +1,5 @@
 import CardImovel from "../CardImovel/CardBeta"
-import { useEffect, useState } from "react"
+
 
 
 
