@@ -1,7 +1,9 @@
+import Card from "../components/CardImovel/Card"
+
 export default function Home() {
   return (
     <div>
-      <h1>Projeto Imobiliaria</h1>
+      <Card />
     </div>
   );
 }
