@@ -20,36 +20,36 @@ interface CardProps {
 export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, preco, codigo }: CardProps) {
     return (
         <>
-            <div className={`${inter.className} flex justify-center gap-14 py-10 lg:gap-6 min-h-screen flex-col lg:flex-row bg-[#DFDAD0] px-10`}>
+            <div className={`${inter.className} flex justify-center gap-14 lg:gap-10 py-10 xl:gap-8 min-h-screen flex-col lg:flex-row bg-[#DFDAD0] px-10`}>
                 <div className="flex justify-center items-center">
                     <div className="flex flex-col w-full max-w-[500px] lg:px-4">
                         <div className="w-full">
-                            <img src="/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px]" />
+                            <img src="/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px] xl:max-w-[400px]" />
                         </div>
-                        <div className="w-full shadow-[5px_20px_100px_rgb(0,0,0,0.1)] bg-white rounded-b-[20px] py-2">
+                        <div className="w-full bg-white shadow-[5px_20px_100px_rgb(0,0,0,0.1)] rounded-b-[20px] py-2">
                             <div className="flex flex-col justify-center items-center">
-                                <p className="text-lg font-black text-[#5C5C5C]">{titulo}</p>
-                                <p className="text-[#702632] font-semibold ">{cidade}</p>
+                                <p className="text-lg  xl:text-2xl font-black text-[#5C5C5C]">{titulo}</p>
+                                <p className="text-[#702632] font-semibold xl:text-xl">{cidade}</p>
                             </div>
                             <div className="flex justify-center gap-10 lg:gap-10 items-center pt-2">
                                 <div className="flex flex-col items-center pl-2">
                                     <p className="text-[#5C5C5C] text-sm">Dormitórios</p>
-                                    <img src="/imagemDormitorio.png" alt="Imagem Imovel" className='xl:min-w-[50px] lg:min-w-[45px]' />
+                                    <img src="/imagemDormitorio.png" alt="Imagem Imovel" className='xl:min-w-[60px] lg:min-w-[45px]' />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdDormitorios}</p>
                                 </div>
                                 <div className="flex flex-col items-center">
-                                    <p className="text-[#5C5C5C] text-sm">Suíte</p>
-                                    <img src="/imagemSuite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[45px] xl:min-w-[50px]" />
+                                    <p className="text-[#5C5C5C] text-sm xl:text-xl">Suíte</p>
+                                    <img src="/imagemSuite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[45px] xl:min-w-[60px]" />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdSuite}</p>
                                 </div>
                                 <div className="flex flex-col items-center pr-2">
-                                    <p className="text-[#5C5C5C] text-sm">Banheiros</p>
-                                    <img src="/imagemBanheiro.png" alt="Imagem Banheiro" className='xl:min-w-[50px] lg:min-w-[45px]' />
+                                    <p className="text-[#5C5C5C] text-sm xl:text-xl">Banheiros</p>
+                                    <img src="/imagemBanheiro.png" alt="Imagem Banheiro" className='xl:min-w-[60px] lg:min-w-[45px]' />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdBanheiros}</p>
                                 </div>
                             </div>
                             <div className="flex flex-col items-center justify-center pt-2">
-                                <p className="text-[#702632] text-2xl lg:text-3xl font-black">{preco}</p>
+                                <p className="text-[#702632] text-2xl lg:text-3xl xl:text-4xl font-black">{preco}</p>
                                 <p className="text-[#5C5C5C] text-sm font-black lg:pt-2">Cód: {codigo}</p>
                             </div>
                         </div>
@@ -59,32 +59,32 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                 <div className="flex justify-center items-center">
                     <div className="flex flex-col w-full max-w-[500px] lg:px-4">
                         <div className="w-full">
-                            <img src="/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px]" />
+                            <img src="/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px] xl:max-w-[400px]" />
                         </div>
                         <div className="w-full bg-white shadow-[5px_20px_100px_rgb(0,0,0,0.1)] rounded-b-[20px] py-2">
                             <div className="flex flex-col justify-center items-center">
-                                <p className="text-lg font-black text-[#5C5C5C]">{titulo}</p>
-                                <p className="text-[#702632] font-semibold ">{cidade}</p>
+                                <p className="text-lg xl:text-2xl font-black text-[#5C5C5C]">{titulo}</p>
+                                <p className="text-[#702632] font-semibold xl:text-xl">{cidade}</p>
                             </div>
                             <div className="flex justify-center gap-10 lg:gap-10 items-center pt-2">
                                 <div className="flex flex-col items-center pl-2">
-                                    <p className="text-[#5C5C5C] text-sm">Dormitórios</p>
-                                    <img src="/imagemDormitorio.png" alt="Imagem Imovel" className='xl:min-w-[50px] lg:min-w-[45px]' />
+                                    <p className="text-[#5C5C5C] text-sm xl:text-xl">Dormitórios</p>
+                                    <img src="/imagemDormitorio.png" alt="Imagem Imovel" className='xl:min-w-[60px] lg:min-w-[45px]' />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdDormitorios}</p>
                                 </div>
                                 <div className="flex flex-col items-center">
-                                    <p className="text-[#5C5C5C] text-sm">Suíte</p>
-                                    <img src="/imagemSuite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[45px] xl:min-w-[50px]" />
+                                    <p className="text-[#5C5C5C] text-sm xl:text-xl">Suíte</p>
+                                    <img src="/imagemSuite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[45px] xl:min-w-[60px]" />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdSuite}</p>
                                 </div>
                                 <div className="flex flex-col items-center pr-2">
-                                    <p className="text-[#5C5C5C] text-sm">Banheiros</p>
-                                    <img src="/imagemBanheiro.png" alt="Imagem Banheiro" className='xl:min-w-[50px] lg:min-w-[45px]' />
+                                    <p className="text-[#5C5C5C] text-sm xl:text-xl">Banheiros</p>
+                                    <img src="/imagemBanheiro.png" alt="Imagem Banheiro" className='xl:min-w-[60px] lg:min-w-[45px]' />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdBanheiros}</p>
                                 </div>
                             </div>
                             <div className="flex flex-col items-center justify-center pt-2">
-                                <p className="text-[#702632] text-2xl lg:text-3xl font-black">{preco}</p>
+                                <p className="text-[#702632] text-2xl lg:text-3xl xl:text-4xl font-black">{preco}</p>
                                 <p className="text-[#5C5C5C] text-sm font-black lg:pt-2">Cód: {codigo}</p>
                             </div>
                         </div>
@@ -94,32 +94,32 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                 <div className="flex justify-center items-center">
                     <div className="flex flex-col w-full max-w-[500px] lg:px-4">
                         <div className="w-full">
-                            <img src="/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px]" />
+                            <img src="/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px] xl:max-w-[400px]" />
                         </div>
                         <div className="w-full bg-white shadow-[5px_20px_100px_rgb(0,0,0,0.1)] rounded-b-[20px] py-2">
                             <div className="flex flex-col justify-center items-center">
-                                <p className="text-lg font-black text-[#5C5C5C]">{titulo}</p>
-                                <p className="text-[#702632] font-semibold ">{cidade}</p>
+                                <p className="text-lg xl:text-2xl font-black text-[#5C5C5C]">{titulo}</p>
+                                <p className="text-[#702632] font-semibold xl:text-xl">{cidade}</p>
                             </div>
                             <div className="flex justify-center gap-10 lg:gap-10 items-center pt-2">
                                 <div className="flex flex-col items-center pl-2">
-                                    <p className="text-[#5C5C5C] text-sm">Dormitórios</p>
-                                    <img src="/imagemDormitorio.png" alt="Imagem Imovel" className='xl:min-w-[50px] lg:min-w-[45px]' />
+                                    <p className="text-[#5C5C5C] text-sm xl:text-xl">Dormitórios</p>
+                                    <img src="/imagemDormitorio.png" alt="Imagem Imovel" className='xl:min-w-[60px] lg:min-w-[45px]' />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdDormitorios}</p>
                                 </div>
                                 <div className="flex flex-col items-center">
-                                    <p className="text-[#5C5C5C] text-sm">Suíte</p>
-                                    <img src="/imagemSuite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[45px] xl:min-w-[50px]" />
+                                    <p className="text-[#5C5C5C] text-sm xl:text-xl">Suíte</p>
+                                    <img src="/imagemSuite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[45px] xl:min-w-[60px]" />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdSuite}</p>
                                 </div>
                                 <div className="flex flex-col items-center pr-2">
-                                    <p className="text-[#5C5C5C] text-sm">Banheiros</p>
-                                    <img src="/imagemBanheiro.png" alt="Imagem Banheiro" className='xl:min-w-[50px] lg:min-w-[45px]' />
+                                    <p className="text-[#5C5C5C] text-sm xl:text-xl">Banheiros</p>
+                                    <img src="/imagemBanheiro.png" alt="Imagem Banheiro" className='xl:min-w-[60px] lg:min-w-[45px]' />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdBanheiros}</p>
                                 </div>
                             </div>
                             <div className="flex flex-col items-center justify-center pt-2">
-                                <p className="text-[#702632] text-2xl lg:text-3xl font-black">{preco}</p>
+                                <p className="text-[#702632] text-2xl lg:text-3xl xl:text-4xl font-black">{preco}</p>
                                 <p className="text-[#5C5C5C] text-sm font-black lg:pt-2">Cód: {codigo}</p>
                             </div>
                         </div>
