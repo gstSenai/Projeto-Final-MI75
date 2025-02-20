@@ -1,16 +1,25 @@
+import { Inter } from 'next/font/google';
+
+// Carregando a fonte Inter
+const inter = Inter({
+    subsets: ['latin'],
+    weight: ['400', '600'],
+    display: 'swap',
+});
+
 export default function Header() {
     return (
         <>
-            <header className="bg-[#DFDAD0]/80 h-[100px] p-6 min-h-screen font-inter font-medium">
-                <section className="flex flex-row">
-                    <div className="flex flex-row items-center gap-40">
-                        <div className="flex items-center gap-6 pl-16">
-                            <img src="../Logo HAV.png" alt="Logo HAV" className="max-h-full w-[3.5rem] mt-[-0.5rem]" />
-                            <p className="text-2xl font-bold text-[#702632]">HAV</p>
+            <header className={`${inter.className} bg-[#DFDAD0] p-6 max-lg:px-20 lg:px-30 xl:px-20 font-inter font-medium`}>
+                <section className="flex flex-row justify-between ">
+                    <div className="flex flex-row items-center lg:gap-16 xl:gap-26 gap-40">
+                        <div className="flex items-center gap-6">
+                            <img src="/imagensHeader/Logo HAV.png" alt="Logo HAV" className="max-h-full lg:w-[60px] w-[40px] mt-[-0.5rem]" />
+                            <p className="text-2xl xl:text-3xl font-bold text-[#702632]">HAV</p>
                         </div>
                         <div>
                             <nav>
-                                <ul className="flex flex-row text-xl gap-12 text-[#303030] lg:text-[1.3rem]">
+                                <ul className="flex flex-row text-xl whitespace-nowrap gap-12 lg:gap-6 text-[#303030] max-lg:hidden">
                                     <li>Início</li>
                                     <li>Propriedades</li>
                                     <li>Corretores</li>
@@ -20,23 +29,25 @@ export default function Header() {
                         </div>
                     </div>
 
-                    <div className="flex flex-row items-center font-medium">
-                        <div className="flex flex-row items-center gap-6">
-                            <div className="flex flex-row items-center pl-20" />
-                            <img src="../Botão tema site.png" alt="Tema" />
+                    <div className="flex flex-row items-center font-medium ">
+                        <div className="flex flex-row items-center gap-6 max-lg:hidden">
+                            <div className="flex flex-row items-center pl-16" />
+                            <img src="/imagensHeader/Botão tema site.png" alt="Tema" />
                         </div>
-                        <div className="flex flex-row items-center gap-2">
-                            <img src="../Brasil.png" alt="Idioma" />
+                        <div className="flex flex-row items-center gap-2 px-8 max-lg:hidden">
+                            <img src="/imagensHeader/Brasil.png" alt="Idioma" />
                             <p className="text-xl">Português</p>
-                            <img src="../seta-para-baixo 2.png" alt="Abrir opções" />
+                            <img src="/imagensHeader/seta-para-baixo 2.png" alt="Abrir opções" />
                         </div>
-                        <div className="flex flex-row items-center">
-                            <img src="../PERFIL SEM LOGIN.png" alt="Perfil sem login" className="w-12" />
+                        <div className="flex flex-row items-center max-lg:hidden">
+                            <img src="/imagensHeader/PERFIL SEM LOGIN.png" alt="Perfil sem login" className="w-12 lg:w-[50px]" />
+                        </div>
+                        <div className="flex flex-row items-center lg:hidden">
+                            <img src="/imagensHeader/HAMBURGUER.png" alt="Perfil sem login" className="w-12 lg:w-[50px]" />
                         </div>
                     </div>
                 </section >
-
-            </header >
+            </header>
         </>
     );
 }

@@ -20,9 +20,9 @@ interface CardProps {
 export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, preco, codigo }: CardProps) {
     return (
         <>
-            <div className={`${inter.className} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-y-0 2xl:gap-y-20 2xl:gap-x-10 py-10 min-h-screen flex-col lg:flex-row bg-[#DFDAD0] 2xl:px-40 xl:px-32 lg:px-20 px-10`}>
+            <div className={`${inter.className} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10  2xl:gap-y-20 2xl:gap-x-10 py-10 min-h-screen flex-col lg:flex-row bg-[#DFDAD0] 2xl:px-40 xl:px-32 lg:px-20 px-10`}>
                 <div className="flex justify-center items-center">
-                    <div className="flex flex-col w-full lg:max-w-[350px] 2xl:max-w-[450px]">
+                    <div className="flex flex-col lg:w-full lg:max-w-[350px] 2xl:max-w-[450px]">
                         <div className="w-full">
                             <img src="/imagensImovel/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[450px]" />
                         </div>
@@ -57,7 +57,7 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                 </div>
 
                 <div className="flex justify-center items-center">
-                    <div className="flex flex-col w-full lg:max-w-[350px] 2xl:max-w-[450px]">
+                    <div className="flex flex-col lg:w-full lg:max-w-[350px] 2xl:max-w-[450px]">
                         <div className="w-full">
                             <img src="/imagensImovel/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[450px]" />
                         </div>
@@ -92,7 +92,7 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                 </div>
 
                 <div className="flex justify-center items-center">
-                    <div className="flex flex-col w-full lg:max-w-[350px] 2xl:max-w-[450px]">
+                    <div className="flex flex-col lg:w-full lg:max-w-[350px] 2xl:max-w-[450px]">
                         <div className="w-full">
                             <img src="/imagensImovel/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[450px]" />
                         </div>
@@ -127,7 +127,7 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                 </div>
 
                 <div className="flex justify-center items-center">
-                    <div className="flex flex-col w-full lg:max-w-[350px] 2xl:max-w-[450px]">
+                    <div className="flex flex-col lg:w-full lg:max-w-[350px] 2xl:max-w-[450px]">
                         <div className="w-full">
                             <img src="/imagensImovel/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[450px]" />
                         </div>
@@ -162,7 +162,7 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                 </div>
 
                 <div className="flex justify-center items-center">
-                    <div className="flex flex-col w-full lg:max-w-[350px] 2xl:max-w-[450px]">
+                    <div className="flex flex-col lg:w-full lg:max-w-[350px] 2xl:max-w-[450px]">
                         <div className="w-full">
                             <img src="/imagensImovel/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[450px]" />
                         </div>
@@ -197,7 +197,7 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                 </div>
 
                 <div className="flex justify-center items-center">
-                    <div className="flex flex-col w-full lg:max-w-[350px] 2xl:max-w-[450px]">
+                    <div className="flex flex-col lg:w-full lg:max-w-[350px] 2xl:max-w-[450px]">
                         <div className="w-full">
                             <img src="/imagensImovel/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[450px]" />
                         </div>
