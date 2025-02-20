@@ -17,7 +17,7 @@ interface CardProps {
     codigo: number;
 }
 
-export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, preco, codigo }: CardProps) {
+export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, preco, codigo }: CardProps) {
     return (
         <>
             <div className={`${inter.className} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10  2xl:gap-y-20 2xl:gap-x-10 py-10 min-h-screen flex-col lg:flex-row bg-[#DFDAD0] 2xl:px-40 xl:px-32 lg:px-20 px-10`}>

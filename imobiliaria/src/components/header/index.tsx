@@ -7,7 +7,7 @@ const inter = Inter({
     display: 'swap',
 });
 
-export default function Header() {
+export function Header() {
     return (
         <>
             <header className={`${inter.className} bg-[#DFDAD0] p-6 max-lg:px-10 lg:px-30 xl:px-20 font-inter font-medium`}>
