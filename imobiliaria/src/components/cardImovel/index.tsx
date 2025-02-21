@@ -20,7 +20,7 @@ interface CardProps {
 export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, preco, codigo }: CardProps) {
     return (
         <>
-            <div className={`${inter.className} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10  2xl:gap-y-20 2xl:gap-x-10 py-10 min-h-screen flex-col lg:flex-row bg-[#DFDAD0] 2xl:px-40 xl:px-32 lg:px-20 px-10`}>
+            <div className={`${inter.className} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 2xl:gap-y-20 2xl:gap-x-10 py-10 min-h-screen flex-col lg:flex-row bg-[#DFDAD0] 2xl:px-40 xl:px-32 lg:px-20 px-10`}>
                 <div className="flex justify-center">
                     <div className="flex flex-col lg:w-full lg:max-w-[350px] 2xl:max-w-[450px]">
                         <div className="w-full">
