@@ -1,9 +1,12 @@
-import Card from "../components/CardImovel/Card"
+import Link from "next/link";
+
 
 export default function Home() {
   return (
     <div>
-      <Card />
+      <Link href={'/formUsuario'} >
+        Formulario Cadastro
+      </Link>
     </div>
   );
 }
