@@ -1,5 +1,6 @@
 import { Header } from "@/components/header"
-import { CadastroEscrito, ListaDeCadastros } from "@/components/CadastroEscrito";
+import { ListaDeCadastros } from "@/components/CadastroEscrito";
+import { Formulario } from "@/components/inputCadastroEscrever"
 
 import { Inter, Montserrat } from 'next/font/google';
 
@@ -43,26 +44,9 @@ export default function CadastroImovel() {
                     </div>
                 </div>
 
-                <div className="flex 2xl:gap-16">
-                    <form action="text" className="flex items-center max-lg:justify-center gap-6 lg:pr-24 xl:pr-28 xl:py-4 2xl:w-[700px] 2xl:py-6 pl-4 py-3.5
-                             bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent 
-                             max-lg:p-0">
-                        <img src="/imagensForms/canetaEditar.png" alt="" />
-                        <input type="text" placeholder="Rua:" name="rua" className="text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl xl:text-xl 2xl:text-xl whitespace-nowrap max-lg:text-black" />
-                    </form>
-                    <form action="text" className="flex items-center max-lg:justify-center gap-6 lg:pr-24 xl:pr-28 xl:py-4 2xl:w-[700px] 2xl:py-6 pl-4 py-3.5
-                             bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent 
-                             max-lg:p-0">
-                        <img src="/imagensForms/canetaEditar.png" alt="" />
-                        <input type="text" placeholder="Cep:" name="cep" className="text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl xl:text-xl 2xl:text-xl whitespace-nowrap max-lg:text-black" />
-                    </form>
-                    <form action="text" className="flex max-lg:justify-center gap-6 lg:pr-24 xl:pr-28 xl:py-4 2xl:w-[700px] 2xl:py-6 pl-4 py-3.5
-                             bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent 
-                             max-lg:p-0">
-                        <img src="/imagensForms/canetaEditar.png" alt="" />
-                        <input type="text" placeholder="Número:" name="numero" className="text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl xl:text-xl 2xl:text-xl whitespace-nowrap max-lg:text-black" />
-                    </form>
-                </div>
+                <Formulario/>
+
+
             </div>
         </>
     );
