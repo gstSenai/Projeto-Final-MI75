@@ -10,8 +10,5 @@ export default function Home() {
       <Link href='../principalEditor'>
         Pagina Editor
       </Link>
-      <Link href='../principalAdministrador'>
-        Pagina Adm
-      </Link>
     </div>
   )
