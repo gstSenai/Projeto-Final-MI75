@@ -15,6 +15,7 @@ public class UsuarioService {
     private UsuarioRepository repository;
 
     public Usuario createUser(Usuario usuario) {
+
         return repository.save(usuario);
     }
 

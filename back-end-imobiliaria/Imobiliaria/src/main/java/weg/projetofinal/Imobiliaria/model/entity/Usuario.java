@@ -1,53 +1,45 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import java.util.Date;
 
 @Data
 @Entity
 @Table(name = "tb_usuario")
+@AllArgsConstructor
 @NoArgsConstructor
 public class Usuario {
     @Id
-    @Column
+    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NonNull
     private Integer id;
 
     @Column(nullable = false)
-    @NonNull
     private String nome;
 
-    @Column
-    @NonNull
+    @Column(nullable = false)
     private String sobrenome;
 
-    @Column
-    @NonNull
+    @Column(nullable = false, unique = true)
     private String cpf;
 
-    @Column
-    @NonNull
+    @Column(nullable = false)
     private String tipo_conta;
 
-    @Column
-    @NonNull
+    @Column(nullable = false)
     private String telefone;
 
     @Column(nullable = false)
-    @NonNull
     private Date data_nascimento;
 
-    @Column
-    @NonNull
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column
-    @NonNull
+    @Column(nullable = false)
     private String senha;
 
 }
