@@ -31,7 +31,7 @@ export function ListaDeCadastros({ textos }: ListaDeCadastrosProps) {
     return (
         <>
             <div className="pt-20">
-                <div className="flex justify-between sm:gap-10 xl:gap-4 gap-10 max-lg:flex-col max-lg:items-center max-lg:gap-4">
+                <div className="flex justify-between sm:gap-4 xl:gap-4 gap-10 max-lg:flex-col max-lg:items-center max-lg:gap-4">
                     {[0, 1].map((colunaIndex) => (
                         <div key={colunaIndex} className="flex flex-col sm:gap-10 md:gap-12 lg:gap-6 xl:gap-4 gap-4">
                             {textos.slice(colunaIndex * 2, colunaIndex * 2 + 2).map((texto, index) => (

@@ -1,4 +1,4 @@
-import { Card } from "@/components/CardImovel"
+import { Card } from "@/components/cardImovel"
 import { Header } from "../components/header";
 
 export default function Home() {

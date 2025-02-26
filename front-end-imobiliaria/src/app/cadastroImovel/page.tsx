@@ -1,6 +1,7 @@
 import { Header } from "@/components/header"
 import { ListaDeCadastros } from "@/components/CadastroEscrito";
 import { Formulario } from "@/components/inputCadastroEscrever"
+import { CheckBoxComponent } from "@/components/checkbox"
 
 import { Inter, Montserrat } from 'next/font/google';
 
@@ -44,8 +45,17 @@ export default function CadastroImovel() {
                     </div>
                 </div>
 
-                <Formulario/>
+                <Formulario />
 
+                <div className={`${inter.className} flex justify-between max-lg:justify-center `}>
+                    <div className="flex flex-row items-center max-lg:justify-center">
+                        <p className="text-2xl xl:text-4xl font-semibold my-10 max-lg:hidden">Tipo de Transação:</p>
+                        <CheckBoxComponent />
+                        <p className="text-2xl xl:text-4xl font-semibold my-10 max-lg:hidden">Venda</p>
+                        <CheckBoxComponent />
+                        <p className="text-2xl xl:text-4xl font-semibold my-10 max-lg:hidden">Locação</p>
+                    </div>
+                </div>
 
             </div>
         </>
