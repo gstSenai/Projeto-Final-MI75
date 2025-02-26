@@ -11,4 +11,4 @@ export default function Home() {
         Pagina Editor
       </Link>
     </div>
-  )
+  ) }
