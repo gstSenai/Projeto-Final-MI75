@@ -37,6 +37,4 @@ public class Endereco {
 
     private String complemento;
 
-
-
 }
