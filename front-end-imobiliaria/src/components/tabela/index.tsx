@@ -25,7 +25,7 @@ export function GenericTable({ headers, data }: TableProps) {
           <thead>
             <tr className="bg-[#702632] text-white sticky top-0 z-10">
               {headers.map((header, index) => (
-                <th key={index} className="p-4 text-lg text-center font-bold border border-[#E0D6CE]">
+                <th key={index} className="p-4 sm:p-4 lg:p-6 text-base sm:text-lg md:text-xl lg:text-2xl 2xl:text-3xl text-center font-bold border border-[#E0D6CE]">
                   {header}
                 </th>
               ))}
@@ -41,7 +41,7 @@ export function GenericTable({ headers, data }: TableProps) {
                 {row.map((cell, cellIndex) => (
                   <td
                     key={cellIndex}
-                    className={`p-4 text-center text-lg text-black border border-[#E0D6CE] ${
+                    className={`p-4 text-center text-xs sm:text-xs md:text-sm lg:text-base 2xl:text-lg text-black border border-[#E0D6CE] ${
                       selectedRow === rowIndex ? 'bg-[#702632] bg-opacity-50' : ''
                     }`}
                   >
@@ -56,3 +56,4 @@ export function GenericTable({ headers, data }: TableProps) {
     </div>
   );
 }
+//sm: md: lg: 2xl:
