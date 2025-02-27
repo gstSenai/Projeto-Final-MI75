@@ -1,5 +1,6 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,11 +11,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tb_imovel")
+@Table(name = "tb_imoveis")
 @Builder
 public class Imovel {
     @Id
-    @Column
+    @Column(name = "id_imovel")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -24,7 +25,6 @@ public class Imovel {
 
     private Double valor_venda;
 
-    @Column(name = "tipoImovel")
     private String tipo_imovel;
 
     private String status_imovel;
@@ -46,11 +46,13 @@ public class Imovel {
     private String descricao;
 
     @OneToOne
-    @JoinColumn(name = "id_endereco")
+    @JoinColumn(name = "id_endereco", nullable = false)
+    @JsonManagedReference
     private Endereco id_endereco;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario")
+    @JsonManagedReference
     private Usuario id_usuario;
 
 
