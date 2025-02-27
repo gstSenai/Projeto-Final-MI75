@@ -107,7 +107,7 @@ export function FormDadosImovel() {
                     />
                 </div>
 
-                <div className="flex flex-col lg:gap-10 w-[40%]">
+                <div className="flex flex-col justify-end lg:gap-10 lg:w-[40%] 2xl:w-full">
                     <div className="flex flex-col bg-white h-full rounded-[20px] border border-black px-5 py-8">
                         <div className="flex items-center gap-5">
                             <img src="/iconsImoveis/imagemImovel.png" alt="" className="h-5 lg:h-8" />
