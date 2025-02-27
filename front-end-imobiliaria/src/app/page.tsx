@@ -1,13 +1,14 @@
 import Card from "../components/CardImovel/Card";
 import Botao from "../components/Botao";
 import Link from "next/link";
-import GenericTable from "../components/tabela"; // Certifique-se de que o caminho está correto
+import { GenericTable } from "@/components/tabela";
+
 
 export default function Home() {
   // Defina os cabeçalhos e dados da tabela
   const headers = ['Código', 'Nome da Propriedade', 'Tipo de imóvel', 'Visibilidade', 'Estado'];
   const data = [
-    ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
+    ['4356AA3534356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
     ['6541e9v564', 'Casa de João pessoa', 'Locação', 'bloqueada', 'Alugado'],
     ['3567e943', 'Casa do Amizade', 'Locação', 'Permitida', 'Livre'],
     ['4356av01', 'Casa do Bau', 'Locação', 'Permitida', 'Livre'],
