@@ -1,4 +1,5 @@
-import Card from "../components/CardImovel/Card";
+import { Card } from "@/components/cardImovel"
+import { Header } from "../components/header";
 import Botao from "../components/Botao";
 import Link from "next/link";
 import { GenericTable } from "@/components/tabela";
