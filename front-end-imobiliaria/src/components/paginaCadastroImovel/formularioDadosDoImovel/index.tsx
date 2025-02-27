@@ -4,6 +4,13 @@ interface FormularioInputProps {
     placeholder: string;
     name: string;
     showOptions?: boolean;
+    iconAreaCT?: boolean;
+    iconSala?: boolean;
+    imagemBanheiro?: boolean;
+    imagemDormitorio?: boolean;
+    imagemSuite?: boolean;
+    iconGaragem?: boolean;
+    imagemPraia?: boolean;
     custumizacaoClass: string;
     options?: string[];
 }
@@ -12,13 +19,26 @@ function FormularioInput({
     placeholder,
     name,
     showOptions = false,
+    iconAreaCT = false,
+    iconSala = false,
+    imagemBanheiro = false,
+    imagemDormitorio = false,
+    imagemSuite = false,
+    iconGaragem = false,
+    imagemPraia = false,
     custumizacaoClass,
     options = []
 }: FormularioInputProps) {
 
     return (
         <form action="text" className={`flex items-center lg:max-h-[58px] xl:max-h-[62px] 2xl:max-h-[78px] max-lg:justify-center gap-6 xl:py-4 2xl:py-6 py-3.5 bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent max-lg:p-0 ${custumizacaoClass}`}>
-            <img src="/iconsForms/canetaEditar.png" alt="Editar" className="h-8 lg:h-6 2xl:h-full ml-4" />
+            {iconAreaCT && <img src="/iconsImoveis/iconAreaCT.png" alt="Botão Opções" className="h-6 lg:h-9 2xl:h-full ml-4" />}
+            {iconSala && <img src="/iconsImoveis/iconSala.png" alt="Botão Opções" className="h-6 lg:h-7 2xl:h-full ml-4" />}
+            {imagemBanheiro && <img src="/imagensImovel/imagemBanheiro.png" alt="Botão Opções" className="h-6 lg:h-9 2xl:h-full ml-4" />}
+            {imagemDormitorio && <img src="/imagensImovel/imagemDormitorio.png" alt="Botão Opções" className="h-6 lg:h-9 2xl:h-full ml-4" />}
+            {imagemSuite && <img src="/imagensImovel/imagemSuite.png" alt="Botão Opções" className="h-6 lg:h-9 2xl:h-full ml-4" />}
+            {iconGaragem && <img src="/iconsImoveis/iconGaragem.png" alt="Botão Opções" className="h-6 lg:h-9 2xl:h-full ml-4" />}
+            {imagemPraia && <img src="/iconsImoveis/iconPraia.png" alt="Botão Opções" className="h-6 lg:h-9 2xl:h-full ml-4" />}
 
             {showOptions ? (
                 <select
@@ -53,12 +73,14 @@ export function FormDadosImovel() {
                     <FormularioInput
                         placeholder="Área Construída (m²):"
                         name="Área Construída (m²):"
+                        iconAreaCT
                         custumizacaoClass="lg:w-full"
                     />
                     <FormularioInput
                         placeholder="Número de Quartos:"
                         name="Número de Quartos"
                         showOptions
+                        imagemDormitorio
                         custumizacaoClass="lg:w-full"
                         options={["Nenhum Quarto", "1 Quarto", "2 Quartos", "3 Quartos", "4+ Quartos"]}
                     />
@@ -66,6 +88,7 @@ export function FormDadosImovel() {
                         placeholder="Número de Suítes:"
                         name="Número de Suítes"
                         showOptions
+                        imagemSuite
                         custumizacaoClass="lg:w-full"
                         options={["Nenhuma Suíte", "1 Suíte", "2 Suítes", "3 Suítes", "4+ Suítes"]}
                     />
@@ -73,6 +96,7 @@ export function FormDadosImovel() {
                         placeholder="Número de piscina:"
                         name="Número de piscina"
                         showOptions
+                        imagemPraia
                         custumizacaoClass="lg:w-full"
                         options={["Nenhuma Piscina", "1 Piscina", "2 Piscinas", "3 Piscinas", "4+ Piscinas"]}
                     />
@@ -82,12 +106,14 @@ export function FormDadosImovel() {
                     <FormularioInput
                         placeholder="Área do Terreno (m²):"
                         name="Área do Terreno (m²):"
+                        iconAreaCT
                         custumizacaoClass="lg:w-full"
                     />
                     <FormularioInput
                         placeholder="Número de Banheiros:"
                         name="Número de Banheiros"
                         showOptions
+                        imagemBanheiro
                         custumizacaoClass="lg:w-full"
                         options={["Nenhum Banheiro", "1 Banheiro", "2 Banheiros", "3 Banheiros", "4+ Banheiros"]}
                     />
@@ -95,15 +121,17 @@ export function FormDadosImovel() {
                         placeholder="Vagas de Garagem:"
                         name="Vagas de Garagem"
                         showOptions
+                        iconGaragem
                         custumizacaoClass="lg:w-full"
                         options={["Nenhuma Garagem", "1 Garagem", "2 Garagens", "3 Garagens", "4+ Garagens"]}
                     />
                     <FormularioInput
-                        placeholder="Número de Vagas:"
-                        name="Número de vagas"
+                        placeholder="Número de Salas:"
+                        name="Número de salas"
                         showOptions
+                        iconSala
                         custumizacaoClass="lg:w-[full]"
-                        options={["Nenhuma Vaga", "1 Vaga", "2 Vagas", "3 Vagas", "4+ Vagas"]}
+                        options={["Nenhuma Sala", "1 Sala", "2 Salas", "3 Salas", "4+ Salas"]}
                     />
                 </div>
 
