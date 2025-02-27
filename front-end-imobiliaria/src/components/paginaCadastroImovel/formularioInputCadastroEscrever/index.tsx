@@ -1,27 +1,96 @@
+"use client"
+import React, { useState, useEffect } from 'react';
+
 interface FormularioInputProps {
     placeholder: string;
     name: string;
     showOptions?: boolean;
     custumizacaoClass: string;
+    options?: string[];
+    onChange?: (value: string) => void;
+    value?: string;
 }
 
-function FormularioInput({ placeholder, name, showOptions = false, custumizacaoClass }: FormularioInputProps) {
+function FormularioInput({ placeholder, name, showOptions = false, custumizacaoClass, options, onChange, value }: FormularioInputProps) {
     return (
         <form action="text" className={`flex items-center lg:max-h-[58px] xl:max-h-[62px] 2xl:max-h-[78px] max-lg:justify-center gap-6 xl:py-4 2xl:py-6 py-3.5 bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent max-lg:p-0 ${custumizacaoClass}`}>
             <img src="/iconsForms/canetaEditar.png" alt="Editar" className="h-8 lg:h-6 2xl:h-full ml-4" />
-            <input type="text" placeholder={placeholder} name={name} className="text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full" />
+            {options ? (
+                <select
+                    value={value}
+                    onChange={(e) => onChange && onChange(e.target.value)}
+                    className="appearance-none text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full bg-transparent"
+                >
+                    <option value="" disabled className="text-gray-400">{name}</option>
+                    {options.map((option, index) => (
+                        <option key={index} value={option} className="text-black">{option}</option>
+                    ))}
+                </select>
+            ) : (
+                <input
+                    type="text"
+                    placeholder={placeholder}
+                    name={name}
+                    className="text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full"
+                    value={value} // Valor do input
+                    onChange={(e) => onChange && onChange(e.target.value)}
+                />
+            )}
             {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-8 2xl:h-full" />}
         </form>
     );
 }
 
 export function Formulario() {
+    const [uf, setUf] = useState<string>('SP');
+    const [cidade, setCidade] = useState<string>('');
+    const [cidades, setCidades] = useState<string[]>([]);
+
+    const estados = ['SP', 'RJ', 'MG', 'BA', 'PR'];
+
+    type Estado = 'SP' | 'RJ' | 'MG' | 'BA' | 'PR';
+
+    const cidadesPorEstado: Record<Estado, string[]> = {
+        'SP': ['São Paulo', 'Campinas', 'Santos'],
+        'RJ': ['Rio de Janeiro', 'Niterói', 'Petrópolis'],
+        'MG': ['Belo Horizonte', 'Juiz de Fora', 'Uberlândia'],
+        'BA': ['Salvador', 'Feira de Santana', 'Vitória da Conquista'],
+        'PR': ['Curitiba', 'Londrina', 'Maringá']
+    };
+
+    useEffect(() => {
+        if (uf && cidadesPorEstado[uf as Estado]) {
+            setCidades(cidadesPorEstado[uf as Estado]);
+            setCidade('');
+        }
+    }, [uf]);
+
     return (
         <div className="flex flex-col lg:gap-10">
             <div className="flex lg:gap-16">
-                <FormularioInput placeholder="UF:" name="uf" showOptions custumizacaoClass="lg:w-[20%]" />
-                <FormularioInput placeholder="Cidade:" name="cidade" showOptions custumizacaoClass="lg:w-[45.5%]" />
-                <FormularioInput placeholder="Cep:" name="cep" custumizacaoClass="lg:w-[32.5%]" />
+                <FormularioInput
+                    placeholder="UF:"
+                    name="UF:"
+                    showOptions
+                    custumizacaoClass="lg:w-[20%]"
+                    options={estados}
+                    onChange={setUf}
+                    value={uf} 
+                />
+                <FormularioInput
+                    placeholder="Cidade:"
+                    name="Cidade:"
+                    showOptions
+                    custumizacaoClass="lg:w-[45.5%]"
+                    options={cidades}
+                    onChange={setCidade}
+                    value={cidade}
+                />
+                <FormularioInput
+                    placeholder="Cep:"
+                    name="cep"
+                    custumizacaoClass="lg:w-[32.5%]"
+                />
             </div>
             <div className="flex lg:gap-16">
                 <FormularioInput placeholder="Bairro:" name="bairro" custumizacaoClass="lg:w-1/3" />
@@ -32,7 +101,7 @@ export function Formulario() {
                 <FormularioInput placeholder="Nome da Propriedade:" name="nome da propriedade" custumizacaoClass="lg:w-full" />
             </div>
             <div className="flex lg:gap-16">
-                <FormularioInput placeholder="Complemento:" name="nome da propriedade" custumizacaoClass="lg:w-full h-40" />
+                <FormularioInput placeholder="Complemento:" name="complemento" custumizacaoClass="lg:w-full h-40" />
             </div>
         </div>
     );
