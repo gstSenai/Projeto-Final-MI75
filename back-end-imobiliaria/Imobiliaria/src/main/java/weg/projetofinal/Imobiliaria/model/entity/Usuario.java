@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -41,5 +42,8 @@ public class Usuario {
 
     @Column(nullable = false)
     private String senha;
+
+    @OneToMany(mappedBy = "id_usuario")
+    private List<Imovel> imovel;
 
 }

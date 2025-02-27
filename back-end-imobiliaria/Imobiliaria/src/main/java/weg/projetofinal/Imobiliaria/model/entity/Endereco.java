@@ -37,4 +37,7 @@ public class Endereco {
 
     private String complemento;
 
+    @OneToOne(mappedBy = "id_endereco")
+    private Imovel imovel;
+
 }
