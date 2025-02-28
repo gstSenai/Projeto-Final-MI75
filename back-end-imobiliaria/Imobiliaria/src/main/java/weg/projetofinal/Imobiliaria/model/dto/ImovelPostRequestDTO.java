@@ -1,6 +1,5 @@
 package weg.projetofinal.Imobiliaria.model.dto;
 
-import ch.qos.logback.core.net.server.Client;
 import weg.projetofinal.Imobiliaria.model.entity.Endereco;
 import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.model.entity.Usuario;

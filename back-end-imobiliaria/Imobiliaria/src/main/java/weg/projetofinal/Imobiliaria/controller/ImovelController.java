@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import weg.projetofinal.Imobiliaria.model.dto.ImovelGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.ImovelPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.service.ImovelService;
@@ -25,14 +26,16 @@ public class ImovelController {
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public Page<Imovel> list(Pageable pageable) {
-        return service.getAllImovel(pageable);
+    public Page<ImovelGetResponseDTO> list(Pageable pageable) {
+        Page<Imovel> imoveisPage = service.getAllImovel(pageable);
+        return imoveisPage.map(Imovel::convert);
     }
 
     @GetMapping("/getById/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Imovel getById(@PathVariable Integer id) {
-        return service.getByIdImovel(id);
+    public ImovelGetResponseDTO getById(@PathVariable Integer id) {
+        Imovel imovel = service.getByIdImovel(id);
+        return imovel.convert();
     }
 
     @DeleteMapping("/delete/{id}")

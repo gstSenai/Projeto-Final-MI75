@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import weg.projetofinal.Imobiliaria.model.dto.ImovelGetResponseDTO;
 
 @Entity
 @Data
@@ -54,6 +55,17 @@ public class Imovel {
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario id_usuario;
+
+    public ImovelGetResponseDTO convert(){
+        return new ImovelGetResponseDTO(
+                this.id, this.codigo, this.nome_propriedade,
+                this.tipo_transacao, this.valor_venda, this.tipo_imovel,
+                this.status_imovel, this.valor_promocional, this.destaque,
+                this.visibilidade, this.valor_iptu, this.condominio,
+                this.area_construida, this.area_terreno, this.descricao,
+                this.id_endereco.convert(), this.id_usuario.convert()
+        );
+    }
 
 
 }

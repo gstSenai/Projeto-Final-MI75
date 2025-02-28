@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import weg.projetofinal.Imobiliaria.model.dto.UsuarioImovelGetResponseDTO;
 
 import java.util.Date;
 import java.util.List;
@@ -25,7 +26,7 @@ public class Usuario {
     @Column(nullable = false)
     private String sobrenome;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 11)
     private String cpf;
 
     @Column(nullable = false)
@@ -46,4 +47,10 @@ public class Usuario {
     @OneToMany(mappedBy = "id_usuario")
     private List<Imovel> imovel;
 
+    public UsuarioImovelGetResponseDTO convert(){
+        return new UsuarioImovelGetResponseDTO(
+                this.id, this.nome, this.sobrenome,this.cpf,
+                this.tipo_conta, this.telefone, this.data_nascimento,
+                this.email, this.senha);
+    }
 }
