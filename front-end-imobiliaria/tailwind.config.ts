@@ -11,6 +11,7 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        footer: "#1D1D1D"
       },
       fontFamily: {
         montserrat: ["Montserrat", "sans-serif"],

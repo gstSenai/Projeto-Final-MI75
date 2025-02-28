@@ -1,5 +1,6 @@
-import { Card } from "@/components/cardImovel"
+import { Card } from "@/components/CardImovel"
 import { Header } from "../components/header";
+import { Footer } from "@/components/Footer"
 import Botao from "../components/Botao";
 import Link from "next/link";
 import GenericTable from "../components/tabela"; // Certifique-se de que o caminho está correto
@@ -24,7 +25,6 @@ export default function Home() {
 
   return (
     <div className="bg-[#DFDAD0] min-h-screen p-10">
-      <Card />
       <Botao texto="Gerenciar" />
       <div className="mt-4">
         <Link href='../principalEditor' className="text-blue-600 underline">
@@ -34,6 +34,7 @@ export default function Home() {
         <Link href='../principalAdministrador' className="text-blue-600 underline">
           Página Administrador
         </Link>
+        <Link href='../footer'>Footer</Link>
       </div>
 
       {/* Renderize a tabela genérica */}
