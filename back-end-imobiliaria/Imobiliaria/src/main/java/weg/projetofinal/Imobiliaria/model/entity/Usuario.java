@@ -1,6 +1,5 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,7 +44,6 @@ public class Usuario {
     private String senha;
 
     @OneToMany(mappedBy = "id_usuario")
-    @JsonManagedReference
     private List<Imovel> imovel;
 
 }

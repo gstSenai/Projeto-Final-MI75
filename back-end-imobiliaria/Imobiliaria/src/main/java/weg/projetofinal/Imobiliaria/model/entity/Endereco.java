@@ -39,7 +39,6 @@ public class Endereco {
     private String complemento;
 
     @OneToOne(mappedBy = "id_endereco")
-    @JsonManagedReference
     private Imovel imovel;
 
 }

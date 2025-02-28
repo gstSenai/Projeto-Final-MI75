@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import weg.projetofinal.Imobiliaria.model.dto.ImovelPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.repository.ImovelRepository;
 
@@ -17,7 +18,8 @@ public class ImovelService {
     private ImovelRepository repository;
 
 
-    public Imovel createImovel(Imovel imovel) {
+    public Imovel createImovel(ImovelPostRequestDTO imovelDTO) {
+        Imovel imovel = imovelDTO.convert();
         return repository.save(imovel);
     }
 

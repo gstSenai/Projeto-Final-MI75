@@ -1,0 +1,57 @@
+[33mccea46a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mhml[m[33m, [m[1;31morigin/hml[m[33m)[m PAGINA TEST GET
+[33m28b4ffc[m[33m ([m[1;31morigin/feature/testGet[m[33m, [m[1;32mfeature/testGet[m[33m)[m save
+[33m75edc8f[m testget
+[33m47ca8e2[m Merge pull request #16 from gstSenai/feature/tabela-de-dados
+[33m803e1e8[m[33m ([m[1;31morigin/feature/tabela-de-dados[m[33m)[m Merge branch 'hml' into feature/tabela-de-dados
+[33me280674[m Revert "Merge branch 'revert-6-hml' into feature/tabela-de-dados"
+[33mb87bc15[m Reapply "Merge branch 'revert-6-hml' into feature/tabela-de-dados"
+[33m81a6a62[m Revert "Merge branch 'revert-6-hml' into feature/tabela-de-dados"
+[33m839d5ef[m new update
+[33m3f01254[m[33m ([m[1;31morigin/feature/footer[m[33m)[m Pagina Cadastro de imoveis adicionada a hml
+[33m5698490[m[33m ([m[1;31morigin/feature/PaginaCadastroImoveis[m[33m)[m Merge branch 'hml' into feature/PaginaCadastroImoveis
+[33mcccd3a2[m icons adicionados
+[33made214f[m Implementação para Hml
+[33m8f207b4[m Tabela de dados
+[33m4ab6a59[m Merge branch 'revert-6-hml' into feature/tabela-de-dados
+[33m5e2991d[m new update
+[33mc6b449f[m Novas funcionalidades
+[33m0cd48d1[m Tabela de dados
+[33mc97313d[m update
+[33ma2dadc7[m Revert "Hml"
+[33mb0c16bb[m Merge pull request #6 from gstSenai/hml
+[33m8ea23c3[m Merge pull request #7 from gstSenai/feature/pagina-administrador
+[33mf7afcec[m[33m ([m[1;31morigin/feature/pagina-administrador[m[33m)[m Pagina Adminstração
+[33me0df351[m atualização de comflitos
+[33m7a12c0b[m Update page.tsx
+[33m0189821[m Merge pull request #5 from gstSenai/feature/pagina-editor
+[33m4711587[m[33m ([m[1;31morigin/feature/pagina-editor[m[33m)[m Update page.tsx
+[33mcf9b941[m atualização do next
+[33m05801cc[m UDPATE CSS E UM COMPONENTE FEITO
+[33me8b1fa8[m Revert "Pagina Administrador"
+[33m0b3c391[m update css
+[33m59537cc[m Merge branch 'feature/pagina-editor' of https://github.com/gstSenai/Projeto-Final-MI75 into feature/pagina-editor
+[33m8c8a71e[m Pagina Administrador
+[33mff67adb[m alterações na pagina de imovel
+[33maa804ae[m Pagina Editor completa
+[33m3991237[m Merge branch 'hml' into feature/pagina-editor
+[33m08fa275[m Update page.tsx
+[33mc9b622e[m Save
+[33m557ebc9[m update
+[33madd9804[m new update
+[33m0a6f5c5[m PaginaEditor
+[33m7f6feb6[m update
+[33m2467836[m Adicionado o Backend da Aplicacao
+[33me6b540c[m Merge pull request #3 from gstSenai/feature/header
+[33m2fa4025[m[33m ([m[1;31morigin/feature/header[m[33m)[m updates
+[33mef4b43a[m update final
+[33m10f0403[m update
+[33m2aabe70[m new update
+[33m8f261d9[m Main somente com o componente de card e nome alterado da pasta
+[33m748bfa0[m Merge pull request #2 from gstSenai/hml
+[33m666e26e[m Merge pull request #1 from gstSenai/feature/Card-Imovel
+[33m7fa2ffd[m[33m ([m[1;31morigin/feature/Card-Imovel[m[33m, [m[1;32mfeature/Card-Imovel[m[33m)[m update css
+[33m9d906ff[m .
+[33mf1030bb[m update css, reajustes
+[33m7b9ae93[m ajuste no css do card
+[33m7cba29c[m criação do card
+[33mbf3b4ac[m Main sem nada somente para clone

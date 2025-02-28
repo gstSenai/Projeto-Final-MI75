@@ -1,6 +1,5 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +17,9 @@ public class Imovel {
     @Column(name = "id_imovel")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(nullable = false, unique = true)
+    private Integer codigo;
 
     private String nome_propriedade;
 
@@ -47,12 +49,10 @@ public class Imovel {
 
     @OneToOne
     @JoinColumn(name = "id_endereco", nullable = false)
-    @JsonManagedReference
     private Endereco id_endereco;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario")
-    @JsonManagedReference
     private Usuario id_usuario;
 
 
