@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import weg.projetofinal.Imobiliaria.model.dto.ImovelUsuarioGetResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.UsuarioGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.UsuarioImovelGetResponseDTO;
 
 import java.util.Date;
@@ -52,5 +54,15 @@ public class Usuario {
                 this.id, this.nome, this.sobrenome,this.cpf,
                 this.tipo_conta, this.telefone, this.data_nascimento,
                 this.email, this.senha);
+    }
+
+    public UsuarioGetResponseDTO convert2(){
+        List<ImovelUsuarioGetResponseDTO> imoveisDTO = this.imovel.stream()
+                .map(Imovel::convert3)
+                .toList();
+        return new UsuarioGetResponseDTO(
+                this.id, this.nome, this.sobrenome,this.cpf,
+                this.tipo_conta, this.telefone, this.data_nascimento,
+                this.email, this.senha, imoveisDTO);
     }
 }

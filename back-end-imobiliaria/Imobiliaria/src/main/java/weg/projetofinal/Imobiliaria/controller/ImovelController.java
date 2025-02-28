@@ -46,8 +46,9 @@ public class ImovelController {
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Imovel update(@PathVariable Integer id,@RequestBody Imovel imovel) {
-        return service.updateImovel(imovel, id);
+    public ImovelGetResponseDTO update(@PathVariable Integer id,@RequestBody Imovel imovel) {
+        Imovel imovel1 = service.updateImovel(imovel, id);
+        return imovel1.convert();
     }
 
 }

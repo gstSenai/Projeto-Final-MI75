@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import weg.projetofinal.Imobiliaria.model.dto.ImovelEnderecoGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.ImovelGetResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.ImovelUsuarioGetResponseDTO;
 
 @Entity
 @Data
@@ -68,4 +70,21 @@ public class Imovel {
     }
 
 
+    public ImovelEnderecoGetResponseDTO convert2() {
+        return new ImovelEnderecoGetResponseDTO(
+                this.id, this.codigo, this.nome_propriedade,
+                this.tipo_transacao, this.valor_venda, this.tipo_imovel,
+                this.status_imovel, this.valor_promocional, this.destaque,
+                this.visibilidade, this.valor_iptu, this.condominio,
+                this.area_construida, this.area_terreno, this.descricao);
+    }
+
+    public ImovelUsuarioGetResponseDTO convert3() {
+        return new ImovelUsuarioGetResponseDTO(
+                this.id, this.codigo, this.nome_propriedade,
+                this.tipo_transacao, this.valor_venda, this.tipo_imovel,
+                this.status_imovel, this.valor_promocional, this.destaque,
+                this.visibilidade, this.valor_iptu, this.condominio,
+                this.area_construida, this.area_terreno, this.descricao);
+    }
 }

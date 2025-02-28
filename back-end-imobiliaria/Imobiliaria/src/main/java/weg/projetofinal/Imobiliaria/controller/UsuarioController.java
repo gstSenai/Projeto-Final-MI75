@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import weg.projetofinal.Imobiliaria.model.dto.UsuarioGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 import weg.projetofinal.Imobiliaria.service.UsuarioService;
 
@@ -25,17 +26,19 @@ public class UsuarioController {
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public Page<Usuario> findAll(
+    public Page<UsuarioGetResponseDTO> findAll(
             @PageableDefault(sort = "nome",
                             direction = Sort.Direction.DESC)
                             Pageable pageable) {
-        return service.findAll(pageable);
+        Page<Usuario> usuario = service.findAll(pageable);
+        return usuario.map(Usuario::convert2);
     }
 
     @GetMapping("/getById/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Usuario findById(@PathVariable Integer id) {
-        return service.findById(id);
+    public UsuarioGetResponseDTO findById(@PathVariable Integer id) {
+        Usuario usuario = service.findById(id);
+        return usuario.convert2();
     }
 
     @DeleteMapping("/delete/{id}")
@@ -46,8 +49,9 @@ public class UsuarioController {
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Usuario update(@RequestBody Usuario usuario, @PathVariable Integer id) {
-        return service.updateUser(usuario, id);
+    public UsuarioGetResponseDTO update(@RequestBody Usuario usuario, @PathVariable Integer id) {
+        Usuario usuario2 = service.updateUser(usuario, id);
+        return usuario2.convert2();
     }
 
 }
