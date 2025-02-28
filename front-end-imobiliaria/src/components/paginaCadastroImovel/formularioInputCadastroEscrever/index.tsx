@@ -42,7 +42,7 @@ function FormularioInput({ placeholder, name, showOptions = false, custumizacaoC
 }
 
 export function Formulario() {
-    const [uf, setUf] = useState<string>('SP');
+    const [uf, setUf] = useState<string>('');
     const [cidade, setCidade] = useState<string>('');
     const [cidades, setCidades] = useState<string[]>([]);
 
