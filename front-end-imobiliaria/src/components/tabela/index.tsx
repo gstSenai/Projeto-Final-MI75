@@ -20,9 +20,9 @@ export function GenericTable({ headers, data }: TableProps) {
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
 
   return (
-    <div className='flex'>
-      <div className={`${montserrat.className} bg-[#F4ECE4] shadow-[5px_20px_100px_rgba(0,0,0,0.1)] rounded-[20px] overflow-hidden`}>
-        <div className="overflow-x-auto max-h-[400px]">
+    <div className='flex flex-col sm:flex-col md:flex-col lg:flex-row 2xl:flex-row  '>
+      <div className={`${montserrat.className} bg-[#F4ECE4] shadow-[5px_20px_100px_rgba(0,0,0,0.1)] rounded-[20px] overflow-hidden basis-5/6`}>
+        <div className="overflow-x-auto max-h-[500px]">
           <table className="w-full border-separate border-spacing-0">
             <thead>
               <tr className="bg-[#702632] text-white sticky top-0 z-10">
@@ -55,16 +55,27 @@ export function GenericTable({ headers, data }: TableProps) {
           </table>
         </div>
       </div>
-      <div className='flex-col'>
-        <button className='p-4 bg-[#016E2F] text-white rounded-[20px]'>
-          <Image src="/sinalAdd.png" alt="sinal de adição" layout="fill" objectFit="cover" quality={100} />
-          Adicionar</button>
-        <button className='p-4 bg-[#702632] text-white rounded-[20px]'>
-         <Image src="/sinalRemove.png" alt="sinal de remoção" layout="fill" objectFit="cover" quality={100} />
-          Remover</button>
-        <button className='p-4 bg-[#252422] text-white rounded-[20px]'>
-        <Image src="/canetaEditar.png" alt="sinal de edição" layout="fill" objectFit="cover" quality={100} />
-          Editar</button>
+      <div className='flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 '>
+        <button className='w-[181px] h-16 m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle'>
+          <div className='pl-5 flex items-center gap-3 justify-start '>
+            <img src="./iconsForms/sinalAdd.png" alt="sinal de adição" />
+            <p className='text-xl font-medium'>Adicionar</p>
+          </div>
+        </button>
+
+        <button className='w-[181px] h-16 m-4 bg-[#702632] text-white rounded-[20px] text-center inline-block align-middle'>
+          <div className='pl-5 flex items-center gap-3 justify-start'>
+            <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" />
+            <p className='text-xl font-medium'>Remover</p>
+          </div>
+        </button>
+
+        <button className='w-[181px] h-16 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle'>
+          <div className='pl-5 flex items-center gap-3 justify-start'>
+            <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" />
+            <p className='text-xl font-medium'>Editar</p>
+          </div>
+        </button>
       </div>
     </div>
   );
