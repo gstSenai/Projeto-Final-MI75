@@ -1,50 +1,44 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Montserrat } from 'next/font/google';
 
 interface TableProps {
   headers: string[];
   data: (string | number)[][];
 }
 
-// Carregando a fonte Montserrat
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['400', '800'],
-  display: 'swap',
-});
-
-export function GenericTable({ headers, data }: TableProps) {
+const GenericTable: React.FC<TableProps> = ({ headers, data }) => {
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
 
   return (
-    <div className={`${montserrat.className} bg-[#F4ECE4] shadow-[5px_20px_100px_rgba(0,0,0,0.1)] rounded-[20px] overflow-hidden`}>
-      <div className="overflow-x-auto max-h-[400px]">
-        <table className="w-full border-separate border-spacing-0">
-          <thead>
-            <tr className="bg-[#702632] text-white sticky top-0 z-10">
-              {headers.map((header, index) => (
-                <th key={index} className="p-4 text-lg text-center font-bold border border-[#E0D6CE]">
-                  {header}
-                </th>
-              ))}
-            </tr>
-          </thead>
+    <div className="bg-white shadow-[5px_20px_100px_rgba(0,0,0,0.1)] rounded-[20px] overflow-hidden">
+      <table className="w-full">
+        <thead>
+          <tr className="bg-[#702632] text-white">
+            {headers.map((header, index) => (
+              <th key={index} className="p-4 text-center text-sm font-semibold">
+                {header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+      </table>
+      <div className="max-h-[400px] overflow-y-auto">
+        <table className="w-full">
           <tbody>
             {data.map((row, rowIndex) => (
               <tr
                 key={rowIndex}
-                className="bg-[#FAF6ED] hover:bg-[#702632] hover:bg-opacity-30 transition-all cursor-pointer border-b border-[#E0D6CE]"
+                className={`${
+                  selectedRow === rowIndex 
+                    ? 'bg-[#702632] bg-opacity-20 border border-[#702632]'  // Fica vermelho quando selecionado
+                    : 'bg-[#FAF6ED]'  // Mantém o padrão quando não está selecionado
+                } 
+                hover:bg-[#702632] hover:bg-opacity-30 transition-all cursor-pointer`}
                 onClick={() => setSelectedRow(rowIndex)}
               >
                 {row.map((cell, cellIndex) => (
-                  <td
-                    key={cellIndex}
-                    className={`p-4 text-center text-lg text-black border border-[#E0D6CE] ${
-                      selectedRow === rowIndex ? 'bg-[#702632] bg-opacity-50' : ''
-                    }`}
-                  >
+                  <td key={cellIndex} className="p-4 text-left text-sm text-black">
                     {cell}
                   </td>
                 ))}
@@ -55,4 +49,6 @@ export function GenericTable({ headers, data }: TableProps) {
       </div>
     </div>
   );
-}
+};
+
+export default GenericTable;
