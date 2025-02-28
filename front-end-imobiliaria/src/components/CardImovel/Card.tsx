@@ -1,4 +1,4 @@
-import CardImovel from "./CardBeta"
+import CardImovel from "../CardImovel/CardBeta"
 
 
 

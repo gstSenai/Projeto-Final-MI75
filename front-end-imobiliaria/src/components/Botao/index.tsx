@@ -4,7 +4,7 @@ interface Botao {
 
 
 
-export function Botao({ texto }: Botao) {
+export default function botao({ texto }: Botao) {
 
     return (
         <>

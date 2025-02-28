@@ -1,6 +1,6 @@
 "use client"
 
-import { Card } from "@/components/cardImovel";
+import { Card } from "@/components/CardImovel";
 import { useState, useEffect } from "react";
 
 
