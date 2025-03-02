@@ -15,7 +15,7 @@ export default function PaginaEditor() {
   return (
     <>
       <Header />
-      <div className={`${montserrat.className} pt-3 pb-24 lg:pt-14 lg:pb-52`}>
+      <div className="font-montserrat pt-3 pb-24 lg:pt-14 lg:pb-52">
         <main className="relative flex h-[811px] w-full max-w-[1810px] mx-auto overflow-hidden ">
           <Image src="/imagensPaginaEDADM/cidadePaginaEditor.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100} />
           <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32">
@@ -43,7 +43,8 @@ export default function PaginaEditor() {
             <div className='flex flex-col items-center w-80 py-10 md:py-10 2xl:py-0'>
               <Image src="/cadastroImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
               <p className='text-4xl font-medium opacity-75 text-center leading-tight py-16 min-h-[120px]'>Cadastrar Imóveis</p>
-              <Botao texto="Gerenciar" />
+              <a href="./cadastroImovel"><Botao texto="Gerenciar" /></a>
+
             </div>
           </div>
         </section>
