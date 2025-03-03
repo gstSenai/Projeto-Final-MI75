@@ -41,67 +41,40 @@ function FormularioInput({ placeholder, name, showOptions = false, custumizacaoC
     );
 }
 
-export function     Formulario() {
-    const [uf, setUf] = useState<string>('');
-    const [cidade, setCidade] = useState<string>('');
-    const [cidades, setCidades] = useState<string[]>([]);
-
-    const estados = ['SP', 'RJ', 'MG', 'BA', 'PR'];
-
-    type Estado = 'SP' | 'RJ' | 'MG' | 'BA' | 'PR';
-
-    const cidadesPorEstado: Record<Estado, string[]> = {
-        'SP': ['São Paulo', 'Campinas', 'Santos'],
-        'RJ': ['Rio de Janeiro', 'Niterói', 'Petrópolis'],
-        'MG': ['Belo Horizonte', 'Juiz de Fora', 'Uberlândia'],
-        'BA': ['Salvador', 'Feira de Santana', 'Vitória da Conquista'],
-        'PR': ['Curitiba', 'Londrina', 'Maringá']
-    };
-
-    useEffect(() => {
-        if (uf && cidadesPorEstado[uf as Estado]) {
-            setCidades(cidadesPorEstado[uf as Estado]);
-            setCidade('');
-        }
-    }, [uf]);
+export function InputDadosUsuario() {
 
     return (
         <div className="flex flex-col lg:gap-10">
             <div className="flex lg:gap-16">
                 <FormularioInput
-                    placeholder="UF:"
-                    name="UF:"
-                    showOptions
+                    placeholder="Nome:"
+                    name="Nome:"
                     custumizacaoClass="lg:w-[20%]"
-                    options={estados}
-                    onChange={setUf}
-                    value={uf} 
                 />
                 <FormularioInput
-                    placeholder="Cidade:"
-                    name="Cidade:"
-                    showOptions
+                    placeholder="Sobrenome:"
+                    name="Sobrenome:"
                     custumizacaoClass="lg:w-[45.5%]"
-                    options={cidades}
-                    onChange={setCidade}
-                    value={cidade}
                 />
                 <FormularioInput
-                    placeholder="Cep:"
-                    name="cep"
+                    placeholder="CPF:"
+                    name="CPF"
                     custumizacaoClass="lg:w-[32.5%]"
                 />
             </div>
             <div className="flex lg:gap-16">
-                <FormularioInput placeholder="Bairro:" name="bairro" custumizacaoClass="lg:w-1/3" />
-                <FormularioInput placeholder="Rua:" name="rua" custumizacaoClass="lg:w-1/3" />
-                <FormularioInput placeholder="Número:" name="número" custumizacaoClass="lg:w-1/3" />
+                <FormularioInput placeholder="Email:" name="Email" custumizacaoClass="lg:w-1/3" />
+                <FormularioInput placeholder="Senha:" name="Senha" custumizacaoClass="lg:w-1/3" />
+                <FormularioInput placeholder="Confirmação de senha:" name="Confirmação de senha" custumizacaoClass="lg:w-1/3" />
             </div>
             <div className="flex lg:gap-16">
-                <FormularioInput placeholder="Nome da Propriedade:" name="nome da propriedade" custumizacaoClass="lg:w-full" />
+                <FormularioInput placeholder="Celular:" name="Celular" custumizacaoClass="lg:w-1/3" />
+                <FormularioInput placeholder="Telefone:" name="Telefone" custumizacaoClass="lg:w-1/3" />
+                <FormularioInput placeholder="Dia do cadastro:" name="Dia do cadastro" custumizacaoClass="lg:w-1/3" />
             </div>
             <div className="flex lg:gap-16">
-                <FormularioInput placeholder="Complemento:" name="complemento" custumizacaoClass="lg:w-full h-40" />
+                <FormularioInput placeholder="Data de Nascimento:" name="Data de Nascimento" custumizacaoClass="lg:w-[50%]" />
+                <FormularioInput placeholder="Último acesso:" name="Último acesso" custumizacaoClass="lg:w-[50%]" />
             </div>
         </div>
     );

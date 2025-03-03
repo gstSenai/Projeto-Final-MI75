@@ -22,8 +22,8 @@ function FormularioInput({
 }: FormularioInputProps) {
 
     return (
-        <form action="text" className={`flex items-center lg:max-h-[58px] xl:max-h-[62px] 2xl:max-h-[78px] max-lg:justify-center gap-6 xl:py-4 2xl:py-6 py-3.5 bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent max-lg:p-0 ${custumizacaoClass}`}>
-            <img src="/iconsForms/canetaEditar.png" alt="Editar" className="h-8 lg:h-6 2xl:h-full ml-4" />
+        <form action="text" className={`flex items-center lg:max-h-[58px] xl:max-h-[60px] 2xl:max-h-[62px] max-lg:justify-center gap-6 xl:py-4 2xl:py-6 py-3.5 bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent max-lg:p-0 ${custumizacaoClass}`}>
+            <img src="/iconsForms/canetaEditar.png" alt="Editar" className="lg:h-6 ml-4" />
 
             <div className="relative w-full">
                 {showOptions ? (
@@ -60,7 +60,7 @@ function FormularioInput({
 
 export function FormValorImovel({ placeholder, name }: FormEspecifico) {
     return (
-        <div className="flex flex-col lg:gap-10 mt-10">
+        <div className="flex flex-col lg:gap-10 mt-10 ">
             <div className="flex lg:gap-10">
                 <FormularioInput
                     placeholder={placeholder}

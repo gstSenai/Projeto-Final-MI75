@@ -16,18 +16,18 @@ const montserrat = Montserrat({
   display: 'swap',
 });
 
-export function GenericTable({ headers, data }: TableProps) {
+export function GenericTable({ headers, data, isPropertyTable }: TableProps & { isPropertyTable: boolean }) {
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
 
   return (
-    <div className='flex flex-col sm:flex-col md:flex-col lg:flex-row 2xl:flex-row  '>
-      <div className={`${montserrat.className} bg-[#F4ECE4] shadow-[5px_20px_100px_rgba(0,0,0,0.1)] rounded-[20px] overflow-hidden basis-5/6`}>
-        <div className="overflow-x-auto max-h-[500px]">
-          <table className="w-full border-separate border-spacing-0">
+    <div className='flex flex-col sm:flex-col md:flex-col lg:flex-row 2xl:flex-row'>
+      <div className='bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6'>
+        <div className='overflow-x-auto max-h-[500px]'>
+          <table className='w-full border-separate border-spacing-0'>
             <thead>
-              <tr className="bg-[#702632] text-white sticky top-0 z-10">
+              <tr className='bg-[#702632] text-white sticky top-0 z-10'>
                 {headers.map((header, index) => (
-                  <th key={index} className="p-4 sm:p-4 lg:p-6 text-base sm:text-lg md:text-xl lg:text-2xl 2xl:text-3xl text-center font-bold border border-[#E0D6CE]">
+                  <th key={index} className='p-4 text-center font-bold border border-[#E0D6CE]'>
                     {header}
                   </th>
                 ))}
@@ -37,14 +37,13 @@ export function GenericTable({ headers, data }: TableProps) {
               {data.map((row, rowIndex) => (
                 <tr
                   key={rowIndex}
-                  className="bg-[#FAF6ED] hover:bg-[#702632] hover:bg-opacity-30 transition-all cursor-pointer border-b border-[#E0D6CE]"
+                  className='bg-[#FAF6ED] hover:bg-[#702632] hover:bg-opacity-30 cursor-pointer border-b border-[#E0D6CE]'
                   onClick={() => setSelectedRow(rowIndex)}
                 >
                   {row.map((cell, cellIndex) => (
                     <td
                       key={cellIndex}
-                      className={`p-4 text-center text-xs sm:text-xs md:text-sm lg:text-base 2xl:text-lg text-black border border-[#E0D6CE] ${selectedRow === rowIndex ? 'bg-[#702632] bg-opacity-50' : ''
-                        }`}
+                      className={`p-4 text-center border border-[#E0D6CE] ${selectedRow === rowIndex ? 'bg-[#702632] bg-opacity-50' : ''}`}
                     >
                       {cell}
                     </td>
@@ -80,4 +79,41 @@ export function GenericTable({ headers, data }: TableProps) {
     </div>
   );
 }
-//sm: md: lg: 2xl:
+
+const propertyHeaders = ['Código', 'Nome da Propriedade', 'Tipo de imóvel', 'Visibilidade', 'Estado'];
+const propertyData = [
+  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
+  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado'],
+  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
+  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado'],
+  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
+  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado'],
+  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
+  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado'],
+  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
+  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado']
+];
+
+const userHeaders = ['Nome', 'E-mail', 'Endereço', 'CPF', 'Telefone'];
+const userData = [
+  ['Rodrigo', 'Rodrigo2023amandoDacunha@gmail.com', '89454700', '09312312323', '47 94931-2912'],
+  ['Matheus', 'MatheusLucas@gmail.com', '89266500', '21312244451', '47 99942-2913'],
+  ['Rodrigo', 'Rodrigo2023amandoDacunha@gmail.com', '89454700', '09312312323', '47 94931-2912'],
+  ['Matheus', 'MatheusLucas@gmail.com', '89266500', '21312244451', '47 99942-2913'],
+  ['Rodrigo', 'Rodrigo2023amandoDacunha@gmail.com', '89454700', '09312312323', '47 94931-2912'],
+  ['Matheus', 'MatheusLucas@gmail.com', '89266500', '21312244451', '47 99942-2913'],
+  ['Rodrigo', 'Rodrigo2023amandoDacunha@gmail.com', '89454700', '09312312323', '47 94931-2912'],
+  ['Matheus', 'MatheusLucas@gmail.com', '89266500', '21312244451', '47 99942-2913'],
+  ['Rodrigo', 'Rodrigo2023amandoDacunha@gmail.com', '89454700', '09312312323', '47 94931-2912'],
+  ['Matheus', 'MatheusLucas@gmail.com', '89266500', '21312244451', '47 99942-2913']
+];
+
+export default function Tabela({ isPropertyTable }: { isPropertyTable: boolean }) {
+  return (
+    <GenericTable 
+      headers={isPropertyTable ? propertyHeaders : userHeaders} 
+      data={isPropertyTable ? propertyData : userData} 
+      isPropertyTable={isPropertyTable}
+    />
+  );
+}
