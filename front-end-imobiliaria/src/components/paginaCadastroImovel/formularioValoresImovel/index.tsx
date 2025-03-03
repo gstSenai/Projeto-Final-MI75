@@ -42,7 +42,7 @@ function FormularioInput({
                         type="text"
                         placeholder={placeholder}
                         name={name}
-                        className="text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full"
+                        className="text-black max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full"
                     />
                 )}
 

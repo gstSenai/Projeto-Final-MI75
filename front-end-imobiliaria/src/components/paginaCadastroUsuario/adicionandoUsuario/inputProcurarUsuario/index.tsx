@@ -1,4 +1,5 @@
 "use client"
+import { Botao } from '@/components/botao';
 import React, { useState, useEffect } from 'react';
 
 interface FormularioInputProps {
@@ -43,7 +44,7 @@ function FormularioInput({ placeholder, name, showOptions = false, custumizacaoC
 
 export function InputProcurarUsuario() {
     return (
-        <div className="flex flex-col lg:gap-10">
+        <div className="flex flex-col lg:gap-5">
             <div className="flex lg:gap-16">
                 <FormularioInput
                     placeholder="Nome:"
@@ -56,13 +57,9 @@ export function InputProcurarUsuario() {
                     custumizacaoClass="lg:w-[25%]"
                 />
             </div>
-            <div className="flex lg:gap-16 mb-20">
+            <div className="flex lg:gap-16 mb-10">
                 <FormularioInput placeholder="Email:" name="Email" custumizacaoClass="lg:w-[25%]" />
-                <div className="font-montserrat max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl w-[25%] leading-normal text-black hover:text-white">
-                    <button className="bg-[#702632] bg-opacity-40 hover:bg-opacity-100 transition-all duration-300 ease-in-out shrink-0 text-center rounded-[20px] lg:h-[58px] xl:h-[60px] 2xl:h-[62px] lg:w-[100%]">
-                        PROCURAR
-                    </button>
-                </div>
+                <Botao texto="Procurar" />
             </div>
         </div>
     );

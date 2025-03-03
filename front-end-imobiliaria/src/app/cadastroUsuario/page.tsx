@@ -1,17 +1,20 @@
 import { Header } from "@/components/header";
+import { InputProcurarUsuario } from "@/components/paginaCadastroUsuario/adicionandoUsuario/inputProcurarUsuario";
 import Tabela from "@/components/tabela/index";
-import { InputDadosUsuario } from "@/components/paginaCadastroUsuario/inputDadosUsuario"
-import { InputProcurarUsuario } from "@/components/paginaCadastroUsuario/inputProcurarUsuario"
+import { Montserrat } from "next/font/google";
+import { Footer } from "@/components/footer";
 
-
-
-
+// Carregando a fonte Montserrat
+const montserrat = Montserrat({
+    subsets: ['latin'],
+    weight: ['400', '800'],
+    display: 'swap',
+});
 
 export default function CadastroUsuario() {
     return (
         <>
             <Header />
-
             <div className="min-h-screen bg-[#DFDAD0] 2xl:px-20 xl:px-20 lg:px-10 px-10 pt-14">
                 <div className="font-inter justify-between max-lg:justify-center ">
                     <div className="flex flex-col max-lg:justify-center">
@@ -23,18 +26,8 @@ export default function CadastroUsuario() {
                     </div>
                 </div>
 
-
                 <Tabela isPropertyTable={false} />
-                <div className="flex flex-row items-center max-lg:justify-center">
-                    <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
-                </div>
-
-                <InputDadosUsuario />
-
-
             </div>
-
         </>
-
     )
 }

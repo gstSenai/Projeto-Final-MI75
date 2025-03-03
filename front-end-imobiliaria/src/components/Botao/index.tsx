@@ -1,15 +1,24 @@
+import { Montserrat } from 'next/font/google';
+
+
+// Carregando a fonte Montserrat
+const montserrat = Montserrat({
+    subsets: ['latin'],
+    weight: ['400', '800'],
+    display: 'swap',
+});
+
 interface Botao {
     texto: string
 }
-
 
 
 export function Botao({ texto }: Botao) {
 
     return (
         <>
-            <div className=" font-montserrat font-normal leading-normal text-black hover:text-white text-[1.25rem]  sm:text-[1.25rem] md:text-[1.75rem] lg:text-[1.975rem] 2xl:text-[2.2rem]">
-                <button className="bg-[#702632] bg-opacity-40 hover:bg-opacity-100 transition-all duration-300 ease-in-out shrink-0 text-center rounded-[20px] w-[242px] h-[46px] sm:w-[242px] sm:h-[46px] md:w-[306px] md:h-[55px] lg:w-[314px] lg:h-[56px] 2xl:w-[370px] 2xl:h-[64px]">
+            <div className="font-montserrat max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-2xl 2xl:text-3xl w-[25%] leading-normal text-black hover:text-white">
+                <button className="bg-[#702632] bg-opacity-40 hover:bg-opacity-100 transition-all duration-300 ease-in-out shrink-0 text-center rounded-[20px] lg:h-[58px] xl:h-[60px] 2xl:h-[62px] lg:w-[100%]">
                     {texto}
                 </button>
             </div>

@@ -10,7 +10,7 @@ const montserrat = Montserrat({
 export function Footer() {
     return (
         <>
-            <footer className="font-montserrat bg-[#000000]/80 h-[450px] relative">
+            <footer className="font-montserrat bg-[#000000]/80 h-[450px] min-h-screen relative">
                 <div className="flex justify-between">
                     <section className="pt-24 pl-10 pr-10 flex flex-row gap-32">
                         <div className="text-white flex flex-col gap-3">
