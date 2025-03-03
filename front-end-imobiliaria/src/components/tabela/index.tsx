@@ -142,6 +142,31 @@ export function GenericTable({ headers, data, isPropertyTable }: TableProps & { 
         </div>
       )}
 
+      {editar && !adicionar && !remover && (
+        <div>
+          <div className="flex flex-col max-lg:justify-center">
+            <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
+
+            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
+          </div>
+
+          <InputDadosUsuario />
+
+          <div className="flex flex-col mt-20 max-lg:justify-center">
+            <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Endereço do proprietário</p>
+
+            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
+          </div>
+
+          <InputEnderecoPropriedade />
+
+          <div className="flex items-center gap-16 mt-20">
+            <Botao texto="Cancelar" />
+            <Botao texto="Salvar cadastro" />
+          </div>
+        </div>
+      )}
+
       {selectedData && editar && !adicionar && !remover && (
         <InputEditandoDadosUsuario selectedData={selectedData} />
       )}
