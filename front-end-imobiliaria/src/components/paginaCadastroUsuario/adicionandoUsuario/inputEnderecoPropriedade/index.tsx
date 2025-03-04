@@ -13,15 +13,15 @@ interface FormularioInputProps {
 
 function FormularioInput({ placeholder, name, showOptions = false, custumizacaoClass, options, onChange, value }: FormularioInputProps) {
     return (
-        <form action="text" className={`flex items-center lg:max-h-[58px] xl:max-h-[60px] 2xl:max-h-[62px] max-lg:justify-center gap-6 xl:py-4 2xl:py-6 py-3.5 bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent max-lg:p-0 ${custumizacaoClass}`}>
+        <form action="text" className={`flex items-center lg:h-[50px] max-lg:justify-center gap-6 xl:py-4 2xl:py-6 py-3.5 bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent max-lg:p-0 ${custumizacaoClass}`}>
             <img src="/iconsForms/canetaEditar.png" alt="Editar" className="lg:h-6 ml-4" />
             {options ? (
                 <select
                     value={value}
                     onChange={(e) => onChange && onChange(e.target.value)}
-                    className="appearance-none text-black max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full bg-transparent"
+                    className="appearance-none text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full bg-transparent"
                 >
-                    <option value="" disabled className="text-black">{name}</option>
+                    <option value="" disabled className="text-gray-400">{name}</option>
                     {options.map((option, index) => (
                         <option key={index} value={option} className="text-black">{option}</option>
                     ))}
@@ -31,7 +31,7 @@ function FormularioInput({ placeholder, name, showOptions = false, custumizacaoC
                     type="text"
                     placeholder={placeholder}
                     name={name}
-                    className="text-black max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full"
+                    className="text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full"
                     value={value} // Valor do input
                     onChange={(e) => onChange && onChange(e.target.value)}
                 />
@@ -41,12 +41,14 @@ function FormularioInput({ placeholder, name, showOptions = false, custumizacaoC
     );
 }
 
-export function     Formulario() {
+export function InputEnderecoPropriedade() {
     const [uf, setUf] = useState<string>('');
+    const [residencia, setResidencia] = useState<string>('');
     const [cidade, setCidade] = useState<string>('');
     const [cidades, setCidades] = useState<string[]>([]);
 
     const estados = ['SP', 'RJ', 'MG', 'BA', 'PR'];
+    const tiposResidencia = ["Casa", "Apartamento", "Terreno"]
 
     type Estado = 'SP' | 'RJ' | 'MG' | 'BA' | 'PR';
 
@@ -98,10 +100,15 @@ export function     Formulario() {
                 <FormularioInput placeholder="Número:" name="número" custumizacaoClass="lg:w-1/3" />
             </div>
             <div className="flex lg:gap-16">
-                <FormularioInput placeholder="Nome da Propriedade:" name="nome da propriedade" custumizacaoClass="lg:w-full" />
-            </div>
-            <div className="flex lg:gap-16">
-                <FormularioInput placeholder="Complemento:" name="complemento" custumizacaoClass="lg:w-full h-40" />
+            <FormularioInput
+                    placeholder="Tipo de residência:"
+                    name="Tipo de residência:"
+                    showOptions
+                    custumizacaoClass="lg:w-full"
+                    options={tiposResidencia}
+                    onChange={setResidencia}
+                    value={residencia} 
+                />
             </div>
         </div>
     );

@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { Montserrat } from 'next/font/google';
-import { Header } from '../header';
-import { InputDadosUsuario } from '../paginaCadastroUsuario/adicionandoUsuario/inputDadosUsuario';
-import { InputEnderecoPropriedade } from '../paginaCadastroUsuario/adicionandoUsuario/inputEnderecoPropriedade';
-import { InputEditandoDadosUsuario } from '../paginaCadastroUsuario/editandoUsuario/inputEditarDadosUsuario';
-import { Botao } from '../botao';
+import { Header } from '../../header';
+import { InputDadosUsuario } from '../../paginaCadastroUsuario/adicionandoUsuario/inputDadosUsuario';
+import { InputEnderecoPropriedade } from '../../paginaCadastroUsuario/adicionandoUsuario/inputEnderecoPropriedade';
+import { InputEditandoDadosUsuario } from '../../paginaCadastroUsuario/editandoUsuario/inputEditarDadosUsuario';
+import { Botao } from '../../botao';
 
 
 // Carregando a fonte Montserrat
@@ -54,26 +54,66 @@ interface ResponseProps {
   content: UsuarioProps[]
 }
 
-export async function getInformacoesUsuario() {
-  const response = await fetch("http://localhost:9090/users/getAll")
-  const data: ResponseProps = await response.json()
 
-  const userData = data.content?.map(post => ({
-    nome: post.nome,
-    sobrenome: post.sobrenome
-  })) || [];
+const request = async (
+  method: "GET" | "POST" | "PUT" | "DELETE",
+  url: string,
+  body?: any
+): Promise<any> => {
+  try {
+    const options: RequestInit = {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
 
-  return userData;
+    if (body) {
+      options.body = JSON.stringify(body);
+    }
 
-}
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+      throw new Error(`Falha na requisição: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Erro ao fazer a requisição:", error);
+    throw error;
+  }
+};
 
 
-export function GenericTable({ headers, data, isPropertyTable }: TableProps & { isPropertyTable: boolean }) {
+export default function GenericTable() {
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
   const [selectedData, setSelectedData] = useState<(string | number)[] | null>(null);
+  const [dataUser, setDataUser] = useState<ResponseProps | null>(null);
   const [adicionar, setAdicionar] = useState(false);
   const [remover, setRemover] = useState(false);
   const [editar, setEditar] = useState(false);
+
+
+  const getUsers = async (): Promise<ResponseProps> => {
+    return request('GET', 'http://localhost:9090/users/getAll');
+  };
+
+  const addUser = async (newUser: { name: string; email: string; address: string }): Promise<ResponseProps> => {
+    return request('POST', 'http://localhost:9090/users/add', newUser);
+  };
+
+  const deleteUser = async (userId: number): Promise<ResponseProps> => {
+    return request('DELETE', `http://localhost:9090/users/delete/${userId}`);
+  };
+
+  const updateUser = async (userId: number, updatedUser: { name: string; email: string; address: string }): Promise<ResponseProps> => {
+    return request('PUT', `http://localhost:9090/users/update/${userId}`, updatedUser);
+  };
+
+
+
 
   return (
     <>
@@ -83,32 +123,41 @@ export function GenericTable({ headers, data, isPropertyTable }: TableProps & { 
             <table className='w-full border-separate border-spacing-0'>
               <thead>
                 <tr className='bg-[#702632] text-white sticky top-0 z-10'>
-                  {headers.map((header, index) => (
-                    <th key={index} className='p-4 text-center font-bold border border-[#E0D6CE]'>
-                      {header}
-                    </th>
-                  ))}
+                  <th className='p-4 text-center font-bold border border-[#E0D6CE]'>
+                    <p>Nome</p>
+                  </th>
+                  <th className='p-4 text-center font-bold border border-[#E0D6CE]'>
+                    <p>E-mail</p>
+                  </th>
+                  <th className='p-4 text-center font-bold border border-[#E0D6CE]'>
+                    <p>Telefone</p>
+                  </th>
+                  <th className='p-4 text-center font-bold border border-[#E0D6CE]'>
+                    <p>CPF</p>
+                  </th>
+                  <th className='p-4 text-center font-bold border border-[#E0D6CE]'>
+                    <p>Tipo da Conta</p>
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {data.map((row, rowIndex) => (
-                  <tr
-                    key={rowIndex}
-                    className='bg-[#FAF6ED] hover:bg-[#702632] hover:bg-opacity-30 cursor-pointer border-b border-[#E0D6CE]'
-                    onClick={() => {
-                      setSelectedRow(rowIndex)
-                      setSelectedData(row)
-                    }}
-
-                  >
-                    {row.map((cell, cellIndex) => (
-                      <td
-                        key={cellIndex}
-                        className={`p-4 text-center border border-[#E0D6CE] ${selectedRow === rowIndex ? 'bg-[#702632] bg-opacity-50' : ''}`}
-                      >
-                        {cell}
-                      </td>
-                    ))}
+                {dataUser?.content?.map(user => (
+                  <tr key={user.id} className='bg-[#FAF6ED] hover:bg-[#702632] hover:bg-opacity-30 cursor-pointer border-b border-[#E0D6CE]'>
+                    <td className={`p-4 text-center border border-[#E0D6CE] 'bg-[#702632] bg-opacity-50' : ''}`}>
+                      {user.nome}
+                    </td>
+                    <td className={`p-4 text-center border border-[#E0D6CE] 'bg-[#702632] bg-opacity-50' : ''}`}>
+                      {user.email}
+                    </td>
+                    <td className={`p-4 text-center border border-[#E0D6CE] 'bg-[#702632] bg-opacity-50' : ''}`}>
+                      {user.telefone}
+                    </td>
+                    <td className={`p-4 text-center border border-[#E0D6CE] 'bg-[#702632] bg-opacity-50' : ''}`}>
+                      {user.cpf}
+                    </td>
+                    <td className={`p-4 text-center border border-[#E0D6CE] 'bg-[#702632] bg-opacity-50' : ''}`}>
+                      {user.tipo_conta}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -215,29 +264,3 @@ const propertyData = [
 
 const userHeaders = ['Nome', 'E-mail', 'Endereço', 'CPF', 'Telefone'];
 
-
-export default function Tabela({ isPropertyTable }: { isPropertyTable: boolean }) {
-  const [userData, setUserData] = useState<any[]>([]);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const data = await getInformacoesUsuario();
-
-      if (data && Array.isArray(data)) {
-        setUserData(data);
-      } else {
-        console.error("Invalid data received:", data);
-      }
-    };
-
-    fetchUserData();
-  }, []);
-  
-  return (
-    <GenericTable
-      headers={isPropertyTable ? propertyHeaders : userHeaders}
-      data={isPropertyTable ? propertyData : userData}
-      isPropertyTable={isPropertyTable}
-    />
-  );
-}
