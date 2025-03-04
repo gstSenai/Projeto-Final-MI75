@@ -8,6 +8,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import weg.projetofinal.Imobiliaria.model.dto.UsuarioGetResponseDTO;
+import weg.projetofinal.Imobiliaria.model.entity.Imagem;
 import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 import weg.projetofinal.Imobiliaria.service.UsuarioService;
 
@@ -39,6 +40,12 @@ public class UsuarioController {
     public UsuarioGetResponseDTO findById(@PathVariable Integer id) {
         Usuario usuario = service.findById(id);
         return usuario.convert2();
+    }
+
+    @GetMapping("/getByNome/{nome}")
+    @ResponseStatus(HttpStatus.OK)
+    public Usuario getByNome(@PathVariable String nome) {
+        return service.getByNomeUsuario(nome);
     }
 
     @DeleteMapping("/delete/{id}")

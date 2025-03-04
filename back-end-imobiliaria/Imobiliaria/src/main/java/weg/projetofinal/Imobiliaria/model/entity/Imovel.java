@@ -9,6 +9,8 @@ import weg.projetofinal.Imobiliaria.model.dto.ImovelEnderecoGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.ImovelGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.ImovelUsuarioGetResponseDTO;
 
+import java.util.List;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -51,12 +53,15 @@ public class Imovel {
     private String descricao;
 
     @OneToOne
-    @JoinColumn(name = "id_endereco", nullable = false)
+    @JoinColumn(name = "id_endereco", nullable = false, unique = true)
     private Endereco id_endereco;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario id_usuario;
+
+    @OneToMany(mappedBy = "id_imovel")
+    private List<Imagem> imagem;
 
     public ImovelGetResponseDTO convert(){
         return new ImovelGetResponseDTO(
