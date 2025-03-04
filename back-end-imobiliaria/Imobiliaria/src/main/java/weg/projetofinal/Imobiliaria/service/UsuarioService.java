@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 import weg.projetofinal.Imobiliaria.repository.UsuarioRepository;
 
+import java.util.Optional;
+
 
 @Service
 @AllArgsConstructor
@@ -33,5 +35,10 @@ public class UsuarioService {
     public Usuario updateUser(Usuario usuario, Integer id) {
         usuario.setId(id);
         return repository.save(usuario);
+    }
+
+    public Usuario getByNomeUsuario(String nome) {
+        Optional<Usuario> usuarioOptional = repository.findByNome(nome);
+        return usuarioOptional.orElse(null);
     }
 }
