@@ -11,11 +11,13 @@ const montserrat = Montserrat({
 import Botao from '@/components/Botao';
 import Image from 'next/image';
 import Link from 'next/link'
+import Agendamento from './agendamentosUser/page'
 
 export default function PaginaEditor() {
     return (
         <div>
            <Link href="./perfilUsuario">Perfil</Link>
+           <Link href="./agendamentosUser">Agendamentos</Link>
         </div>
 
 

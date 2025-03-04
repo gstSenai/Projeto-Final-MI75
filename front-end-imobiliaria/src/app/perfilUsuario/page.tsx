@@ -4,7 +4,7 @@ import { FaPhoneAlt, FaEnvelope } from 'react-icons/fa';
 
 export default function PerfilUsuario() {
     return (
-        <div className="flex bg-[#B1ACA2] p-6 rounded h-[300px] -lg shadow-lg gap-10 max-w-2x1 mx-auto w-[70%]">
+        <div className="flex bg-[#DFDAD0] p-6 rounded h-[300px] -lg shadow-lg gap-10 max-w-2x1 mx-auto w-[70%]">
             <div className='flex flex-col items-center text-center w-[50%]'>
                 <img
                     src="/images/user.jpg"
