@@ -1,5 +1,5 @@
 import { Montserrat } from 'next/font/google';
-import { Botao } from '@/components/botao';
+import { Botao } from '@/components/Botao';
 import Image from 'next/image';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
