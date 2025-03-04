@@ -91,71 +91,69 @@ export default function GenericTable() {
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
   const [selectedData, setSelectedData] = useState<(string | number)[] | null>(null);
   const [dataUser, setDataUser] = useState<ResponseProps | null>(null);
+  ({ id: 0, nome: '', email: '', telefone: '', cpf: '', tipo_conta: '' });
+  const [users, setUsers] = useState<ResponseProps | null>(null);
   const [adicionar, setAdicionar] = useState(false);
   const [remover, setRemover] = useState(false);
   const [editar, setEditar] = useState(false);
 
-
-  const getUsers = async (): Promise<ResponseProps> => {
-    return request('GET', 'http://localhost:9090/users/getAll');
-  };
-
-  const addUser = async (newUser: { name: string; email: string; address: string }): Promise<ResponseProps> => {
-    return request('POST', 'http://localhost:9090/users/add', newUser);
+  const getUsers = async () => {
+    const usersGet = await request('GET', 'http://localhost:9090/users/getAll')
+    setUsers(usersGet)
   };
 
   const deleteUser = async (userId: number): Promise<ResponseProps> => {
     return request('DELETE', `http://localhost:9090/users/delete/${userId}`);
   };
 
-  const updateUser = async (userId: number, updatedUser: { name: string; email: string; address: string }): Promise<ResponseProps> => {
-    return request('PUT', `http://localhost:9090/users/update/${userId}`, updatedUser);
-  };
-
-
-
+  useEffect(() => {
+    getUsers()
+  }, []);
 
   return (
     <>
-      <div className='flex flex-col mb-20 sm:flex-col md:flex-col lg:flex-row 2xl:flex-row'>
-        <div className='bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6'>
-          <div className='overflow-x-auto max-h-[500px]'>
-            <table className='w-full border-separate border-spacing-0'>
+      <div className="flex flex-col mb-20 sm:flex-col md:flex-col lg:flex-row 2xl:flex-row">
+        <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6">
+          <div className="overflow-x-auto max-h-[500px]">
+            <table className="w-full border-separate border-spacing-0">
               <thead>
-                <tr className='bg-[#702632] text-white sticky top-0 z-10'>
-                  <th className='p-4 text-center font-bold border border-[#E0D6CE]'>
+                <tr className="bg-[#702632] text-white sticky top-0 z-10">
+                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Nome</p>
                   </th>
-                  <th className='p-4 text-center font-bold border border-[#E0D6CE]'>
+                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>E-mail</p>
                   </th>
-                  <th className='p-4 text-center font-bold border border-[#E0D6CE]'>
+                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Telefone</p>
                   </th>
-                  <th className='p-4 text-center font-bold border border-[#E0D6CE]'>
+                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>CPF</p>
                   </th>
-                  <th className='p-4 text-center font-bold border border-[#E0D6CE]'>
+                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Tipo da Conta</p>
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {dataUser?.content?.map(user => (
-                  <tr key={user.id} className='bg-[#FAF6ED] hover:bg-[#702632] hover:bg-opacity-30 cursor-pointer border-b border-[#E0D6CE]'>
-                    <td className={`p-4 text-center border border-[#E0D6CE] 'bg-[#702632] bg-opacity-50' : ''}`}>
+                {users?.content?.map((user) => (
+                  <tr
+                    key={user.id}
+                    className="bg-[#FAF6ED] hover:bg-[#702632] hover:bg-opacity-30 cursor-pointer border-b border-[#E0D6CE]"
+                  >
+                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
                       {user.nome}
                     </td>
-                    <td className={`p-4 text-center border border-[#E0D6CE] 'bg-[#702632] bg-opacity-50' : ''}`}>
+                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
                       {user.email}
                     </td>
-                    <td className={`p-4 text-center border border-[#E0D6CE] 'bg-[#702632] bg-opacity-50' : ''}`}>
+                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
                       {user.telefone}
                     </td>
-                    <td className={`p-4 text-center border border-[#E0D6CE] 'bg-[#702632] bg-opacity-50' : ''}`}>
+                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
                       {user.cpf}
                     </td>
-                    <td className={`p-4 text-center border border-[#E0D6CE] 'bg-[#702632] bg-opacity-50' : ''}`}>
+                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
                       {user.tipo_conta}
                     </td>
                   </tr>
@@ -186,11 +184,11 @@ export default function GenericTable() {
             </div>
           </button>
         </div>
-      </div>
+      </div >
 
 
       {adicionar && !editar && (
-        <div>
+        <>
           <div className="flex flex-col max-lg:justify-center">
             <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
 
@@ -198,52 +196,41 @@ export default function GenericTable() {
           </div>
 
           <InputDadosUsuario />
+        </>
+      )
+      }
 
-          <div className="flex flex-col mt-20 max-lg:justify-center">
-            <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Endereço do proprietário</p>
+      {
+        remover && !adicionar && !editar && (
+          <div>
+            <div className="flex flex-col max-lg:justify-center">
+              <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
 
-            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
-          </div>
+              <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
+            </div>
 
-          <InputEnderecoPropriedade />
+            <InputDadosUsuario />
 
-          <div className="flex items-center gap-16 mt-10">
-            <div className='flex gap-[30rem] w-full'>
-              <Botao texto="Cancelar" />
-              <Botao texto="Salvar cadastro" />
+            <div className="flex flex-col mt-20 max-lg:justify-center">
+              <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Endereço do proprietário</p>
+
+              <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
+            </div>
+
+            <InputEnderecoPropriedade />
+
+            <div className="flex items-center gap-16 mt-10">
+              
             </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
-      {remover && !adicionar && !editar && (
-        <div>
-          <div className="flex flex-col max-lg:justify-center">
-            <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
-
-            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
-          </div>
-
-          <InputDadosUsuario />
-
-          <div className="flex flex-col mt-20 max-lg:justify-center">
-            <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Endereço do proprietário</p>
-
-            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
-          </div>
-
-          <InputEnderecoPropriedade />
-
-          <div className="flex items-center gap-16 mt-10">
-            <Botao texto="Cancelar" />
-            <Botao texto="Salvar cadastro" />
-          </div>
-        </div>
-      )}
-
-      {selectedData && editar && !adicionar && !remover && (
-        <InputEditandoDadosUsuario selectedData={selectedData} />
-      )}
+      {
+        selectedData && editar && !adicionar && !remover && (
+          <InputEditandoDadosUsuario selectedData={selectedData} />
+        )
+      }
     </>
   );
 }
