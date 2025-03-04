@@ -1,6 +1,7 @@
 import { Header } from "@/components/header";
 import { InputProcurarUsuario } from "@/components/paginaCadastroUsuario/adicionandoUsuario/inputProcurarUsuario";
-import Tabela from "@/components/tabela/index";
+// import Tabela from "@/components/tabela/index";
+import Tabela from "@/components/paginaCadastroUsuario/tabelaUsuario";
 import { Montserrat } from "next/font/google";
 import { Footer } from "@/components/footer";
 
@@ -26,7 +27,7 @@ export default function CadastroUsuario() {
                     </div>
                 </div>
 
-                <Tabela isPropertyTable={false} />
+                <Tabela />
             </div>
         </>
     )
