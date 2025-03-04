@@ -105,14 +105,14 @@ export function InputEditandoDadosUsuario({
                     placeholder="Sobrenome:"
                     name="Sobrenome:"
                     custumizacaoClass="lg:w-[45.5%]"
-                    value={String(formData[1] || "")}
+                    value={String(formData[0] || "")}
                     onChange={(value) => handleInputChange(1, value)}
                 />
                 <FormularioInput
                     placeholder="CPF:"
                     name="CPF"
                     custumizacaoClass="lg:w-[32.5%]"
-                    value={String(formData[2] || "")}
+                    value={String(formData[3] || "")}
                     onChange={(value) => handleInputChange(2, value)}
                 />
             </div>
@@ -121,21 +121,21 @@ export function InputEditandoDadosUsuario({
                     placeholder="Email:"
                     name="Email"
                     custumizacaoClass="lg:w-1/3"
-                    value={String(formData[3] || "")}
+                    value={String(formData[1] || "")}
                     onChange={(value) => handleInputChange(3, value)}
                 />
                 <FormularioInput
                     placeholder="Senha:"
                     name="Senha"
                     custumizacaoClass="lg:w-1/3"
-                    value={String(formData[4] || "")}
+                    value={String(formData[10] || "")}
                     onChange={(value) => handleInputChange(4, value)}
                 />
                 <FormularioInput
                     placeholder="Confirmação de senha:"
                     name="Confirmação de senha"
                     custumizacaoClass="lg:w-1/3"
-                    value={String(formData[5] || "")}
+                    value={String(formData[10] || "")}
                     onChange={(value) => handleInputChange(5, value)}
                 />
             </div>
@@ -144,14 +144,14 @@ export function InputEditandoDadosUsuario({
                     placeholder="Celular:"
                     name="Celular"
                     custumizacaoClass="lg:w-1/3"
-                    value={String(formData[6] || "")}
+                    value={String(formData[4] || "")}
                     onChange={(value) => handleInputChange(6, value)}
                 />
                 <FormularioInput
                     placeholder="Telefone:"
                     name="Telefone"
                     custumizacaoClass="lg:w-1/3"
-                    value={String(formData[7] || "")}
+                    value={String(formData[4] || "")}
                     onChange={(value) => handleInputChange(7, value)}
                 />
                 <FormularioInput

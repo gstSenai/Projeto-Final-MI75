@@ -16,6 +16,19 @@ interface ImovelProps {
     descricao: string;
 }
 
+interface UsuarioProps {
+    id: number;
+    nome: string;
+    sobrenome: string;
+    cpf: string;
+    tipo_conta: string;
+    telefone: string;
+    data_nascimento: Date;
+    email: string;
+    senha: string;
+    imovel: string;
+}
+
 interface ResponseProps {
     content: ImovelProps[]
 }

@@ -14,7 +14,7 @@ interface FormularioInputProps {
 
 function FormularioInput({ placeholder, name, showOptions = false, custumizacaoClass, options, onChange, value }: FormularioInputProps) {
     return (
-        <form action="text" className={`flex items-center lg:max-h-[58px] xl:max-h-[60px] 2xl:max-h-[62px] max-lg:justify-center gap-6 xl:py-4 2xl:py-6 py-3.5 bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent max-lg:p-0 ${custumizacaoClass}`}>
+        <form action="text" className={`flex items-center lg:h-[50px] max-lg:justify-center gap-6 xl:py-4 2xl:py-6 py-3.5 bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent max-lg:p-0 ${custumizacaoClass}`}>
             <img src="/iconsForms/canetaEditar.png" alt="Editar" className="lg:h-6 ml-4" />
             {options ? (
                 <select
@@ -44,7 +44,7 @@ function FormularioInput({ placeholder, name, showOptions = false, custumizacaoC
 
 export function InputProcurarUsuario() {
     return (
-        <div className="flex flex-col lg:gap-5">
+        <div className="flex flex-col lg:gap-5 mb-10">
             <div className="flex lg:gap-16">
                 <FormularioInput
                     placeholder="Nome:"
@@ -56,11 +56,15 @@ export function InputProcurarUsuario() {
                     name="CPF"
                     custumizacaoClass="lg:w-[25%]"
                 />
+                <FormularioInput
+                    placeholder="Email:"
+                    name="Email"
+                    custumizacaoClass="lg:w-[25%]" />
+                <div className='w-1/6'>
+                    <Botao texto="Procurar" />
+                </div>
             </div>
-            <div className="flex lg:gap-16 mb-10">
-                <FormularioInput placeholder="Email:" name="Email" custumizacaoClass="lg:w-[25%]" />
-                <Botao texto="Procurar" />
-            </div>
+
         </div>
     );
 }

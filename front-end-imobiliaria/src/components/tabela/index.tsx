@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Montserrat } from 'next/font/google';
 import { Header } from '../header';
 import { InputDadosUsuario } from '../paginaCadastroUsuario/adicionandoUsuario/inputDadosUsuario';
@@ -8,10 +8,6 @@ import { InputEnderecoPropriedade } from '../paginaCadastroUsuario/adicionandoUs
 import { InputEditandoDadosUsuario } from '../paginaCadastroUsuario/editandoUsuario/inputEditarDadosUsuario';
 import { Botao } from '../botao';
 
-interface TableProps {
-  headers: string[];
-  data: (string | number)[][];
-}
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
@@ -19,6 +15,58 @@ const montserrat = Montserrat({
   weight: ['400', '800'],
   display: 'swap',
 });
+
+interface TableProps {
+  headers: string[];
+  data: (string | number)[][];
+}
+
+interface ImovelProps {
+  id: number;
+  nome_propriedade: string;
+  tipo_transacao: string;
+  valor_venda: number;
+  tipo_imovel: string;
+  status_imovel: string;
+  valor_promocional: number;
+  destaque?: boolean;
+  visibilidade: boolean;
+  condominio: number;
+  area_construida: number;
+  area_terreno: number;
+  descricao: string;
+}
+
+interface UsuarioProps {
+  id: number;
+  nome: string;
+  sobrenome: string;
+  cpf: string;
+  tipo_conta: string;
+  telefone: string;
+  data_nascimento: Date;
+  email: string;
+  senha: string;
+  imovel: string;
+}
+
+interface ResponseProps {
+  content: UsuarioProps[]
+}
+
+export async function getInformacoesUsuario() {
+  const response = await fetch("http://localhost:9090/users/getAll")
+  const data: ResponseProps = await response.json()
+
+  const userData = data.content?.map(post => ({
+    nome: post.nome,
+    sobrenome: post.sobrenome
+  })) || [];
+
+  return userData;
+
+}
+
 
 export function GenericTable({ headers, data, isPropertyTable }: TableProps & { isPropertyTable: boolean }) {
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
@@ -68,24 +116,24 @@ export function GenericTable({ headers, data, isPropertyTable }: TableProps & { 
           </div>
         </div>
         <div className='flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full '>
-          <button onClick={() => setAdicionar(!adicionar)} className='w-[181px] lg:h-[58px] xl:h-[60px] 2xl:h-[62px]  m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle'>
+          <button onClick={() => setAdicionar(!adicionar)} className='w-36 lg:h-[50px]  m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle'>
             <div className='pl-5 flex items-center gap-3 justify-start '>
-              <img src="./iconsForms/sinalAdd.png" alt="sinal de adição" />
-              <p className='text-xl font-medium'>Adicionar</p>
+              <img src="./iconsForms/sinalAdd.png" alt="sinal de adição" className='lg:w-4' />
+              <p className='text-lg font-medium'>Adicionar</p>
             </div>
           </button>
 
-          <button onClick={() => setRemover(!remover)} className='w-[181px] lg:h-[58px] xl:h-[60px] 2xl:h-[62px] m-4 bg-[#702632] text-white rounded-[20px] text-center inline-block align-middle'>
+          <button onClick={() => setRemover(!remover)} className='w-36 lg:h-[50px] m-4 bg-[#702632] text-white rounded-[20px] text-center inline-block align-middle'>
             <div className='pl-5 flex items-center gap-3 justify-start'>
-              <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" />
-              <p className='text-xl font-medium'>Remover</p>
+              <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" className='lg:w-4' />
+              <p className='text-lg font-medium'>Remover</p>
             </div>
           </button>
 
-          <button onClick={() => setEditar(!editar)} className='w-[181px] lg:h-[58px] xl:h-[60px] 2xl:h-[62px] m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle'>
+          <button onClick={() => setEditar(!editar)} className='w-36 lg:h-[50px] m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle'>
             <div className='pl-5 flex items-center gap-3 justify-start'>
-              <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" />
-              <p className='text-xl font-medium'>Editar</p>
+              <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" className='lg:w-4' />
+              <p className='text-lg font-medium'>Editar</p>
             </div>
           </button>
         </div>
@@ -110,9 +158,11 @@ export function GenericTable({ headers, data, isPropertyTable }: TableProps & { 
 
           <InputEnderecoPropriedade />
 
-          <div className="flex items-center gap-16 mt-20">
-            <Botao texto="Cancelar" />
-            <Botao texto="Salvar cadastro" />
+          <div className="flex items-center gap-16 mt-10">
+            <div className='flex gap-[30rem] w-full'>
+              <Botao texto="Cancelar" />
+              <Botao texto="Salvar cadastro" />
+            </div>
           </div>
         </div>
       )}
@@ -135,32 +185,7 @@ export function GenericTable({ headers, data, isPropertyTable }: TableProps & { 
 
           <InputEnderecoPropriedade />
 
-          <div className="flex items-center gap-16 mt-20">
-            <Botao texto="Cancelar" />
-            <Botao texto="Salvar cadastro" />
-          </div>
-        </div>
-      )}
-
-      {editar && !adicionar && !remover && (
-        <div>
-          <div className="flex flex-col max-lg:justify-center">
-            <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
-
-            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
-          </div>
-
-          <InputDadosUsuario />
-
-          <div className="flex flex-col mt-20 max-lg:justify-center">
-            <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Endereço do proprietário</p>
-
-            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
-          </div>
-
-          <InputEnderecoPropriedade />
-
-          <div className="flex items-center gap-16 mt-20">
+          <div className="flex items-center gap-16 mt-10">
             <Botao texto="Cancelar" />
             <Botao texto="Salvar cadastro" />
           </div>
@@ -189,20 +214,25 @@ const propertyData = [
 ];
 
 const userHeaders = ['Nome', 'E-mail', 'Endereço', 'CPF', 'Telefone'];
-const userData = [
-  ['Rodrigo', 'Rodrigo2023amandoDacunha@gmail.com', '89454700', '09312312323', '47 94931-2912'],
-  ['Matheus', 'MatheusLucas@gmail.com', '89266500', '21312244451', '47 99942-2913'],
-  ['Rodrigo', 'Rodrigo2023amandoDacunha@gmail.com', '89454700', '09312312323', '47 94931-2912'],
-  ['Matheus', 'MatheusLucas@gmail.com', '89266500', '21312244451', '47 99942-2913'],
-  ['Rodrigo', 'Rodrigo2023amandoDacunha@gmail.com', '89454700', '09312312323', '47 94931-2912'],
-  ['Matheus', 'MatheusLucas@gmail.com', '89266500', '21312244451', '47 99942-2913'],
-  ['Rodrigo', 'Rodrigo2023amandoDacunha@gmail.com', '89454700', '09312312323', '47 94931-2912'],
-  ['Matheus', 'MatheusLucas@gmail.com', '89266500', '21312244451', '47 99942-2913'],
-  ['Rodrigo', 'Rodrigo2023amandoDacunha@gmail.com', '89454700', '09312312323', '47 94931-2912'],
-  ['Matheus', 'MatheusLucas@gmail.com', '89266500', '21312244451', '47 99942-2913']
-];
+
 
 export default function Tabela({ isPropertyTable }: { isPropertyTable: boolean }) {
+  const [userData, setUserData] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const data = await getInformacoesUsuario();
+
+      if (data && Array.isArray(data)) {
+        setUserData(data);
+      } else {
+        console.error("Invalid data received:", data);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
     <GenericTable
       headers={isPropertyTable ? propertyHeaders : userHeaders}
