@@ -60,7 +60,7 @@ public class Imovel {
     @JoinColumn(name = "id_usuario")
     private Usuario id_usuario;
 
-    @OneToMany(mappedBy = "id_imovel")
+    @OneToMany(mappedBy = "imovel")
     private List<Imagem> imagem;
 
     public ImovelGetResponseDTO convert(){

@@ -1,9 +1,11 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CPF;
 import weg.projetofinal.Imobiliaria.model.dto.ImovelUsuarioGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.UsuarioGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.UsuarioImovelGetResponseDTO;
@@ -29,6 +31,7 @@ public class Usuario {
     private String sobrenome;
 
     @Column(nullable = false, unique = true, length = 11)
+    @CPF
     private String cpf;
 
     @Column(nullable = false)
@@ -41,6 +44,7 @@ public class Usuario {
     private Date data_nascimento;
 
     @Column(nullable = false, unique = true)
+    @Email
     private String email;
 
     @Column(nullable = false)

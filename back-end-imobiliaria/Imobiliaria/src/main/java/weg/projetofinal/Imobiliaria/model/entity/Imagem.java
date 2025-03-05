@@ -1,6 +1,5 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +21,6 @@ public class Imagem {
     private String caminho_foto;
 
     @ManyToOne
-    @JoinColumn(name = "id_imovel")
-    private Imovel id_imovel;
+    @JoinColumn(name = "idImovel")
+    private Imovel imovel;
 }

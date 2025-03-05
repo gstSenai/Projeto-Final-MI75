@@ -1,5 +1,6 @@
 package weg.projetofinal.Imobiliaria.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,7 @@ public class ImagemController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Imagem create(@RequestBody ImagemPostRequestDTO imagemPostDTO) {
+    public Imagem create(@RequestBody @Valid ImagemPostRequestDTO imagemPostDTO) {
         return service.createImagem(imagemPostDTO);
     }
 
