@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Botao } from '@/components/botao';
 import { useForm } from 'react-hook-form';
 import request from '@/routes/request';
+import { useRouter } from 'next/router';
 
 interface FormularioInputProps {
     placeholder: string;
@@ -54,30 +55,31 @@ interface UsuarioProps {
     senha: string;
     confirmar_senha?: string;
     ultimo_acesso?: string;
-    imovel: string;}
+    imovel: string;
+}
+
+interface ResponseProps {
+    content: UsuarioProps[]
+}
 
 export function InputDadosUsuario() {
-    const { register, handleSubmit, formState: { errors } } = useForm<UsuarioProps>({
-        defaultValues: {
-            tipo_conta: '',
-        }
-    });
-    const [users, setUsers] = useState<UsuarioProps[]>([]);
+    const { register, handleSubmit, formState: { errors } } = useForm<UsuarioProps>();
+    const [users, setUsers] = useState<ResponseProps | null>(null);
 
-    
+    const tiposConta = ['Usuario', 'Corretor', 'Administrador', 'Editor'];
 
     const getUsers = async () => {
         const usersGet = await request('GET', 'http://localhost:9090/users/getAll');
         setUsers(usersGet);
     };
 
-    const addUser  = async (data: UsuarioProps) => {
+    const addUser = async (data: UsuarioProps) => {
         await request('POST', 'http://localhost:9090/users/create', data);
-        getUsers();
+        await getUsers();
     };
 
-    const onSubmit = (data: UsuarioProps) => {
-        addUser(data);
+    const onSubmit = async (data: UsuarioProps) => {
+        await addUser(data);
     };
 
     useEffect(() => {
@@ -86,7 +88,7 @@ export function InputDadosUsuario() {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col lg:gap-10">
-            <div className="flex lg:gap-16">    
+            <div className="flex lg:gap-16">
                 <FormularioInput
                     placeholder="Nome:"
                     name='nome'
@@ -103,7 +105,7 @@ export function InputDadosUsuario() {
                 <FormularioInput
                     placeholder="CPF:"
                     name='cpf'
-                    register={register} 
+                    register={register}
                     custumizacaoClass="lg:w-[32.5%]"
                 />
             </div>
@@ -143,8 +145,10 @@ export function InputDadosUsuario() {
                 <FormularioInput
                     placeholder="Tipo Conta:"
                     name='tipo_conta'
-                    register={register} 
+                    register={register}
+                    showOptions
                     custumizacaoClass="lg:w-[50%]"
+                    options={tiposConta}
                 />
             </div>
 
