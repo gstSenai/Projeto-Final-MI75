@@ -131,21 +131,21 @@ export default function GenericTable() {
           </div>
         </div>
         <div className='flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full '>
-          <button onClick={() => { setAdicionar(true); setEditar(false); setRemover(false); }} className='w-36 lg:h-[50px]  m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle'>
+          <button onClick={() => { setAdicionar(!adicionar); setEditar(false); setRemover(false); }} className='w-36 lg:h-[50px]  m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle'>
             <div className='pl-5 flex items-center gap-3 justify-start '>
               <img src="./iconsForms/sinalAdd.png" alt="sinal de adição" className='lg:w-4' />
               <p className='text-lg font-medium'>Adicionar</p>
             </div>
           </button>
 
-          <button onClick={() => { setAdicionar(false); setEditar(false); setRemover(true); }} className='w-36 lg:h-[50px] m-4 bg-[#702632] text-white rounded-[20px] text-center inline-block align-middle'>
+          <button onClick={() => { setAdicionar(false); setEditar(false); setRemover(!remover); }} className='w-36 lg:h-[50px] m-4 bg-[#702632] text-white rounded-[20px] text-center inline-block align-middle'>
             <div className='pl-5 flex items-center gap-3 justify-start'>
               <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" className='lg:w-4' />
               <p className='text-lg font-medium'>Remover</p>
             </div>
           </button>
 
-          <button onClick={() => { setAdicionar(false); setEditar(true); setRemover(true); }} className='w-36 lg:h-[50px] m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle'>
+          <button onClick={() => { setAdicionar(false); setEditar(!editar); setRemover(false); }} className='w-36 lg:h-[50px] m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle'>
             <div className='pl-5 flex items-center gap-3 justify-start'>
               <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" className='lg:w-4' />
               <p className='text-lg font-medium'>Editar</p>
@@ -155,7 +155,7 @@ export default function GenericTable() {
       </div >
 
 
-      {adicionar && !editar && !remover && (
+      {adicionar && (
         <>
           <div className="flex flex-col max-lg:justify-center">
             <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
@@ -168,16 +168,8 @@ export default function GenericTable() {
       )
       }
 
-      {remover && !adicionar && !editar && (
+      {remover && (
         <div>
-          <div className="flex flex-col max-lg:justify-center">
-            <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
-
-            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
-          </div>
-
-          <InputDadosUsuario />
-
           <div className="flex flex-col mt-20 max-lg:justify-center">
             <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Endereço do proprietário</p>
 
@@ -193,7 +185,7 @@ export default function GenericTable() {
       )
       }
 
-      {selectedData && editar && !adicionar && !remover && (
+      {selectedData && editar && (
         <InputEditandoDadosUsuario selectedData={selectedData} />
       )
       }
