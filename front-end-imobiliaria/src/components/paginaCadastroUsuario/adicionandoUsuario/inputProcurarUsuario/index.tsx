@@ -61,7 +61,7 @@ export function InputProcurarUsuario() {
                     name="Email"
                     custumizacaoClass="lg:w-[25%]" />
                 <div className='w-1/6'>
-                    <Botao texto="Procurar" />
+                    <Botao onClick={() => console.log()} texto="Procurar" />
                 </div>
             </div>
 

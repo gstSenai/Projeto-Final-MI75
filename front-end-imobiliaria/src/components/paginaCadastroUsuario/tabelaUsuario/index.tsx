@@ -34,9 +34,17 @@ export default function GenericTable() {
   const [editar, setEditar] = useState(false);
 
   const getUsers = async () => {
-    const usersGet = await request('GET', 'http://localhost:9090/users/getAll')
-    setUsers(usersGet)
-  };
+    try {
+      const usersGet = await request('GET', 'http://localhost:9090/users/getAll');
+      console.log('Usuários recebidos:', usersGet); // Verifique os dados recebidos
+      setUsers(Array.isArray(usersGet) ? usersGet : []);
+    } catch (error) {
+      console.error('Erro ao carregar usuários:', error);
+      setUsers([]); // Fallback em caso de erro
+    }
+  }
+
+
 
   useEffect(() => {
     getUsers()
@@ -67,30 +75,33 @@ export default function GenericTable() {
                   </th>
                 </tr>
               </thead>
-              <tbody>
-                {users?.map((user) => (
-                  <tr
-                    key={user.id}
-                    className="bg-[#FAF6ED] hover:bg-[#702632] hover:bg-opacity-30 cursor-pointer border-b border-[#E0D6CE]"
-                  >
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.nome}
-                    </td>
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.email}
-                    </td>
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.telefone}
-                    </td>
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.cpf}
-                    </td>
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.tipo_conta}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+                <tbody>
+                  {users.map((user) => {
+                    console.log(user);  // Verifique o formato de cada item
+                    return (
+                      <tr
+                        key={user.id}
+                        className="bg-[#FAF6ED] hover:bg-[#702632] hover:bg-opacity-30 cursor-pointer border-b border-[#E0D6CE]"
+                      >
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
+                          {user.nome}
+                        </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
+                          {user.email}
+                        </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
+                          {user.telefone}
+                        </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
+                          {user.cpf}
+                        </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
+                          {user.tipo_conta}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
             </table>
           </div>
         </div>

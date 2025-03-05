@@ -54,12 +54,17 @@ interface UsuarioProps {
     senha: string;
     confirmar_senha?: string;
     ultimo_acesso?: string;
-    imovel: string;
-}
+    imovel: string;}
 
 export function InputDadosUsuario() {
-    const { register, handleSubmit, formState: { errors } } = useForm<UsuarioProps>();
+    const { register, handleSubmit, formState: { errors } } = useForm<UsuarioProps>({
+        defaultValues: {
+            tipo_conta: '',
+        }
+    });
     const [users, setUsers] = useState<UsuarioProps[]>([]);
+
+    
 
     const getUsers = async () => {
         const usersGet = await request('GET', 'http://localhost:9090/users/getAll');
@@ -67,12 +72,12 @@ export function InputDadosUsuario() {
     };
 
     const addUser  = async (data: UsuarioProps) => {
-        await request('POST', 'http://localhost:9090/users/add', data);
+        await request('POST', 'http://localhost:9090/users/create', data);
         getUsers();
     };
 
     const onSubmit = (data: UsuarioProps) => {
-        addUser (data);
+        addUser(data);
     };
 
     useEffect(() => {
@@ -136,8 +141,8 @@ export function InputDadosUsuario() {
                     custumizacaoClass="lg:w-[50%]"
                 />
                 <FormularioInput
-                    placeholder="Último acesso:"
-                    name='ultimo_acesso'
+                    placeholder="Tipo Conta:"
+                    name='tipo_conta'
                     register={register} 
                     custumizacaoClass="lg:w-[50%]"
                 />

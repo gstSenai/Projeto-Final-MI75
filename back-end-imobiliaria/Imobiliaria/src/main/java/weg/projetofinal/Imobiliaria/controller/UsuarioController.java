@@ -15,6 +15,7 @@ import weg.projetofinal.Imobiliaria.service.UsuarioService;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class UsuarioController {
 
     private UsuarioService service;
