@@ -1,8 +1,10 @@
 import { Montserrat } from 'next/font/google';
-import { Botao } from '@/components/Botao';
+import { Botao } from '@/components/botao';
 import Image from 'next/image';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
+import { on } from 'events';
+import { handleClientScriptLoad } from 'next/script';
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
@@ -33,17 +35,17 @@ export default function PaginaEditor() {
             <div className='flex flex-col items-center w-80 py-10 md:py-10 2xl:py-0'>
               <Image src="/gerenciamentoImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
               <p className='text-4xl font-medium opacity-75 text-center leading-tight py-16 min-h-[120px]'>Gerenciamento de Imóveis</p>
-              <Botao texto="Gerenciar" />
+              <Botao onClick={() => console.log()} texto="Gerenciar" />
             </div>
             <div className='flex flex-col items-center w-80 py-10 md:py-10 2xl:py-0'>
               <Image src="/gerenciamentoProprietarios.png" alt="Cadastro de Imóveis" width={110} height={123} />
               <p className='text-4xl font-medium opacity-75 text-center leading-tight py-16 min-h-[120px]'>Gerenciamento de Proprietários</p>
-              <Botao texto="Gerenciar" />
+              <Botao onClick={() => console.log()} texto="Gerenciar" />
             </div>
             <div className='flex flex-col items-center w-80 py-10 md:py-10 2xl:py-0'>
               <Image src="/cadastroImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
               <p className='text-4xl font-medium opacity-75 text-center leading-tight py-16 min-h-[120px]'>Cadastrar Imóveis</p>
-              <a href="./cadastroImovel"><Botao texto="Gerenciar" /></a>
+              <a href="./cadastroImovel"><Botao onClick={() => console.log()} texto="Gerenciar" /></a>
 
             </div>
           </div>

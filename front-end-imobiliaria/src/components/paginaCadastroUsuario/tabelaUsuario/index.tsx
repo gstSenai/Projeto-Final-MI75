@@ -2,12 +2,9 @@
 
 import React, { use, useEffect, useState } from 'react';
 import { Montserrat } from 'next/font/google';
-import { Header } from '../../header';
 import { InputDadosUsuario } from '../../paginaCadastroUsuario/adicionandoUsuario/inputDadosUsuario';
 import { InputEnderecoPropriedade } from '../../paginaCadastroUsuario/adicionandoUsuario/inputEnderecoPropriedade';
-import { InputEditandoDadosUsuario } from '../../paginaCadastroUsuario/editandoUsuario/inputEditarDadosUsuario';
-import { Botao } from '../../botao';
-
+import request from "@/routes/request";
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
@@ -15,27 +12,6 @@ const montserrat = Montserrat({
   weight: ['400', '800'],
   display: 'swap',
 });
-
-interface TableProps {
-  headers: string[];
-  data: (string | number)[][];
-}
-
-interface ImovelProps {
-  id: number;
-  nome_propriedade: string;
-  tipo_transacao: string;
-  valor_venda: number;
-  tipo_imovel: string;
-  status_imovel: string;
-  valor_promocional: number;
-  destaque?: boolean;
-  visibilidade: boolean;
-  condominio: number;
-  area_construida: number;
-  area_terreno: number;
-  descricao: string;
-}
 
 interface UsuarioProps {
   id: number;
@@ -50,49 +26,9 @@ interface UsuarioProps {
   imovel: string;
 }
 
-interface ResponseProps {
-  content: UsuarioProps[]
-}
-
-
-const request = async (
-  method: "GET" | "POST" | "PUT" | "DELETE",
-  url: string,
-  body?: any
-): Promise<any> => {
-  try {
-    const options: RequestInit = {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    if (body) {
-      options.body = JSON.stringify(body);
-    }
-
-    const response = await fetch(url, options);
-
-    if (!response.ok) {
-      throw new Error(`Falha na requisição: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Erro ao fazer a requisição:", error);
-    throw error;
-  }
-};
-
 
 export default function GenericTable() {
-  const [selectedRow, setSelectedRow] = useState<number | null>(null);
-  const [selectedData, setSelectedData] = useState<(string | number)[] | null>(null);
-  const [dataUser, setDataUser] = useState<ResponseProps | null>(null);
-  ({ id: 0, nome: '', email: '', telefone: '', cpf: '', tipo_conta: '' });
-  const [users, setUsers] = useState<ResponseProps | null>(null);
+  const [users, setUsers] = useState<UsuarioProps[]>([]);
   const [adicionar, setAdicionar] = useState(false);
   const [remover, setRemover] = useState(false);
   const [editar, setEditar] = useState(false);
@@ -100,10 +36,6 @@ export default function GenericTable() {
   const getUsers = async () => {
     const usersGet = await request('GET', 'http://localhost:9090/users/getAll')
     setUsers(usersGet)
-  };
-
-  const deleteUser = async (userId: number): Promise<ResponseProps> => {
-    return request('DELETE', `http://localhost:9090/users/delete/${userId}`);
   };
 
   useEffect(() => {
@@ -136,7 +68,7 @@ export default function GenericTable() {
                 </tr>
               </thead>
               <tbody>
-                {users?.content?.map((user) => (
+                {users?.map((user) => (
                   <tr
                     key={user.id}
                     className="bg-[#FAF6ED] hover:bg-[#702632] hover:bg-opacity-30 cursor-pointer border-b border-[#E0D6CE]"
@@ -220,15 +152,9 @@ export default function GenericTable() {
             <InputEnderecoPropriedade />
 
             <div className="flex items-center gap-16 mt-10">
-              
+
             </div>
           </div>
-        )
-      }
-
-      {
-        selectedData && editar && !adicionar && !remover && (
-          <InputEditandoDadosUsuario selectedData={selectedData} />
         )
       }
     </>

@@ -14,7 +14,6 @@ interface Botao {
 }
 
 export function Botao({ texto, onClick }: Botao) {
-    
 
     return (
         <>
