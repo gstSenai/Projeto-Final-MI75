@@ -19,7 +19,8 @@ export default function PaginaInicial() {
                 <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32 gap-11">
                     <h1 className="text-[2.5rem] lg:text-[3.125em] text-center 2xl:text-start font-normal max-w-[800px]">Nós vamos ajudá-lo a encontrar sua <span className='text-[2.5rem] lg:text-[4.375rem] text-center 2xl:text-start font-bold'>Maravilhosa</span> casa</h1>
                     <p className=" text-xl font-normal text-center 2xl:text-start max-w-3xl">Uma ótima plataforma para comprar, vender e alugar seus imóveis sem nenhum agente ou comissões.</p>
-                  <div className='flex align-center'>
+
+                <div className='absolute inset-0 flex flex-col justify-center items-center 2xl:items-start p-8 md:pl-16 2xl:pl-80 gap-11'>
                   <PesquisaPaginaInicial/>
                   </div>
                 </div>
