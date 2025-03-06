@@ -14,7 +14,7 @@ export default function CadastroImovel() {
                         <p className="text-3xl font-semibold lg:hidden">Cadastro</p>
                     </div>
                     <div className="flex flex-row items-center max-lg:hidden">
-                        <p className="text-[#702632] text-lg xl:text-2xl">Voltar ao menu</p>
+                        <p className="text-vermelho text-lg xl:text-2xl">Voltar ao menu</p>
                     </div>
                 </div>
 
@@ -23,7 +23,7 @@ export default function CadastroImovel() {
                     "Dono: Nome do Proprietário/Imobiliária",
                     "Email: Email do Proprietário/Imobiliária"]} />
 
-                <hr className="mt-16 mb-4 w-full h-2 rounded-2xl bg-[#702632] max-lg:h-3 max-lg:mt-10"></hr>
+                <hr className="mt-16 mb-4 w-full h-2 rounded-2xl bg-vermelho max-lg:h-3 max-lg:mt-10"></hr>
 
                 <div className="font-inter flex justify-between max-lg:justify-center ">
                     <div className="flex flex-row items-center max-lg:justify-center">

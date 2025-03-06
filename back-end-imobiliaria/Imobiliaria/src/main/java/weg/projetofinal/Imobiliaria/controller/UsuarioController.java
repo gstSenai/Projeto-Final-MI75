@@ -36,6 +36,7 @@ public class UsuarioController {
         return usuario.map(Usuario::convert2);
     }
 
+
     @GetMapping("/getById/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UsuarioGetResponseDTO findById(@PathVariable Integer id) {

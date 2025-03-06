@@ -82,7 +82,7 @@ export function GenericTable({ headers, data, isPropertyTable }: TableProps & { 
           <div className='overflow-x-auto max-h-[500px]'>
             <table className='w-full border-separate border-spacing-0'>
               <thead>
-                <tr className='bg-[#702632] text-white sticky top-0 z-10'>
+                <tr className='bg-vermelho text-white sticky top-0 z-10'>
                   {headers.map((header, index) => (
                     <th key={index} className='p-4 text-center font-bold border border-[#E0D6CE]'>
                       {header}
@@ -94,7 +94,7 @@ export function GenericTable({ headers, data, isPropertyTable }: TableProps & { 
                 {data.map((row, rowIndex) => (
                   <tr
                     key={rowIndex}
-                    className='bg-[#FAF6ED] hover:bg-[#702632] hover:bg-opacity-30 cursor-pointer border-b border-[#E0D6CE]'
+                    className='bg-[#FAF6ED] hover:bg-vermelho hover:bg-opacity-30 cursor-pointer border-b border-[#E0D6CE]'
                     onClick={() => {
                       setSelectedRow(rowIndex)
                       setSelectedData(row)
@@ -104,7 +104,7 @@ export function GenericTable({ headers, data, isPropertyTable }: TableProps & { 
                     {row.map((cell, cellIndex) => (
                       <td
                         key={cellIndex}
-                        className={`p-4 text-center border border-[#E0D6CE] ${selectedRow === rowIndex ? 'bg-[#702632] bg-opacity-50' : ''}`}
+                        className={`p-4 text-center border border-[#E0D6CE] ${selectedRow === rowIndex ? 'bg-vermelho bg-opacity-50' : ''}`}
                       >
                         {cell}
                       </td>
@@ -123,7 +123,7 @@ export function GenericTable({ headers, data, isPropertyTable }: TableProps & { 
             </div>
           </button>
 
-          <button onClick={() => setRemover(!remover)} className='w-36 lg:h-[50px] m-4 bg-[#702632] text-white rounded-[20px] text-center inline-block align-middle'>
+          <button onClick={() => setRemover(!remover)} className='w-36 lg:h-[50px] m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle'>
             <div className='pl-5 flex items-center gap-3 justify-start'>
               <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" className='lg:w-4' />
               <p className='text-lg font-medium'>Remover</p>
@@ -145,7 +145,7 @@ export function GenericTable({ headers, data, isPropertyTable }: TableProps & { 
           <div className="flex flex-col max-lg:justify-center">
             <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
 
-            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
+            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-vermelho "></hr>
           </div>
 
           <InputDadosUsuario />
@@ -153,7 +153,7 @@ export function GenericTable({ headers, data, isPropertyTable }: TableProps & { 
           <div className="flex flex-col mt-20 max-lg:justify-center">
             <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Endereço do proprietário</p>
 
-            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
+            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-vermelho "></hr>
           </div>
 
           <InputEnderecoPropriedade />
@@ -172,7 +172,7 @@ export function GenericTable({ headers, data, isPropertyTable }: TableProps & { 
           <div className="flex flex-col max-lg:justify-center">
             <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
 
-            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
+            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-vermelho "></hr>
           </div>
 
           <InputDadosUsuario />
@@ -180,7 +180,7 @@ export function GenericTable({ headers, data, isPropertyTable }: TableProps & { 
           <div className="flex flex-col mt-20 max-lg:justify-center">
             <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Endereço do proprietário</p>
 
-            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
+            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-vermelho "></hr>
           </div>
 
           <InputEnderecoPropriedade />

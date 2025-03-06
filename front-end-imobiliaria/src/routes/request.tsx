@@ -18,10 +18,15 @@ const request = async (
         const response = await fetch(url, options);
 
         if (!response.ok) {
-            throw new Error(`Falha na requisição: ${response.statusText}`);
+            throw new Error(`Falha na requisição: ${response.status} ${response.statusText}`);
         }
 
-        return await response.json();
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            return await response.json();
+        } else {
+            return await response.text();
+        }
     } catch (error) {
         console.error("Erro ao fazer a requisição:", error);
         throw error;

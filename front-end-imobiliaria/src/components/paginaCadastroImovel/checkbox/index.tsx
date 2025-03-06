@@ -47,7 +47,7 @@ export function CheckBoxComponent() {
             {selectedVenda && !selectedLocacao && (
                 <div className="font-inter flex flex-col">
 
-                    <hr className="mb-4 w-full h-2 rounded-2xl bg-[#702632] max-lg:h-3 max-lg:mt-10"></hr>
+                    <hr className="mb-4 w-full h-2 rounded-2xl bg-vermelho max-lg:h-3 max-lg:mt-10"></hr>
 
                     <FormValorImovel placeholder="Valor da Venda (R$):" name="Valor da Venda (R$):" />
 
@@ -55,11 +55,11 @@ export function CheckBoxComponent() {
                         <p className="text-2xl xl:text-3xl font-semibold mt-12 mb-5 max-lg:hidden">Dados do Imóvel:</p>
                     </div>
 
-                    <hr className="mb-4 w-full h-2 rounded-2xl bg-[#702632] max-lg:h-3 max-lg:mt-10"></hr>
+                    <hr className="mb-4 w-full h-2 rounded-2xl bg-vermelho max-lg:h-3 max-lg:mt-10"></hr>
 
                     <FormDadosImovel />
 
-                    <hr className="mt-5 mb-4 w-full h-2 rounded-2xl bg-[#702632] max-lg:h-3 max-lg:mt-10"></hr>
+                    <hr className="mt-5 mb-4 w-full h-2 rounded-2xl bg-vermelho max-lg:h-3 max-lg:mt-10"></hr>
 
                     <div className=" flex justify-between items-center gap-[30rem]  mt-10">
                         <Botao texto="Cancelar" />
@@ -71,7 +71,7 @@ export function CheckBoxComponent() {
             {!selectedVenda && selectedLocacao && (
                 <div className="font-inter flex flex-col">
 
-                    <hr className="mb-4 w-full h-2 rounded-2xl bg-[#702632] max-lg:h-3 max-lg:mt-10"></hr>
+                    <hr className="mb-4 w-full h-2 rounded-2xl bg-vermelho max-lg:h-3 max-lg:mt-10"></hr>
 
                     <FormValorImovel placeholder="Valor do Aluguel (R$):" name="Valor da Aluguel (R$):" />
 
@@ -79,11 +79,11 @@ export function CheckBoxComponent() {
                         <p className="text-2xl xl:text-3xl font-semibold mt-12 mb-5 max-lg:hidden">Dados do Imóvel:</p>
                     </div>
 
-                    <hr className="mb-4 w-full h-2 rounded-2xl bg-[#702632] max-lg:h-3 max-lg:mt-10"></hr>
+                    <hr className="mb-4 w-full h-2 rounded-2xl bg-vermelho max-lg:h-3 max-lg:mt-10"></hr>
 
                     <FormDadosImovel />
 
-                    <hr className="mt-5 mb-4 w-full h-2 rounded-2xl bg-[#702632] max-lg:h-3 max-lg:mt-10"></hr>
+                    <hr className="mt-5 mb-4 w-full h-2 rounded-2xl bg-vermelho max-lg:h-3 max-lg:mt-10"></hr>
 
                     <div className="flex items-center justify-between mt-10">
                         <Botao texto="Cancelar" />

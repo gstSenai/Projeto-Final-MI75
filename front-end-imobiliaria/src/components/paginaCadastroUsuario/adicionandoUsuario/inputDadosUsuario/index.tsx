@@ -97,21 +97,21 @@ export function InputDadosUsuario() {
         setShowModal(true);
         setTimeout(() => {
             setShowModal(false)
-        }, 10000);
+        }, 5000);
     };
 
     useEffect(() => {
         getUsers();
-    });
+    }, []);
 
     return (
         <>
             {showForm && (
-                <div>
+                <div className="2xl:px-20 xl:px-20 lg:px-10 px-10 pt-14">
                     <div className="flex flex-col max-lg:justify-center">
                         <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
 
-                        <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
+                        <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-vermelho "></hr>
                     </div>
                     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col lg:gap-10">
                         <div className="flex lg:gap-16">
@@ -186,18 +186,26 @@ export function InputDadosUsuario() {
                         </div>
                     </form>
                 </div>
-
             )}
+
             {showModal && (
                 <>
-                    {users?.content.map(user => (
-                        <div key={user.id} className="flex items-center justify-center relative">
-                            <div className='bg-black p-3 rounded-[20px]'>
-                                <button onClick={() => onSubmitDelete(user.id)} className='text-white'>desfazer</button>
-                            </div>
-                        </div>
-                    ))}
+                    {users?.content?.length ? (() => {
+                        const lastUser = users.content.reduce((maiorId, item) => (item.id > maiorId.id ? item : maiorId));
 
+                        return lastUser ? (
+                            <div className="w-full bottom-16 pl-10 items-center relative">
+                                <div className='bg-vermelho/80 w-72 flex gap-1 p-3 rounded-[20px] text-white'>
+                                    <p>Adicionado com Sucesso!</p>
+                                    <button
+                                        onClick={() => onSubmitDelete(lastUser.id)}
+                                        className='underline '>
+                                        Desfazer
+                                    </button>
+                                </div>
+                            </div>
+                        ) : null;
+                    })() : null}
                 </>
             )}
         </>
