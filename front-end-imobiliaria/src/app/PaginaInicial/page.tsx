@@ -1,5 +1,6 @@
 import { Montserrat } from 'next/font/google';
 import { PesquisaPaginaInicial } from '@/components/PesquisaPaginaInicial';
+import Card from '@/components/CardImovel/Card';
 
 // Carregando a fonte Inter
 const montserrat = Montserrat({
@@ -34,23 +35,71 @@ export default function PaginaInicial() {
                 </div>
                 <div className='flex flex-col lg:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around pt-36'>
                     <div className='flex flex-col items-center w-80 lg:w-[500px] py-10 md:py-10 2xl:py-0'>
-                        <Image src="/gerenciamentoImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
+                        <Image src="/sistemaDeCompra.png" alt="Sistema de compra" width={110} height={123} />
                         <h2 className='text-[2.8125rem] font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>Sistema de Compra</h2>
                         <p className='text-3xl font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
                     </div>
                     <div className='flex flex-col items-center  w-80 lg:w-[500px] py-10 md:py-10 2xl:py-0'>
-                        <Image src="/gerenciamentoProprietarios.png" alt="Cadastro de Imóveis" width={110} height={123} />
+                        <Image src="/sistemaChat.png" alt="Sistema de chato" width={110} height={123} />
                         <h2 className='text-[2.8125rem] font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>Sistema de Chat</h2>
                         <p className='text-3xl font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
                     </div>
                     <div className='flex flex-col items-center  w-80 lg:w-[550px] py-10 md:py-10 2xl:py-0'>
-                        <Image src="/cadastroImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
+                        <Image src="/segurançaDosClientes.png" alt="Sistema de compra" width={110} height={123} />
                         <h2 className='text-[2.8125rem] font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>Segurança dos Clientes</h2>
                         <p className='text-3xl font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
                     </div>
                 </div>
             </section>
-        </div>
+            <section>
+                <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-[600px]  2xl:pt-96'>
+                    <div className='w-[1000px]'>
+                        <h2 className='flex justify-center text-center text-4xl lg:text-5xl font-medium pb-2 opacity-75'>Imóveis em Destaque</h2>
+                        <p className='flex justify-center text-center text-2xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
+                    </div>
+                </div>
+
+
+            </section>
+            <section>
+                <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-[600px]  2xl:pt-96'>
+                    <div className='w-[1000px]'>
+                        <h2 className='flex justify-center text-center text-4xl lg:text-5xl font-medium pb-2 opacity-75'>Imóveis Adcionados Recentemente</h2>
+                        <p className='flex justify-center text-center text-2xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
+                    </div>
+                </div>
+                <Card></Card>
+
+            </section>
+            <section>
+                <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-[600px]  2xl:pt-96'>
+                    <div className='w-[1000px]'>
+                        <h2 className='flex justify-center text-center text-4xl lg:text-5xl font-medium pb-2 opacity-75'>Imóveis em Promoção</h2>
+                        <p className='flex justify-center text-center text-2xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
+                    </div>
+                </div>
+                <Card></Card>
+
+            </section>
+            <section>
+                <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-[600px]  2xl:pt-96'>
+                    <div className='w-[1000px]'>
+                        <h2 className='flex justify-center text-center text-4xl lg:text-5xl font-medium pb-2 opacity-75'>Localidades</h2>
+                        <p className='flex justify-center text-center text-2xl lg:text-3xl font-medium p-3 opacity-75'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
+                    </div>
+                </div>
+
+
+            </section>
+
+
+            <footer>
+            <img className='flex static max-w-max' src="/PreFotterInicial.png" alt="tracejado vermelho" />
+
+
+            </footer>
+
+       </div>
     );
 
 
