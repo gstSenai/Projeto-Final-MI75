@@ -24,8 +24,8 @@ export function PesquisaPaginaInicial() {
                     onClick={() => setModo('alugar')}
                 >Aluguel</button>
             </div>
-            <div className='bg-[#702632] w-0 2xl:w-[800px] rounded-3xl'>
-                <div className='flex flex-row'>
+            <div className='bg-[#702632] w-0 xl:w-[800px] rounded-3xl'>
+                <div className='flex flex-col lg:flex-row 2xl:flex-row'>
                     <div>
                         <p>Código:</p>
                         <input type="text" />
