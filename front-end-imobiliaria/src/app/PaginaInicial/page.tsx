@@ -93,9 +93,12 @@ export default function PaginaInicial() {
             </section>
 
 
-            <footer>
-            <img className='flex static max-w-max' src="/PreFotterInicial.png" alt="tracejado vermelho" />
+            <footer >
+        
 
+            <Image src="/PreFotterInicial.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100} />
+        
+        
 
             </footer>
 
