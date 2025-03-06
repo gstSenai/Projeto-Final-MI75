@@ -10,16 +10,16 @@ export default function AppointmentCard({ corretor, data, horario }: Appointment
   return (
     <div className="border border-black rounded-2xl  p-4  flex flex-col items-start w-80">
       <div className="flex items-center gap-2 text-black mb-2">
-        <img src="./public/iconPerfil/user-profile-01.png" alt="ícone" className="w-4 h-4" />
+        <img src="/iconPerfil/usuario.png" alt="ícone" className="w-4 h-4" />
         <span className="text-sm">Corretor: <strong>{corretor}</strong></span>
       </div>
       <div className="flex gap-3">
         <div className="flex items-center gap-2 text-black">
-          <img src="./public/iconPerfil/clock-01.png" alt="ícone" className="w-4 h-4" />
+          <img src="/iconPerfil/calendario.png" alt="ícone" className="w-4 h-4" />
           <span className="text-sm">Data: <strong>{data}</strong></span>
         </div>
         <div className="flex items-center gap-2 text-black">
-          <img src="./public/iconPerfil/clock-01.png" alt="ícone" className="w-4 h-4" />
+          <img src="/iconPerfil/relogio.png" alt="ícone" className="w-4 h-4" />
           <span className="text-sm">Horário: <strong>{horario}</strong></span>
       </div>
       </div>
