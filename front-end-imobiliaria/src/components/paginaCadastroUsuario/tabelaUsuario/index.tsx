@@ -56,27 +56,25 @@ interface ResponseProps {
 }
 
 export default function GenericTable() {
-  const [selectedRow, setSelectedRow] = useState<number | null>(null);
   const [selectedData, setSelectedData] = useState<(string | number)[] | null>(null);
-  const [dataUser, setDataUser] = useState<ResponseProps | null>(null);
-  ({ id: 0, nome: '', email: '', telefone: '', cpf: '', tipo_conta: '' });
   const [users, setUsers] = useState<ResponseProps | null>(null);
   const [adicionar, setAdicionar] = useState(false);
   const [remover, setRemover] = useState(false);
   const [editar, setEditar] = useState(false);
+
 
   const getUsers = async () => {
     const usersGet = await request('GET', 'http://localhost:9090/users/getAll')
     setUsers(usersGet)
   };
 
-  const deleteUser = async (userId: number): Promise<ResponseProps> => {
-    return request('DELETE', `http://localhost:9090/users/delete/${userId}`);
-  };
-
   useEffect(() => {
     getUsers()
-  }, []);
+        const interval = setInterval(() => {
+            getUsers()
+        }, 3000);
+        return () => clearInterval(interval)
+  });
 
   return (
     <>
@@ -157,12 +155,6 @@ export default function GenericTable() {
 
       {adicionar && (
         <>
-          <div className="flex flex-col max-lg:justify-center">
-            <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
-
-            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
-          </div>
-
           <InputDadosUsuario />
         </>
       )

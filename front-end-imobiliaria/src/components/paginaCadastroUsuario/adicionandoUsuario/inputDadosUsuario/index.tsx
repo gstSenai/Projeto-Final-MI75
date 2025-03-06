@@ -21,8 +21,9 @@ function FormularioInput({ placeholder, name, showOptions = false, custumizacaoC
             <img src="/iconsForms/canetaEditar.png" alt="Editar" className="lg:h-6 ml-4" />
             {options ? (
                 <select
+                    defaultValue=""
                     {...register(name)}
-                    className="appearance-none text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full bg-transparent"
+                    className="appearance-none text-black max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full bg-transparent"
                 >
                     <option value="" disabled className="text-gray-400">{placeholder}</option>
                     {options.map((option, index) => (
@@ -63,8 +64,11 @@ interface ResponseProps {
 }
 
 export function InputDadosUsuario() {
-    const { register, handleSubmit, formState: { errors } } = useForm<UsuarioProps>();
-    const [users, setUsers] = useState<ResponseProps | null>(null);
+    const { register, handleSubmit, formState: { errors } } = useForm<UsuarioProps>()
+    const [users, setUsers] = useState<ResponseProps | null>(null)
+    const [showForm, setShowForm] = useState(true)
+    const [showModal, setShowModal] = useState(false)
+
 
     const tiposConta = ['Usuario', 'Corretor', 'Administrador', 'Editor'];
 
@@ -75,89 +79,127 @@ export function InputDadosUsuario() {
 
     const addUser = async (data: UsuarioProps) => {
         await request('POST', 'http://localhost:9090/users/create', data);
-        await getUsers();
+        getUsers();
     };
+
+    const deleteUser = async (userId: number): Promise<ResponseProps> => {
+        return request('DELETE', `http://localhost:9090/users/delete/${userId}`);
+    };
+
+    const onSubmitDelete = async (id: number) => {
+        await deleteUser(id)
+        setShowModal(false)
+    }
 
     const onSubmit = async (data: UsuarioProps) => {
         await addUser(data);
+        setShowForm(false);
+        setShowModal(true);
+        setTimeout(() => {
+            setShowModal(false)
+        }, 10000);
     };
 
     useEffect(() => {
         getUsers();
-    }, []);
+    });
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col lg:gap-10">
-            <div className="flex lg:gap-16">
-                <FormularioInput
-                    placeholder="Nome:"
-                    name='nome'
-                    register={register}
-                    errorMessage={errors.nome?.message}
-                    custumizacaoClass="lg:w-[20%]"
-                />
-                <FormularioInput
-                    placeholder="Sobrenome:"
-                    name='sobrenome'
-                    register={register}
-                    custumizacaoClass="lg:w-[45.5%]"
-                />
-                <FormularioInput
-                    placeholder="CPF:"
-                    name='cpf'
-                    register={register}
-                    custumizacaoClass="lg:w-[32.5%]"
-                />
-            </div>
-            <div className="flex lg:gap-16">
-                <FormularioInput
-                    placeholder="Email:"
-                    name='email'
-                    register={register}
-                    custumizacaoClass="lg:w-1/3"
-                />
-                <FormularioInput
-                    placeholder="Senha:"
-                    name='senha'
-                    register={register}
-                    custumizacaoClass="lg:w-1/3"
-                />
-                <FormularioInput
-                    placeholder="Confirmação de senha:"
-                    name='confirmar_senha'
-                    register={register}
-                    custumizacaoClass="lg:w-1/3"
-                />
-            </div>
-            <div className="flex lg:gap-16">
-                <FormularioInput
-                    placeholder="Telefone:"
-                    name='telefone'
-                    register={register}
-                    custumizacaoClass="lg:w-1/3"
-                />
-                <FormularioInput
-                    placeholder="Data de Nascimento:"
-                    name='data_nascimento'
-                    register={register}
-                    custumizacaoClass="lg:w-[50%]"
-                />
-                <FormularioInput
-                    placeholder="Tipo Conta:"
-                    name='tipo_conta'
-                    register={register}
-                    showOptions
-                    custumizacaoClass="lg:w-[50%]"
-                    options={tiposConta}
-                />
-            </div>
+        <>
+            {showForm && (
+                <div>
+                    <div className="flex flex-col max-lg:justify-center">
+                        <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
 
-            <div className="flex items-center gap-16 mt-10">
-                <div className='flex gap-[30rem] w-full'>
-                    <Botao onClick={() => console.log()} texto="Cancelar" />
-                    <Botao onClick={handleSubmit(onSubmit)} texto="Salvar cadastro" />
+                        <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
+                    </div>
+                    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col lg:gap-10">
+                        <div className="flex lg:gap-16">
+                            <FormularioInput
+                                placeholder="Nome:"
+                                name="nome"
+                                register={register}
+                                errorMessage={errors.nome?.message}
+                                custumizacaoClass="lg:w-[20%]"
+                            />
+                            <FormularioInput
+                                placeholder="Sobrenome:"
+                                name="sobrenome"
+                                register={register}
+                                custumizacaoClass="lg:w-[45.5%]"
+                            />
+                            <FormularioInput
+                                placeholder="CPF:"
+                                name="cpf"
+                                register={register}
+                                custumizacaoClass="lg:w-[32.5%]"
+                            />
+                        </div>
+                        <div className="flex lg:gap-16">
+                            <FormularioInput
+                                placeholder="Email:"
+                                name="email"
+                                register={register}
+                                custumizacaoClass="lg:w-1/3"
+                            />
+                            <FormularioInput
+                                placeholder="Senha:"
+                                name="senha"
+                                register={register}
+                                custumizacaoClass="lg:w-1/3"
+                            />
+                            <FormularioInput
+                                placeholder="Confirmação de senha:"
+                                name="confirmar_senha"
+                                register={register}
+                                custumizacaoClass="lg:w-1/3"
+                            />
+                        </div>
+                        <div className="flex lg:gap-16">
+                            <FormularioInput
+                                placeholder="Telefone:"
+                                name="telefone"
+                                register={register}
+                                custumizacaoClass="lg:w-1/3"
+                            />
+                            <FormularioInput
+                                placeholder="Data de Nascimento:"
+                                name="data_nascimento"
+                                register={register}
+                                custumizacaoClass="lg:w-[50%]"
+                            />
+                            <FormularioInput
+                                placeholder="Tipo Conta:"
+                                name="tipo_conta"
+                                register={register}
+                                showOptions
+                                custumizacaoClass="lg:w-[50%]"
+                                options={tiposConta}
+                            />
+                        </div>
+
+                        <div className="flex items-center gap-16 mt-10">
+                            <div className="flex gap-[30rem] w-full">
+                                <Botao onClick={() => console.log()} texto="Cancelar" />
+                                <Botao onClick={handleSubmit(onSubmit)} texto="Salvar cadastro" />
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </div>
-        </form>
+
+            )}
+            {showModal && (
+                <>
+                    {users?.content.map(user => (
+                        <div key={user.id} className="flex items-center justify-center relative">
+                            <div className='bg-black p-3 rounded-[20px]'>
+                                <button onClick={() => onSubmitDelete(user.id)} className='text-white'>desfazer</button>
+                            </div>
+                        </div>
+                    ))}
+
+                </>
+            )}
+        </>
     );
-}
+}    
