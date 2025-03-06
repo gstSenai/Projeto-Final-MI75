@@ -114,25 +114,25 @@ export default function PaginaInicial() {
 
                 <div className="absolute inset-0 flex flex-col lg:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around self-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32 gap-11">
 
-                    <div  className='flex text-center items-center'>
+                    <div  className='flex text-center items-center gap-7'>
                         <Image src="/imoveisCadastros.png" alt="imoveis Cadastrados" objectFit="cover" width={106} height={108} quality={100} />
-                        <div>
+                        <div className='flex flex-col  text-start'>
                             <ImoveisDisponiveis/>
                             <p>Imoveis Cadastrados</p>
                         </div>
                     </div>
 
-                    <div className='flex text-center items-center'>
+                    <div className='flex text-center items-center gap-7'>
                         <Image src="/imoveisVendidos.png" alt="Imoveis Vendidos" objectFit="cover" width={106} height={108} quality={100} />
-                        <div>
+                        <div className='flex flex-col  text-start'>
                             <ImoveisVendidos/>
                             <p>Imoveis Vendidos</p>
                         </div>
                     </div>
 
-                    <div  className='flex text-center items-center'>
+                    <div  className='flex text-center items-center gap-7'>
                         <Image src="/numeroCincoEstrelas.png" alt="Cincos estrelas" objectFit="cover" width={106} height={108} quality={100} />
-                        <div>
+                        <div className='flex flex-col text-start'>
                             <CincoEstrelas/>
                             <p>Cincos estrelas</p>
                         </div>
