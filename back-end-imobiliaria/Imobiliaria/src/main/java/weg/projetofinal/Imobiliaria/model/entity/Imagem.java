@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import weg.projetofinal.Imobiliaria.model.dto.ImagemGetResponseDTO;
 
 @Entity
 @Table(name = "tb_fotos_imovel")
@@ -23,4 +24,11 @@ public class Imagem {
     @ManyToOne
     @JoinColumn(name = "idImovel")
     private Imovel imovel;
+
+    public ImagemGetResponseDTO convert(){
+        return new ImagemGetResponseDTO(
+                this.id_foto, this.caminho_foto,this.imovel.convert4()
+        );
+    }
+
 }

@@ -23,6 +23,7 @@ public class EnderecoController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public Endereco post(@RequestBody Endereco endereco) {
+
         return service.create(endereco);
     }
 
