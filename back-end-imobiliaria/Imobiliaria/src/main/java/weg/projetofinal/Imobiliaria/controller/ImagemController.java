@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import weg.projetofinal.Imobiliaria.model.dto.ImagemGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.ImagemPostRequestDTO;
-import weg.projetofinal.Imobiliaria.model.entity.Endereco;
+import weg.projetofinal.Imobiliaria.model.dto.ImagemPutResponseDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Imagem;
 import weg.projetofinal.Imobiliaria.service.ImagemService;
 
@@ -29,7 +29,6 @@ public class ImagemController {
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
     public Page<ImagemGetResponseDTO> getAll(@PageableDefault Pageable pageable) {
-
         Page<Imagem> enderecos = service.getAllImagem(pageable);
         return enderecos.map(Imagem::convert);
     }
@@ -41,8 +40,6 @@ public class ImagemController {
         return imagem.convert();
     }
 
-
-
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
@@ -51,7 +48,7 @@ public class ImagemController {
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Imagem update(@PathVariable Integer id, @RequestBody Imagem imagem) {
-        return service.updateImagem(id,imagem);
+    public Imagem update(@PathVariable Integer id, @RequestBody ImagemPutResponseDTO imagemDTO) {
+        return service.updateImagem(id,imagemDTO);
     }
 }

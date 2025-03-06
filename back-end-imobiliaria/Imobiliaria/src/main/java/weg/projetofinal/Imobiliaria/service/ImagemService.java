@@ -5,7 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import weg.projetofinal.Imobiliaria.model.dto.ImagemPostRequestDTO;
+import weg.projetofinal.Imobiliaria.model.dto.ImagemPutResponseDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Imagem;
+import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.repository.ImagemRepository;
 
 @Service
@@ -31,8 +33,18 @@ public class ImagemService {
         repository.deleteById(id);
     }
 
-    public Imagem updateImagem(Integer id, Imagem imagem) {
-        imagem.setId_foto(id);
-        return repository.save(imagem);
+    public Imagem updateImagem(Integer id, ImagemPutResponseDTO imagemDTO) {
+        Imagem imagemExistente = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Imagem não encontrada para o ID: " + id));
+
+        imagemExistente.setCaminho_foto(imagemDTO.caminho_foto());
+
+        if (imagemDTO.idImovel() != null) {
+            Imovel imovel = new Imovel();
+            imovel.setId(imagemDTO.idImovel());
+            imagemExistente.setImovel(imovel);
+        }
+
+        return repository.save(imagemExistente);
     }
 }
