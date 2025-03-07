@@ -32,42 +32,40 @@ export default function PaginaInicial() {
                     </p>
                 </div>
             </main>
-
-            {/* Posicionando a pesquisa logo abaixo da imagem de fundo */}
-            <div className="relative flex justify-center xl:-ml-[700px] -mt-[10rem] lg:-mt-[15rem] z-10">
+            <div className="relative flex justify-center xl:-ml-[700px] mt-[5rem] lg:-mt-[15rem] z-10">
                 <PesquisaPaginaInicial />
             </div>
             <section>
 
-                <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-[600px]  2xl:pt-20'>
+                <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-40  2xl:pt-56'>
                     <div className='w-[1000px]'>
-                        <h2 className='flex justify-center text-center text-4xl lg:text-5xl font-medium pb-2 opacity-75'>Como Funciona</h2>
-                        <p className='flex justify-center text-center text-2xl lg:text-3xl font-medium p-3 opacity-75'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
+                        <h2 className='flex justify-center text-center text-2xl lg:text-5xl font-medium pb-2 opacity-75'>Como Funciona</h2>
+                        <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
                     </div>
                 </div>
                 <div className='flex flex-col lg:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around pt-36'>
                     <div className='flex flex-col items-center w-80 lg:w-[500px] py-10 md:py-10 2xl:py-0'>
                         <Image src="/sistemaDeCompra.png" alt="Sistema de compra" width={110} height={123} />
-                        <h2 className='text-[2.8125rem] font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>Sistema de Compra</h2>
-                        <p className='text-3xl font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
+                        <h2 className='text-2xl lg:text-[2.8125rem] font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>Sistema de Compra</h2>
+                        <p className='text-xl lg:text-3xl  font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
                     </div>
                     <div className='flex flex-col items-center  w-80 lg:w-[500px] py-10 md:py-10 2xl:py-0'>
                         <Image src="/sistemaChat.png" alt="Sistema de chat" width={110} height={123} />
-                        <h2 className='text-[2.8125rem] font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>Sistema de Chat</h2>
-                        <p className='text-3xl font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
+                        <h2 className='text-2xl lg:text-[2.8125rem] font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>Sistema de Chat</h2>
+                        <p className='text-xl lg:text-3xl font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
                     </div>
                     <div className='flex flex-col items-center  w-80 lg:w-[550px] py-10 md:py-10 2xl:py-0'>
                         <Image src="/segurançaDosClientes.png" alt="Sistema de compra" width={110} height={123} />
-                        <h2 className='text-[2.8125rem] font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>Segurança dos Clientes</h2>
-                        <p className='text-3xl font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
+                        <h2 className='text-2xl lg:text-[2.8125rem] font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>Segurança dos Clientes</h2>
+                        <p className='text-xl lg:text-3xl  font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
                     </div>
                 </div>
             </section>
             <section>
                 <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-[600px]  2xl:pt-96'>
                     <div className='w-[1000px]'>
-                        <h2 className='flex justify-center text-center text-4xl lg:text-5xl font-medium pb-2 opacity-75'>Imóveis em Destaque</h2>
-                        <p className='flex justify-center text-center text-2xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
+                        <h2 className='flex justify-center text-center text-2xl lg:text-5xl font-medium pb-2 opacity-75'>Imóveis em Destaque</h2>
+                        <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
                     </div>
                 </div>
                 <div>
@@ -79,8 +77,8 @@ export default function PaginaInicial() {
             <section>
                 <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-[600px]  2xl:pt-96'>
                     <div className='w-[1000px]'>
-                        <h2 className='flex justify-center text-center text-4xl lg:text-5xl font-medium pb-2 opacity-75'>Imóveis Adcionados Recentemente</h2>
-                        <p className='flex justify-center text-center text-2xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
+                        <h2 className='flex justify-center text-center text-2xl lg:text-5xl font-medium pb-2 opacity-75'>Imóveis Adcionados Recentemente</h2>
+                        <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
                     </div>
                 </div>
                 <Card></Card>
@@ -89,8 +87,8 @@ export default function PaginaInicial() {
             <section>
                 <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-[600px]  2xl:pt-96'>
                     <div className='w-[1000px]'>
-                        <h2 className='flex justify-center text-center text-4xl lg:text-5xl font-medium pb-2 opacity-75'>Imóveis em Promoção</h2>
-                        <p className='flex justify-center text-center text-2xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
+                        <h2 className='flex justify-center text-center text-2xl lg:text-5xl  font-medium pb-2 opacity-75'>Imóveis em Promoção</h2>
+                        <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
                     </div>
                 </div>
                 <Card></Card>
@@ -99,8 +97,8 @@ export default function PaginaInicial() {
             <section>
                 <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-[600px]  2xl:pt-96'>
                     <div className='w-[1000px]'>
-                        <h2 className='flex justify-center text-center text-4xl lg:text-5xl font-medium pb-2 opacity-75'>Localidades</h2>
-                        <p className='flex justify-center text-center text-2xl lg:text-3xl font-medium p-3 opacity-75'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
+                        <h2 className='flex justify-center text-center text-2xl lg:text-5xl  font-medium pb-2 opacity-75'>Localidades</h2>
+                        <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
                     </div>
                 </div>
 
@@ -113,7 +111,6 @@ export default function PaginaInicial() {
                 />
 
                 <div className="absolute inset-0 flex flex-col lg:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around self-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32 gap-11">
-
                     <div  className='flex text-center items-center gap-7'>
                         <Image src="/imoveisCadastros.png" alt="imoveis Cadastrados" objectFit="cover" width={106} height={108} quality={100} />
                         <div className='flex flex-col  text-start'>

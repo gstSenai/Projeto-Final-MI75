@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { Montserrat } from 'next/font/google';
 import Image from 'next/image';
+import PlaceFilter from '../botãoseleção';
 
 
 const montserrat = Montserrat({
@@ -11,6 +12,10 @@ const montserrat = Montserrat({
     weight: ['400', '800'],
     display: 'swap',
 });
+
+
+
+
 
 export function PesquisaPaginaInicial() {
     const [modo, setModo] = useState('comprar');
@@ -44,26 +49,36 @@ export function PesquisaPaginaInicial() {
                     className='py-4 flex items-center gap-2'
                     onClick={() => setMostrarAvançado(!mostrarAvançado)}
                 >
-                    <Image className={`transition-transform duration-300 ${mostrarAvançado ? 'rotate-180' : ''}`} src="/seta.png" alt="Ícone avançado" width={20} height={20} />
-                    <span>Avançado</span>
+                    <Image className={`transition-transform duration-300 w-6 h-6  ${mostrarAvançado ? 'rotate-180' : ''}`} src="/seta.png" alt="Ícone avançado" width={48} height={48} />
+                    <span className='text-xl'>Avançado</span>
                 </button>
 
-                <button className="rounded-md bg-[#DFDAD0] pr-6 flex ">
-                    <div className='flex p-2 gap-2'>
-                        <Image src="/lupa.png" alt="Ícone de pesquisa" width={20} height={20} />
-                        <p className='text-[#702632]'>Pesquisa</p>
+                <button className="rounded-md p-2 w-[180px] bg-[#DFDAD0] text-[#702632] items-center">
+                    <div className='flex items-center gap-2'>
+                        <Image src="/lupa.png" alt="Ícone de pesquisa" width={30} height={30} />
+                        <p className='text-[#702632] font-medium '>Pesquisa</p>
                     </div>
                 </button>
 
                 {mostrarAvançado && (
-                    <div className='py-8 flex flex-col lg:flex-row 2xl:flex-row justify-between '>
-                        <div className='w-64 py-2  xl:w-[320px]'>
-                            <p className='font-medium lg:font-bold text-2xl'>Min Valor:</p>
-                            <input className='rounded-md p-2 w-full bg-[#DFDAD0] text-[#702632]' type="value" placeholder='Busca por Valor Minimo' />
+                    <div>
+                        <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between '>
+                            <div className='w-64 py-2  xl:w-[320px]'>
+                                <p className='font-medium lg:font-bold text-2xl'>Min Valor:</p>
+                                <input className='rounded-md p-2 w-full bg-[#DFDAD0] text-[#702632]' type="value" placeholder='Busca por Valor Minimo' />
+                            </div>
+                            <div className='w-64 py-2  xl:w-[320px]'>
+                                <p className='font-medium lg:font-bold text-2xl'>Max Valor:</p>
+                                <input className='rounded-md p-2  w-full bg-[#DFDAD0] text-[#702632]' type="value" placeholder='Busca por Valor Maximo' />
+                            </div>
                         </div>
-                        <div className='w-64 py-2  xl:w-[320px]'>
-                            <p className='font-medium lg:font-bold text-2xl'>Max Valor:</p>
-                            <input className='rounded-md p-2  w-full bg-[#DFDAD0] text-[#702632]' type="value" placeholder='Busca por Valor Maximo' />
+                        <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between '>
+                            <PlaceFilter tipo="TipoLocal" texto='Quant. de Quartos:' />
+                            <PlaceFilter tipo="NumLocal" texto='Quant. de Quartos:' />
+                        </div>
+                        <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between '>
+                            <PlaceFilter tipo="NumLocal" texto='Quant. de Quartos:' />
+                            <PlaceFilter tipo="NumLocal" texto='Quant. de Quartos:' />
                         </div>
                     </div>
                 )}
