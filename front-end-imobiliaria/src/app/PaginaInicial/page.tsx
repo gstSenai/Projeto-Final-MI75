@@ -1,9 +1,9 @@
 import { Montserrat } from 'next/font/google';
 import { PesquisaPaginaInicial } from '@/components/PesquisaPaginaInicial';
 import Card from '@/components/CardImovel/Card';
-import { CincoEstrelas } from '@/components/NumeroAtualizaveis/CincoEstrelas';
 import { ImoveisDisponiveis } from '@/components/NumeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisVendidos } from '@/components/NumeroAtualizaveis/ImoveisVendidos';
+import { ImoveisAlugados } from '@/components/NumeroAtualizaveis/ImoveisAlugados';
 
 // Carregando a fonte Inter
 const montserrat = Montserrat({
@@ -34,7 +34,7 @@ export default function PaginaInicial() {
             </main>
 
             {/* Posicionando a pesquisa logo abaixo da imagem de fundo */}
-            <div className="relative flex justify-center xl:-ml-[700px] -mt-[15rem] z-10">
+            <div className="relative flex justify-center xl:-ml-[700px] -mt-[10rem] lg:-mt-[15rem] z-10">
                 <PesquisaPaginaInicial />
             </div>
             <section>
@@ -131,10 +131,10 @@ export default function PaginaInicial() {
                     </div>
 
                     <div  className='flex text-center items-center gap-7'>
-                        <Image src="/numeroCincoEstrelas.png" alt="Cincos estrelas" objectFit="cover" width={106} height={108} quality={100} />
+                        <Image src="/imoveisAlugados.png" alt="Imoveis Alugados" objectFit="cover" width={106} height={108} quality={100} />
                         <div className='flex flex-col text-start'>
-                            <CincoEstrelas/>
-                            <p>Cincos estrelas</p>
+                            <ImoveisAlugados/>
+                            <p>Imoveis Alugados</p>
                         </div>
                     </div>
 
