@@ -31,14 +31,14 @@ function FormularioInput({
 }: FormularioInputProps) {
 
     return (
-        <form action="text" className={`flex items-center lg:max-h-[58px] xl:max-h-[62px] 2xl:max-h-[78px] max-lg:justify-center gap-6 xl:py-4 2xl:py-6 py-3.5 bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent max-lg:p-0 ${custumizacaoClass}`}>
-            {iconAreaCT && <img src="/iconsImoveis/iconAreaCT.png" alt="Botão Opções" className="h-6 lg:h-9 2xl:h-full ml-4" />}
-            {iconSala && <img src="/iconsImoveis/iconSala.png" alt="Botão Opções" className="h-6 lg:h-7 2xl:h-full ml-4" />}
-            {imagemBanheiro && <img src="/imagensImovel/imagemBanheiro.png" alt="Botão Opções" className="h-6 lg:h-9 2xl:h-full ml-4" />}
-            {imagemDormitorio && <img src="/imagensImovel/imagemDormitorio.png" alt="Botão Opções" className="h-6 lg:h-9 2xl:h-full ml-4" />}
-            {imagemSuite && <img src="/imagensImovel/imagemSuite.png" alt="Botão Opções" className="h-6 lg:h-9 2xl:h-full ml-4" />}
-            {iconGaragem && <img src="/iconsImoveis/iconGaragem.png" alt="Botão Opções" className="h-6 lg:h-9 2xl:h-full ml-4" />}
-            {imagemPraia && <img src="/iconsImoveis/iconPraia.png" alt="Botão Opções" className="h-6 lg:h-9 2xl:h-full ml-4" />}
+        <form action="text" className={`flex items-center lg:max-h-[58px] xl:max-h-[60px] 2xl:max-h-[62px] max-lg:justify-center gap-6 xl:py-4 2xl:py-6 py-3.5 bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent max-lg:p-0 ${custumizacaoClass}`}>
+            {iconAreaCT && <img src="/iconsImoveis/iconAreaCT.png" alt="Botão Opções" className="h-6 lg:h-6 ml-4" />}
+            {iconSala && <img src="/iconsImoveis/iconSala.png" alt="Botão Opções" className="h-6 lg:h-7 ml-4" />}
+            {imagemBanheiro && <img src="/imagensImovel/imagemBanheiro.png" alt="Botão Opções" className="h-6 lg:h-9 ml-4" />}
+            {imagemDormitorio && <img src="/imagensImovel/imagemDormitorio.png" alt="Botão Opções" className="h-6 lg:h-9 ml-4" />}
+            {imagemSuite && <img src="/imagensImovel/imagemSuite.png" alt="Botão Opções" className="h-6 lg:h-9 ml-4" />}
+            {iconGaragem && <img src="/iconsImoveis/iconGaragem.png" alt="Botão Opções" className="h-6 lg:h-9 ml-4" />}
+            {imagemPraia && <img src="/iconsImoveis/iconPraia.png" alt="Botão Opções" className="h-6 lg:h-9 ml-4" />}
 
             {showOptions ? (
                 <select
@@ -55,11 +55,11 @@ function FormularioInput({
                     type="text"
                     placeholder={placeholder}
                     name={name}
-                    className="text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full"
+                    className="text-black max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full"
                 />
             )}
 
-            {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-8 2xl:h-full" />}
+            {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-6" />}
         </form>
     );
 }

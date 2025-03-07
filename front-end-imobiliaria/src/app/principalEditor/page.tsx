@@ -1,5 +1,6 @@
 import { Montserrat } from 'next/font/google';
-
+import { Botao } from '@/components/botao';
+import Image from 'next/image';
 
 // Carregando a fonte Inter
 const montserrat = Montserrat({
@@ -8,8 +9,6 @@ const montserrat = Montserrat({
     display: 'swap',
 });
 
-import Botao from '@/components/Botao';
-import Image from 'next/image';
 
 export default function PaginaEditor() {
     return (
@@ -27,7 +26,7 @@ export default function PaginaEditor() {
                 <h2 className='flex justify-center text-center text-5xl lg:text-6xl font-medium p-24'>Explore nossos recursos:</h2>
                 <div className='flex flex-col lg:flex-row 2xl:flex-row items-center justify-center  sm:items-center sm:justify-center md:justify-around ' >
                     <div className='flex flex-col items-center w-80  py-10 md:py-10 2xl:py-0'>
-                        <Image src="/gerenciamentoImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
+                        <Image src="/imagensPaginaEDADM/gerenciamentoImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
                         <p className='text-4xl font-medium opacity-75 text-center leading-tight py-16 min-h-[120px]'>Gerenciamento de Imóveis</p>
                         <Botao texto="Gerenciar" />
                     </div>
