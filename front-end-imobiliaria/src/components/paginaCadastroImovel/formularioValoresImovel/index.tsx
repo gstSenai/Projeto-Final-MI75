@@ -61,6 +61,7 @@ function FormularioInput({
 export function FormValorImovel({ placeholder, name }: FormEspecifico) {
     return (
         <div className="flex flex-col lg:gap-10 mt-10 ">
+        
             <div className="flex lg:gap-10">
                 <FormularioInput
                     placeholder={placeholder}

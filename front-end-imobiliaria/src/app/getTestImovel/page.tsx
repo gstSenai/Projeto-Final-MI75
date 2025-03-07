@@ -1,4 +1,5 @@
-import { Card } from "@/components/cardImovel";
+import { Card } from "@/components/CardImovel";
+
 
 interface ImovelProps {
     id: number;
@@ -14,19 +15,6 @@ interface ImovelProps {
     area_construida: number;
     area_terreno: number;
     descricao: string;
-}
-
-interface UsuarioProps {
-    id: number;
-    nome: string;
-    sobrenome: string;
-    cpf: string;
-    tipo_conta: string;
-    telefone: string;
-    data_nascimento: Date;
-    email: string;
-    senha: string;
-    imovel: string;
 }
 
 interface ResponseProps {

@@ -13,7 +13,7 @@ export default {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        montserrat: ["Montserrat", "latin",],
+        montserrat: ["Montserrat", "sans-serif"],
         inter: ["Inter", "sans-serif"],
       },
     },
