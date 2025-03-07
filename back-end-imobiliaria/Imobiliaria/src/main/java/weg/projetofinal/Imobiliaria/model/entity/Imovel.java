@@ -64,6 +64,9 @@ public class Imovel {
     @OneToMany(mappedBy = "imovel")
     private List<Imagem> imagem;
 
+    @OneToOne(mappedBy = "imovel", cascade = CascadeType.ALL)
+    private CaracteristicaImovel caracteristicaImovel;
+
     public ImovelGetResponseDTO convert(){
         return new ImovelGetResponseDTO(
                 this.id, this.codigo, this.nome_propriedade,
