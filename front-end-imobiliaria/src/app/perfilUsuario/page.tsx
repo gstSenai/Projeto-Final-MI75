@@ -1,15 +1,12 @@
 'use client';
-import { Montserrat } from 'next/font/google';
+import { FaPhoneAlt, FaEnvelope } from 'react-icons/fa';
+import { Montserrat } from 'next/font/google'
 
-
-// Carregando a fonte Inter
 const montserrat = Montserrat({
     subsets: ['latin'],
-    weight: ['400', '800'],
+    weight: ['400', '600'],
     display: 'swap',
 });
-
-import { FaPhoneAlt, FaEnvelope } from 'react-icons/fa';
 
 export default function PerfilUsuario() {
     return (
@@ -39,7 +36,7 @@ export default function PerfilUsuario() {
                             <img src="/iconsSociais/whatsapp.png" alt="whatsapp" className="mr-2 w-5" /> +55 (47) 9469-4250
                         </p>
                         <p className="flex">
-                        <img src="/iconsSociais/Email.png" alt="email" className="mr-2 w-5 h-4 mt-1" />
+                            <img src="/iconsSociais/Email.png" alt="email" className="mr-2 w-5 h-4 mt-1" />
                             <a href="mailto:jessica.vieira@gmail.com.br" className="text-blue-600 underline">
                                 jessica.vieira@gmail.com
                             </a>
@@ -55,6 +52,5 @@ export default function PerfilUsuario() {
                 </div>
             </div>
         </div>
-
     );
 }
