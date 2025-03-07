@@ -39,7 +39,7 @@ export default function PaginaInicial() {
             </div>
             <section>
 
-                <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-[600px]  2xl:pt-96'>
+                <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-[600px]  2xl:pt-20'>
                     <div className='w-[1000px]'>
                         <h2 className='flex justify-center text-center text-4xl lg:text-5xl font-medium pb-2 opacity-75'>Como Funciona</h2>
                         <p className='flex justify-center text-center text-2xl lg:text-3xl font-medium p-3 opacity-75'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>

@@ -28,14 +28,14 @@ export function PesquisaPaginaInicial() {
                     onClick={() => setModo('alugar')}
                 >Aluguel</button>
             </div>
-            <div className='bg-[#702632] w-0 lg:w-[600px] xl:w-[800px] pt-6 pr-16 pb-6 rounded-3xl text-white'>
+            <div className='bg-[#702632] w-0 lg:w-[650px] xl:w-[800px] pt-6 pr-16 pb-6 rounded-3xl text-white'>
                 <div className='flex flex-col lg:flex-row 2xl:flex-row justify-between'>
-                    <div>
-                        <p className='font-bold text-2xl'>Código:</p>
+                    <div className='py-4'>
+                        <p className='font-medium lg:font-bold text-2xl'>Código:</p>
                         <input className='rounded-md p-2 pr-16 bg-[#DFDAD0] ' placeholder='Busca por Código' type="text" />
                     </div>
-                    <div>
-                        <p className='font-bold text-2xl'>Localização:</p>
+                    <div className='py-4'>
+                        <p className='font-medium lg:font-bold text-2xl'>Localização:</p>
                         <input className='rounded-md p-2 pr-16 bg-[#DFDAD0] ' type="text" placeholder='Busca por Localização' />
                     </div>
                 </div>
