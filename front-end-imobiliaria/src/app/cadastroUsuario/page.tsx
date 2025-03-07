@@ -28,9 +28,7 @@ export default function CadastroUsuario() {
                         </div>
                     </div>
                 </div>
-                <div>
-                    <Tabela />
-                </div>
+                <Tabela />
             </div>
             <div>
             </div>

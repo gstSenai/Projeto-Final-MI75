@@ -61,7 +61,7 @@ export function CheckBoxComponent() {
 
                     <hr className="mt-5 mb-4 w-full h-2 rounded-2xl bg-vermelho max-lg:h-3 max-lg:mt-10"></hr>
 
-                    <div className=" flex justify-between items-center gap-[30rem]  mt-10">
+                    <div className=" flex justify-between items-center gap-[30rem] mt-10">
                         <Botao texto="Cancelar" />
                         <Botao texto="Cadastrar" />
                     </div>
@@ -85,7 +85,7 @@ export function CheckBoxComponent() {
 
                     <hr className="mt-5 mb-4 w-full h-2 rounded-2xl bg-vermelho max-lg:h-3 max-lg:mt-10"></hr>
 
-                    <div className="flex items-center justify-between mt-10">
+                    <div className=" flex justify-between items-center gap-[30rem] mt-10">
                         <Botao texto="Cancelar" />
                         <Botao texto="Cadastrar" />
                     </div>

@@ -1,54 +1,52 @@
-"use client";
+"use client"
 
-import React, { use, useEffect, useState } from 'react';
-import { Montserrat } from 'next/font/google';
-import { Header } from '../../header';
-import { InputDadosUsuario } from '../../paginaCadastroUsuario/adicionandoUsuario/inputDadosUsuario';
-import { InputEnderecoPropriedade } from '../../paginaCadastroUsuario/adicionandoUsuario/inputEnderecoPropriedade';
-import { InputEditandoDadosUsuario } from '../../paginaCadastroUsuario/editandoUsuario/inputEditarDadosUsuario';
-import { Botao } from '../../botao';
-import request from '@/routes/request';
-
+import { useEffect, useState } from "react"
+import { Montserrat } from "next/font/google"
+import { InputDadosUsuario } from "../../paginaCadastroUsuario/adicionandoUsuario/inputDadosUsuario"
+import { InputEditandoDadosUsuario } from "../../paginaCadastroUsuario/editandoUsuario/inputEditarDadosUsuario"
+import request from "@/routes/request"
+import { RemoveUsuario } from "../removerUsuario"
+import { on } from "events"
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['400', '800'],
-  display: 'swap',
-});
+  subsets: ["latin"],
+  weight: ["400", "800"],
+  display: "swap",
+})
 
 interface TableProps {
-  headers: string[];
-  data: (string | number)[][];
+  headers: string[]
+  data: (string | number)[][]
 }
 
 interface ImovelProps {
-  id: number;
-  nome_propriedade: string;
-  tipo_transacao: string;
-  valor_venda: number;
-  tipo_imovel: string;
-  status_imovel: string;
-  valor_promocional: number;
-  destaque?: boolean;
-  visibilidade: boolean;
-  condominio: number;
-  area_construida: number;
-  area_terreno: number;
-  descricao: string;
+  id: number
+  nome_propriedade: string
+  tipo_transacao: string
+  valor_venda: number
+  tipo_imovel: string
+  status_imovel: string
+  valor_promocional: number
+  destaque?: boolean
+  visibilidade: boolean
+  condominio: number
+  area_construida: number
+  area_terreno: number
+  descricao: string
 }
 
 interface UsuarioProps {
-  id: number;
-  nome: string;
-  sobrenome: string;
-  cpf: string;
-  tipo_conta: string;
-  telefone: string;
-  data_nascimento: Date;
-  email: string;
-  senha: string;
-  imovel: string;
+  id: number
+  nome: string
+  sobrenome: string
+  cpf: string
+  tipo_conta: string
+  telefone: string
+  data_nascimento: Date
+  email: string
+  senha: string
+  imovel: string
 }
 
 interface ResponseProps {
@@ -56,21 +54,63 @@ interface ResponseProps {
 }
 
 export default function GenericTable() {
-  const [selectedData, setSelectedData] = useState<(string | number)[] | null>(null);
-  const [users, setUsers] = useState<ResponseProps | null>(null);
-  const [adicionar, setAdicionar] = useState(false);
-  const [remover, setRemover] = useState(false);
-  const [editar, setEditar] = useState(false);
-
+  const [selectedData, setSelectedData] = useState(null);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [users, setUsers] = useState<ResponseProps | null>(null)
+  const [adicionar, setAdicionar] = useState(false)
+  const [remover, setRemover] = useState(false)
+  const [editar, setEditar] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   const getUsers = async () => {
-    const usersGet = await request('GET', 'http://localhost:9090/users/getAll')
-    setUsers(usersGet)
-  };
+    if (isLoading) return
+
+    setIsLoading(true)
+    try {
+      const usersGet = await request("GET", "http://localhost:9090/users/getAll")
+      setUsers(usersGet)
+    } catch (error) {
+      console.error("Error fetching users:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const refreshData = () => {
+    setRefreshTrigger((atualizar) => atualizar + 1)
+  }
 
   useEffect(() => {
     getUsers()
-  }, []);
+  }, [refreshTrigger])
+
+  const handleAddUser = () => {
+    setAdicionar(!adicionar)
+    setEditar(false)
+    setRemover(false)
+    if (adicionar) {
+      refreshData()
+    }
+  }
+
+  const handleRemoveUser = () => {
+    setAdicionar(false)
+    setEditar(false)
+    setRemover(!remover)
+    if (remover) {
+      refreshData()
+    }
+  }
+
+  const handleEditUser = () => {
+    setAdicionar(false)
+    setEditar(!editar)
+    setRemover(false)
+    if (editar) {
+      refreshData()
+    }
+  }
 
   return (
     <>
@@ -98,97 +138,70 @@ export default function GenericTable() {
                 </tr>
               </thead>
               <tbody>
-                {users?.content?.map((user) => (
-                  <tr
-                    key={user.id}
-                    className="bg-[#FAF6ED] hover:bg-vermelho bg-ver hover:bg-opacity-30 cursor-pointer border-b border-[#E0D6CE]"
-                  >
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.nome}
-                    </td>
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.email}
-                    </td>
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.telefone}
-                    </td>
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.cpf}
-                    </td>
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.tipo_conta}
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={5} className="p-4 text-center border border-[#E0D6CE]">
+                      Carregando...
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  users?.content?.map((user) => (
+                    <tr
+                      key={user.id}
+                      className="bg-[#FAF6ED] hover:bg-vermelho bg-ver hover:bg-opacity-30 cursor-pointer border-b border-[#E0D6CE]"
+                      onClick={() => on}
+                    >
+                      <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">{user.nome}</td>
+                      <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">{user.email}</td>
+                      <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">{user.telefone}</td>
+                      <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">{user.cpf}</td>
+                      <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">{user.tipo_conta}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
         </div>
-        <div className='flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full '>
-          <button onClick={() => { setAdicionar(!adicionar); setEditar(false); setRemover(false); }} className='w-36 lg:h-[50px]  m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle'>
-            <div className='pl-5 flex items-center gap-3 justify-start '>
-              <img src="./iconsForms/sinalAdd.png" alt="sinal de adição" className='lg:w-4' />
-              <p className='text-lg font-medium'>Adicionar</p>
+        <div className="flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full ">
+          <button
+            onClick={handleAddUser}
+            className="w-36 lg:h-[50px] m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
+            disabled={isLoading}
+          >
+            <div className="pl-5 flex items-center gap-3 justify-start ">
+              <img src="./iconsForms/sinalAdd.png" alt="sinal de adição" className="lg:w-4" />
+              <p className="text-lg font-medium">Adicionar</p>
             </div>
           </button>
 
-          <button onClick={() => { setAdicionar(false); setEditar(false); setRemover(!remover); }} className='w-36 lg:h-[50px] m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle'>
-            <div className='pl-5 flex items-center gap-3 justify-start'>
-              <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" className='lg:w-4' />
-              <p className='text-lg font-medium'>Remover</p>
+          <button
+            onClick={handleRemoveUser}
+            className="w-36 lg:h-[50px] m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
+            disabled={isLoading}
+          >
+            <div className="pl-5 flex items-center gap-3 justify-start">
+              <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" className="lg:w-4" />
+              <p className="text-lg font-medium">Remover</p>
             </div>
           </button>
 
-          <button onClick={() => { setAdicionar(false); setEditar(!editar); setRemover(false); }} className='w-36 lg:h-[50px] m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle'>
-            <div className='pl-5 flex items-center gap-3 justify-start'>
-              <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" className='lg:w-4' />
-              <p className='text-lg font-medium'>Editar</p>
+          <button
+            onClick={handleEditUser}
+            className="w-36 lg:h-[50px] m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
+            disabled={isLoading || !selectedData}
+          >
+            <div className="pl-5 flex items-center gap-3 justify-start">
+              <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" className="lg:w-4" />
+              <p className="text-lg font-medium">Editar</p>
             </div>
           </button>
         </div>
-      </div >
+      </div>
 
-
-      {adicionar && (<InputDadosUsuario />)}
-
-      {remover && (
-        <div>
-          <div className="flex flex-col mt-20 max-lg:justify-center">
-            <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Endereço do proprietário</p>
-
-            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-VERMELHO "></hr>
-          </div>
-
-          <InputEnderecoPropriedade />
-
-          <div className="flex items-center gap-16 mt-10">
-
-          </div>
-        </div>
-      )
-      }
-
-      {selectedData && editar && (
-        <InputEditandoDadosUsuario selectedData={selectedData} />
-      )
-      }
+      {adicionar && <InputDadosUsuario onComplete={refreshData} />}
+      {remover && <RemoveUsuario onComplete={refreshData} />}
     </>
-  );
+  )
 }
-
-const propertyHeaders = ['Código', 'Nome da Propriedade', 'Tipo de imóvel', 'Visibilidade', 'Estado'];
-const propertyData = [
-  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
-  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado'],
-  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
-  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado'],
-  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
-  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado'],
-  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
-  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado'],
-  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
-  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado']
-];
-
-const userHeaders = ['Nome', 'E-mail', 'Endereço', 'CPF', 'Telefone'];
 
