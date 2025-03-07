@@ -1,12 +1,12 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Montserrat } from "next/font/google"
+import { Montserrat } from 'next/font/google'
 import { InputDadosUsuario } from "../../paginaCadastroUsuario/adicionandoUsuario/inputDadosUsuario"
 import { InputEditandoDadosUsuario } from "../../paginaCadastroUsuario/editandoUsuario/inputEditarDadosUsuario"
 import request from "@/routes/request"
 import { RemoveUsuario } from "../removerUsuario"
-import { on } from "events"
+import { InputEnderecoPropriedade } from "../adicionandoUsuario/inputEnderecoPropriedade"
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
@@ -54,14 +54,53 @@ interface ResponseProps {
 }
 
 export default function GenericTable() {
-  const [selectedData, setSelectedData] = useState(null);
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedUsers, setSelectedUsers] = useState<UsuarioProps[]>([])
   const [users, setUsers] = useState<ResponseProps | null>(null)
   const [adicionar, setAdicionar] = useState(false)
   const [remover, setRemover] = useState(false)
   const [editar, setEditar] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
+
+  const handleAddUser = () => {
+    setAdicionar(!adicionar)
+    setEditar(false)
+    setRemover(false)
+    if (adicionar) {
+      refreshData()
+    }
+  }
+
+  const handleRemoveUser = () => {
+    if (selectedUsers.length === 0) {
+      alert("Selecione pelo menos um usuário para remover")
+      return
+    }
+
+    setAdicionar(false)
+    setEditar(false)
+    setRemover(!remover)
+    if (remover) {
+      refreshData()
+    }
+  }
+
+  const handleEditUser = () => {
+    if (selectedUsers.length === 0) {
+      alert("Selecione um usuário para editar")
+      return
+    } else if (selectedUsers.length > 1) {
+      alert("Pode editar um usuário por vez")
+      return
+    }
+
+    setAdicionar(false)
+    setRemover(false)
+    setEditar(!editar)
+    if (editar) {
+      refreshData()
+    }
+  }
 
   const getUsers = async () => {
     if (isLoading) return
@@ -79,38 +118,24 @@ export default function GenericTable() {
 
   const refreshData = () => {
     setRefreshTrigger((atualizar) => atualizar + 1)
+    setSelectedUsers([])
+  }
+
+  const toggleUserSelection = (user: UsuarioProps) => {
+    setSelectedUsers(prevSelected => {
+      const isSelected = prevSelected.some(u => u.id === user.id)
+
+      if (isSelected) {
+        return prevSelected.filter(u => u.id !== user.id)
+      } else {
+        return [...prevSelected, user]
+      }
+    })
   }
 
   useEffect(() => {
     getUsers()
   }, [refreshTrigger])
-
-  const handleAddUser = () => {
-    setAdicionar(!adicionar)
-    setEditar(false)
-    setRemover(false)
-    if (adicionar) {
-      refreshData()
-    }
-  }
-
-  const handleRemoveUser = () => {
-    setAdicionar(false)
-    setEditar(false)
-    setRemover(!remover)
-    if (remover) {
-      refreshData()
-    }
-  }
-
-  const handleEditUser = () => {
-    setAdicionar(false)
-    setEditar(!editar)
-    setRemover(false)
-    if (editar) {
-      refreshData()
-    }
-  }
 
   return (
     <>
@@ -145,23 +170,42 @@ export default function GenericTable() {
                     </td>
                   </tr>
                 ) : (
-                  users?.content?.map((user) => (
-                    <tr
-                      key={user.id}
-                      className="bg-[#FAF6ED] hover:bg-vermelho bg-ver hover:bg-opacity-30 cursor-pointer border-b border-[#E0D6CE]"
-                      onClick={() => on}
-                    >
-                      <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">{user.nome}</td>
-                      <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">{user.email}</td>
-                      <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">{user.telefone}</td>
-                      <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">{user.cpf}</td>
-                      <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">{user.tipo_conta}</td>
-                    </tr>
-                  ))
+                  users?.content?.map((user) => {
+                    const isSelected = selectedUsers.some(u => u.id === user.id)
+                    return (
+                      <tr
+                        key={user.id}
+                        className={`cursor-pointer border-b border-[#E0D6CE] ${isSelected ? "bg-vermelho text-white" : "bg-[#FAF6ED] hover:bg-vermelho hover:bg-opacity-30"
+                          }`}
+                        onClick={() => toggleUserSelection(user)}
+                      >
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
+                          {user.nome}
+                        </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
+                          {user.email}
+                        </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
+                          {user.telefone}
+                        </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
+                          {user.cpf}
+                        </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
+                          {user.tipo_conta}
+                        </td>
+                      </tr>
+                    )
+                  })
                 )}
               </tbody>
             </table>
           </div>
+          {selectedUsers.length > 0 && (
+            <div className="p-3 bg-[#FAF6ED] border-t border-[#E0D6CE]">
+              <p className="text-vermelho font-medium">{selectedUsers.length} usuário(s) selecionado(s)</p>
+            </div>
+          )}
         </div>
         <div className="flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full ">
           <button
@@ -189,7 +233,7 @@ export default function GenericTable() {
           <button
             onClick={handleEditUser}
             className="w-36 lg:h-[50px] m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
-            disabled={isLoading || !selectedData}
+            disabled={isLoading || selectedUsers.length !== 1}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
               <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" className="lg:w-4" />
@@ -199,9 +243,14 @@ export default function GenericTable() {
         </div>
       </div>
 
-      {adicionar && <InputDadosUsuario onComplete={refreshData} />}
-      {remover && <RemoveUsuario onComplete={refreshData} />}
+      {adicionar && (
+        <>
+          <div>
+            <InputDadosUsuario onComplete={refreshData} />
+          </div>
+        </>
+      )}
+      {remover && <RemoveUsuario selectedUsers={selectedUsers} onComplete={refreshData} />}
     </>
   )
 }
-

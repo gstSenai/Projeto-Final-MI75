@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Botao } from '@/components/botao';
 import { useForm } from 'react-hook-form';
 import request from '@/routes/request';
+import { InputEnderecoPropriedade } from '../inputEnderecoPropriedade';
 
 interface FormularioInputProps {
     placeholder: string
@@ -69,7 +70,18 @@ interface UsuarioProps {
     senha: string
     confirmar_senha?: string
     ultimo_acesso?: string
-    imovel: string
+    endereco: EnderecoUsuarioProps
+}
+
+interface EnderecoUsuarioProps {
+    id: number
+    uf: string
+    cidade: string
+    cep: string
+    bairro: string
+    rua: string
+    numero: string
+    tipo_residencia: string
 }
 
 interface InputDadosUsuarioProps {
@@ -81,8 +93,10 @@ export function InputDadosUsuario({ onComplete }: InputDadosUsuarioProps) {
     const [showForm, setShowForm] = useState(true)
     const [showModal, setShowModal] = useState(false)
     const [lastAddedUser, setLastAddedUser] = useState<UsuarioProps | null>(null)
+    const [lastAddedEndereco, setLastAddedEndereco] = useState<UsuarioProps | null>(null)
 
     const tiposConta = ['Usuario', 'Corretor', 'Administrador', 'Editor'];
+
 
     const addUser = async (data: UsuarioProps) => {
         try {
@@ -104,26 +118,67 @@ export function InputDadosUsuario({ onComplete }: InputDadosUsuarioProps) {
         }
     };
 
+    const addEndereco = async (data: UsuarioProps) => {
+        try {
+            const response = await request('POST', 'http://localhost:9090/users/create', data.endereco);
+            setLastAddedUser(response);
+            return response;
+        } catch (error) {
+            console.error("Erro ao adicionar usuário:", error);
+            throw error;
+        }
+    };
+
+    const deleteEndereco = async (endereco: number): Promise<void> => {
+        try {
+            await request('DELETE', `http://localhost:9090/users/delete/${enderecoId}`);
+        } catch (error) {
+            console.error("Erro ao deletar usuário:", error);
+            throw error;
+        }
+    };
+
+
     const onSubmitDelete = async () => {
-        if (lastAddedUser) {
-            await deleteUser(lastAddedUser.id);
-            setShowModal(false);
-            setLastAddedUser(null);
+        if (lastAddedUser && lastAddedEndereco) {
+            await deleteUser(lastAddedUser.id)
+            await deleteEndereco(lastAddedEndereco.endereco.id)
+            setShowModal(false)
+            setLastAddedUser(null)
+            setLastAddedEndereco(null)
             if (onComplete) {
                 onComplete();
             }
         }
     }
 
+    const extractEndereco = (data: UsuarioProps): EnderecoUsuarioProps => ({
+        id: data.endereco.id,
+        uf: data.endereco.uf,
+        cidade: data.endereco.cidade,
+        cep: data.endereco.cep,
+        bairro: data.endereco.bairro,
+        rua: data.endereco.rua,
+        numero: data.endereco.numero,
+        tipo_residencia: data.endereco.tipo_residencia
+    });
+    
     const onSubmit = async (data: UsuarioProps) => {
         try {
             const addedUser = await addUser(data);
+            
+            const enderecoData = extractEndereco(data);
+            const addedEnderecoUser = await addEndereco(enderecoData);
+    
             setShowForm(false);
             setShowModal(true);
             setLastAddedUser(addedUser);
+            setLastAddedEndereco(addedEnderecoUser);
+
             if (onComplete) {
                 onComplete();
             }
+    
             setTimeout(() => {
                 setShowModal(false);
             }, 5000);
@@ -131,6 +186,7 @@ export function InputDadosUsuario({ onComplete }: InputDadosUsuarioProps) {
             console.error("Erro ao submeter formulário:", error);
         }
     };
+    
 
     return (
         <>
@@ -140,7 +196,7 @@ export function InputDadosUsuario({ onComplete }: InputDadosUsuarioProps) {
                         <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
                         <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-vermelho "></hr>
                     </div>
-                    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col lg:gap-10">
+                    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col lg:gap-10 mb-10">
                         <div className="flex lg:gap-16">
                             <FormularioInput
                                 placeholder="Nome:"
@@ -189,14 +245,16 @@ export function InputDadosUsuario({ onComplete }: InputDadosUsuarioProps) {
                                 options={tiposConta}
                             />
                         </div>
-
-                        <div className="flex items-center gap-16 mt-10">
-                            <div className="flex gap-[30rem] w-full">
-                                <Botao onClick={() => console.log()} texto="Cancelar" />
-                                <Botao onClick={handleSubmit(onSubmit)} texto="Salvar cadastro" />
-                            </div>
-                        </div>
                     </form>
+
+                    <InputEnderecoPropriedade />
+
+                    <div className="flex items-center gap-16 mt-10">
+                        <div className="flex gap-[30rem] w-full">
+                            <Botao onClick={() => console.log()} texto="Cancelar" />
+                            <Botao onClick={handleSubmit(onSubmit)} texto="Salvar cadastro" />
+                        </div>
+                    </div>
                 </div>
             )}
 
