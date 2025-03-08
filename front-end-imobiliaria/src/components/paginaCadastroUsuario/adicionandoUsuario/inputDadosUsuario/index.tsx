@@ -92,13 +92,13 @@ export function InputDadosUsuario({ onComplete }: InputDadosUsuarioProps) {
     const { register, handleSubmit, formState: { errors } } = useForm<UsuarioProps>()
     const [showForm, setShowForm] = useState(true)
     const [showModal, setShowModal] = useState(false)
-    const [lastAddedUser, setLastAddedUser] = useState<UsuarioProps | null>(null)
-    const [lastAddedEndereco, setLastAddedEndereco] = useState<UsuarioProps | null>(null)
+    // const [lastAddedUser, setLastAddedUser] = useState<UsuarioProps | null>(null)
+    const [lastAddedEndereco, setLastAddedEndereco] = useState<EnderecoUsuarioProps | null>(null)
 
     const tiposConta = ['Usuario', 'Corretor', 'Administrador', 'Editor'];
 
 
-    const addUser = async (data: UsuarioProps) => {
+    /* const addUser = async (data: UsuarioProps) => {
         try {
             const response = await request('POST', 'http://localhost:9090/users/create', data);
             setLastAddedUser(response);
@@ -116,12 +116,12 @@ export function InputDadosUsuario({ onComplete }: InputDadosUsuarioProps) {
             console.error("Erro ao deletar usuário:", error);
             throw error;
         }
-    };
+    }; */
 
-    const addEndereco = async (data: UsuarioProps) => {
+    const addEndereco = async (data: EnderecoUsuarioProps) => {
         try {
-            const response = await request('POST', 'http://localhost:9090/users/create', data.endereco);
-            setLastAddedUser(response);
+            const response = await request('POST', 'http://localhost:9090/endereco/create', data);
+            setLastAddedEndereco(response);
             return response;
         } catch (error) {
             console.error("Erro ao adicionar usuário:", error);
@@ -129,9 +129,9 @@ export function InputDadosUsuario({ onComplete }: InputDadosUsuarioProps) {
         }
     };
 
-    const deleteEndereco = async (endereco: number): Promise<void> => {
+    const deleteEndereco = async (enderecoId: number): Promise<void> => {
         try {
-            await request('DELETE', `http://localhost:9090/users/delete/${enderecoId}`);
+            await request('DELETE', `http://localhost:9090/endereco/delete/${enderecoId}`);
         } catch (error) {
             console.error("Erro ao deletar usuário:", error);
             throw error;
@@ -140,11 +140,9 @@ export function InputDadosUsuario({ onComplete }: InputDadosUsuarioProps) {
 
 
     const onSubmitDelete = async () => {
-        if (lastAddedUser && lastAddedEndereco) {
-            await deleteUser(lastAddedUser.id)
-            await deleteEndereco(lastAddedEndereco.endereco.id)
+        if (lastAddedEndereco) {
+            await deleteEndereco(lastAddedEndereco.id)
             setShowModal(false)
-            setLastAddedUser(null)
             setLastAddedEndereco(null)
             if (onComplete) {
                 onComplete();
@@ -152,33 +150,18 @@ export function InputDadosUsuario({ onComplete }: InputDadosUsuarioProps) {
         }
     }
 
-    const extractEndereco = (data: UsuarioProps): EnderecoUsuarioProps => ({
-        id: data.endereco.id,
-        uf: data.endereco.uf,
-        cidade: data.endereco.cidade,
-        cep: data.endereco.cep,
-        bairro: data.endereco.bairro,
-        rua: data.endereco.rua,
-        numero: data.endereco.numero,
-        tipo_residencia: data.endereco.tipo_residencia
-    });
-    
     const onSubmit = async (data: UsuarioProps) => {
         try {
-            const addedUser = await addUser(data);
-            
-            const enderecoData = extractEndereco(data);
-            const addedEnderecoUser = await addEndereco(enderecoData);
-    
+            const addedEnderecoUser = await addEndereco(data.endereco);
+
             setShowForm(false);
             setShowModal(true);
-            setLastAddedUser(addedUser);
             setLastAddedEndereco(addedEnderecoUser);
 
             if (onComplete) {
                 onComplete();
             }
-    
+
             setTimeout(() => {
                 setShowModal(false);
             }, 5000);
@@ -186,7 +169,7 @@ export function InputDadosUsuario({ onComplete }: InputDadosUsuarioProps) {
             console.error("Erro ao submeter formulário:", error);
         }
     };
-    
+
 
     return (
         <>
@@ -258,7 +241,7 @@ export function InputDadosUsuario({ onComplete }: InputDadosUsuarioProps) {
                 </div>
             )}
 
-            {showModal && lastAddedUser && (
+            {showModal && lastAddedEndereco && (
                 <div className="w-full bottom-16 pl-10 items-center relative">
                     <div className='bg-vermelho/80 w-72 flex gap-1 p-3 rounded-[20px] text-white'>
                         <p>Adicionado com Sucesso!</p>

@@ -72,7 +72,7 @@ export function InputEnderecoPropriedade() {
             <div className="flex lg:gap-16">
                 <FormularioInput
                     placeholder="UF:"
-                    name="UF:"
+                    name="uf"
                     showOptions
                     custumizacaoClass="lg:w-[20%]"
                     options={estados}

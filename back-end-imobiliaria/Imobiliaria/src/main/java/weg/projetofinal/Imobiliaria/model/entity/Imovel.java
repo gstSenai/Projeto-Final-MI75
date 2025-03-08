@@ -1,5 +1,6 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,9 +59,11 @@ public class Imovel {
 
     @ManyToOne
     @JoinColumn(name = "id_usuario")
+    @JsonIgnore
     private Usuario id_usuario;
 
     @OneToMany(mappedBy = "id_imovel")
+    @JsonIgnore
     private List<Imagem> imagem;
 
     public ImovelGetResponseDTO convert(){

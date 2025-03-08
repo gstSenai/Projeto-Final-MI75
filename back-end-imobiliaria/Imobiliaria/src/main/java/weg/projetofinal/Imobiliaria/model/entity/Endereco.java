@@ -1,5 +1,6 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -41,6 +42,7 @@ public class Endereco {
     private String complemento;
 
     @OneToOne(mappedBy = "id_endereco")
+    @JsonIgnore
     private Imovel imovel;
 
     public EnderecoImovelGetResponseDTO convert(){

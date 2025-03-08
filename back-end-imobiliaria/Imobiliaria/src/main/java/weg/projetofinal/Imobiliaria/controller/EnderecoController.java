@@ -15,6 +15,7 @@ import weg.projetofinal.Imobiliaria.service.EnderecoService;
 
 @RestController
 @RequestMapping("/endereco")
+@CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
 public class EnderecoController {
 

@@ -1,4 +1,5 @@
-"use client"
+'use client'
+
 import React, { useEffect, useState } from 'react';
 import { UseFormRegister } from 'react-hook-form';
 import { FormularioInput } from '../formularioInput';
@@ -27,9 +28,18 @@ export function EnderecoSection({ register }: EnderecoSectionProps) {
         }
     }, [uf]);
 
+    const handleUfChange = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+        if (event.target instanceof HTMLSelectElement) {
+            setUf(event.target.value);
+        } else if (event.target instanceof HTMLInputElement) {
+            setCidade(event.target.value);
+        }
+    };
+
     return (
         <>
-            <div className="font-inter flex justify-between max-lg:justify-center">
+            <div className="font-inter flex-col justify-between max-lg:justify-center">
+                <hr className="mt-16 mb-4 w-full h-2 rounded-2xl bg-vermelho max-lg:h-3 max-lg:mt-10"></hr>
                 <div className="flex flex-row items-center max-lg:justify-center">
                     <p className="text-2xl xl:text-4xl font-semibold my-10 max-lg:hidden">Endereço:</p>
                 </div>
@@ -41,6 +51,7 @@ export function EnderecoSection({ register }: EnderecoSectionProps) {
                         name="uf"
                         showOptions
                         register={register}
+                        onChange={handleUfChange}
                         custumizacaoClass="lg:w-[20%]"
                         options={estados}
                     />
@@ -64,27 +75,19 @@ export function EnderecoSection({ register }: EnderecoSectionProps) {
                         placeholder="Bairro:"
                         name="bairro"
                         register={register}
-                        custumizacaoClass="lg:w-1/3" 
+                        custumizacaoClass="lg:w-1/3"
                     />
                     <FormularioInput
                         placeholder="Rua:"
-                        name="rua"
+                        name="cep"
                         register={register}
-                        custumizacaoClass="lg:w-1/3" 
+                        custumizacaoClass="lg:w-1/3"
                     />
                     <FormularioInput
                         placeholder="Número:"
                         name="numero"
                         register={register}
-                        custumizacaoClass="lg:w-1/3" 
-                    />
-                </div>
-                <div className="flex lg:gap-16">
-                    <FormularioInput
-                        placeholder="Nome da Propriedade:"
-                        name="nome da propriedade"
-                        register={register}
-                        custumizacaoClass="lg:w-full" 
+                        custumizacaoClass="lg:w-1/3"
                     />
                 </div>
                 <div className="flex lg:gap-16">
@@ -92,7 +95,7 @@ export function EnderecoSection({ register }: EnderecoSectionProps) {
                         placeholder="Complemento:"
                         name="complemento"
                         register={register}
-                        custumizacaoClass="lg:w-full h-40" 
+                        custumizacaoClass="lg:w-full h-40"
                     />
                 </div>
             </div>

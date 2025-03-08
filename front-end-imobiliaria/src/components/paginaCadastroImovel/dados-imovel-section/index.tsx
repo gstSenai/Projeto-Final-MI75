@@ -20,14 +20,14 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
             <div className="flex flex-col lg:gap-10">
                 <div className="flex lg:gap-10">
                     <FormularioInput
-                        placeholder="Tipo do imóvel:"
-                        name="Tipo do imóvel"
+                        placeholder="Nome da Propriedade:"
+                        name="nome_propriedade"
                         register={register}
                         custumizacaoClass="lg:w-1/3"
                     />
                     <FormularioInput
                         placeholder="Tipo do imóvel:"
-                        name="Tipo do imóvel"
+                        name="tipo_imovel"
                         showOptions
                         register={register}
                         custumizacaoClass="lg:w-1/3"
@@ -45,13 +45,13 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                 <div className="flex lg:gap-10">
                     <FormularioInput
                         placeholder="Valor do Preço Promocional (R$):"
-                        name="Valor do Preço Promocional (R$)"
+                        name="valor_promocional"
                         register={register}
                         custumizacaoClass="lg:w-[40%]"
                     />
                     <FormularioInput
                         placeholder="Permitir destaque:"
-                        name="Permitir destaque"
+                        name="destaque"
                         showOptions
                         register={register}
                         custumizacaoClass="lg:w-[35%]"
@@ -59,7 +59,7 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                     />
                     <FormularioInput
                         placeholder="Visibilidade:"
-                        name="Visibilidade"
+                        name="visibilidade"
                         showOptions
                         register={register}
                         custumizacaoClass="lg:w-[25%]"
@@ -69,13 +69,13 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                 <div className="flex lg:gap-10">
                     <FormularioInput
                         placeholder="Valor do IPTU (R$):"
-                        name="Valor do IPTU (R$)"
+                        name="valor_iptu"
                         register={register}
                         custumizacaoClass="lg:w-[63%]"
                     />
                     <FormularioInput
                         placeholder="Taxa de Condomínio Caso tenha (R$):"
-                        name="Taxa de Condomínio Caso tenha (R$):"
+                        name="condominio"
                         register={register}
                         custumizacaoClass="lg:w-full"
                     />
@@ -175,13 +175,6 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
             <div className="flex items-center lg:gap-10 w-full mt-10">
                 <Descricao className="w-full h-80" />
                 <ImageUpload title="Fotos do Imóvel" className="w-[55%] h-80" />
-            </div>
-
-            <div className="flex items-center gap-16 mt-10">
-                <div className="flex gap-[30rem] w-full">
-                    <Botao texto="Cancelar" />
-                    <Botao texto="Salvar cadastro" />
-                </div>
             </div>
         </div>
     )

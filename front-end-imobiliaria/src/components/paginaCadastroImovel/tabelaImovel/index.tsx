@@ -6,6 +6,7 @@ import { InputDadosUsuario } from "../../paginaCadastroUsuario/adicionandoUsuari
 import { InputEditandoDadosUsuario } from "../../paginaCadastroUsuario/editandoUsuario/inputEditarDadosUsuario"
 import request from "@/routes/request"
 import { Formulario } from "../formulario"
+import { ListaDeCadastros } from "../formularioEscrito"
 // import { RemoveUsuario } from "../removerUsuario"
 // import { InputEnderecoPropriedade } from "../adicionandoUsuario/inputEnderecoPropriedade"
 
@@ -124,7 +125,7 @@ export default function TabelaImovel() {
 
   return (
     <>
-      <div className="flex flex-col 2xl:px-20 xl:px-20 lg:px-10 px-10 mb-20 sm:flex-col md:flex-col lg:flex-row 2xl:flex-row">
+      <div className="flex flex-col 2xl:px-20 xl:px-20 lg:px-10 px-10 sm:flex-col md:flex-col lg:flex-row 2xl:flex-row">
         <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6">
           <div className="overflow-x-auto max-h-[500px]">
             <table className="w-full border-separate border-spacing-0">
@@ -227,6 +228,14 @@ export default function TabelaImovel() {
           </button>
         </div>
       </div>
+      <ListaDeCadastros
+        textos={[
+          "ID do Imóvel: [Gerado automaticamente]",
+          "Telefone: telefone do Proprietário/Imobiliária",
+          "Dono: Nome do Proprietário/Imobiliária",
+          "Email: Email do Proprietário/Imobiliária",
+        ]}
+      />
 
       {adicionar && (
         <>
