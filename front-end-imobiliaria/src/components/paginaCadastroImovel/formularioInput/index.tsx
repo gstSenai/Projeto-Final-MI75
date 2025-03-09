@@ -23,7 +23,7 @@ export function FormularioInput({
   register,
   errorMessage,
   icon,
-  onChange, // custom onChange handler
+  onChange,
 }: FormularioInputProps) {
   const getIconPath = () => {
     switch (icon?.type) {

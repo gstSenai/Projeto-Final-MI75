@@ -95,15 +95,14 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
 
     const onSubmit = async (data: ImovelProps) => {
         try {
-            const endereco = data.endereco;
-    
             // Valide os dados do endereço antes de fazer a requisição
-            if (!endereco.rua || !endereco.cep || !endereco.numero || !endereco.bairro || !endereco.cidade || !endereco.uf) {
+            if (!data.endereco.rua || !data.endereco.cep || !data.endereco.numero 
+                || !data.endereco.bairro || !data.endereco.cidade || !data.endereco.uf) {
                 console.error("Faltando dados obrigatórios do endereço!");
                 return;
             }
     
-            const addedEnderecoImovel = await addEndereco(endereco);
+            const addedEnderecoImovel = await addEndereco(data.endereco);
     
             // Continuar com o processo depois de adicionar o endereço
     
