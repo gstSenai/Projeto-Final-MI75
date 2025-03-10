@@ -77,8 +77,8 @@ export function PesquisaPaginaInicial() {
                             <PlaceFilter tipo="NumLocal" texto='Quant. de Quartos:' />
                         </div>
                         <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between '>
-                            <PlaceFilter tipo="NumLocal" texto='Quant. de Quartos:' />
-                            <PlaceFilter tipo="NumLocal" texto='Quant. de Quartos:' />
+                            <PlaceFilter tipo="NumLocal" texto='Quant. de Garagem:' />
+                            <PlaceFilter tipo="NumLocal" texto='Quant. de Banheiros:' />
                         </div>
                     </div>
                 )}

@@ -1,9 +1,9 @@
-import { Montserrat } from 'next/font/google';
-import { PesquisaPaginaInicial } from '@/components/PesquisaPaginaInicial';
 import Card from '@/components/CardImovel/Card';
+import { ImoveisAlugados } from '@/components/NumeroAtualizaveis/ImoveisAlugados';
 import { ImoveisDisponiveis } from '@/components/NumeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisVendidos } from '@/components/NumeroAtualizaveis/ImoveisVendidos';
-import { ImoveisAlugados } from '@/components/NumeroAtualizaveis/ImoveisAlugados';
+import { PesquisaPaginaInicial } from '@/components/PesquisaPaginaInicial';
+import { Montserrat } from 'next/font/google';
 
 // Carregando a fonte Inter
 const montserrat = Montserrat({
@@ -101,7 +101,12 @@ export default function PaginaInicial() {
                         <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
                     </div>
                 </div>
+                <div>
+                <Image src="/PreFotterInicial.png" alt="Fundo Vermelho" width={100} height={100} quality={100}
+                />
 
+
+                </div>
 
 
             </section>
@@ -111,10 +116,10 @@ export default function PaginaInicial() {
                 />
 
                 <div className="absolute inset-0 flex flex-col lg:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around self-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32 gap-11">
-                    <div  className='flex text-center items-center gap-7'>
+                    <div className='flex text-center items-center gap-7'>
                         <Image src="/imoveisCadastros.png" alt="imoveis Cadastrados" objectFit="cover" width={106} height={108} quality={100} />
                         <div className='flex flex-col  text-start'>
-                            <ImoveisDisponiveis/>
+                            <ImoveisDisponiveis />
                             <p>Imoveis Cadastrados</p>
                         </div>
                     </div>
@@ -122,15 +127,15 @@ export default function PaginaInicial() {
                     <div className='flex text-center items-center gap-7'>
                         <Image src="/imoveisVendidos.png" alt="Imoveis Vendidos" objectFit="cover" width={106} height={108} quality={100} />
                         <div className='flex flex-col  text-start'>
-                            <ImoveisVendidos/>
+                            <ImoveisVendidos />
                             <p>Imoveis Vendidos</p>
                         </div>
                     </div>
 
-                    <div  className='flex text-center items-center gap-7'>
+                    <div className='flex text-center items-center gap-7'>
                         <Image src="/imoveisAlugados.png" alt="Imoveis Alugados" objectFit="cover" width={106} height={108} quality={100} />
                         <div className='flex flex-col text-start'>
-                            <ImoveisAlugados/>
+                            <ImoveisAlugados />
                             <p>Imoveis Alugados</p>
                         </div>
                     </div>
