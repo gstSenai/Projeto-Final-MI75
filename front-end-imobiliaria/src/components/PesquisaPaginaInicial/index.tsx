@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { Montserrat } from 'next/font/google';
 import Image from 'next/image';
-import PlaceFilter from '../botãoseleção';
+import PlaceFilter from '../botaoselecao';
 
 
 const montserrat = Montserrat({
