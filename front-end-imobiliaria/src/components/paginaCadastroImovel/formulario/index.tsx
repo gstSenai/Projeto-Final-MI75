@@ -27,13 +27,14 @@ interface ImovelProps {
 }
 
 interface EnderecoImovelProps {
-    id: number
+    id?: number
     cep: string
     rua: string
     numero: string
     bairro: string
     cidade: string
     uf: string
+    complemento: string
 }
 
 interface InputDadosImovelProps {
@@ -41,45 +42,68 @@ interface InputDadosImovelProps {
 }
 
 export function Formulario({ onComplete }: InputDadosImovelProps) {
-    const { register: registerImovel, handleSubmit: handleSubmitImovel } = useForm<ImovelProps>();
-    const { register: registerEndereco, handleSubmit: handleSubmitEndereco } = useForm<EnderecoImovelProps>();
+    const { register: registerImovel, handleSubmit: handleSubmitImovel } = useForm<ImovelProps>({
+        defaultValues: {
+            endereco: {
+                cep: '',
+                rua: '',
+                numero: '',
+                bairro: '',
+                cidade: '',
+                uf: '',
+                complemento: ""
+            }
+        }
+    });
+
+    const { register: registerEndereco, handleSubmit: handleSubmitEndereco, formState: { errors: enderecoErrors } } = useForm<EnderecoImovelProps>();
     const [selectedVenda, setSelectedVenda] = useState(false)
     const [selectedLocacao, setSelectedLocacao] = useState(false)
     const [showForm, setShowForm] = useState(true)
     const [showModal, setShowModal] = useState(false)
     const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
     const [lastAddedEndereco, setLastAddedEndereco] = useState<EnderecoImovelProps | null>(null)
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const addEndereco = async (data: EnderecoImovelProps) => {
         try {
+            // Log the data being sent to help debug
+            console.log("Sending address data:", data);
+            
+            // Make sure all required fields have values
+            if (!data.cep || !data.rua || !data.numero || !data.bairro || !data.cidade || !data.uf) {
+                throw new Error('Todos os campos obrigatórios devem ser preenchidos');
+            }
+            
             const response = await request("POST", "http://localhost:9090/endereco/create", data);
+            
             if (response.status === 201) {
                 return response.data;
             }
-            throw new Error('Falha ao criar o endereço');
+            
+            console.error("Resposta do servidor:", response);
+            throw new Error(`Falha ao criar o endereço: ${response.status}`);
         } catch (error) {
             console.error("Erro ao adicionar endereço:", error);
             throw error;
         }
     };
 
-
     const deleteEndereco = async (enderecoId: number): Promise<void> => {
         try {
             await request('DELETE', `http://localhost:9090/endereco/delete/${enderecoId}`);
         } catch (error) {
-            console.error("Erro ao deletar usuário:", error);
+            console.error("Erro ao deletar endereço:", error);
             throw error;
         }
     };
-
 
     const addImovel = async (data: ImovelProps) => {
         try {
             const response = await request("POST", "http://localhost:9090/imovel/create", data)
             return response
         } catch (error) {
-            console.error("Erro ao adicionar usuário:", error)
+            console.error("Erro ao adicionar imóvel:", error)
             throw error
         }
     }
@@ -88,50 +112,63 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         try {
             await request('DELETE', `http://localhost:9090/imovel/delete/${imoveId}`)
         } catch (error) {
-            console.error("Erro ao deletar usuário:", error)
+            console.error("Erro ao deletar imóvel:", error)
             throw error;
         }
     }
 
-    const onSubmit = async (data: ImovelProps) => {
+    const onSubmit = async (data: EnderecoImovelProps) => {
+        if (isSubmitting) return;
+        
         try {
-            // Valide os dados do endereço antes de fazer a requisição
-            if (!data.endereco.rua || !data.endereco.cep || !data.endereco.numero 
-                || !data.endereco.bairro || !data.endereco.cidade || !data.endereco.uf) {
-                console.error("Faltando dados obrigatórios do endereço!");
+            setIsSubmitting(true);
+            
+            // Validate the data before sending
+            if (!data.cep || !data.rua || !data.numero || !data.bairro || !data.cidade || !data.uf) {
+                alert('Por favor, preencha todos os campos obrigatórios do endereço');
+                setIsSubmitting(false);
                 return;
             }
-    
-            const addedEnderecoImovel = await addEndereco(data.endereco);
-    
-            // Continuar com o processo depois de adicionar o endereço
-    
+            
+            console.log("Submitting address data:", data);
+            
+            const response = await addEndereco(data);
+            
+            console.log("Server response:", response);
+            
             setShowForm(false);
             setShowModal(true);
-            setLastAddedEndereco(addedEnderecoImovel);
+            setLastAddedEndereco(response.data);
     
-            if (onComplete) {
-                onComplete();
-            }
+            if (onComplete) onComplete();
     
-            setTimeout(() => {
-                setShowModal(false);
-            }, 5000);
+            setTimeout(() => setShowModal(false), 5000);
         } catch (error) {
-            console.error("Erro ao submeter formulário:", error);
+            console.error("Erro ao salvar Endereço:", error);
+            alert(`Erro ao salvar endereço: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+        } finally {
+            setIsSubmitting(false);
         }
     };
-    
 
     const onSubmitDelete = async () => {
         if (lastAddedImovel && lastAddedEndereco) {
-            await deleteImovel(lastAddedImovel.id)
-            await deleteEndereco(lastAddedEndereco.id)
-            setShowModal(false)
-            setLastAddedImovel(null)
-            setLastAddedEndereco(null)
-            if (onComplete) {
-                onComplete()
+            try {
+                if (lastAddedImovel.id) {
+                    await deleteImovel(lastAddedImovel.id);
+                }
+                if (lastAddedEndereco.id) {
+                    await deleteEndereco(lastAddedEndereco.id);
+                }
+                setShowModal(false);
+                setLastAddedImovel(null);
+                setLastAddedEndereco(null);
+                if (onComplete) {
+                    onComplete();
+                }
+            } catch (error) {
+                console.error("Erro ao desfazer:", error);
+                alert("Erro ao desfazer a operação");
             }
         }
     }
@@ -147,7 +184,10 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
                 <div className="flex items-center gap-16 mt-10">
                     <div className="flex gap-[30rem] w-full">
                         <Botao onClick={() => console.log()} texto="Cancelar" />
-                        <Botao onClick={handleSubmitImovel(onSubmit)} texto="Salvar cadastro" />
+                        <Botao 
+                            onClick={handleSubmitEndereco(onSubmit)} 
+                            texto={isSubmitting ? "Salvando..." : "Salvar cadastro"} 
+                        />
                     </div>
                 </div>
                 <Checkbox label="Venda" checked={selectedVenda} onChange={() => setSelectedVenda(!selectedVenda)} />
@@ -160,7 +200,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
                     <div className="flex items-center gap-16 mt-10">
                         <div className="flex gap-[30rem] w-full">
                             <Botao onClick={() => console.log()} texto="Cancelar" />
-                            <Botao onClick={handleSubmitImovel(onSubmit)} texto="Salvar cadastro" />
+                            <Botao onClick={() => console.log()} texto="Salvar cadastro" />
                         </div>
                     </div>
                 </>
@@ -182,4 +222,3 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         </>
     )
 }
-

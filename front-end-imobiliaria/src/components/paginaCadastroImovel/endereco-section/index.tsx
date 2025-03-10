@@ -4,11 +4,18 @@ import React, { useEffect, useState } from 'react';
 import { UseFormRegister } from 'react-hook-form';
 import { FormularioInput } from '../formularioInput';
 
-interface EnderecoSectionProps {
-    register: UseFormRegister<any>;
+interface EnderecoProps {
+    id?: number;
+    cep: string;
+    rua: string;
+    numero: string;
+    bairro: string;
+    cidade: string;
+    uf: string;
+    complemento: string;
 }
 
-export function EnderecoSection({ register }: EnderecoSectionProps) {
+export function EnderecoSection({ register }: { register: UseFormRegister<any> }) {
     const [uf, setUf] = useState<string>('');
     const [cidade, setCidade] = useState<string>('');
     const [cidades, setCidades] = useState<string[]>([]);
@@ -54,6 +61,7 @@ export function EnderecoSection({ register }: EnderecoSectionProps) {
                         onChange={handleUfChange}
                         custumizacaoClass="lg:w-[20%]"
                         options={estados}
+                        required={true}
                     />
                     <FormularioInput
                         placeholder="Cidade:"
@@ -62,12 +70,14 @@ export function EnderecoSection({ register }: EnderecoSectionProps) {
                         register={register}
                         custumizacaoClass="lg:w-[45.5%]"
                         options={cidades}
+                        required={true}
                     />
                     <FormularioInput
                         placeholder="Cep:"
                         name="cep"
                         register={register}
                         custumizacaoClass="lg:w-[32.5%]"
+                        required={true}
                     />
                 </div>
                 <div className="flex lg:gap-16">
@@ -76,18 +86,21 @@ export function EnderecoSection({ register }: EnderecoSectionProps) {
                         name="bairro"
                         register={register}
                         custumizacaoClass="lg:w-1/3"
+                        required={true}
                     />
                     <FormularioInput
                         placeholder="Rua:"
-                        name="cep"
+                        name="rua"
                         register={register}
                         custumizacaoClass="lg:w-1/3"
+                        required={true}
                     />
                     <FormularioInput
                         placeholder="Número:"
                         name="numero"
                         register={register}
                         custumizacaoClass="lg:w-1/3"
+                        required={true}
                     />
                 </div>
                 <div className="flex lg:gap-16">
