@@ -101,10 +101,24 @@ export default function PaginaInicial() {
                         <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
                     </div>
                 </div>
-                <div>
-                <Image src="/PreFotterInicial.png" alt="Fundo Vermelho" width={100} height={100} quality={100}
-                />
+                <div className='flex content-between justify-evenly py-20'>
 
+                    <button className='flex relative'>
+                        <Image src="/jaragua.png" alt="Imagem jaraguá" objectFit="cover" width={420} height={300} quality={100} />
+                        <h2 className="absolute inset-0 flex items-center justify-center text-2xl text-white font-semibold">Jaraguá do Sul</h2>
+                    </button>
+                    <button className='flex relative'>
+                        <Image src="/guaramirim.png" alt="Imagem guaramirim"  objectFit="cover" width={420} height={300} quality={100} />
+                        <h2 className="absolute inset-0 flex items-center justify-center text-2xl text-white font-semibold">Guaramirim</h2> 
+                    </button>
+                    <button className='flex relative'>
+                        <Image src="/curupa.png" alt="Imagem curupa" objectFit="cover" width={420} height={300} quality={100} />
+                        <h2 className="absolute inset-0 flex items-center justify-center text-2xl text-white font-semibold">Corupá</h2> 
+                    </button>   
+                    <button className='flex relative'>
+                        <Image src="/schorder.png" alt="Imagem schoreder"  objectFit="cover" width={420} height={300} quality={100} />
+                        <h2 className="absolute inset-0 flex items-center justify-center text-2xl text-white font-semibold">Schroeder</h2> 
+                    </button>
 
                 </div>
 
