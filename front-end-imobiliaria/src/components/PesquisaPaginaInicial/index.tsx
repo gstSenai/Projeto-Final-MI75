@@ -63,20 +63,20 @@ export function PesquisaPaginaInicial() {
                 {mostrarAvançado && (
                     <div>
                         <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between '>
-                            <div className='w-64 py-2  xl:w-[320px]'>
+                            <div className='py-2 w-64 xl:w-[320px]'>
                                 <p className='font-medium lg:font-bold text-2xl'>Min Valor:</p>
                                 <input className='rounded-md p-2 w-full bg-[#DFDAD0] text-[#702632]' type="value" placeholder='Busca por Valor Minimo' />
                             </div>
-                            <div className='w-64 py-2  xl:w-[320px]'>
+                            <div className='py-2 w-64 xl:w-[320px]'>
                                 <p className='font-medium lg:font-bold text-2xl'>Max Valor:</p>
                                 <input className='rounded-md p-2  w-full bg-[#DFDAD0] text-[#702632]' type="value" placeholder='Busca por Valor Maximo' />
                             </div>
                         </div>
-                        <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between '>
+                        <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between gap-4 '>
                             <PlaceFilter tipo="TipoLocal" texto='Quant. de Quartos:' />
                             <PlaceFilter tipo="NumLocal" texto='Quant. de Quartos:' />
                         </div>
-                        <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between '>
+                        <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between gap-4'>
                             <PlaceFilter tipo="NumLocal" texto='Quant. de Garagem:' />
                             <PlaceFilter tipo="NumLocal" texto='Quant. de Banheiros:' />
                         </div>
