@@ -65,6 +65,7 @@ export function FormularioInput({
         <select
           {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
           onChange={onChange}
+
           defaultValue=""
           className="appearance-none text-black max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full bg-transparent"
         >

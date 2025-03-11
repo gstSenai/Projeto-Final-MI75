@@ -1,5 +1,5 @@
 "use client"
-import type { UseFormRegister } from "react-hook-form"
+import { useForm, UseFormRegister  } from "react-hook-form"
 import { FormularioInput } from "../formularioInput"
 import { ImageUpload } from "../image-upload"
 import { Descricao } from "../descricao"
@@ -11,6 +11,7 @@ interface DadosImovelSectionProps {
 }
 
 export function DadosImovelSection({ register }: DadosImovelSectionProps) {
+    const {setValue} = useForm();
 
     return (
         <div className="flex flex-col">
@@ -34,12 +35,12 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                         options={["Casa", "Apartamento", "Terreno"]}
                     />
                     <FormularioInput
-                        placeholder="Estado do imóvel:"
-                        name="Estado do imóvel"
+                        placeholder="Tipo de transação:"
+                        name="tipo_transacao"
                         showOptions
                         register={register}
                         custumizacaoClass="lg:w-1/3"
-                        options={["Novo", "Usado", "Em construção", "Reformado"]}
+                        options={["Venda", "Locação", "Venda e Locação"]}
                     />
                 </div>
                 <div className="flex lg:gap-10">
@@ -51,19 +52,20 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                     />
                     <FormularioInput
                         placeholder="Permitir destaque:"
-                        name="destaque"
+                        name="test_destaque"
                         showOptions
                         register={register}
                         custumizacaoClass="lg:w-[35%]"
                         options={["Sim", "Não"]}
                     />
+
                     <FormularioInput
                         placeholder="Visibilidade:"
-                        name="visibilidade"
+                        name="test_visibilidade"
                         showOptions
                         register={register}
                         custumizacaoClass="lg:w-[25%]"
-                        options={["Público", "Privado", "Administrador"]}
+                        options={["Público", "Privado"]}
                     />
                 </div>
                 <div className="flex lg:gap-10">
@@ -78,6 +80,14 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                         name="condominio"
                         register={register}
                         custumizacaoClass="lg:w-full"
+                    />
+                    <FormularioInput
+                        placeholder="Status do imóvel:"
+                        name="status_imovel"
+                        showOptions
+                        register={register}
+                        custumizacaoClass="lg:w-[25%]"
+                        options={["Vendido", "Disponivel"]}
                     />
                 </div>
             </div>
@@ -95,7 +105,7 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                     <div className="flex flex-col lg:gap-10">
                         <FormularioInput
                             placeholder="Área Construída (m²):"
-                            name="Área Construída (m²):"
+                            name="area_construida"
                             register={register}
                             icon={{ type: "areaCT" }}
                             custumizacaoClass="lg:w-full"
@@ -132,7 +142,7 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                     <div className="flex flex-col lg:gap-10">
                         <FormularioInput
                             placeholder="Área do Terreno (m²):"
-                            name="Área do Terreno (m²):"
+                            name="area_terreno"
                             register={register}
                             icon={{ type: "areaCT" }}
                             custumizacaoClass="lg:w-full"
