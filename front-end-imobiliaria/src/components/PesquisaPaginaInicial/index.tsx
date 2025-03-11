@@ -36,11 +36,11 @@ export function PesquisaPaginaInicial() {
             <div className='bg-[#702632] w-0 lg:w-[650px] xl:w-[800px] pt-6 pr-16 pb-6 rounded-3xl text-white'>
                 <div className='flex flex-col  py-4 lg:flex-row 2xl:flex-row justify-between '>
                     <div className=' py-2 w-64 xl:w-[320px]'>
-                        <p className='font-medium lg:font-bold text-2xl'>Código:</p>
+                        <p className='font-medium lg:font-bold text-2xl pb-2'>Código:</p>
                         <input className='rounded-md p-2 w-full bg-[#DFDAD0] text-[#702632]' placeholder='Busca por Código' type="text" />
                     </div>
                     <div className=' py-2 w-64 xl:w-[320px]'>
-                        <p className='font-medium lg:font-bold text-2xl'>Localização:</p>
+                        <p className='font-medium lg:font-bold text-2xl pb-2'>Localização:</p>
                         <input className='rounded-md p-2  w-full bg-[#DFDAD0] text-[#702632]' type="text" placeholder='Busca por Localização' />
                     </div>
                 </div>
