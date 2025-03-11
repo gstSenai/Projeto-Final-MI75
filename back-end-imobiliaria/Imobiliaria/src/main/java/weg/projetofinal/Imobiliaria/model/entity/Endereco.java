@@ -42,7 +42,6 @@ public class Endereco {
     private String complemento;
 
     @OneToOne(mappedBy = "id_endereco")
-    @JsonIgnore
     private Imovel imovel;
 
     public EnderecoImovelGetResponseDTO convert(){

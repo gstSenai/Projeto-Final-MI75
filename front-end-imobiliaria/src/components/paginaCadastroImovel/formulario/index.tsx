@@ -6,6 +6,7 @@ import { DadosImovelSection } from "../dados-imovel-section"
 import { Checkbox } from "../checkbox"
 import request from "@/routes/request"
 import { Botao } from "@/components/botao"
+import { useQuery } from "@tanstack/react-query"
 
 interface ImovelProps {
     id: number
@@ -67,20 +68,18 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
 
     const addEndereco = async (data: EnderecoImovelProps) => {
         try {
-            // Log the data being sent to help debug
             console.log("Sending address data:", data);
-            
-            // Make sure all required fields have values
+
             if (!data.cep || !data.rua || !data.numero || !data.bairro || !data.cidade || !data.uf) {
                 throw new Error('Todos os campos obrigatórios devem ser preenchidos');
             }
-            
+
             const response = await request("POST", "http://localhost:9090/endereco/create", data);
-            
-            if (response.status === 201) {
-                return response.data;
-            }
-            
+
+            if (response && response.id) { 
+                return response; 
+            }            
+
             console.error("Resposta do servidor:", response);
             throw new Error(`Falha ao criar o endereço: ${response.status}`);
         } catch (error) {
@@ -119,29 +118,29 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
 
     const onSubmit = async (data: EnderecoImovelProps) => {
         if (isSubmitting) return;
-        
+
         try {
             setIsSubmitting(true);
-            
+
             // Validate the data before sending
             if (!data.cep || !data.rua || !data.numero || !data.bairro || !data.cidade || !data.uf) {
                 alert('Por favor, preencha todos os campos obrigatórios do endereço');
                 setIsSubmitting(false);
                 return;
             }
-            
+
             console.log("Submitting address data:", data);
-            
+
             const response = await addEndereco(data);
-            
+
             console.log("Server response:", response);
-            
+
             setShowForm(false);
             setShowModal(true);
             setLastAddedEndereco(response.data);
-    
+
             if (onComplete) onComplete();
-    
+
             setTimeout(() => setShowModal(false), 5000);
         } catch (error) {
             console.error("Erro ao salvar Endereço:", error);
@@ -184,9 +183,9 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
                 <div className="flex items-center gap-16 mt-10">
                     <div className="flex gap-[30rem] w-full">
                         <Botao onClick={() => console.log()} texto="Cancelar" />
-                        <Botao 
-                            onClick={handleSubmitEndereco(onSubmit)} 
-                            texto={isSubmitting ? "Salvando..." : "Salvar cadastro"} 
+                        <Botao
+                            onClick={handleSubmitEndereco(onSubmit)}
+                            texto={isSubmitting ? "Salvando..." : "Salvar cadastro"}
                         />
                     </div>
                 </div>
