@@ -21,7 +21,6 @@ public class CaracteristicaImovel {
     @OneToOne
     @MapsId
     @JoinColumn(name = "id_imovel", referencedColumnName = "id_imovel", foreignKey = @ForeignKey(name = "fk_caracteristica_imovel"))
-    @JsonIgnore
     private Imovel imovel;
     private Integer numero_quartos;
     private Integer numero_banheiros;
