@@ -43,18 +43,8 @@ public class Endereco {
     @OneToOne(mappedBy = "id_endereco")
     private Imovel imovel;
 
-    public EnderecoImovelGetResponseDTO convert(){
-        return new EnderecoImovelGetResponseDTO(
-                this.id, this.rua, this.cep,
-                this.numero, this.bairro, this.cidade,
-                this.uf, this.complemento);
-    }
 
-    public EnderecoGetResponseDTO convert2(){
-        return new EnderecoGetResponseDTO(
-                this.id, this.rua, this.cep,
-                this.numero, this.bairro, this.cidade,
-                this.uf, this.complemento, this.imovel.convert2());
-    }
+
+
 
 }
