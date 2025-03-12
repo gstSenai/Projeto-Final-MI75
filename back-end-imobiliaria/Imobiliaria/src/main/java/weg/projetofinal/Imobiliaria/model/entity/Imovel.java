@@ -67,44 +67,4 @@ public class Imovel {
     @OneToOne(mappedBy = "imovel", cascade = CascadeType.ALL)
     private CaracteristicaImovel caracteristicaImovel;
 
-    public ImovelGetResponseDTO convert(){
-        return new ImovelGetResponseDTO(
-                this.id, this.codigo, this.nome_propriedade,
-                this.tipo_transacao, this.valor_venda, this.tipo_imovel,
-                this.status_imovel, this.valor_promocional, this.destaque,
-                this.visibilidade, this.valor_iptu, this.condominio,
-                this.area_construida, this.area_terreno, this.descricao,
-                this.id_endereco.convert(), this.id_usuario.convert()
-        );
-    }
-
-
-    public ImovelEnderecoGetResponseDTO convert2() {
-        return new ImovelEnderecoGetResponseDTO(
-                this.id, this.codigo, this.nome_propriedade,
-                this.tipo_transacao, this.valor_venda, this.tipo_imovel,
-                this.status_imovel, this.valor_promocional, this.destaque,
-                this.visibilidade, this.valor_iptu, this.condominio,
-                this.area_construida, this.area_terreno, this.descricao);
-    }
-
-    public ImovelUsuarioGetResponseDTO convert3() {
-        return new ImovelUsuarioGetResponseDTO(
-                this.id, this.codigo, this.nome_propriedade,
-                this.tipo_transacao, this.valor_venda, this.tipo_imovel,
-                this.status_imovel, this.valor_promocional, this.destaque,
-                this.visibilidade, this.valor_iptu, this.condominio,
-                this.area_construida, this.area_terreno, this.descricao);
-    }
-
-    public ImovelImagemGetResponseDTO convert4(){
-        return new ImovelImagemGetResponseDTO(
-                this.id,this.codigo, this.nome_propriedade,
-                this.tipo_transacao, this.valor_venda, this.tipo_imovel,
-                this.status_imovel, this.valor_promocional, this.destaque,
-                this.visibilidade, this.valor_iptu, this.condominio,
-                this.area_construida, this.area_terreno, this.descricao
-        );
-    }
-
 }

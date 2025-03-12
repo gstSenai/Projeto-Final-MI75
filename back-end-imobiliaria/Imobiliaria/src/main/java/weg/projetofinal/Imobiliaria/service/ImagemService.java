@@ -9,6 +9,7 @@ import weg.projetofinal.Imobiliaria.model.dto.ImagemPutResponseDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Imagem;
 import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.repository.ImagemRepository;
+import weg.projetofinal.Imobiliaria.repository.ImovelRepository;
 
 @Service
 @AllArgsConstructor
@@ -16,8 +17,7 @@ public class ImagemService {
 
     private ImagemRepository repository;
 
-    public Imagem createImagem(ImagemPostRequestDTO imagemPostRequestDTO) {
-        Imagem imagem = imagemPostRequestDTO.convert();
+    public Imagem createImagem(Imagem imagem) {
         return repository.save(imagem);
     }
 
@@ -33,18 +33,17 @@ public class ImagemService {
         repository.deleteById(id);
     }
 
-    public Imagem updateImagem(Integer id, ImagemPutResponseDTO imagemDTO) {
+    public Imagem updateImagem(Integer id, Imagem imagemDTO) {
         Imagem imagemExistente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Imagem não encontrada para o ID: " + id));
 
-        imagemExistente.setCaminho_foto(imagemDTO.caminho_foto());
+        imagemExistente.setCaminho_foto(imagemDTO.getCaminho_foto());
 
-        if (imagemDTO.idImovel() != null) {
-            Imovel imovel = new Imovel();
-            imovel.setId(imagemDTO.idImovel());
-            imagemExistente.setImovel(imovel);
+        if (imagemDTO.getImovel() != null) {
+            imagemExistente.setImovel(imagemDTO.getImovel());
         }
 
         return repository.save(imagemExistente);
     }
+
 }

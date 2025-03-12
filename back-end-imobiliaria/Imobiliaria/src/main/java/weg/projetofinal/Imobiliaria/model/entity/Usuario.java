@@ -53,20 +53,4 @@ public class Usuario {
     @OneToMany(mappedBy = "id_usuario")
     private List<Imovel> imovel;
 
-    public UsuarioImovelGetResponseDTO convert(){
-        return new UsuarioImovelGetResponseDTO(
-                this.id, this.nome, this.sobrenome,this.cpf,
-                this.tipo_conta, this.telefone, this.data_nascimento,
-                this.email, this.senha);
-    }
-
-    public UsuarioGetResponseDTO convert2(){
-        List<ImovelUsuarioGetResponseDTO> imoveisDTO = this.imovel.stream()
-                .map(Imovel::convert3)
-                .toList();
-        return new UsuarioGetResponseDTO(
-                this.id, this.nome, this.sobrenome,this.cpf,
-                this.tipo_conta, this.telefone, this.data_nascimento,
-                this.email, this.senha, imoveisDTO);
-    }
 }

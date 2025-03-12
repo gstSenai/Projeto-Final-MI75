@@ -25,10 +25,5 @@ public class Imagem {
     @JoinColumn(name = "idImovel")
     private Imovel imovel;
 
-    public ImagemGetResponseDTO convert(){
-        return new ImagemGetResponseDTO(
-                this.id_foto, this.caminho_foto,this.imovel.convert4()
-        );
-    }
 
 }
