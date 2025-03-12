@@ -4,17 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { UseFormRegister } from 'react-hook-form';
 import { FormularioInput } from '../formularioInput';
 
-interface EnderecoProps {
-    id?: number;
-    cep: string;
-    rua: string;
-    numero: string;
-    bairro: string;
-    cidade: string;
-    uf: string;
-    complemento: string;
-}
-
 export function EnderecoSection({ register }: { register: UseFormRegister<any> }) {
     const [uf, setUf] = useState<string>('');
     const [cidade, setCidade] = useState<string>('');

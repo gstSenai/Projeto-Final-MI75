@@ -7,10 +7,11 @@ import { Checkbox } from "../checkbox"
 import request from "@/routes/request"
 import { Botao } from "@/components/botao"
 import { useQuery } from "@tanstack/react-query"
+import { number } from "zod"
 
 interface ImovelProps {
     id?: number
-    codigo?: number
+    codigo: number
     nome_propriedade: string
     tipo_transacao: string
     valor_venda: number
@@ -25,9 +26,8 @@ interface ImovelProps {
     condominio: number
     area_construida: number
     area_terreno: number
-    descricao?: string
-    id_endereco: EnderecoImovelProps 
-    id_usuario?: EnderecoImovelProps
+    descricao: string
+    id_endereco: number 
 }
 
 interface EnderecoImovelProps {
@@ -55,6 +55,8 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
     const [lastAddedEndereco, setLastAddedEndereco] = useState<EnderecoImovelProps | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false)
 
+    const [enderecoId, setEnderecoId] = useState<number>();
+
     const addEndereco = async (data: EnderecoImovelProps) => {
         try {
             console.log("Sending address data:", data);
@@ -66,6 +68,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
             const response = await request("POST", "http://localhost:9090/endereco/create", data);
 
             if (response && response.id) {
+                setEnderecoId(response.id)
                 return response;
             }
 
@@ -158,34 +161,30 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
                 setIsSubmitting(false);
                 return;
             }
+
+            if (!data.id_endereco || !lastAddedEndereco?.id) {
+                alert('Endereço não encontrado. Por favor, adicione um endereço primeiro.');
+                setIsSubmitting(false);
+                return;
+            }
     
             const immobileData = {
-                codigo: data.codigo,
+                codigo: data.codigo || Math.floor(Math.random() * 10000),
                 nome_propriedade: data.nome_propriedade,
                 tipo_transacao: data.tipo_transacao,
-                valor_venda: data.valor_venda, 
+                valor_venda: data.valor_venda || 0,
                 tipo_imovel: data.tipo_imovel,
                 status_imovel: data.status_imovel,
-                valor_promocional: data.valor_promocional,
+                valor_promocional: data.valor_promocional || 0,
                 destaque: data.test_destaque === "Sim",
                 visibilidade: data.test_visibilidade === "Público",
-                valor_iptu: data.valor_iptu,
-                condominio: data.condominio,
-                area_construida: data.area_construida,
-                area_terreno: data.area_terreno,
-                descricao: data.descricao,
-                id_endereco: {
-                    id: data.id_endereco.id,  // Certifique-se de que data.id_endereco é um objeto com essas propriedades
-                    cep: data.id_endereco.cep,
-                    rua: data.id_endereco.rua,
-                    numero: data.id_endereco.numero,
-                    bairro: data.id_endereco.bairro,
-                    cidade: data.id_endereco.cidade,
-                    uf: data.id_endereco.uf,
-                    complemento: data.id_endereco.complemento // Se tiver complemento
-                }
-            };
-            
+                valor_iptu: data.valor_iptu || 0,
+                condominio: data.condominio || 0,
+                area_construida: data.area_construida || 0,
+                area_terreno: data.area_terreno || 0,
+                descricao: data.descricao || "",
+                id_endereco: enderecoId,
+            }
     
             console.log("Dados do imóvel a serem enviados:", immobileData);
     
