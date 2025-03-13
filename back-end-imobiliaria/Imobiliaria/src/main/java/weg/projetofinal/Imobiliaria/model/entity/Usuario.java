@@ -50,7 +50,7 @@ public class Usuario {
     @Column(nullable = false)
     private String senha;
 
-    @OneToMany(mappedBy = "id_usuario")
+    @OneToMany(mappedBy = "id_usuario", cascade = CascadeType.REMOVE)
     private List<Imovel> imovel;
 
 }

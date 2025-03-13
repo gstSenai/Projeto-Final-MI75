@@ -32,11 +32,13 @@ public class ImovelService {
     }
 
     public void deleteImovel(Integer id) {
-        if(repository.existsById(id)){
+        if (repository.existsById(id)) {
             repository.deleteById(id);
+        } else {
+            throw new NoSuchElementException("Imóvel com ID " + id + " não encontrado.");
         }
-        throw new NoSuchElementException();
     }
+
 
     public Imovel updateImovel(Imovel imovel, Integer id) {
         if(repository.existsById(id)) {

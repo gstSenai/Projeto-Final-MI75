@@ -36,4 +36,8 @@ public class CaracteriscaImovelService {
     public CaracteristicaImovel getById(Integer id) {
         return repository.findById(id).get();
     }
+
+    public void deleteCaracteristica(Integer id) {
+        repository.deleteById(id);
+    }
 }

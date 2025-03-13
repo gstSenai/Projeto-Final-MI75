@@ -21,7 +21,7 @@ public class Imagem {
     @Column(nullable = false)
     private String caminho_foto;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "idImovel")
     private Imovel imovel;
 

@@ -40,7 +40,7 @@ public class Endereco {
 
     private String complemento;
 
-    @OneToOne(mappedBy = "id_endereco")
+    @OneToOne(mappedBy = "id_endereco", cascade = CascadeType.REMOVE)
     private Imovel imovel;
 
 

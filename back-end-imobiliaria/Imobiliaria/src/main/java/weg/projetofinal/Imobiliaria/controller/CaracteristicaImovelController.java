@@ -28,14 +28,22 @@ public class CaracteristicaImovelController {
     }
 
     @GetMapping("/getAll")
+    @ResponseStatus(HttpStatus.OK)
     public Page<CaracteristicaImovelGetResponseDTO> getAll(@PageableDefault Pageable pageable) {
         Page<CaracteristicaImovel> caracteristicaImovels = service.getAll(pageable);
         return caracteristicaImovels.map(CaracteristicaImovelMapper.INSTANCE::caracteristicaImovelToCaracteristicaImovelGetResponseDTO);
     }
 
     @GetMapping("/getById/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public CaracteristicaImovelGetResponseDTO getById(@PathVariable Integer id) {
         CaracteristicaImovel caracteristicaImovel = service.getById(id);
         return CaracteristicaImovelMapper.INSTANCE.caracteristicaImovelToCaracteristicaImovelGetResponseDTO(caracteristicaImovel);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(@PathVariable Integer id) {
+        service.deleteCaracteristica(id);
     }
 }

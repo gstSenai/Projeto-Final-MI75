@@ -18,7 +18,7 @@ public class CaracteristicaImovel {
     @Column
     private Integer id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @MapsId
     @JoinColumn(name = "id_imovel", referencedColumnName = "id_imovel", foreignKey = @ForeignKey(name = "fk_caracteristica_imovel"))
     private Imovel imovel;
