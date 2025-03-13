@@ -1,10 +1,5 @@
 package weg.projetofinal.Imobiliaria.model.dto;
 
-import jakarta.persistence.Column;
-import weg.projetofinal.Imobiliaria.model.entity.Endereco;
-import weg.projetofinal.Imobiliaria.model.entity.Imagem;
-import weg.projetofinal.Imobiliaria.model.entity.Imovel;
-
 public record EnderecoPostRequestDTO(
         String rua,
         String cep,
@@ -12,5 +7,6 @@ public record EnderecoPostRequestDTO(
         String bairro,
         String cidade,
         String uf,
-        String complemento) {
+        String complemento,
+        Integer idUsuario ) {
 }

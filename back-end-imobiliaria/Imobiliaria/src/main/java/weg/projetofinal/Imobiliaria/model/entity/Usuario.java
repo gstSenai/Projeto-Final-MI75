@@ -46,7 +46,10 @@ public class Usuario {
     @Column(nullable = false)
     private String senha;
 
-    @OneToMany(mappedBy = "id_usuario", cascade = CascadeType.REMOVE)
-    private List<Imovel> imovel;
+    private String imagem_usuario;
+
+    @OneToOne
+    @JoinColumn(name = "id_endereco_usuario")
+    private EnderecoUsuario enderecoUsuario;
 
 }

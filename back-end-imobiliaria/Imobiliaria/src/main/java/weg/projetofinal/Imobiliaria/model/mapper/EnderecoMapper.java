@@ -16,6 +16,4 @@ public interface EnderecoMapper {
     EnderecoGetResponseDTO enderecoToEnderecoGetResponseDTO(Endereco endereco);
 
     Endereco enderecoPostRequestDTOToEndereco(EnderecoPostRequestDTO enderecoPostRequestDTO);
-
-
 }

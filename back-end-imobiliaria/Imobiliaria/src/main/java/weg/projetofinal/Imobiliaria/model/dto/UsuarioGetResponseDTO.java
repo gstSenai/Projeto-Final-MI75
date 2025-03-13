@@ -1,7 +1,5 @@
 package weg.projetofinal.Imobiliaria.model.dto;
 
-import weg.projetofinal.Imobiliaria.model.entity.Imovel;
-
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +13,7 @@ public record UsuarioGetResponseDTO(
         Date data_nascimento,
         String email,
         String senha,
-        List<ImovelUsuarioGetResponseDTO> imovel
+        String imagem_usuario,
+        UsuarioEnderecoReponseDTO endereco
 ) {
 }
