@@ -13,9 +13,4 @@ public record EnderecoPostRequestDTO(
         String cidade,
         String uf,
         String complemento) {
-
-    public Endereco convert() {
-        return Endereco.builder().rua(rua).cep(cep).numero(numero).bairro(bairro).cidade(cidade).
-                uf(uf).complemento(complemento).build();
-    }
 }

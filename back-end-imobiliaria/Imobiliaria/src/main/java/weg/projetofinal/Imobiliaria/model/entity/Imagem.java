@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import weg.projetofinal.Imobiliaria.model.dto.ImagemGetResponseDTO;
 
 @Entity
 @Table(name = "tb_fotos_imovel")
@@ -21,7 +20,7 @@ public class Imagem {
     @Column(nullable = false)
     private String caminho_foto;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "idImovel")
     private Imovel imovel;
 

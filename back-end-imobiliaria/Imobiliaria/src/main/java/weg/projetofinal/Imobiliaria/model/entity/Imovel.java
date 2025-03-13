@@ -5,11 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelEnderecoGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelImagemGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelUsuarioGetResponseDTO;
-
 import java.util.List;
 
 @Entity
@@ -53,18 +48,18 @@ public class Imovel {
 
     private String descricao;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_endereco", nullable = false, unique = true)
     private Endereco id_endereco;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_usuario")
     private Usuario id_usuario;
 
-    @OneToMany(mappedBy = "imovel")
+    @OneToMany(mappedBy = "imovel", cascade = CascadeType.REMOVE)
     private List<Imagem> imagem;
 
-    @OneToOne(mappedBy = "imovel", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "imovel", cascade = CascadeType.REMOVE)
     private CaracteristicaImovel caracteristicaImovel;
 
 }

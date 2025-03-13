@@ -2,22 +2,16 @@ package weg.projetofinal.Imobiliaria.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import weg.projetofinal.Imobiliaria.model.dto.ImagemGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.ImagemPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.dto.ImagemPutResponseDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Imagem;
-import weg.projetofinal.Imobiliaria.model.entity.Imovel;
-import weg.projetofinal.Imobiliaria.model.mapper.ImovelMapper;
 import weg.projetofinal.Imobiliaria.service.ImagemService;
 import weg.projetofinal.Imobiliaria.model.mapper.ImagemMapper;
-import weg.projetofinal.Imobiliaria.service.ImovelService;
 
 @RestController
 @RequestMapping("/imagens")

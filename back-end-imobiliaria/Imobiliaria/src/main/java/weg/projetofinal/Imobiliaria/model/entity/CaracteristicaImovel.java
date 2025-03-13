@@ -1,6 +1,5 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,10 +17,9 @@ public class CaracteristicaImovel {
     @Column
     private Integer id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @MapsId
     @JoinColumn(name = "id_imovel", referencedColumnName = "id_imovel", foreignKey = @ForeignKey(name = "fk_caracteristica_imovel"))
-    @JsonIgnore
     private Imovel imovel;
     private Integer numero_quartos;
     private Integer numero_banheiros;

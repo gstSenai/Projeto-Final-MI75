@@ -1,11 +1,9 @@
 package weg.projetofinal.Imobiliaria.service;
 
 import lombok.AllArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.repository.ImovelRepository;
 
@@ -32,11 +30,13 @@ public class ImovelService {
     }
 
     public void deleteImovel(Integer id) {
-        if(repository.existsById(id)){
+        if (repository.existsById(id)) {
             repository.deleteById(id);
+        } else {
+            throw new NoSuchElementException("Imóvel com ID " + id + " não encontrado.");
         }
-        throw new NoSuchElementException();
     }
+
 
     public Imovel updateImovel(Imovel imovel, Integer id) {
         if(repository.existsById(id)) {

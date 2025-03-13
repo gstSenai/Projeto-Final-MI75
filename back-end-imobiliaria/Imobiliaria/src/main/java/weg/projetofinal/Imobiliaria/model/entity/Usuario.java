@@ -6,10 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelUsuarioGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.UsuarioGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.UsuarioImovelGetResponseDTO;
-
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +46,7 @@ public class Usuario {
     @Column(nullable = false)
     private String senha;
 
-    @OneToMany(mappedBy = "id_usuario")
+    @OneToMany(mappedBy = "id_usuario", cascade = CascadeType.REMOVE)
     private List<Imovel> imovel;
 
 }
