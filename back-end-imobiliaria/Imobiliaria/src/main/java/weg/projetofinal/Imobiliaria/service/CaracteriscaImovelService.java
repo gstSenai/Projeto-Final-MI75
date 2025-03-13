@@ -1,6 +1,6 @@
 package weg.projetofinal.Imobiliaria.service;
 
-import jakarta.transaction.Transactional;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,4 +40,15 @@ public class CaracteriscaImovelService {
     public void deleteCaracteristica(Integer id) {
         repository.deleteById(id);
     }
+
+    public CaracteristicaImovel updateCaracteristica(Integer id, CaracteristicaImovel caracteristica) {
+        CaracteristicaImovel existingCaracteristica = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Característica não encontrada com ID: " + id));
+
+        caracteristica.setId(id);
+        caracteristica.setImovel(existingCaracteristica.getImovel());
+
+        return repository.save(caracteristica);
+    }
+
 }

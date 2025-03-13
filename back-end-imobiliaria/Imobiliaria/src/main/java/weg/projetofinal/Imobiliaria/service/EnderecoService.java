@@ -13,7 +13,6 @@ public class EnderecoService {
 
     private EnderecoRepository enderecoRepository;
 
-
     public Endereco create(Endereco endereco) {
         return enderecoRepository.save(endereco);
     }

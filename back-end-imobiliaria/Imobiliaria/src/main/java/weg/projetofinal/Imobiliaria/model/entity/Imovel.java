@@ -5,11 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelEnderecoGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelImagemGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelUsuarioGetResponseDTO;
-
 import java.util.List;
 
 @Entity

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import weg.projetofinal.Imobiliaria.model.dto.CaracteristicaImovelGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.CaracteristicaImovelPostRequestDTO;
+import weg.projetofinal.Imobiliaria.model.dto.CaracteristicasImovelPutRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.CaracteristicaImovel;
 import weg.projetofinal.Imobiliaria.model.mapper.CaracteristicaImovelMapper;
 import weg.projetofinal.Imobiliaria.service.CaracteriscaImovelService;
@@ -45,5 +46,13 @@ public class CaracteristicaImovelController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Integer id) {
         service.deleteCaracteristica(id);
+    }
+
+    @PutMapping("/update/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public CaracteristicaImovelGetResponseDTO updateCaracterisca(@PathVariable Integer id, @RequestBody CaracteristicasImovelPutRequestDTO caracteristicaImovelDTO) {
+        CaracteristicaImovel caracteristicaImovel = CaracteristicaImovelMapper.INSTANCE.caracteristicaImovelPutRequestDTOToCaracteristicaImovel(caracteristicaImovelDTO);
+        CaracteristicaImovel updateCaracteriscaImovel = service.updateCaracteristica(id, caracteristicaImovel);
+        return CaracteristicaImovelMapper.INSTANCE.caracteristicaImovelToCaracteristicaImovelGetResponseDTO(updateCaracteriscaImovel);
     }
 }
