@@ -53,10 +53,10 @@ export function PesquisaPaginaInicial() {
                     <span className='text-xl'>Avançado</span>
                 </button>
 
-                <button className="rounded-md p-2 w-[180px] bg-[#DFDAD0] text-[#702632] items-center">
+                <button className="rounded-md p-2 w-[180px] bg-[#DFDAD0] text-[#702632] items-center focus:outline-none focus:ring-0 active:bg-[#dfd0d0]">
                     <div className='flex items-center gap-2'>
                         <Image src="/lupa.png" alt="Ícone de pesquisa" width={30} height={30} />
-                        <p className='text-[#702632] font-medium '>Pesquisa</p>
+                        <p className='text-[#702632] font-medium'>Pesquisa</p>
                     </div>
                 </button>
 
@@ -73,7 +73,7 @@ export function PesquisaPaginaInicial() {
                             </div>
                         </div>
                         <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between gap-4 '>
-                            <PlaceFilter tipo="TipoLocal" texto='Quant. de Quartos:' />
+                            <PlaceFilter tipo="TipoLocal" texto='Tipo Local:' />
                             <PlaceFilter tipo="NumLocal" texto='Quant. de Quartos:' />
                         </div>
                         <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between gap-4'>
