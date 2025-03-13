@@ -2,7 +2,6 @@ package weg.projetofinal.Imobiliaria.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Imagem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +18,8 @@ public class Imagem {
     @Column(nullable = false)
     private String caminho_foto;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "idImovel")
+    @ManyToOne
+    @JoinColumn(name = "idImovel", nullable = false)
     private Imovel imovel;
 
 

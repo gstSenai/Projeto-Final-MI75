@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@Builder
 @Entity
 @NoArgsConstructor
 @Table(name = "tb_caracteristicas_imovel")

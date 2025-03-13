@@ -21,13 +21,4 @@ public record ImovelPostRequestDTO(
         String descricao,
         Endereco id_endereco,
         Usuario id_usuario) {
-
-    public Imovel convert(){
-        return Imovel.builder().codigo(codigo).nome_propriedade(nome_propriedade).
-                tipo_transacao(tipo_transacao).valor_venda(valor_venda).tipo_imovel(tipo_imovel).
-                status_imovel(status_imovel).valor_promocional(valor_promocional).destaque(destaque).
-                visibilidade(visibilidade).valor_iptu(valor_iptu).condominio(condominio).
-                area_construida(area_construida).area_terreno(area_terreno).descricao(descricao).
-                id_endereco(id_endereco).id_usuario(id_usuario).build();
-    }
 }

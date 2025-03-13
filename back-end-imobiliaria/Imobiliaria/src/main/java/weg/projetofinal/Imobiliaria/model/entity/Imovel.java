@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tb_imoveis")
-@Builder
 public class Imovel {
     @Id
     @Column(name = "id_imovel")
@@ -51,10 +50,6 @@ public class Imovel {
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_endereco", nullable = false, unique = true)
     private Endereco id_endereco;
-
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "id_usuario")
-    private Usuario id_usuario;
 
     @OneToMany(mappedBy = "imovel", cascade = CascadeType.REMOVE)
     private List<Imagem> imagem;

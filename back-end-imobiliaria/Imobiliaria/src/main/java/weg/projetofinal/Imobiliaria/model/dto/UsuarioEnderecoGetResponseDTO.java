@@ -2,7 +2,7 @@ package weg.projetofinal.Imobiliaria.model.dto;
 
 import java.util.Date;
 
-public record UsuarioImovelGetResponseDTO(
+public record UsuarioEnderecoGetResponseDTO (
         Integer id,
         String nome,
         String sobrenome,
@@ -11,6 +11,7 @@ public record UsuarioImovelGetResponseDTO(
         String telefone,
         Date data_nascimento,
         String email,
-        String senha
-) {
+        String senha,
+        String imagem_usuario
+){
 }
