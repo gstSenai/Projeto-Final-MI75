@@ -10,8 +10,12 @@ const montserrat = Montserrat({
 
 export default function PoliticaPrivacidade() {
   return (
+
     <div className="flex flex-col font-montserrat">
 
+      <h2 className="ml-44 mt-11 text-xl font-bold text-gray-800  mb-10 border-b-2 border-[#702632] pb-2 w-1/3">
+        Política de Privacidade e Termos de Uso
+      </h2>
       <div className="flex border-b border-gray-300 mt-7 ml-60">
         <button className="text-xs md:text-sm px-4 py-2 bg-[#702632] text-white rounded-t-lg  hover:bg-[#4B151E] transition">
           Política de Privacidade
