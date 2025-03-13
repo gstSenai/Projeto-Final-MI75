@@ -13,7 +13,7 @@ export default function PoliticaPrivacidade() {
 
     <div className="flex flex-col font-montserrat">
 
-      <h2 className="ml-44 mt-11 text-xl font-bold text-gray-800  mb-10 border-b-2 border-[#702632] pb-2 w-1/3">
+      <h2 className="ml-44 mt-11 text-xl text-[25px] font-bold text-gray-800  mb-10 border-b-2 border-[#702632] pb-2 w-1/2">
         Política de Privacidade e Termos de Uso
       </h2>
       <div className="flex border-b border-gray-300 mt-7 ml-60">
