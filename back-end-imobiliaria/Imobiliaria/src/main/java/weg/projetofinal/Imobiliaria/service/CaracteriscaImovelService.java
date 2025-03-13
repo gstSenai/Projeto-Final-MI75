@@ -2,6 +2,8 @@ package weg.projetofinal.Imobiliaria.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import weg.projetofinal.Imobiliaria.model.dto.CaracteristicaImovelPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.CaracteristicaImovel;
@@ -27,4 +29,11 @@ public class CaracteriscaImovelService {
         return repository.save(caracteristica);
     }
 
+    public Page<CaracteristicaImovel> getAll(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
+    public CaracteristicaImovel getById(Integer id) {
+        return repository.findById(id).get();
+    }
 }

@@ -2,6 +2,9 @@ package weg.projetofinal.Imobiliaria.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import weg.projetofinal.Imobiliaria.model.dto.CaracteristicaImovelGetResponseDTO;
@@ -22,5 +25,17 @@ public class CaracteristicaImovelController {
     public CaracteristicaImovelGetResponseDTO create(@RequestBody @Valid CaracteristicaImovelPostRequestDTO caracteristicaImovelDTO) {
         CaracteristicaImovel caracteristicaImovelSaved = service.createCaracteristica(caracteristicaImovelDTO);
         return CaracteristicaImovelMapper.INSTANCE.caracteristicaImovelToCaracteristicaImovelGetResponseDTO(caracteristicaImovelSaved);
+    }
+
+    @GetMapping("/getAll")
+    public Page<CaracteristicaImovelGetResponseDTO> getAll(@PageableDefault Pageable pageable) {
+        Page<CaracteristicaImovel> caracteristicaImovels = service.getAll(pageable);
+        return caracteristicaImovels.map(CaracteristicaImovelMapper.INSTANCE::caracteristicaImovelToCaracteristicaImovelGetResponseDTO);
+    }
+
+    @GetMapping("/getById/{id}")
+    public CaracteristicaImovelGetResponseDTO getById(@PathVariable Integer id) {
+        CaracteristicaImovel caracteristicaImovel = service.getById(id);
+        return CaracteristicaImovelMapper.INSTANCE.caracteristicaImovelToCaracteristicaImovelGetResponseDTO(caracteristicaImovel);
     }
 }
