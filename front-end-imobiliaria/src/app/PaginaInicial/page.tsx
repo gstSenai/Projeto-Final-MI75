@@ -2,9 +2,10 @@ import Card from '@/components/CardImovel/Card';
 import { ImoveisAlugados } from '@/components/NumeroAtualizaveis/ImoveisAlugados';
 import { ImoveisDisponiveis } from '@/components/NumeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisVendidos } from '@/components/NumeroAtualizaveis/ImoveisVendidos';
-import { PesquisaPaginaInicial } from '@/components/PesquisaPaginaInicial';
+import { PesquisaPaginaInicial } from '@/components/PaginaInicial/PesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
-import Carousel from '@/components/carrossel';
+import Carousel from '@/components/PaginaInicial/carrossel';
+import BotaoImageTexto from '@/components/PaginaInicial/BotaoImageTexto';
 // Carregando a fonte Inter
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -17,26 +18,28 @@ import Image from 'next/image';
 
 export default function PaginaInicial() {
     return (
-        <div className={`${montserrat.className} pt-3 `}>
-            <main className="relative flex h-[881px] w-full max-w-[1810px] mx-auto overflow-hidden pb-24 lg:pt-14 lg:pb-52 ">
-                <Image
-                    className='rounded-lg' src="/PaginaCasaPaginaInicial.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100}
-                />
-                <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32 gap-11">
-                    <h1 className="text-[2.5rem] lg:text-[3.125em] text-center 2xl:text-start font-normal max-w-[800px]">
-                        Nós vamos ajudá-lo a encontrar sua
-                        <span className='text-[2.5rem] lg:text-[4.375rem] text-center 2xl:text-start font-bold'> Maravilhosa</span> casa
-                    </h1>
-                    <p className="text-xl font-normal text-center 2xl:text-start max-w-3xl">
-                        Uma ótima plataforma para comprar, vender e alugar seus imóveis sem nenhum agente ou comissões.
-                    </p>
+        <div className={`${montserrat.className} pt-3`}>
+            <main className='max-lg:px-4 px-20'>
+                <div className="relative flex h-[881px] w-full rounded-[20px] mx-auto overflow-hidden pb-24 lg:pt-14 lg:pb-52 ">
+                    <Image
+                        className='' src="/PaginaCasaPaginaInicial.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100}
+                    />
+                    <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32 gap-11">
+                        <h1 className="text-[2.5rem] lg:text-[3.125em] text-center 2xl:text-start font-normal max-w-[800px]">
+                            Nós vamos ajudá-lo a encontrar sua
+                            <span className='text-[2.5rem] lg:text-[4.375rem] text-center 2xl:text-start font-bold'> Maravilhosa</span> casa
+                        </h1>
+                        <p className="text-xl font-normal text-center 2xl:text-start max-w-3xl">
+                            Uma ótima plataforma para comprar, vender e alugar seus imóveis sem nenhum agente ou comissões.
+                        </p>
+                    </div>
                 </div>
             </main>
             <div className="relative flex justify-center xl:-ml-[700px] mt-[5rem] lg:-mt-[15rem] z-10">
                 <PesquisaPaginaInicial />
             </div>
+            <section className='px-20'>
             <section>
-
                 <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-40  2xl:pt-56'>
                     <div className='w-[1000px]'>
                         <h2 className='flex justify-center text-center text-2xl lg:text-4xl font-medium pb-2 opacity-75'>Como Funciona</h2>
@@ -94,6 +97,7 @@ export default function PaginaInicial() {
                 <Card></Card>
 
             </section>
+            </section>
             <section>
                 <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-[600px]  2xl:pt-96'>
                     <div className='w-[1000px]'>
@@ -101,16 +105,24 @@ export default function PaginaInicial() {
                         <p className='flex justify-center text-center text-xl lg:text-2xl font-medium p-3 opacity-75'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
                     </div>
                 </div>
-             
-                <Carousel/>
 
+                <Carousel>
+                    <BotaoImageTexto src="/jaragua.png" texto="Jaraguá do Sul" />
+                    <BotaoImageTexto src="/guaramirim.png" texto="Guaramirim" />
+                    <BotaoImageTexto src="/curupa.png" texto="Corupá" />
+                    <BotaoImageTexto src="/schorder.png" texto="Schroeder" />
+                    <BotaoImageTexto src="/jaragua.png" texto="Jaraguá do Sul" />
+                    <BotaoImageTexto src="/guaramirim.png" texto="Guaramirim" />
+                    <BotaoImageTexto src="/curupa.png" texto="Corupá" />
+                    <BotaoImageTexto src="/schorder.png" texto="Schroeder" />
+                </Carousel>
             </section>
             <footer className="relative flex  w-full h-[400px] overflow-hidden">
 
                 <Image src="/PreFotterInicial.png" alt="Fundo Vermelho" layout="fill" objectFit="cover" quality={100}
                 />
 
-                <div className="absolute inset-0 flex flex-col lg:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around self-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32 gap-11">
+                <div className="absolute inset-0 flex flex-col lg:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around self-center 2xl:items-start text-white p-8 gap-11">
                     <div className='flex text-center items-center gap-7'>
                         <Image src="/imoveisCadastros.png" alt="imoveis Cadastrados" objectFit="cover" width={106} height={108} quality={100} />
                         <div className='flex flex-col  text-start'>
