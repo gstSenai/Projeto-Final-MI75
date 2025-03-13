@@ -3,15 +3,12 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { EnderecoSection } from "../endereco-section"
 import { DadosImovelSection } from "../dados-imovel-section"
-import { Checkbox } from "../checkbox"
 import request from "@/routes/request"
 import { Botao } from "@/components/botao"
-import { useQuery } from "@tanstack/react-query"
-import { number } from "zod"
 
 interface ImovelProps {
-    id?: number
-    codigo: number
+    id: number;
+    codigo?: number
     nome_propriedade: string
     tipo_transacao: string
     valor_venda: number
@@ -26,8 +23,7 @@ interface ImovelProps {
     condominio: number
     area_construida: number
     area_terreno: number
-    descricao: string
-    id_endereco: number 
+    descricao?: string
 }
 
 interface EnderecoImovelProps {
@@ -46,15 +42,11 @@ interface InputDadosImovelProps {
 }
 
 export function Formulario({ onComplete }: InputDadosImovelProps) {
-    const { register: registerImovel, handleSubmit: handleSubmitImovel } = useForm<ImovelProps>();
-
-    const { register: registerEndereco, handleSubmit: handleSubmitEndereco, formState: { errors: enderecoErrors } } = useForm<EnderecoImovelProps>();
+    const { register, handleSubmit, formState: { errors } } = useForm<{ imovel: ImovelProps; endereco: EnderecoImovelProps }>();
     const [showForm, setShowForm] = useState(true)
     const [showModal, setShowModal] = useState(false)
     const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
-    const [lastAddedEndereco, setLastAddedEndereco] = useState<EnderecoImovelProps | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false)
-
     const [enderecoId, setEnderecoId] = useState<number>();
 
     const addEndereco = async (data: EnderecoImovelProps) => {
@@ -80,17 +72,11 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         }
     };
 
-    const deleteEndereco = async (enderecoId: number): Promise<void> => {
-        try {
-            await request('DELETE', `http://localhost:9090/endereco/delete/${enderecoId}`);
-        } catch (error) {
-            console.error("Erro ao deletar endereço:", error);
-            throw error;
-        }
-    };
-
     const addImovel = async (data: ImovelProps) => {
         try {
+
+            console.log("Sending address data:", data);
+
             const response = await request("POST", "http://localhost:9090/imovel/create", data)
             return response
         } catch (error) {
@@ -108,28 +94,51 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         }
     }
 
-
-    const onSubmit = async (data: EnderecoImovelProps) => {
+    const onSubmitImovel = async (data: { imovel: ImovelProps; endereco: EnderecoImovelProps }) => {
         if (isSubmitting) return;
 
         try {
             setIsSubmitting(true);
 
-            if (!data.cep || !data.rua || !data.numero || !data.bairro || !data.cidade || !data.uf) {
-                alert('Por favor, preencha todos os campos obrigatórios do endereço');
-                setIsSubmitting(false);
-                return;
+            console.log("Dados recebidos para validação:", data);
+
+            const { imovel, endereco } = data;
+
+            console.log("Dados do Endereço:", endereco);
+            console.log("Dados do Imóvel:", imovel);
+
+            const responseEndereco = await addEndereco(endereco);
+
+            const immobileData = {
+                id: imovel.id,
+                codigo: imovel.codigo || imovel.valor_venda,
+                nome_propriedade: imovel.nome_propriedade,
+                tipo_transacao: imovel.tipo_transacao,
+                valor_venda: imovel.valor_venda || 0,
+                tipo_imovel: imovel.tipo_imovel,
+                status_imovel: imovel.status_imovel,
+                valor_promocional: imovel.valor_promocional || 0,
+                destaque: imovel.test_destaque === "Sim",
+                visibilidade: imovel.test_visibilidade === "Público",
+                valor_iptu: imovel.valor_iptu || 0,
+                condominio: imovel.condominio || 0,
+                area_construida: imovel.area_construida || 0,
+                area_terreno: imovel.area_terreno || 0,
+                descricao: imovel.descricao || "",
+                id_endereco: responseEndereco,
+            };
+
+            console.log("Dados do imóvel a serem enviados:", immobileData);
+
+            const response = await addImovel(immobileData);
+            console.log("Resposta do servidor:", response);
+            if (response) {
+                setLastAddedImovel(response);
+                setShowForm(false);
+                setShowModal(true);
+            } else {
+                console.error("Erro: Resposta inválida ao adicionar imóvel.");
             }
-
-            console.log("Submitting address data:", data);
-
-            const response = await addEndereco(data);
-
-            console.log("Server response:", response);
-
-            setShowForm(false);
-            setShowModal(true);
-            setLastAddedEndereco(response);
 
             if (onComplete) onComplete();
 
@@ -142,127 +151,50 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         }
     };
 
-    const onSubmitImovel = async (data: ImovelProps) => {
-        if (isSubmitting) return;
-    
-        try {
-            setIsSubmitting(true);
-    
-            // Verifica se todos os campos obrigatórios estão preenchidos
-            console.log("Dados recebidos para validação:", data);
-            
-            if (!data.codigo || !data.nome_propriedade || !data.tipo_transacao
-                || !data.valor_venda || !data.tipo_imovel || !data.status_imovel
-                || !data.valor_promocional || !data.destaque || !data.visibilidade
-                || !data.valor_iptu || !data.condominio || !data.area_construida
-                || !data.area_terreno || !data.descricao || !data.id_endereco) {  // Verifica se id_endereco está preenchido
-                console.log("Campos obrigatórios não preenchidos:", data);
-                alert('Por favor, preencha todos os campos obrigatórios do imóvel');
-                setIsSubmitting(false);
-                return;
-            }
-
-            if (!data.id_endereco || !lastAddedEndereco?.id) {
-                alert('Endereço não encontrado. Por favor, adicione um endereço primeiro.');
-                setIsSubmitting(false);
-                return;
-            }
-    
-            const immobileData = {
-                codigo: data.codigo || Math.floor(Math.random() * 10000),
-                nome_propriedade: data.nome_propriedade,
-                tipo_transacao: data.tipo_transacao,
-                valor_venda: data.valor_venda || 0,
-                tipo_imovel: data.tipo_imovel,
-                status_imovel: data.status_imovel,
-                valor_promocional: data.valor_promocional || 0,
-                destaque: data.test_destaque === "Sim",
-                visibilidade: data.test_visibilidade === "Público",
-                valor_iptu: data.valor_iptu || 0,
-                condominio: data.condominio || 0,
-                area_construida: data.area_construida || 0,
-                area_terreno: data.area_terreno || 0,
-                descricao: data.descricao || "",
-                id_endereco: enderecoId,
-            }
-    
-            console.log("Dados do imóvel a serem enviados:", immobileData);
-    
-            const response = await addImovel(immobileData);
-            console.log("Resposta do servidor:", response);
-    
-            setShowForm(false);
-            setShowModal(true);
-            setLastAddedEndereco(response.data);
-    
-            if (onComplete) onComplete();
-    
-            setTimeout(() => setShowModal(false), 5000);
-        } catch (error) {
-            console.error("Erro ao salvar Endereço:", error);
-            alert(`Erro ao salvar endereço: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
-        } finally {
-            setIsSubmitting(false);
-        }
-    };    
-    
     const onSubmitDelete = async () => {
-        if (lastAddedImovel && lastAddedEndereco) {
-            try {
-                if (lastAddedImovel.id) {
-                    await deleteImovel(lastAddedImovel.id);
-                }
-                if (lastAddedEndereco.id) {
-                    await deleteEndereco(lastAddedEndereco.id);
-                }
-                setShowModal(false);
-                setLastAddedImovel(null);
-                setLastAddedEndereco(null);
-                if (onComplete) {
-                    onComplete();
-                }
-            } catch (error) {
-                console.error("Erro ao desfazer:", error);
-                alert("Erro ao desfazer a operação");
+        if (lastAddedImovel) {
+            if (lastAddedImovel.id) {
+                await deleteImovel(lastAddedImovel.id)
+                setShowModal(false)
+                setLastAddedImovel(null)
+            }
+            if (onComplete) {
+                onComplete();
             }
         }
     }
 
+
     return (
         <>
-            <EnderecoSection register={registerEndereco} />
+            {showForm && (
+                <>
+                    <EnderecoSection register={register} />
 
-            <div className="font-inter flex max-lg:justify-center">
-                <div className="flex flex-row items-center max-lg:justify-center">
-                    <p className="text-2xl xl:text-3xl font-semibold my-10 max-lg:hidden">Tipo de Transação:</p>
-                </div>
-                <div className="flex items-center gap-16 mt-10">
-                    <div className="flex gap-[30rem] w-full">
-                        <Botao onClick={() => console.log()} texto="Cancelar" />
-                        <Botao
-                            onClick={handleSubmitEndereco(onSubmit)}
-                            texto={isSubmitting ? "Salvando..." : "Salvar cadastro"}
-                        />
+                    <div className="font-inter flex max-lg:justify-center">
+                        <div className="flex flex-row items-center max-lg:justify-center">
+                            <p className="text-2xl xl:text-3xl font-semibold my-10 max-lg:hidden">Tipo de Transação:</p>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <DadosImovelSection register={registerImovel} />
+                    <DadosImovelSection register={register} />
 
-            <div className="flex items-center gap-16 mt-10">
-                <div className="flex gap-[30rem] w-full">
-                    <Botao onClick={() => console.log()} texto="Cancelar" />
-                    <Botao onClick={handleSubmitImovel(onSubmitImovel)} texto="Salvar cadastro" />
-                </div>
-            </div>
+                    <div className="flex items-center gap-16 mt-10">
+                        <div className="flex gap-[30rem] w-full">
+                            <Botao onClick={() => console.log()} texto="Cancelar" />
+                            <Botao onClick={handleSubmit(onSubmitImovel)} texto="Salvar cadastro" />
+                        </div>
+                    </div>
+                </>
+            )}
 
-            {showModal && lastAddedEndereco && (
+            {showModal && lastAddedImovel && (
                 <div className="w-full bottom-16 pl-10 items-center relative">
-                    <div className='bg-vermelho/80 w-72 flex gap-1 p-3 rounded-[20px] text-white'>
+                    <div className='bg-vermelho w-72 flex gap-1 p-3 rounded-[20px] text-white'>
                         <p>Adicionado com Sucesso!</p>
                         <button
                             onClick={onSubmitDelete}
-                            className='underline '>
+                            className='underline'>
                             Desfazer
                         </button>
                     </div>

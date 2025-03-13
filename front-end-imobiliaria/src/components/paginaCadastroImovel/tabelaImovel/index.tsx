@@ -7,6 +7,8 @@ import { InputEditandoDadosUsuario } from "../../paginaCadastroUsuario/editandoU
 import request from "@/routes/request"
 import { Formulario } from "../formulario"
 import { ListaDeCadastros } from "../formularioEscrito"
+import { RemoveImovel } from "../removerImovel"
+import { EditarImovel } from "../editarImovel"
 // import { RemoveUsuario } from "../removerUsuario"
 // import { InputEnderecoPropriedade } from "../adicionandoUsuario/inputEnderecoPropriedade"
 
@@ -19,20 +21,22 @@ const montserrat = Montserrat({
 
 interface ImovelProps {
   id: number
-  codigo: number
+  codigo?: number
   nome_propriedade: string
   tipo_transacao: string
   valor_venda: number
   tipo_imovel: string
   status_imovel: string
   valor_promocional: number
+  test_destaque?: string
+  test_visibilidade?: string
   destaque: boolean
   visibilidade: boolean
   valor_iptu: number
   condominio: number
   area_construida: number
   area_terreno: number
-  descricao: string
+  descricao?: string
 }
 
 interface ResponseProps {
@@ -121,12 +125,15 @@ export default function TabelaImovel() {
 
   useEffect(() => {
     getImoveis()
+    setAdicionar(false)
+    setEditar(false)
+    setRemover(false)
   }, [refreshTrigger])
 
   return (
     <>
-      <div className="flex flex-col 2xl:px-20 xl:px-20 lg:px-10 px-10 sm:flex-col md:flex-col lg:flex-row 2xl:flex-row">
-        <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6">
+      <div className="flex flex-col gap-10 sm:flex-col md:flex-col lg:flex-row">
+        <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6 w-full">
           <div className="overflow-x-auto max-h-[500px]">
             <table className="w-full border-separate border-spacing-0">
               <thead>
@@ -141,7 +148,7 @@ export default function TabelaImovel() {
                     <p>Tipo de imóvel</p>
                   </th>
                   <th className="p-4 text-center font-bold border border-[#E0D6CE]">
-                    <p>Visibilidade</p>
+                    <p>Tipo Transação</p>
                   </th>
                   <th className="p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Estado</p>
@@ -165,19 +172,19 @@ export default function TabelaImovel() {
                           }`}
                         onClick={() => toggleImoveiselection(imovel)}
                       >
-                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
                           {imovel.codigo}
                         </td>
-                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 max-w-[20rem] truncate whitespace-nowrap overflow-hidden">
                           {imovel.nome_propriedade}
                         </td>
-                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
                           {imovel.tipo_imovel}
                         </td>
-                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                          {imovel.visibilidade}
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
+                          {imovel.tipo_transacao}
                         </td>
-                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
                           {imovel.destaque}
                         </td>
                       </tr>
@@ -237,13 +244,9 @@ export default function TabelaImovel() {
         ]}
       />
 
-      {adicionar && (
-        <>
-          <div>
-            <Formulario onComplete={refreshData} />
-          </div>
-        </>
-      )}
+      {adicionar && <Formulario onComplete={refreshData} />}
+      {remover && <RemoveImovel selectedImoveis={selectedImoveis} onComplete={refreshData} />}
+      {editar && <EditarImovel selectedImoveis={selectedImoveis} onComplete={refreshData} />}
     </>
   )
 }

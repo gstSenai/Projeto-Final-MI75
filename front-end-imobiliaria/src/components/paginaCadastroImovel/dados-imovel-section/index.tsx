@@ -1,17 +1,14 @@
 "use client"
-import { useForm, UseFormRegister  } from "react-hook-form"
+import { useForm, UseFormRegister } from "react-hook-form"
 import { FormularioInput } from "../formularioInput"
 import { ImageUpload } from "../image-upload"
 import { Descricao } from "../descricao"
-import { Botao } from "@/components/botao"
-import request from "@/routes/request"
 
 interface DadosImovelSectionProps {
     register: UseFormRegister<any>
 }
 
 export function DadosImovelSection({ register }: DadosImovelSectionProps) {
-    const {setValue} = useForm();
 
     return (
         <div className="flex flex-col">
@@ -22,13 +19,13 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                 <div className="flex lg:gap-10">
                     <FormularioInput
                         placeholder="Nome da Propriedade:"
-                        name="nome_propriedade"
+                        name="imovel.nome_propriedade"
                         register={register}
                         custumizacaoClass="lg:w-1/3"
                     />
                     <FormularioInput
                         placeholder="Tipo do imóvel:"
-                        name="tipo_imovel"
+                        name="imovel.tipo_imovel"
                         showOptions
                         register={register}
                         custumizacaoClass="lg:w-1/3"
@@ -36,7 +33,7 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                     />
                     <FormularioInput
                         placeholder="Tipo de transação:"
-                        name="tipo_transacao"
+                        name="imovel.tipo_transacao"
                         showOptions
                         register={register}
                         custumizacaoClass="lg:w-1/3"
@@ -45,14 +42,20 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                 </div>
                 <div className="flex lg:gap-10">
                     <FormularioInput
+                        placeholder="Valor de Venda (R$):"
+                        name="imovel.valor_venda"
+                        register={register}
+                        custumizacaoClass="lg:w-[40%]"
+                    />
+                    <FormularioInput
                         placeholder="Valor do Preço Promocional (R$):"
-                        name="valor_promocional"
+                        name="imovel.valor_promocional"
                         register={register}
                         custumizacaoClass="lg:w-[40%]"
                     />
                     <FormularioInput
                         placeholder="Permitir destaque:"
-                        name="test_destaque"
+                        name="imovel.test_destaque"
                         showOptions
                         register={register}
                         custumizacaoClass="lg:w-[35%]"
@@ -61,7 +64,7 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
 
                     <FormularioInput
                         placeholder="Visibilidade:"
-                        name="test_visibilidade"
+                        name="imovel.test_visibilidade"
                         showOptions
                         register={register}
                         custumizacaoClass="lg:w-[25%]"
@@ -71,19 +74,19 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                 <div className="flex lg:gap-10">
                     <FormularioInput
                         placeholder="Valor do IPTU (R$):"
-                        name="valor_iptu"
+                        name="imovel.valor_iptu"
                         register={register}
                         custumizacaoClass="lg:w-[63%]"
                     />
                     <FormularioInput
                         placeholder="Taxa de Condomínio Caso tenha (R$):"
-                        name="condominio"
+                        name="imovel.condominio"
                         register={register}
                         custumizacaoClass="lg:w-full"
                     />
                     <FormularioInput
                         placeholder="Status do imóvel:"
-                        name="status_imovel"
+                        name="imovel.status_imovel"
                         showOptions
                         register={register}
                         custumizacaoClass="lg:w-[25%]"
@@ -105,74 +108,20 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                     <div className="flex flex-col lg:gap-10">
                         <FormularioInput
                             placeholder="Área Construída (m²):"
-                            name="area_construida"
+                            name="imovel.area_construida"
                             register={register}
                             icon={{ type: "areaCT" }}
                             custumizacaoClass="lg:w-full"
-                        />
-                        <FormularioInput
-                            placeholder="Número de Quartos:"
-                            name="Número de Quartos"
-                            register={register}
-                            showOptions
-                            icon={{ type: "dormitorio" }}
-                            custumizacaoClass="lg:w-full"
-                            options={["Nenhum Quarto", "1 Quarto", "2 Quartos", "3 Quartos", "4+ Quartos"]}
-                        />
-                        <FormularioInput
-                            placeholder="Número de Suítes:"
-                            name="Número de Suítes"
-                            register={register}
-                            showOptions
-                            icon={{ type: "suite" }}
-                            custumizacaoClass="lg:w-full"
-                            options={["Nenhuma Suíte", "1 Suíte", "2 Suítes", "3 Suítes", "4+ Suítes"]}
-                        />
-                        <FormularioInput
-                            placeholder="Número de piscina:"
-                            name="Número de piscina"
-                            register={register}
-                            showOptions
-                            icon={{ type: "praia" }}
-                            custumizacaoClass="lg:w-full"
-                            options={["Nenhuma Piscina", "1 Piscina", "2 Piscinas", "3 Piscinas", "4+ Piscinas"]}
                         />
                     </div>
 
                     <div className="flex flex-col lg:gap-10">
                         <FormularioInput
                             placeholder="Área do Terreno (m²):"
-                            name="area_terreno"
+                            name="imovel.area_terreno"
                             register={register}
                             icon={{ type: "areaCT" }}
                             custumizacaoClass="lg:w-full"
-                        />
-                        <FormularioInput
-                            placeholder="Número de Banheiros:"
-                            name="Número de Banheiros"
-                            register={register}
-                            showOptions
-                            icon={{ type: "banheiro" }}
-                            custumizacaoClass="lg:w-full"
-                            options={["Nenhum Banheiro", "1 Banheiro", "2 Banheiros", "3 Banheiros", "4+ Banheiros"]}
-                        />
-                        <FormularioInput
-                            placeholder="Vagas de Garagem:"
-                            name="Vagas de Garagem"
-                            register={register}
-                            showOptions
-                            icon={{ type: "garagem" }}
-                            custumizacaoClass="lg:w-full"
-                            options={["Nenhuma Garagem", "1 Garagem", "2 Garagens", "3 Garagens", "4+ Garagens"]}
-                        />
-                        <FormularioInput
-                            placeholder="Número de Salas:"
-                            name="Número de salas"
-                            register={register}
-                            showOptions
-                            icon={{ type: "sala" }}
-                            custumizacaoClass="lg:w-[full]"
-                            options={["Nenhuma Sala", "1 Sala", "2 Salas", "3 Salas", "4+ Salas"]}
                         />
                     </div>
 
@@ -183,7 +132,11 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
             </div>
 
             <div className="flex items-center lg:gap-10 w-full mt-10">
-                <Descricao className="w-full h-80" />
+                <Descricao 
+                placeholder="Descrição"
+                name="imovel.descricao"
+                register={register} 
+                className="w-full h-80" />
                 <ImageUpload title="Fotos do Imóvel" className="w-[55%] h-80" />
             </div>
         </div>

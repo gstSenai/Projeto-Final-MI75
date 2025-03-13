@@ -53,16 +53,16 @@ public class Imovel {
 
     private String descricao;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_endereco", nullable = false, unique = true)
     private Endereco id_endereco;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_usuario")
     @JsonIgnore
     private Usuario id_usuario;
 
-    @OneToMany(mappedBy = "id_imovel")
+    @OneToMany(mappedBy = "id_imovel", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Imagem> imagem;
 
@@ -73,7 +73,7 @@ public class Imovel {
                 this.status_imovel, this.valor_promocional, this.destaque,
                 this.visibilidade, this.valor_iptu, this.condominio,
                 this.area_construida, this.area_terreno, this.descricao,
-                this.id_endereco.convert(), this.id_usuario.convert()
+                this.id_endereco.convert()
         );
     }
 

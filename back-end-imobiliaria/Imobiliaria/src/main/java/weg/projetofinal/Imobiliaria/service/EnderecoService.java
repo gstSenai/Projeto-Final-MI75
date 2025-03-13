@@ -1,5 +1,6 @@
 package weg.projetofinal.Imobiliaria.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +14,7 @@ public class EnderecoService {
 
     private EnderecoRepository enderecoRepository;
 
-
+    @Transactional
     public Endereco create(Endereco endereco) {
         return enderecoRepository.save(endereco);
     }

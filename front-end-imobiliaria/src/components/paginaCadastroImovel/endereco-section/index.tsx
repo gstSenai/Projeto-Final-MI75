@@ -44,7 +44,7 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
                 <div className="flex lg:gap-16">
                     <FormularioInput
                         placeholder="UF:"
-                        name="uf"
+                        name="endereco.uf"
                         showOptions
                         register={register}
                         onChange={handleUfChange}
@@ -54,7 +54,7 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
                     />
                     <FormularioInput
                         placeholder="Cidade:"
-                        name="cidade"
+                        name="endereco.cidade"
                         showOptions
                         register={register}
                         custumizacaoClass="lg:w-[45.5%]"
@@ -63,7 +63,7 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
                     />
                     <FormularioInput
                         placeholder="Cep:"
-                        name="cep"
+                        name="endereco.cep"
                         register={register}
                         custumizacaoClass="lg:w-[32.5%]"
                         required={true}
@@ -72,21 +72,21 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
                 <div className="flex lg:gap-16">
                     <FormularioInput
                         placeholder="Bairro:"
-                        name="bairro"
+                        name="endereco.bairro"
                         register={register}
                         custumizacaoClass="lg:w-1/3"
                         required={true}
                     />
                     <FormularioInput
                         placeholder="Rua:"
-                        name="rua"
+                        name="endereco.rua"
                         register={register}
                         custumizacaoClass="lg:w-1/3"
                         required={true}
                     />
                     <FormularioInput
                         placeholder="Número:"
-                        name="numero"
+                        name="endereco.numero"
                         register={register}
                         custumizacaoClass="lg:w-1/3"
                         required={true}
@@ -95,7 +95,7 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
                 <div className="flex lg:gap-16">
                     <FormularioInput
                         placeholder="Complemento:"
-                        name="complemento"
+                        name="endereco.complemento"
                         register={register}
                         custumizacaoClass="lg:w-full h-40"
                     />
