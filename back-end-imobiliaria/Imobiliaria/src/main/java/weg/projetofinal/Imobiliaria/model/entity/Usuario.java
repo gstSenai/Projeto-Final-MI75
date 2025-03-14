@@ -1,5 +1,6 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -46,6 +47,7 @@ public class Usuario {
     @Column(nullable = false)
     private String senha;
 
+    @JsonIgnore
     private String imagem_usuario;
 
     @OneToOne

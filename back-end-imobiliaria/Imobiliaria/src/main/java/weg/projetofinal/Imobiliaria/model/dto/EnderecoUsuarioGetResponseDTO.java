@@ -9,7 +9,7 @@ public record EnderecoUsuarioGetResponseDTO(
         Integer numero_apartamento,
         String bairro,
         String cidade,
-        String estado,
+        String uf,
         UsuarioEnderecoGetResponseDTO usuario
 ) {
 }

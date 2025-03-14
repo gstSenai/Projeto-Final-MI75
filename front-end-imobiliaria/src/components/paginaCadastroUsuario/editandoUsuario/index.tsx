@@ -37,7 +37,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
             console.log("Sending address usuario:", data);
 
             for (const users of selectedUsuarios) {
-                const response = await request('PUT', `http://localhost:9090/users/update/${users.id}`, data)
+                const response = await request('PUT', `http://localhost:9090/usuario/update/${users.id}`, data)
                 return response
             }
         } catch (error) {

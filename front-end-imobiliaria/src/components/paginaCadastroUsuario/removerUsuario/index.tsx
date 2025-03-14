@@ -13,7 +13,8 @@ interface UsuarioProps {
     data_nascimento: string
     email: string
     senha: string
-  }
+}
+
 interface RemoveUsuarioProps {
     selectedUsers: UsuarioProps[]
     onComplete?: () => void
@@ -26,7 +27,7 @@ export function RemoveUsuario({ selectedUsers, onComplete }: RemoveUsuarioProps)
 
     const addUser = async (data: UsuarioProps) => {
         try {
-            const response = await request('POST', 'http://localhost:9090/users/create', data);
+            const response = await request('POST', 'http://localhost:9090/usuario/create', data);
             setLastDeleteUser(response);
             return response;
         } catch (error) {
@@ -39,7 +40,7 @@ export function RemoveUsuario({ selectedUsers, onComplete }: RemoveUsuarioProps)
         setIsDeleting(true)
         try {
             for (const user of selectedUsers) {
-                await request("DELETE", `http://localhost:9090/users/delete/${user.id}`)
+                await request("DELETE", `http://localhost:9090/usuario/delete/${user.id}`)
             }
 
             setTimeout(() => {

@@ -7,7 +7,7 @@ import request from "@/routes/request"
 import { Botao } from "@/components/botao"
 
 interface UsuarioProps {
-    id: number
+    id?: number
     nome: string
     sobrenome: string
     cpf: string
@@ -22,11 +22,12 @@ interface EnderecoImovelProps {
     id?: number
     cep: string
     rua: string
-    numero: string
+    tipo_residencia: string
+    numero_imovel: number
+    numero_apartamento: number
     bairro: string
     cidade: string
     uf: string
-    complemento?: string
 }
 
 interface InputDadosUsuarioProps {
@@ -45,11 +46,13 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
         try {
             console.log("Sending address data:", data);
 
-            if (!data.cep || !data.rua || !data.numero || !data.bairro || !data.cidade || !data.uf) {
+            if (!data.cep || !data.rua || !data.tipo_residencia
+                || !data.numero_imovel || !data.numero_apartamento
+                || !data.bairro || !data.cidade || !data.uf) {
                 throw new Error('Todos os campos obrigatórios devem ser preenchidos');
             }
 
-            const response = await request("POST", "http://localhost:9090/endereco/create", data);
+            const response = await request("POST", "http://localhost:9090/enderecoUsuario/create", data);
 
             if (response && response.id) {
                 setEnderecoId(response.id)
@@ -69,7 +72,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
 
             console.log("Sending address data:", data);
 
-            const response = await request("POST", "http://localhost:9090/users/create", data)
+            const response = await request("POST", "http://localhost:9090/usuario/create", data)
             return response
         } catch (error) {
             console.error("Erro ao adicionar usuário:", error)
@@ -79,7 +82,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
 
     const deleteUsuario = async (userId: number): Promise<void> => {
         try {
-            await request('DELETE', `http://localhost:9090/users/delete/${userId}`)
+            await request('DELETE', `http://localhost:9090/usuario/delete/${userId}`)
         } catch (error) {
             console.error("Erro ao deletar imóvel:", error)
             throw error;
@@ -111,7 +114,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                 data_nascimento: usuario.data_nascimento,
                 email: usuario.email,
                 senha: usuario.senha,
-                id_endereco: responseEndereco,
+                enderecoUsuario: responseEndereco,
             };
 
             console.log("Dados do imóvel a serem enviados:", usuarioAdd);

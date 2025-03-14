@@ -9,6 +9,6 @@ public record UsuarioEnderecoReponseDTO (
         Integer numero_apartamento,
         String bairro,
         String cidade,
-        String estado
+        String uf
 ){
 }

@@ -80,13 +80,13 @@ export default function TabelaUsuario() {
     }
   }
 
-  const getImoveis = async () => {
+  const getUsuario = async () => {
     if (isLoading) return
 
     setIsLoading(true)
     try {
-      const imoveisGet = await request("GET", "http://localhost:9090/users/getAll")
-      setUsuarios(imoveisGet)
+      const usuariosGet = await request("GET", "http://localhost:9090/usuario/getAll")
+      setUsuarios(usuarios)
     } catch (error) {
       console.error("Error fetching Imoveis:", error)
     } finally {
@@ -112,7 +112,7 @@ export default function TabelaUsuario() {
   }
 
   useEffect(() => {
-    getImoveis()
+    getUsuario()
     setAdicionar(false)
     setEditar(false)
     setRemover(false)
