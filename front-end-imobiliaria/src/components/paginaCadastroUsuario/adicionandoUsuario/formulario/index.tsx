@@ -7,7 +7,7 @@ import request from "@/routes/request"
 import { Botao } from "@/components/botao"
 
 interface UsuarioProps {
-    id?: number
+    id: number
     nome: string
     sobrenome: string
     cpf: string
@@ -19,7 +19,7 @@ interface UsuarioProps {
 }
 
 interface EnderecoImovelProps {
-    id?: number
+    id: number
     cep: string
     rua: string
     tipo_residencia: string
@@ -114,7 +114,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                 data_nascimento: usuario.data_nascimento,
                 email: usuario.email,
                 senha: usuario.senha,
-                enderecoUsuario: responseEndereco,
+                idEnderecoUsuario: enderecoId,
             };
 
             console.log("Dados do imóvel a serem enviados:", usuarioAdd);

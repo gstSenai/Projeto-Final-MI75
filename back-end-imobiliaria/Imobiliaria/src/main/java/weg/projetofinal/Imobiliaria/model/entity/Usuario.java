@@ -50,7 +50,7 @@ public class Usuario {
     @JsonIgnore
     private String imagem_usuario;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_endereco_usuario")
     private EnderecoUsuario enderecoUsuario;
 

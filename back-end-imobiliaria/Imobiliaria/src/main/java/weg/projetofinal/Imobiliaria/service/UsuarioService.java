@@ -46,24 +46,20 @@ public class UsuarioService {
         repository.deleteById(id);
     }
 
-    public Usuario updateUser(Usuario usuario, Integer id, Integer idEnderecoUsuario) {
-        Usuario usuarioExistente = repository.findById(id).get();
-
-        if (usuarioExistente == null) {
-            throw new RuntimeException("Usuário não encontrado com ID: " + id);
+    public Usuario updateUser(Usuario usuario, Integer id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID do usuário não pode ser nulo.");
         }
 
-        EnderecoUsuario enderecoUsuario = enderecoUsuarioService.findById(idEnderecoUsuario);
+        Usuario usuarioExistente = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
 
-        if (enderecoUsuario == null) {
-            throw new RuntimeException("Endereço não encontrado com ID: " + idEnderecoUsuario);
-        }
 
         usuario.setId(id);
-        usuario.setEnderecoUsuario(enderecoUsuario);
 
         return repository.save(usuario);
     }
+
 
 
 

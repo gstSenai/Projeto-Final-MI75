@@ -86,9 +86,9 @@ export default function TabelaUsuario() {
     setIsLoading(true)
     try {
       const usuariosGet = await request("GET", "http://localhost:9090/usuario/getAll")
-      setUsuarios(usuarios)
+      setUsuarios(usuariosGet)
     } catch (error) {
-      console.error("Error fetching Imoveis:", error)
+      console.error("Error fetching usuarios:", error)
     } finally {
       setIsLoading(false)
     }
@@ -99,7 +99,7 @@ export default function TabelaUsuario() {
     setSelectedUsuarios([])
   }
 
-  const toggleImoveiselection = (usuario: UsuarioProps) => {
+  const toggleUsuarioselection = (usuario: UsuarioProps) => {
     setSelectedUsuarios(prevSelected => {
       const isSelected = prevSelected.some(u => u.id === usuario.id)
 
@@ -158,7 +158,7 @@ export default function TabelaUsuario() {
                         key={usuario.id}
                         className={`cursor-pointer border-b border-[#E0D6CE] ${isSelected ? "bg-vermelho text-white" : "bg-[#FAF6ED] hover:bg-vermelho hover:bg-opacity-30"
                           }`}
-                        onClick={() => toggleImoveiselection(usuario)}
+                        onClick={() => toggleUsuarioselection(usuario)}
                       >
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
                           {usuario.nome}

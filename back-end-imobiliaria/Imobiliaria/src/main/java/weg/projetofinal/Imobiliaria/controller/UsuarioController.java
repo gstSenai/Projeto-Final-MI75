@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import weg.projetofinal.Imobiliaria.model.dto.UsuarioGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.UsuarioPostRequestDTO;
+import weg.projetofinal.Imobiliaria.model.dto.UsuarioPutRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 import weg.projetofinal.Imobiliaria.model.mapper.UsuarioMapper;
 import weg.projetofinal.Imobiliaria.service.UsuarioService;
@@ -60,9 +61,9 @@ public class UsuarioController {
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioGetResponseDTO update(@RequestBody @Valid UsuarioPostRequestDTO usuarioDTO, @PathVariable Integer id) {
-        Usuario usuario = UsuarioMapper.INSTANCE.usuarioPostRequestDTOToUsuario(usuarioDTO);
-        Usuario usuarioUpdate = service.updateUser(usuario,id, usuarioDTO.idEnderecoUsuario());
+    public UsuarioGetResponseDTO update(@RequestBody @Valid UsuarioPutRequestDTO usuarioDTO, @PathVariable Integer id) {
+        Usuario usuario = UsuarioMapper.INSTANCE.usuarioPutRequestDTOToUsuario(usuarioDTO);
+        Usuario usuarioUpdate = service.updateUser(usuario,id);
         return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuarioUpdate);
     }
 }
