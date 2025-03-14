@@ -16,6 +16,8 @@ export default function PaginaEditor() {
     return (
         <div className={`${montserrat.className} pt-3 pb-24 lg:pt-14 lg:pb-52`}>
             <Link href="./PoliticaPrivacidade">PoliticaPrivacidade</Link>
+            <Link href="./TermosUso">TermosUso</Link>
+
         </div>
 
 
