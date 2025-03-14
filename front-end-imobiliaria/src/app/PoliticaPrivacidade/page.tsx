@@ -149,7 +149,8 @@ export default function PoliticaPrivacidade() {
                   <h3 className="text-sm text-gray-200 ">- Opera</h3>
                   <h3 className="text-sm text-gray-200 mb-4 ">- Safari </h3>
 
-                  <h3 className="text-sm font-semibold mb-2">Mais informações</h3>
+
+                  <h2 className="text-md font-bold mt-6 mb-2">Mais informações</h2>
                   <p className="text-sm text-gray-200 mb-4">
                     Esperemos que esteja esclarecido e, como mencionado anteriormente, se houver algo que você não tem certeza se precisa ou não, geralmente é mais seguro deixar os cookies ativados, caso interaja com um dos recursos que você usa em nosso site.
                   </p>
