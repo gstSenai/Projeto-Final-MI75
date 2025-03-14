@@ -1,4 +1,6 @@
 import { Inter } from 'next/font/google';
+import Image from 'next/image';
+
 
 // Carregando a fonte Inter
 const inter = Inter({
@@ -24,7 +26,7 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                 <div className="flex justify-center items-center">
                     <div className="flex flex-col w-full max-w-[375px] lg:max-w-[500px] lg:px-4">
                         <div className="w-full">
-                            <img src="/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[400px]" />
+                            <Image src="/imagensImovel/fotoImovel.png" alt="Imagem Imovel" width={500} height={350} className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[500px]" />
                         </div>
                         <div className="w-full bg-white shadow-[5px_20px_100px_rgb(0,0,0,0.1)] rounded-b-[20px] py-2">
                             <div className="flex flex-col justify-center items-center">
@@ -34,17 +36,17 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                             <div className="flex justify-center gap-10 lg:gap-10 items-center pt-2">
                                 <div className="flex flex-col items-center pl-2">
                                     <p className="text-[#5C5C5C] text-sm 2xl:text-xl">Dormitórios</p>
-                                    <img src="/imagemDormitorio.png" alt="Imagem Imovel" className='2xl:min-w-[60px] lg:min-w-[35px]' />
+                                    <Image src="/imagensImovel/imagemDormitorio.png" alt="Imagem Imovel" width={40} height={40}  className='2xl:min-w-[60px] lg:min-w-[35px]' />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdDormitorios}</p>
                                 </div>
                                 <div className="flex flex-col items-center">
                                     <p className="text-[#5C5C5C] text-sm 2xl:text-xl">Suíte</p>
-                                    <img src="/imagemSuite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[35px] 2xl:min-w-[60px]" />
+                                    <Image src="/imagensImovel/imagemSuite.png" alt="Imagem Suite" width={40} height={40}  className="min-w-[20px] max-w-[40px] lg:min-w-[35px] 2xl:min-w-[60px]" />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdSuite}</p>
                                 </div>
                                 <div className="flex flex-col items-center pr-2">
                                     <p className="text-[#5C5C5C] text-sm 2xl:text-xl">Banheiros</p>
-                                    <img src="/imagemBanheiro.png" alt="Imagem Banheiro" className='2xl:min-w-[60px] lg:min-w-[35px]' />
+                                    <Image src="/imagensImovel/imagemBanheiro.png" alt="Imagem Banheiro" width={40} height={40}  className='2xl:min-w-[60px] lg:min-w-[35px]' />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdBanheiros}</p>
                                 </div>
                             </div>
@@ -56,10 +58,11 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                     </div>
                 </div>
 
+
                 <div className="flex justify-center items-center">
                     <div className="flex flex-col w-full max-w-[375px] lg:max-w-[500px] lg:px-4">
                         <div className="w-full">
-                            <img src="/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[400px]" />
+                            <Image src="/imagensImovel/fotoImovel.png" alt="Imagem Imovel" width={500} height={350} className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[500px]" />
                         </div>
                         <div className="w-full bg-white shadow-[5px_20px_100px_rgb(0,0,0,0.1)] rounded-b-[20px] py-2">
                             <div className="flex flex-col justify-center items-center">
@@ -69,17 +72,17 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                             <div className="flex justify-center gap-10 lg:gap-10 items-center pt-2">
                                 <div className="flex flex-col items-center pl-2">
                                     <p className="text-[#5C5C5C] text-sm 2xl:text-xl">Dormitórios</p>
-                                    <img src="/imagemDormitorio.png" alt="Imagem Imovel" className='2xl:min-w-[60px] lg:min-w-[35px]' />
+                                    <Image src="/imagensImovel/imagemDormitorio.png" alt="Imagem Imovel" width={40} height={40}  className='2xl:min-w-[60px] lg:min-w-[35px]' />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdDormitorios}</p>
                                 </div>
                                 <div className="flex flex-col items-center">
                                     <p className="text-[#5C5C5C] text-sm 2xl:text-xl">Suíte</p>
-                                    <img src="/imagemSuite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[35px] 2xl:min-w-[60px]" />
+                                    <Image src="/imagensImovel/imagemSuite.png" alt="Imagem Suite" width={40} height={40}  className="min-w-[20px] max-w-[40px] lg:min-w-[35px] 2xl:min-w-[60px]" />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdSuite}</p>
                                 </div>
                                 <div className="flex flex-col items-center pr-2">
                                     <p className="text-[#5C5C5C] text-sm 2xl:text-xl">Banheiros</p>
-                                    <img src="/imagemBanheiro.png" alt="Imagem Banheiro" className='2xl:min-w-[60px] lg:min-w-[35px]' />
+                                    <Image src="/imagensImovel/imagemBanheiro.png" alt="Imagem Banheiro" width={40} height={40}  className='2xl:min-w-[60px] lg:min-w-[35px]' />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdBanheiros}</p>
                                 </div>
                             </div>
@@ -91,10 +94,11 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                     </div>
                 </div>
 
+
                 <div className="flex justify-center items-center">
                     <div className="flex flex-col w-full max-w-[375px] lg:max-w-[500px] lg:px-4">
                         <div className="w-full">
-                            <img src="/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[400px]" />
+                            <Image src="/imagensImovel/fotoImovel.png" alt="Imagem Imovel" width={500} height={350} className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[500px]" />
                         </div>
                         <div className="w-full bg-white shadow-[5px_20px_100px_rgb(0,0,0,0.1)] rounded-b-[20px] py-2">
                             <div className="flex flex-col justify-center items-center">
@@ -104,17 +108,17 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                             <div className="flex justify-center gap-10 lg:gap-10 items-center pt-2">
                                 <div className="flex flex-col items-center pl-2">
                                     <p className="text-[#5C5C5C] text-sm 2xl:text-xl">Dormitórios</p>
-                                    <img src="/imagemDormitorio.png" alt="Imagem Imovel" className='2xl:min-w-[60px] lg:min-w-[35px]' />
+                                    <Image src="/imagensImovel/imagemDormitorio.png" alt="Imagem Imovel" width={40} height={40}  className='2xl:min-w-[60px] lg:min-w-[35px]' />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdDormitorios}</p>
                                 </div>
                                 <div className="flex flex-col items-center">
                                     <p className="text-[#5C5C5C] text-sm 2xl:text-xl">Suíte</p>
-                                    <img src="/imagemSuite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[35px] 2xl:min-w-[60px]" />
+                                    <Image src="/imagensImovel/imagemSuite.png" alt="Imagem Suite" width={40} height={40}  className="min-w-[20px] max-w-[40px] lg:min-w-[35px] 2xl:min-w-[60px]" />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdSuite}</p>
                                 </div>
                                 <div className="flex flex-col items-center pr-2">
                                     <p className="text-[#5C5C5C] text-sm 2xl:text-xl">Banheiros</p>
-                                    <img src="/imagemBanheiro.png" alt="Imagem Banheiro" className='2xl:min-w-[60px] lg:min-w-[35px]' />
+                                    <Image src="/imagensImovel/imagemBanheiro.png" alt="Imagem Banheiro" width={40} height={40}  className='2xl:min-w-[60px] lg:min-w-[35px]' />
                                     <p className="text-[#702632] font-black lg:text-lg">{qtdBanheiros}</p>
                                 </div>
                             </div>
@@ -125,6 +129,7 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                         </div>
                     </div>
                 </div>
+
             </div>
         </>
     );

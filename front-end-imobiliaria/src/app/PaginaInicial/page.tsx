@@ -80,6 +80,7 @@ export default function PaginaInicial() {
                     <div>
 
                         <Card></Card>
+                        
 
                     </div>
                 </section>
