@@ -10,14 +10,10 @@ interface UsuarioProps {
     cpf: string
     tipo_conta: string
     telefone: string
-    data_nascimento: Date
+    data_nascimento: string
     email: string
     senha: string
-    confirmar_senha?: string
-    ultimo_acesso?: string
-    imovel: string
-}
-
+  }
 interface RemoveUsuarioProps {
     selectedUsers: UsuarioProps[]
     onComplete?: () => void

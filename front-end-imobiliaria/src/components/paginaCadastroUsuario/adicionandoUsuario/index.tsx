@@ -1,12 +1,12 @@
 "use client"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { EnderecoSection } from "../formulario/endereco-section"
-import { DadosImovelSection } from "./dados-imovel-section"
+import { EnderecoSection } from "./formulario/endereco-section"
+import { DadosUsuarioSection } from "./formulario/dados-imovel-section"
 import request from "@/routes/request"
 import { Botao } from "@/components/botao"
 
-interface ImovelProps {
+interface UsuarioProps {
     id: number;
     codigo?: number
     nome_propriedade: string
@@ -26,7 +26,7 @@ interface ImovelProps {
     descricao?: string
 }
 
-interface EnderecoImovelProps {
+interface EnderecoUsuarioProps {
     id?: number
     cep: string
     rua: string
@@ -37,19 +37,19 @@ interface EnderecoImovelProps {
     complemento?: string
 }
 
-interface InputDadosImovelProps {
+interface InputDadosUsuarioProps {
     onComplete?: () => void;
 }
 
-export function Formulario({ onComplete }: InputDadosImovelProps) {
-    const { register, handleSubmit, formState: { errors } } = useForm<{ imovel: ImovelProps; endereco: EnderecoImovelProps }>();
+export function Formulario({ onComplete }: InputDadosUsuarioProps) {
+    const { register, handleSubmit, formState: { errors } } = useForm<{ imovel: UsuarioProps; endereco: EnderecoUsuarioProps }>();
     const [showForm, setShowForm] = useState(true)
     const [showModal, setShowModal] = useState(false)
-    const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
+    const [lastAddedImovel, setLastAddedImovel] = useState<UsuarioProps | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [enderecoId, setEnderecoId] = useState<number>();
 
-    const addEndereco = async (data: EnderecoImovelProps) => {
+    const addEndereco = async (data: EnderecoUsuarioProps) => {
         try {
             console.log("Sending address data:", data);
 
@@ -72,7 +72,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         }
     };
 
-    const addImovel = async (data: ImovelProps) => {
+    const addImovel = async (data: UsuarioProps) => {
         try {
 
             console.log("Sending address data:", data);
@@ -94,7 +94,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         }
     }
 
-    const onSubmitImovel = async (data: { imovel: ImovelProps; endereco: EnderecoImovelProps }) => {
+    const onSubmitImovel = async (data: { imovel: UsuarioProps; endereco: EnderecoUsuarioProps }) => {
         if (isSubmitting) return;
 
         try {
@@ -171,7 +171,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
                 <>
                     <EnderecoSection register={register} />
 
-                    <DadosImovelSection register={register} />
+                    <DadosUsuarioSection register={register} />
 
                     <div className="flex items-center gap-16 mt-10">
                         <div className="flex gap-[30rem] w-full">

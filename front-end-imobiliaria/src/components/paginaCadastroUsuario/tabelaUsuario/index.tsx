@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { Montserrat } from 'next/font/google'
-import { InputDadosUsuario } from "../../paginaCadastroUsuario/adicionandoUsuario/inputDadosUsuario"
-import { InputEditandoDadosUsuario } from "../../paginaCadastroUsuario/editandoUsuario/inputEditarDadosUsuario"
 import request from "@/routes/request"
+import { Formulario } from "../adicionandoUsuario/formulario"
 import { RemoveUsuario } from "../removerUsuario"
-import { InputEnderecoPropriedade } from "../adicionandoUsuario/inputEnderecoPropriedade"
+import { EditarUsuario } from "../editandoUsuario"
+
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
@@ -15,27 +15,6 @@ const montserrat = Montserrat({
   display: "swap",
 })
 
-interface TableProps {
-  headers: string[]
-  data: (string | number)[][]
-}
-
-interface ImovelProps {
-  id: number
-  nome_propriedade: string
-  tipo_transacao: string
-  valor_venda: number
-  tipo_imovel: string
-  status_imovel: string
-  valor_promocional: number
-  destaque?: boolean
-  visibilidade: boolean
-  condominio: number
-  area_construida: number
-  area_terreno: number
-  descricao: string
-}
-
 interface UsuarioProps {
   id: number
   nome: string
@@ -43,26 +22,25 @@ interface UsuarioProps {
   cpf: string
   tipo_conta: string
   telefone: string
-  data_nascimento: Date
+  data_nascimento: string
   email: string
   senha: string
-  imovel: string
 }
 
 interface ResponseProps {
   content: UsuarioProps[]
 }
 
-export default function GenericTable() {
-  const [selectedUsers, setSelectedUsers] = useState<UsuarioProps[]>([])
-  const [users, setUsers] = useState<ResponseProps | null>(null)
+export default function TabelaUsuario() {
+  const [selectedUsuarios, setSelectedUsuarios] = useState<UsuarioProps[]>([])
+  const [usuarios, setUsuarios] = useState<ResponseProps | null>(null)
   const [adicionar, setAdicionar] = useState(false)
   const [remover, setRemover] = useState(false)
   const [editar, setEditar] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
 
-  const handleAddUser = () => {
+  const handleAddUsuario = () => {
     setAdicionar(!adicionar)
     setEditar(false)
     setRemover(false)
@@ -71,9 +49,9 @@ export default function GenericTable() {
     }
   }
 
-  const handleRemoveUser = () => {
-    if (selectedUsers.length === 0) {
-      alert("Selecione pelo menos um usuário para remover")
+  const handleRemoveUsuario = () => {
+    if (selectedUsuarios.length === 0) {
+      alert("Selecione pelo menos um imóvel para remover")
       return
     }
 
@@ -85,12 +63,12 @@ export default function GenericTable() {
     }
   }
 
-  const handleEditUser = () => {
-    if (selectedUsers.length === 0) {
-      alert("Selecione um usuário para editar")
+  const handleEditusuario = () => {
+    if (selectedUsuarios.length === 0) {
+      alert("Selecione um imóvel para editar")
       return
-    } else if (selectedUsers.length > 1) {
-      alert("Pode editar um usuário por vez")
+    } else if (selectedUsuarios.length > 1) {
+      alert("Pode editar um imóvel por vez")
       return
     }
 
@@ -102,15 +80,15 @@ export default function GenericTable() {
     }
   }
 
-  const getUsers = async () => {
+  const getImoveis = async () => {
     if (isLoading) return
 
     setIsLoading(true)
     try {
-      const usersGet = await request("GET", "http://localhost:9090/users/getAll")
-      setUsers(usersGet)
+      const imoveisGet = await request("GET", "http://localhost:9090/users/getAll")
+      setUsuarios(imoveisGet)
     } catch (error) {
-      console.error("Error fetching users:", error)
+      console.error("Error fetching Imoveis:", error)
     } finally {
       setIsLoading(false)
     }
@@ -118,29 +96,32 @@ export default function GenericTable() {
 
   const refreshData = () => {
     setRefreshTrigger((atualizar) => atualizar + 1)
-    setSelectedUsers([])
+    setSelectedUsuarios([])
   }
 
-  const toggleUserSelection = (user: UsuarioProps) => {
-    setSelectedUsers(prevSelected => {
-      const isSelected = prevSelected.some(u => u.id === user.id)
+  const toggleImoveiselection = (usuario: UsuarioProps) => {
+    setSelectedUsuarios(prevSelected => {
+      const isSelected = prevSelected.some(u => u.id === usuario.id)
 
       if (isSelected) {
-        return prevSelected.filter(u => u.id !== user.id)
+        return prevSelected.filter(u => u.id !== usuario.id)
       } else {
-        return [...prevSelected, user]
+        return [...prevSelected, usuario]
       }
     })
   }
 
   useEffect(() => {
-    getUsers()
+    getImoveis()
+    setAdicionar(false)
+    setEditar(false)
+    setRemover(false)
   }, [refreshTrigger])
 
   return (
     <>
-      <div className="flex flex-col 2xl:px-20 xl:px-20 lg:px-10 px-10 mb-20 sm:flex-col md:flex-col lg:flex-row 2xl:flex-row">
-        <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6">
+      <div className="flex flex-col gap-10 sm:flex-col md:flex-col lg:flex-row">
+        <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6 w-full">
           <div className="overflow-x-auto max-h-[500px]">
             <table className="w-full border-separate border-spacing-0">
               <thead>
@@ -152,13 +133,13 @@ export default function GenericTable() {
                     <p>E-mail</p>
                   </th>
                   <th className="p-4 text-center font-bold border border-[#E0D6CE]">
-                    <p>Telefone</p>
-                  </th>
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>CPF</p>
                   </th>
                   <th className="p-4 text-center font-bold border border-[#E0D6CE]">
-                    <p>Tipo da Conta</p>
+                    <p>Tipo Conta</p>
+                  </th>
+                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
+                    <p>Telefone</p>
                   </th>
                 </tr>
               </thead>
@@ -170,29 +151,29 @@ export default function GenericTable() {
                     </td>
                   </tr>
                 ) : (
-                  users?.content?.map((user) => {
-                    const isSelected = selectedUsers.some(u => u.id === user.id)
+                  usuarios?.content?.map((usuario) => {
+                    const isSelected = selectedUsuarios.some(u => u.id === usuario.id)
                     return (
                       <tr
-                        key={user.id}
+                        key={usuario.id}
                         className={`cursor-pointer border-b border-[#E0D6CE] ${isSelected ? "bg-vermelho text-white" : "bg-[#FAF6ED] hover:bg-vermelho hover:bg-opacity-30"
                           }`}
-                        onClick={() => toggleUserSelection(user)}
+                        onClick={() => toggleImoveiselection(usuario)}
                       >
-                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                          {user.nome}
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
+                          {usuario.nome}
                         </td>
-                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                          {user.email}
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 max-w-[20rem] truncate whitespace-nowrap overflow-hidden">
+                          {usuario.email}
                         </td>
-                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                          {user.telefone}
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
+                          {usuario.cpf}
                         </td>
-                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                          {user.cpf}
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
+                          {usuario.tipo_conta}
                         </td>
-                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                          {user.tipo_conta}
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
+                          {usuario.telefone}
                         </td>
                       </tr>
                     )
@@ -201,16 +182,16 @@ export default function GenericTable() {
               </tbody>
             </table>
           </div>
-          {selectedUsers.length > 0 && (
+          {selectedUsuarios.length > 0 && (
             <div className="p-3 bg-[#FAF6ED] border-t border-[#E0D6CE]">
-              <p className="text-vermelho font-medium">{selectedUsers.length} usuário(s) selecionado(s)</p>
+              <p className="text-vermelho font-medium">{selectedUsuarios.length} imóvel(s) selecionado(s)</p>
             </div>
           )}
         </div>
         <div className="flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full ">
           <button
-            onClick={handleAddUser}
-            className="w-36 lg:h-[50px] m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
+            onClick={handleAddUsuario}
+            className="w-36 lg:h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start ">
@@ -220,8 +201,8 @@ export default function GenericTable() {
           </button>
 
           <button
-            onClick={handleRemoveUser}
-            className="w-36 lg:h-[50px] m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
+            onClick={handleRemoveUsuario}
+            className="w-36 lg:h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
@@ -231,9 +212,9 @@ export default function GenericTable() {
           </button>
 
           <button
-            onClick={handleEditUser}
-            className="w-36 lg:h-[50px] m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
-            disabled={isLoading || selectedUsers.length !== 1}
+            onClick={handleEditusuario}
+            className="w-36 lg:h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
+            disabled={isLoading || selectedUsuarios.length !== 1}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
               <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" className="lg:w-4" />
@@ -243,14 +224,9 @@ export default function GenericTable() {
         </div>
       </div>
 
-      {adicionar && (
-        <>
-          <div>
-            <InputDadosUsuario onComplete={refreshData} />
-          </div>
-        </>
-      )}
-      {remover && <RemoveUsuario selectedUsers={selectedUsers} onComplete={refreshData} />}
+      {adicionar && <Formulario onComplete={refreshData} />}
+      {remover && <RemoveUsuario selectedUsers={selectedUsuarios} onComplete={refreshData} />}
+      {editar && <EditarUsuario selectedUsuarios={selectedUsuarios} onComplete={refreshData} />}
     </>
   )
 }

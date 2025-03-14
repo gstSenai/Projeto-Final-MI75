@@ -2,15 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { Montserrat } from 'next/font/google'
-import { InputDadosUsuario } from "../../paginaCadastroUsuario/adicionandoUsuario/inputDadosUsuario"
-import { InputEditandoDadosUsuario } from "../../paginaCadastroUsuario/editandoUsuario/inputEditarDadosUsuario"
 import request from "@/routes/request"
 import { Formulario } from "../formulario"
-import { ListaDeCadastros } from "../formularioEscrito"
 import { RemoveImovel } from "../removerImovel"
 import { EditarImovel } from "../editarImovel"
-// import { RemoveUsuario } from "../removerUsuario"
-// import { InputEnderecoPropriedade } from "../adicionandoUsuario/inputEnderecoPropriedade"
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
@@ -151,7 +146,7 @@ export default function TabelaImovel() {
                     <p>Tipo Transação</p>
                   </th>
                   <th className="p-4 text-center font-bold border border-[#E0D6CE]">
-                    <p>Estado</p>
+                    <p>Status</p>
                   </th>
                 </tr>
               </thead>
@@ -185,7 +180,7 @@ export default function TabelaImovel() {
                           {imovel.tipo_transacao}
                         </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
-                          {imovel.destaque}
+                          {imovel.status_imovel}
                         </td>
                       </tr>
                     )
@@ -203,7 +198,7 @@ export default function TabelaImovel() {
         <div className="flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full ">
           <button
             onClick={handleAddImovel}
-            className="w-36 lg:h-[50px] m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-36 lg:h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start ">
@@ -214,7 +209,7 @@ export default function TabelaImovel() {
 
           <button
             onClick={handleRemoveImovel}
-            className="w-36 lg:h-[50px] m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-36 lg:h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
@@ -225,7 +220,7 @@ export default function TabelaImovel() {
 
           <button
             onClick={handleEditImovel}
-            className="w-36 lg:h-[50px] m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-36 lg:h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading || selectedImoveis.length !== 1}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
@@ -235,14 +230,6 @@ export default function TabelaImovel() {
           </button>
         </div>
       </div>
-      <ListaDeCadastros
-        textos={[
-          "ID do Imóvel: [Gerado automaticamente]",
-          "Telefone: telefone do Proprietário/Imobiliária",
-          "Dono: Nome do Proprietário/Imobiliária",
-          "Email: Email do Proprietário/Imobiliária",
-        ]}
-      />
 
       {adicionar && <Formulario onComplete={refreshData} />}
       {remover && <RemoveImovel selectedImoveis={selectedImoveis} onComplete={refreshData} />}

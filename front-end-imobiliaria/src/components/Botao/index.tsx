@@ -16,8 +16,8 @@ interface Botao {
 export function Botao({ texto, onClick }: Botao) {
     return (
         <>
-            <div className="font-montserrat max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-2xl 2xl:text-3xl w-full leading-normal text-black hover:text-white">
-                <button onClick={onClick} className={`bg-vermelho bg-opacity-40 hover:bg-opacity-100 transition-all duration-300 ease-in-out shrink-0 text-center rounded-[20px] lg:h-[50px] lg:w-[100%]`}>
+            <div className="font-montserrat max-sm:text-lg max-md:text-xl max-lg:text-xl lg:text-xl w-full leading-normal text-black hover:text-white">
+                <button onClick={onClick} className={`bg-vermelho bg-opacity-40 hover:bg-opacity-100 transition-all duration-300 ease-in-out shrink-0 text-center rounded-[20px] lg:h-[45px] lg:w-[100%]`}>
                     {texto}
                 </button>
             </div>

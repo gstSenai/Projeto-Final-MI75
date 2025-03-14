@@ -2,28 +2,20 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { EnderecoSection } from "../formulario/endereco-section"
-import { DadosImovelSection } from "./dados-imovel-section"
+import { DadosUsuarioSection } from "./dados-imovel-section"
 import request from "@/routes/request"
 import { Botao } from "@/components/botao"
 
-interface ImovelProps {
-    id: number;
-    codigo?: number
-    nome_propriedade: string
-    tipo_transacao: string
-    valor_venda: number
-    tipo_imovel: string
-    status_imovel: string
-    valor_promocional: number
-    test_destaque?: string
-    test_visibilidade?: string
-    destaque: boolean
-    visibilidade: boolean
-    valor_iptu: number
-    condominio: number
-    area_construida: number
-    area_terreno: number
-    descricao?: string
+interface UsuarioProps {
+    id: number
+    nome: string
+    sobrenome: string
+    cpf: string
+    tipo_conta: string
+    telefone: string
+    data_nascimento: string
+    email: string
+    senha: string
 }
 
 interface EnderecoImovelProps {
@@ -37,15 +29,15 @@ interface EnderecoImovelProps {
     complemento?: string
 }
 
-interface InputDadosImovelProps {
+interface InputDadosUsuarioProps {
     onComplete?: () => void;
 }
 
-export function Formulario({ onComplete }: InputDadosImovelProps) {
-    const { register, handleSubmit, formState: { errors } } = useForm<{ imovel: ImovelProps; endereco: EnderecoImovelProps }>();
+export function Formulario({ onComplete }: InputDadosUsuarioProps) {
+    const { register, handleSubmit, formState: { errors } } = useForm<{ usuario: UsuarioProps; endereco: EnderecoImovelProps }>();
     const [showForm, setShowForm] = useState(true)
     const [showModal, setShowModal] = useState(false)
-    const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
+    const [lastAddedUsuario, setLastAddedUsuario] = useState<UsuarioProps | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [enderecoId, setEnderecoId] = useState<number>();
 
@@ -72,29 +64,29 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         }
     };
 
-    const addImovel = async (data: ImovelProps) => {
+    const addUsuario = async (data: UsuarioProps) => {
         try {
 
             console.log("Sending address data:", data);
 
-            const response = await request("POST", "http://localhost:9090/imovel/create", data)
+            const response = await request("POST", "http://localhost:9090/users/create", data)
             return response
         } catch (error) {
-            console.error("Erro ao adicionar imóvel:", error)
+            console.error("Erro ao adicionar usuário:", error)
             throw error
         }
     }
 
-    const deleteImovel = async (imoveId: number): Promise<void> => {
+    const deleteUsuario = async (userId: number): Promise<void> => {
         try {
-            await request('DELETE', `http://localhost:9090/imovel/delete/${imoveId}`)
+            await request('DELETE', `http://localhost:9090/users/delete/${userId}`)
         } catch (error) {
             console.error("Erro ao deletar imóvel:", error)
             throw error;
         }
     }
 
-    const onSubmitImovel = async (data: { imovel: ImovelProps; endereco: EnderecoImovelProps }) => {
+    const onSubmitUsuario = async (data: { usuario: UsuarioProps; endereco: EnderecoImovelProps }) => {
         if (isSubmitting) return;
 
         try {
@@ -102,61 +94,55 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
 
             console.log("Dados recebidos para validação:", data);
 
-            const { imovel, endereco } = data;
+            const { usuario, endereco } = data;
 
             console.log("Dados do Endereço:", endereco);
-            console.log("Dados do Imóvel:", imovel);
+            console.log("Dados do Usuário:", usuario);
 
             const responseEndereco = await addEndereco(endereco);
 
-            const immobileData = {
-                id: imovel.id,
-                codigo: imovel.codigo || imovel.valor_venda,
-                nome_propriedade: imovel.nome_propriedade,
-                tipo_transacao: imovel.tipo_transacao,
-                valor_venda: imovel.valor_venda || 0,
-                tipo_imovel: imovel.tipo_imovel,
-                status_imovel: imovel.status_imovel,
-                valor_promocional: imovel.valor_promocional || 0,
-                destaque: imovel.test_destaque === "Sim",
-                visibilidade: imovel.test_visibilidade === "Público",
-                valor_iptu: imovel.valor_iptu || 0,
-                condominio: imovel.condominio || 0,
-                area_construida: imovel.area_construida || 0,
-                area_terreno: imovel.area_terreno || 0,
-                descricao: imovel.descricao || "",
+            const usuarioAdd = {
+                id: usuario.id,
+                nome: usuario.nome,
+                sobrenome: usuario.sobrenome,
+                cpf: usuario.cpf,
+                tipo_conta: usuario.tipo_conta,
+                telefone: usuario.telefone,
+                data_nascimento: usuario.data_nascimento,
+                email: usuario.email,
+                senha: usuario.senha,
                 id_endereco: responseEndereco,
             };
 
-            console.log("Dados do imóvel a serem enviados:", immobileData);
+            console.log("Dados do imóvel a serem enviados:", usuarioAdd);
 
-            const response = await addImovel(immobileData);
+            const response = await addUsuario(usuarioAdd);
             console.log("Resposta do servidor:", response);
             if (response) {
-                setLastAddedImovel(response);
+                setLastAddedUsuario(response);
                 setShowForm(false);
                 setShowModal(true);
             } else {
-                console.error("Erro: Resposta inválida ao adicionar imóvel.");
+                console.error("Erro: Resposta inválida ao adicionar usuário.");
             }
 
             if (onComplete) onComplete();
 
             setTimeout(() => setShowModal(false), 5000);
         } catch (error) {
-            console.error("Erro ao salvar Endereço:", error);
-            alert(`Erro ao salvar endereço: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+            console.error("Erro ao salvar usuário:", error);
+            alert(`Erro ao salvar usuário: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
         } finally {
             setIsSubmitting(false);
         }
     };
 
     const onSubmitDelete = async () => {
-        if (lastAddedImovel) {
-            if (lastAddedImovel.id) {
-                await deleteImovel(lastAddedImovel.id)
+        if (lastAddedUsuario) {
+            if (lastAddedUsuario.id) {
+                await deleteUsuario(lastAddedUsuario.id)
                 setShowModal(false)
-                setLastAddedImovel(null)
+                setLastAddedUsuario(null)
             }
             if (onComplete) {
                 onComplete();
@@ -169,20 +155,20 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         <>
             {showForm && (
                 <>
+                    <DadosUsuarioSection register={register} />
+
                     <EnderecoSection register={register} />
 
-                    <DadosImovelSection register={register} />
-
                     <div className="flex items-center gap-16 mt-10">
-                        <div className="flex gap-[30rem] w-full">
+                        <div className="flex gap-[40rem] w-full">
                             <Botao onClick={() => console.log()} texto="Cancelar" />
-                            <Botao onClick={handleSubmit(onSubmitImovel)} texto="Salvar cadastro" />
+                            <Botao onClick={handleSubmit(onSubmitUsuario)} texto="Salvar cadastro" />
                         </div>
                     </div>
                 </>
             )}
 
-            {showModal && lastAddedImovel && (
+            {showModal && lastAddedUsuario && (
                 <div className="w-full bottom-16 pl-10 items-center relative">
                     <div className='bg-vermelho w-72 flex gap-1 p-3 rounded-[20px] text-white'>
                         <p>Adicionado com Sucesso!</p>
