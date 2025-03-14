@@ -8,18 +8,18 @@ const montserrat = Montserrat({
     display: 'swap',
 });
 
-import Botao from '@/components/Botao';
+import { Botao } from '@/components/botao';
 import Image from 'next/image';
 
 export default function PaginaAdministrador() {
     return (
         <div className={`${montserrat.className} pb-24 pt-3 lg:pt-14 lg:pb-52`}>
             <main className="relative flex h-[811px] w-full max-w-[1810px] mx-auto overflow-hidden ">
-                <Image src="/montanhaPaginaAdministrador.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100}/>
+                <Image src="/montanhaPaginaAdministrador.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100} />
                 <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32">
                     <h1 className="text-[2.5rem] lg:text-[4.375rem] text-center 2xl:text-start font-bold">Bem-vindo à Área do Administrador!</h1>
                     {/* Linha vermelha */}
-                    <div className="border-t-8 border-[#702632] w-[265px] md:w-[405px] 2xl:w-[405px] my-6"></div>
+                    <div className="border-t-8 border-vermelho w-[265px] md:w-[405px] 2xl:w-[405px] my-6"></div>
                     <p className=" text-2xl lg:text-3xl  font-normal text-center 2xl:text-start max-w-4xl">Aqui você encontra todas as ferramentas necessárias para gerenciar todos os imóveis, usuários, cadastro de imóveis e Relatórios e Análises de dados.</p>
                 </div>
             </main>
@@ -64,5 +64,3 @@ export default function PaginaAdministrador() {
 
 
 }
-
-//sm: md: lg: 2xl:
