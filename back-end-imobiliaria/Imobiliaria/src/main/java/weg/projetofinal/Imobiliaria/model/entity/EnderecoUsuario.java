@@ -23,7 +23,7 @@ public class EnderecoUsuario {
     private Integer numero_apartamento;
     private String bairro;
     private String cidade;
-    private String estado;
+    private String uf;
 
     @OneToOne(mappedBy = "enderecoUsuario", cascade = CascadeType.REMOVE)
     private Usuario usuario;

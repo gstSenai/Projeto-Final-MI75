@@ -30,11 +30,12 @@ interface EnderecoUsuarioProps {
     id?: number
     cep: string
     rua: string
-    numero: string
+    tipo_residencia: string
+    numero_imovel: number
+    numero_apartamento: number
     bairro: string
     cidade: string
     uf: string
-    complemento?: string
 }
 
 interface InputDadosUsuarioProps {
@@ -53,7 +54,9 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
         try {
             console.log("Sending address data:", data);
 
-            if (!data.cep || !data.rua || !data.numero || !data.bairro || !data.cidade || !data.uf) {
+            if (!data.cep || !data.rua || !data.tipo_residencia
+                || !data.rua || !data.tipo_residencia
+                || !data.bairro || !data.cidade || !data.uf) {
                 throw new Error('Todos os campos obrigatórios devem ser preenchidos');
             }
 
