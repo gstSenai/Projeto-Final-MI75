@@ -13,15 +13,15 @@ interface FormularioInputProps {
 
 function FormularioInput({ placeholder, name, showOptions = false, custumizacaoClass, options, onChange, value }: FormularioInputProps) {
     return (
-        <form action="text" className={`flex items-center lg:max-h-[58px] xl:max-h-[62px] 2xl:max-h-[78px] max-lg:justify-center gap-6 xl:py-4 2xl:py-6 py-3.5 bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent max-lg:p-0 ${custumizacaoClass}`}>
-            <img src="/iconsForms/canetaEditar.png" alt="Editar" className="h-8 lg:h-6 2xl:h-full ml-4" />
+        <form action="text" className={`flex items-center lg:max-h-[58px] xl:max-h-[60px] 2xl:max-h-[62px] max-lg:justify-center gap-6 xl:py-4 2xl:py-6 py-3.5 bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent max-lg:p-0 ${custumizacaoClass}`}>
+            <img src="/iconsForms/canetaEditar.png" alt="Editar" className="lg:h-6 ml-4" />
             {options ? (
                 <select
                     value={value}
                     onChange={(e) => onChange && onChange(e.target.value)}
-                    className="appearance-none text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full bg-transparent"
+                    className="appearance-none text-black max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full bg-transparent"
                 >
-                    <option value="" disabled className="text-gray-400">{name}</option>
+                    <option value="" disabled className="text-black">{name}</option>
                     {options.map((option, index) => (
                         <option key={index} value={option} className="text-black">{option}</option>
                     ))}
@@ -31,18 +31,18 @@ function FormularioInput({ placeholder, name, showOptions = false, custumizacaoC
                     type="text"
                     placeholder={placeholder}
                     name={name}
-                    className="text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full"
+                    className="text-black max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl max-lg:text-black outline-none w-full"
                     value={value} // Valor do input
                     onChange={(e) => onChange && onChange(e.target.value)}
                 />
             )}
-            {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-8 2xl:h-full" />}
+            {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-6" />}
         </form>
     );
 }
 
-export function Formulario() {
-    const [uf, setUf] = useState<string>('SP');
+export function     Formulario() {
+    const [uf, setUf] = useState<string>('');
     const [cidade, setCidade] = useState<string>('');
     const [cidades, setCidades] = useState<string[]>([]);
 

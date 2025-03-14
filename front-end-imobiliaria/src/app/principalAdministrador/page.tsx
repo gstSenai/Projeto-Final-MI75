@@ -8,7 +8,7 @@ const montserrat = Montserrat({
     display: 'swap',
 });
 
-import Botao from '@/components/Botao';
+import Botao from '@/components/botao';
 import Image from 'next/image';
 
 export default function PaginaAdministrador() {

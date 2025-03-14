@@ -13,7 +13,7 @@ interface CadastroEscritoProps {
 export function CadastroEscrito({ texto }: CadastroEscritoProps) {
     return (
         <>
-            <div className="flex justify-start max-lg:justify-center lg:pr-20 xl:pr-28 xl:py-4 2xl:pr-64 2xl:py-6 pl-4 py-3.5
+            <div className="flex items-center lg:max-h-[58px] xl:max-h-[60px] 2xl:max-h-[62px] justify-start max-lg:justify-center lg:pr-20 xl:pr-28 xl:py-4 2xl:pr-64 2xl:py-6 pl-4 py-3.5
                              bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent 
                              max-lg:p-0">
                 <p className="text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl lg:text-xl

@@ -1,5 +1,6 @@
 import { Card } from "@/components/CardImovel";
 
+
 interface ImovelProps {
     id: number;
     nome_propriedade: string;
