@@ -184,7 +184,7 @@ export default function TabelaUsuario() {
           </div>
           {selectedUsuarios.length > 0 && (
             <div className="p-3 bg-[#FAF6ED] border-t border-[#E0D6CE]">
-              <p className="text-vermelho font-medium">{selectedUsuarios.length} imóvel(s) selecionado(s)</p>
+              <p className="text-vermelho font-medium">{selectedUsuarios.length} Usuário(s) selecionado(s)</p>
             </div>
           )}
         </div>

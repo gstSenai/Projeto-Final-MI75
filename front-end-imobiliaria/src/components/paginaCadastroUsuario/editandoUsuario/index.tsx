@@ -111,16 +111,10 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
                             >X</button>
                         </div>
                         <div className="flex flex-col w-full overflow-y-auto max-h-[80vh] pt-5 px-10">
-                            <h2 className="text-3xl font-semibold text-vermelho mb-4">Editar Imóveis</h2>
+                            <h2 className="text-3xl font-semibold text-vermelho mb-4">Editar Usuário</h2>
                             <div>
-                                <div className="flex flex-col gap-4">
-                                    <div className="bg-slate-500/70 h-[14rem] rounded-lg"></div>
-                                    <div className="flex gap-2">
-                                        <div className="bg-slate-500/70 w-full h-14 rounded-lg"></div>
-                                        <div className="bg-slate-500/70 w-full h-14 rounded-lg"></div>
-                                        <div className="bg-slate-500/70 w-full h-14 rounded-lg"></div>
-                                        <p>SETA</p>
-                                    </div>
+                                <div className="flex items-center flex-col gap-4">
+                                    <div className="bg-slate-500/70 h-[14rem] w-[14rem] rounded-full"></div>
                                 </div>
                                 <div>
                                     <form className="space-y-4">
@@ -146,7 +140,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
 
                                                             <div className="w-full">
                                                                 <label htmlFor={`sobrenome_${users.id}`} className="block text-lg">
-                                                                    Tipo do imóvel:
+                                                                    Sobrenome:
                                                                 </label>
                                                                 <FormularioEditarInput
                                                                     placeholder="Ex: Souza"
@@ -184,6 +178,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
                                                                     register={register}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                                                                    options={['Usuario', 'Corretor', 'Administrador', 'Editor']}
                                                                 />
                                                             </div>
 
