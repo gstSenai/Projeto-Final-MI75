@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Montserrat } from "next/font/google";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 import { z } from "zod";
 
 const montserrat = Montserrat({
@@ -18,20 +19,45 @@ interface AuthFormProps {
 }
 
 const schema = z.object({
-  nome: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
-  email: z.string().email("E-mail inválido"),
-  senha: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
+  nomeUsuario: z.string().min(5, "O nome deve ter pelo menos 5 caracteres.").regex(/^[a-zA-Z0-9_.]+$/, "O nome só pode conter letras, números, _ e .").max(15, "O nome deve ter no máximo 15 caracteres.").refine((nome) => !nome.includes(" "), {
+    message: "O nome não pode conter espaços.",
+  })
+    .refine((nome) => /^[a-zA-Z0-9]/.test(nome), {
+      message: `O nome não pode começar com um caractere especial.`,
+    })
+    .refine((nome) => /[a-zA-Z0-9]$/.test(nome), {
+      message: "O nome não pode terminar com um caractere especial.",
+    }),
+  email: z.string().email("E-mail inválido."),
+  senha: z.string().min(8, "A senha deve ter no mínimo 8 caracteres.").refine((senha) => /[A-Z]/.test(senha), {
+    message: "A senha deve conter pelo menos uma letra maiúscula.",
+  })
+    .refine((senha) => /[a-z]/.test(senha), {
+      message: "A senha deve conter pelo menos uma letra minúscula.",
+    })
+    .refine((senha) => /\d/.test(senha), {
+      message: "A senha deve conter pelo menos um número.",
+    })
+    .refine((senha) => /[!@#$%^&*(),.?":{}|<>]/.test(senha), {
+      message: "A senha deve conter pelo menos um caractere especial.",
+    })
+    .refine((senha) => !/^(1234|senha|abcd)$/.test(senha), {
+      message: "A senha não pode conter sequências óbvias.",
+    }),
   confirmarSenha: z.string(),
 }).refine((data) => data.senha === data.confirmarSenha, {
-  message: "As senhas não conferem",
+  message: "As senhas não coincidem.",
   path: ["confirmarSenha"],
 });
 
 const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro, isCadastro = false }) => {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
 
   const [formData, setFormData] = useState({
-    nome: "",
+    nomeUsuario: "",
     email: "",
     senha: "",
     confirmarSenha: "",
@@ -41,6 +67,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
 
   const handleRedirect = () => {
     router.push(isCadastro ? "/login" : "/cadastro");
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prev) => !prev);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,16 +119,16 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
             <form onSubmit={handleSubmit}>
               {isCadastro && (
                 <div className="mb-2">
-                  <label className="text-gray-700">Nome</label>
+                  <label className="text-gray-700">Nome de Usuário</label>
                   <input
                     type="text"
-                    name="nome"
-                    value={formData.nome}
+                    name="nomeUsuario"
+                    value={formData.nomeUsuario}
                     onChange={handleChange}
                     className="block px-4 w-[320px] py-2 border rounded-lg"
-                    placeholder="Digite seu nome"
+                    placeholder="Digite um nome de usuário"
                   />
-                  {errors.nome && <p className="text-red-500 text-sm">{errors.nome}</p>}
+                  {errors.nomeUsuario && <p className="max-w-xs break-words text-[#CF2020] opacity-80 text-sm">{errors.nomeUsuario}</p>}
                 </div>
               )}
               <div className="mb-2">
@@ -107,34 +141,104 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                   className="block px-4 w-[320px] py-2 border rounded-lg"
                   placeholder="Digite seu email"
                 />
-                {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+                {errors.email && <p className="max-w-xs break-words text-[#CF2020] opacity-80 text-sm">{errors.email}</p>}
               </div>
 
-              <div className="mb-2">
-                <label className="text-gray-700">Senha</label>
-                <input
-                  type="password"
-                  name="senha"
-                  value={formData.senha}
-                  onChange={handleChange}
-                  className="block px-4 w-[320px] py-2 border rounded-lg"
-                  placeholder="Digite sua senha"
-                />
-                {errors.senha && <p className="text-red-500 text-sm">{errors.senha}</p>}
-              </div>
+              {!errors.email && (
+                <>
+                  <div className="mb-2 relative">
+                    <label className="text-gray-700">Senha</label>
+                    <div className="flex flex-col items-center ">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        name="senha"
+                        value={formData.senha}
+                        onChange={handleChange}
+                        className="block px-4 py-2 w-[320px] rounded-lg focus:ring-2 focus:ring-blue-500 border-black border-opacity-30"
+                        placeholder="Digite sua senha"
+                      />
+                      <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="absolute inset-y-11 right-4 flex items-center"
+                      >
+                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                      </button>
+                    </div>
+                    {errors.senha && <p className="w-[300px] text-[#CF2020] opacity-80 text-sm">{errors.senha}</p>}
+                  </div>
+                </>
+              )}
+
+              {errors.email && (
+                <>
+                  <div className="mb-2 relative">
+                    <label className="text-gray-700">Senha</label>
+                    <div className="flex flex-col items-center ">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        name="senha"
+                        value={formData.senha}
+                        onChange={handleChange}
+                        className="block px-4 py-2 w-[320px] rounded-lg focus:ring-2 focus:ring-blue-500 border-black border-opacity-30"
+                        placeholder="Digite sua senha"
+                      />
+                      <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="absolute inset-y-11 right-4 pb-4 flex items-center"
+                      >
+                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                      </button>
+                    </div>
+                    {errors.senha && <p className="w-[300px] text-[#CF2020] opacity-80 text-sm">{errors.senha}</p>}
+                  </div>
+                </>
+              )}
+
+              {!isCadastro && (
+                <div className="mb-2 relative">
+                  <label className="text-gray-700">Senha</label>
+                  <div className="flex flex-col items-center ">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="senha"
+                      value={formData.senha}
+                      onChange={handleChange}
+                      className="block px-4 py-2 w-[320px] rounded-lg focus:ring-2 focus:ring-blue-500 border-black border-opacity-30"
+                      placeholder="Digite sua senha"
+                    />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="absolute inset-y-11 right-4 pb-4 flex items-center"
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
+                </div>
+              )}
+
 
               {isCadastro && (
-                <div className="mb-2">
+                <div className="mb-2 relative">
                   <label className="text-gray-700">Confirme sua senha</label>
                   <input
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     name="confirmarSenha"
                     value={formData.confirmarSenha}
                     onChange={handleChange}
                     className="block px-4 w-[320px] py-2 border rounded-lg"
                     placeholder="Confirme sua senha"
                   />
-                  {errors.confirmarSenha && <p className="text-red-500 text-sm">{errors.confirmarSenha}</p>}
+                  <button
+                    type="button"
+                    onClick={toggleConfirmPasswordVisibility}
+                    className="absolute inset-y-11 right-4 flex items-center"
+                  >
+                    {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                  {errors.confirmarSenha && <p className="max-w-xs break-words text-[#CF2020] opacity-80 text-sm">{errors.confirmarSenha}</p>}
                 </div>
               )}
 
