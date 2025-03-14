@@ -7,7 +7,8 @@ import { Montserrat } from 'next/font/google';
 import Carousel from '@/components/PaginaInicial/carrossel';
 import BotaoImageTexto from '@/components/PaginaInicial/BotaoImageTexto';
 import AtualizarComponents from '@/components/atualizarComponents';
-
+import { Header } from '@/components/header';     
+import { Footer } from '@/components/footer';
 // Carregando a fonte Inter
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -20,7 +21,10 @@ import Image from 'next/image';
 
 export default function PaginaInicial() {
     return (
-        <div className={`${montserrat.className} pt-3`}>
+        <div>
+        <Header />
+
+        <div className={`${montserrat.className} pt-8`}>
             <main className='max-lg:px-4 px-20'>
                 <div className="relative flex h-[881px] w-full rounded-[20px] mx-auto overflow-hidden pb-24 lg:pt-14 lg:pb-52 ">
                     <Image
@@ -109,14 +113,14 @@ export default function PaginaInicial() {
                 </div>
 
                 <Carousel>
-                    <BotaoImageTexto src="/jaragua.png" texto="Jaraguá do Sul" />
-                    <BotaoImageTexto src="/guaramirim.png" texto="Guaramirim" />
-                    <BotaoImageTexto src="/curupa.png" texto="Corupá" />
-                    <BotaoImageTexto src="/schorder.png" texto="Schroeder" />
-                    <BotaoImageTexto src="/jaragua.png" texto="Jaraguá do Sul" />
-                    <BotaoImageTexto src="/guaramirim.png" texto="Guaramirim" />
-                    <BotaoImageTexto src="/curupa.png" texto="Corupá" />
-                    <BotaoImageTexto src="/schorder.png" texto="Schroeder" />
+                    <BotaoImageTexto src="paginaInicial/ImagensCidade/jaragua.png" texto="Jaraguá do Sul" />
+                    <BotaoImageTexto src="paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
+                    <BotaoImageTexto src="paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
+                    <BotaoImageTexto src="paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
+                    <BotaoImageTexto src="paginaInicial/ImagensCidade/jaragua.png" texto="Jaraguá do Sul" />
+                    <BotaoImageTexto src="paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
+                    <BotaoImageTexto src="paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
+                    <BotaoImageTexto src="paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
                 </Carousel>
             </section>
             <footer >
@@ -153,7 +157,11 @@ export default function PaginaInicial() {
                 <div className="relative flex justify-center -mt-[16rem] lg:-mt-[9rem] z-10 max-lg:px-4 px-20">
                     <AtualizarComponents />
                 </div>
+                <div className='relative -mt-[140.2px]'>
+                <Footer />
+                </div>
             </footer>
+        </div>
         </div>
     );
 

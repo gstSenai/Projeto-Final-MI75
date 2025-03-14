@@ -1,3 +1,4 @@
+"use client";
 import { Montserrat } from 'next/font/google';
 
 
@@ -10,10 +11,13 @@ const montserrat = Montserrat({
 
 interface Botao {
     texto: string
-    onClick: React.MouseEventHandler<HTMLButtonElement>
+    onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
-export function Botao({ texto, onClick }: Botao) {
+
+
+export function Botao({ texto, onClick = () => {} }: Botao) {
+
     
 
     return (
