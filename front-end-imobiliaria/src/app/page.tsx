@@ -42,6 +42,7 @@ export default function Home() {
         <h2 className="text-2xl font-bold text-[#702632] mb-6">Tabela de Propriedades</h2>
         <GenericTable  headers={headers} data={data} />
       </div>
+      <Footer/>
     </div>
   );
 }
