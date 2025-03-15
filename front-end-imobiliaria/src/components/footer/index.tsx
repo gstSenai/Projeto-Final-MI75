@@ -10,9 +10,9 @@ const montserrat = Montserrat({
 
 export function Footer() {
     return (
-        <footer className="font-montserrat bg-[#1D1D1D] relative text-white">
-            <section className="flex flex-col xl:flex-row p-6 md:p-8 lg:p-12 xl:p-16 gap-10 xl:gap-20 relative">
-                
+        <footer className="font-montserrat bg-[#1D1D1D] relative text-white overflow-hidden">
+            <section className="flex flex-col xl:flex-row p-6 md:p-8 lg:p-12 xl:p-16 pt-16 md:pt-16 lg:pt-20 xl:pt-24  gap-10 xl:gap-20 relative">
+
                 {/* Bloco de Informações */}
                 <div className="flex flex-col items-start">
                     <p className="text-xl xl:text-2xl font-extrabold">Informações</p>
@@ -21,16 +21,16 @@ export function Footer() {
                     </p>
                     <div className="flex gap-6 pt-6">
                         <Link href="https://facebook.com" target="_blank">
-                            <img src="/iconFooter/facebook.png" alt="facebook" />
+                            <img src="/iconFooter/facebook.png" alt="facebook" className='w-7 h-7 md:w-7 md:h-7 lg:h-8 lg:w-8 xl:h-10 xl:w-10' />
                         </Link>
                         <Link href="https://linkedin.com" target="_blank">
-                            <img src="/iconFooter/linkedin.png" alt="linkedin" />
+                            <img src="/iconFooter/linkedin.png" alt="linkedin" className='w-7 h-7 md:w-7 md:h-7 lg:h-8 lg:w-8 xl:h-10 xl:w-10' />
                         </Link>
                         <Link href="https://instagram.com" target="_blank">
-                            <img src="/iconFooter/instagram.png" alt="instagram" />
+                            <img src="/iconFooter/instagram.png" alt="instagram" className='w-7 h-7 md:w-7 md:h-7 lg:h-8 lg:w-8 xl:h-10 xl:w-10' />
                         </Link>
                         <Link href="https://whatsapp.com" target="_blank">
-                            <img src="/iconFooter/zap.png" alt="whatsapp" />
+                            <img src="/iconFooter/zap.png" alt="whatsapp" className='w-7 h-7 md:w-7 md:h-7 lg:h-8 lg:w-8 xl:h-10 xl:w-10' />
                         </Link>
                     </div>
                 </div>
@@ -38,27 +38,28 @@ export function Footer() {
                 {/* Bloco de Links */}
                 <div className="flex flex-wrap gap-8 md:gap-20 xl:gap-36">
                     {/* Serviços */}
-                    <div className="flex flex-col gap-3">
-                        <p className="text-xl xl:text-2xl font-extrabold">Serviços</p>
-                        <div className="font-light text-sm md:text-base flex flex-col gap-2">
-                            <p><a href="#">Avaliações</a></p>
-                            <p><a href="#">Consultoria</a></p>
-                            <p><a href="#">Regularização</a></p>
-                            <p><a href="#">Investimentos</a></p>
+                    <div className='flex gap-8 md:gap-20 xl:gap-36'>
+                        <div className="flex flex-col gap-3">
+                            <p className="text-xl xl:text-2xl font-extrabold">Serviços</p>
+                            <div className="font-light text-sm md:text-base flex flex-col gap-2">
+                                <p><a href="#">Avaliações</a></p>
+                                <p><a href="#">Consultoria</a></p>
+                                <p><a href="#">Regularização</a></p>
+                                <p><a href="#">Investimentos</a></p>
+                            </div>
+                        </div>
+
+                        {/* Contato */}
+                        <div className="flex flex-col gap-3">
+                            <p className="text-xl xl:text-2xl font-extrabold">Contato</p>
+                            <div className="font-light text-sm md:text-base flex flex-col gap-2">
+                                <p><a href="#">Suporte</a></p>
+                                <p><a href="#">Atendimento</a></p>
+                                <p><a href="#">FAQ</a></p>
+                                <p><a href="#">Reclame Aqui</a></p>
+                            </div>
                         </div>
                     </div>
-
-                    {/* Contato */}
-                    <div className="flex flex-col gap-3">
-                        <p className="text-xl xl:text-2xl font-extrabold">Contato</p>
-                        <div className="font-light text-sm md:text-base flex flex-col gap-2">
-                            <p><a href="#">Suporte</a></p>
-                            <p><a href="#">Atendimento</a></p>
-                            <p><a href="#">FAQ</a></p>
-                            <p><a href="#">Reclame Aqui</a></p>
-                        </div>
-                    </div>
-
                     {/* Links Rápidos */}
                     <div className="flex flex-col gap-3">
                         <p className="text-xl xl:text-2xl font-extrabold">Links Rápidos</p>
@@ -72,17 +73,19 @@ export function Footer() {
                 </div>
 
                 {/* Imagem posicionada no canto direito */}
-                <Image 
-                    src="/iconFooter/imagemFooterLogo.png" 
-                    alt="Imagem Imóvel" 
-                    width={466} 
-                    height={490}  
-                    className="absolute bottom-0 right-0 max-w-[200px] md:max-w-[300px] lg:max-w-[400px] xl:max-w-[466px] hidden md:block"
+                <Image
+                    src="/iconFooter/imagemFooterLogo.png"
+                    alt="Imagem Imóvel"
+                    width={466}
+                    height={490}
+                    className="absolute  bottom-2 -right-44 xl:-bottom-20 xl:-right-44 md:block"
                 />
+
             </section>
 
             {/* Rodapé */}
-            <section className="bg-black bg-opacity-80 text-white py-4 px-4 flex justify-center items-center">
+            <section className="relative bg-[#2B2A28]  text-white py-4 px-4 flex justify-center items-center">
+
                 <p className="text-center text-xs md:text-sm lg:text-base">
                     © 2024 HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. Termos de Uso | Política de Privacidade | Política de Cookies.
                 </p>
