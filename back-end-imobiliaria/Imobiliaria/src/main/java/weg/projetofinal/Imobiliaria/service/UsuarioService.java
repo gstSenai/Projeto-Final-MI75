@@ -54,7 +54,6 @@ public class UsuarioService {
         Usuario usuarioExistente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
 
-
         usuario.setId(id);
 
         return repository.save(usuario);
