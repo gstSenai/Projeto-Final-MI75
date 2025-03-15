@@ -38,7 +38,7 @@ export function Footer() {
                 {/* Bloco de Links */}
                 <div className="flex flex-wrap gap-8 md:gap-20 xl:gap-36">
                     {/* Serviços */}
-                    <div className='flex gap-8 md:gap-20 xl:gap-36'>
+                    <div className='flex gap-20 md:gap-20 xl:gap-36'>
                         <div className="flex flex-col gap-3">
                             <p className="text-xl xl:text-2xl font-extrabold">Serviços</p>
                             <div className="font-light text-sm md:text-base flex flex-col gap-2">
@@ -78,7 +78,7 @@ export function Footer() {
                     alt="Imagem Imóvel"
                     width={466}
                     height={490}
-                    className="absolute  bottom-2 -right-44 xl:-bottom-20 xl:-right-44 md:block"
+                    className="absolute  bottom-2 -right-60 xl:-bottom-20 xl:-right-44 md:block"
                 />
 
             </section>
