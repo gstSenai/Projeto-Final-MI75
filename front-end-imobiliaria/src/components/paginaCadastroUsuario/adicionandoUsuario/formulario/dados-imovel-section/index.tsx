@@ -19,16 +19,16 @@ export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
 
     return (
         <div className="flex flex-col font-montserrat">
-            <div className="font-inter flex max-lg:justify-center">
-                <div className="flex flex-row items-center max-lg:justify-center">
-                    <p className="text-2xl xl:text-3xl font-semibold my-10 max-lg:hidden">Dados do Usuário:</p>
+            <div className="font-inter flex">
+                <div className="flex flex-row items-center">
+                    <p className="text-2xl xl:text-3xl font-semibold my-10 ">Dados do Usuário:</p>
                 </div>
             </div>
 
-            <hr className="mb-10  w-full h-2 rounded-2xl bg-vermelho max-lg:h-3"></hr>
+            <hr className="mb-10 w-full h-2 rounded-2xl bg-vermelho"></hr>
 
-            <div className="flex flex-col lg:gap-6">
-                <div className="flex lg:gap-10">
+            <div className="flex flex-col gap-6">
+                <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput
                         placeholder="Nome:"
                         name="usuario.nome"
@@ -54,7 +54,7 @@ export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
                         custumizacaoClass="w-full"
                     />
                 </div>
-                <div className="flex lg:gap-10">
+                <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput
                         placeholder="Tipo da Conta:"
                         name="usuario.tipo_conta"
@@ -81,7 +81,7 @@ export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
                     />
                 </div>
 
-                <div className="flex lg:gap-10">
+                <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput
                         placeholder="E-mail:"
                         name="usuario.email"
@@ -96,7 +96,7 @@ export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
                         interName="Ex: 123"
                         register={register}
                         required
-                        custumizacaoClass="lg:w-full"
+                        custumizacaoClass="w-full"
                     />
                 </div>
             </div>
