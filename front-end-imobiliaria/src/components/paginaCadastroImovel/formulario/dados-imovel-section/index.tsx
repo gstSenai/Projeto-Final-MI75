@@ -18,10 +18,10 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                 </div>
             </div>
 
-            <hr className="mb-10  w-full h-2 rounded-2xl bg-vermelho max-lg:h-3"></hr>
+            <hr className="mb-10 w-full h-2 rounded-2xl bg-vermelho"></hr>
 
             <div className="flex flex-col lg:gap-6">
-                <div className="flex lg:gap-10">
+                <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput
                         placeholder="Nome da Propriedade:"
                         name="imovel.nome_propriedade"
@@ -49,7 +49,7 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                         options={["Venda", "Locação", "Venda e Locação"]}
                     />
                 </div>
-                <div className="flex lg:gap-10">
+                <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:pt-4 gap-10">
                     <FormularioInput
                         placeholder="Valor de Venda (R$):"
                         name="imovel.valor_venda"
@@ -76,7 +76,7 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                     />
                 </div>
 
-                <div className="flex lg:gap-10">
+                <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:pt-4 gap-10">
                     <FormularioInput
                         placeholder="Valor do IPTU (R$):"
                         name="imovel.valor_iptu"
@@ -86,7 +86,7 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                         custumizacaoClass="w-full"
                     />
                     <FormularioInput
-                        placeholder="Taxa de Condomínio Caso tenha (R$):"
+                        placeholder="Taxa de Condomínio (R$):"
                         name="imovel.condominio"
                         interName="Ex: R$100000,00"
                         register={register}
@@ -103,7 +103,7 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                     />
                 </div>
 
-                <div className="flex w-full lg:gap-10">
+                <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:pt-4 gap-10">
                     <FormularioInput
                         placeholder="Visibilidade:"
                         name="imovel.test_visibilidade"
@@ -125,7 +125,7 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
 
                 </div>
 
-                <div className="flex lg:gap-10 mt-4 whitespace-nowrap">
+                <div className="flex max-lg:flex-col max-lg:gap-4 gap-10 mt-4 whitespace-nowrap">
                     <div className="flex flex-col lg:gap-10">
                         <FormularioInput
                             placeholder="Área Construída (m²):"
@@ -137,7 +137,7 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                         />
                     </div>
 
-                    <div className="flex flex-col lg:gap-10">
+                    <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                         <FormularioInput
                             placeholder="Área do Terreno (m²):"
                             name="imovel.area_terreno"
@@ -154,13 +154,13 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                 </div>
             </div>
 
-            <div className="flex items-center lg:gap-10 w-full mt-10">
+            <div className="flex items-center max-sm:gap-2 gap-10 w-full mt-10">
                 <Descricao
                     placeholder="Descrição"
                     name="imovel.descricao"
                     register={register}
                     className="w-full h-80" />
-                <ImageUpload title="Fotos do Imóvel" className="w-[55%] h-80" />
+                <ImageUpload title="Fotos do Imóvel" className="h-80 lg:w-96" />
             </div>
         </div>
     )
