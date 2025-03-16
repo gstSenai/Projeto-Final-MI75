@@ -26,5 +26,5 @@ public class EnderecoUsuario {
     private String uf;
 
     @OneToOne(mappedBy = "enderecoUsuario")
-    private Usuario usuario;    
+    private Usuario usuario;
 }

@@ -25,6 +25,19 @@ interface UsuarioProps {
   data_nascimento: string
   email: string
   senha: string
+  endereco:EnderecoImovelProps
+}
+
+interface EnderecoImovelProps {
+    id: number
+    cep: string
+    rua: string
+    tipo_residencia: string
+    numero_imovel: number
+    numero_apartamento: number
+    bairro: string
+    cidade: string
+    uf: string
 }
 
 interface ResponseProps {
@@ -120,7 +133,7 @@ export default function TabelaUsuario() {
 
   return (
     <>
-      <div className="flex flex-col gap-10 sm:flex-col md:flex-col lg:flex-row">
+      <div className="flex flex-col gap-10 sm:flex-col md:flex-col lg:flex-row font-montserrat">
         <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6 w-full">
           <div className="overflow-x-auto max-h-[500px]">
             <table className="w-full border-separate border-spacing-0">

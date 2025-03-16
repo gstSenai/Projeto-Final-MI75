@@ -115,7 +115,7 @@ export function RemoveUsuario({ selectedUsers, onComplete }: RemoveUsuarioProps)
             {showModal && isDeleting && (
                 <div className="w-full bottom-16 pl-10 items-center relative">
                     <div className='bg-vermelho/80 w-72 flex gap-1 p-3 rounded-[20px] text-white'>
-                        <p>Adicionado com Sucesso!</p>
+                        <p>Removido com Sucesso!</p>
                         <button
                             onClick={onSubmitAdd}
                             className='underline '>
