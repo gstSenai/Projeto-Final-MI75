@@ -23,7 +23,7 @@ export default function CadastroUsuario() {
 
                             <TabelaUsuario />
                         </div>
-                    </div>
+                    </div>  
                 </div>
             </div>
             <div>
