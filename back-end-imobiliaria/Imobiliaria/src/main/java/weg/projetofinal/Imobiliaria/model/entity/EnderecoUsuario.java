@@ -25,6 +25,6 @@ public class EnderecoUsuario {
     private String cidade;
     private String uf;
 
-    @OneToOne(mappedBy = "enderecoUsuario", cascade = CascadeType.REMOVE)
-    private Usuario usuario;
+    @OneToOne(mappedBy = "enderecoUsuario")
+    private Usuario usuario;    
 }

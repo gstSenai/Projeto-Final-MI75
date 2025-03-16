@@ -78,44 +78,67 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
         }
     }
 
-    const editarUsers = async (data: UsuarioProps) => {
+    const editarUsers = async (data: Partial<UsuarioProps>) => {
         try {
-
             console.log("📤 Enviando dados para atualização:", data);
-
+    
             const responses = await Promise.all(
                 selectedUsuarios.map(async (usuario) => {
-                    return request("PUT", `http://localhost:9090/usuario/update/${usuario.id}`, {
-                        ...data
-                    });
+                    const usuarioAtualizado = {
+                        ...usuario,
+                        ...data,
+                        enderecoUsuario: {
+                            ...usuario.endereco
+                        },
+                    };
+    
+                    return request("PUT", `http://localhost:9090/usuario/update/${usuario.id}`, usuarioAtualizado);
                 })
             );
-
+    
             return responses;
         } catch (error) {
             console.error("❌ Erro ao editar usuário:", error);
             throw error;
         }
     };
+    
 
 
     const editarEndereco = async (data: EnderecoImovelProps) => {
         try {
-            console.log("Sending address usuario:", data)
-
-            for (const endereco of selectedUsuarios) {
-                const response = await request("PUT", `http://localhost:9090/enderecoUsuario/update/${endereco.id}`, data)
-
-                if (endereco && endereco.id) {
-                    setEnderecoId(endereco.id)
-                    return response
+            console.log("📤 Enviando endereço do usuário:", data);
+    
+            for (const usuario of selectedUsuarios) {
+                if (!usuario.endereco || !usuario.endereco.id) {
+                    console.warn("⚠️ Usuário sem endereço cadastrado:", usuario);
+                    continue;
                 }
+    
+                const enderecoAtualizado = {
+                    id: usuario.endereco.id,
+                    cep: data.cep,
+                    rua: data.rua,
+                    tipo_residencia: data.tipo_residencia,
+                    numero_imovel: data.numero_imovel,
+                    numero_apartamento: data.numero_apartamento,
+                    bairro: data.bairro,
+                    cidade: data.cidade,
+                    uf: data.uf
+                };
+    
+                const response = await request("PUT", `http://localhost:9090/enderecoUsuario/update/${usuario.endereco.id}`, enderecoAtualizado);
+                console.log("✅ Endereço atualizado com sucesso:", response);
+                return response
             }
         } catch (error) {
-            console.error("Erro ao editar usuário:", error)
-            throw error
+            console.error("❌ Erro ao editar endereço:", error);
+            throw error;
         }
-    }
+    };
+    
+    
+        
 
     const onSubmitEditUsers: SubmitHandler<{ usuario: UsuarioProps; }> = async (data) => {
         if (isSubmitting) return
@@ -195,7 +218,6 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
             const response = await editarEndereco(endereco)
             console.log("Resposta do servidor:", response)
             if (response) {
-                setLastAddedUsuarios(response)
                 setShowModal(false)
                 setShowEditTrue(true)
             } else {
@@ -546,4 +568,3 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
         </>
     )
 }
-
