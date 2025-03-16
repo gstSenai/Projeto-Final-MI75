@@ -12,12 +12,6 @@ const montserrat = Montserrat({
 });
 
 export default function PaginaEditor() {
-
-  const handleClick = () => {
-    // Lógica para quando o botão for clicado
-    console.log('Botão clicado!');
-  };
-
   
   return (
     <>
