@@ -174,9 +174,9 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
                     <DadosImovelSection register={register} />
 
                     <div className="flex items-center gap-16 mt-10">
-                        <div className="flex gap-[30rem] w-full">
-                            <Botao onClick={() => console.log()} texto="Cancelar" />
-                            <Botao onClick={handleSubmit(onSubmitImovel)} texto="Salvar cadastro" />
+                        <div className="flex max-sm:gap-12 max-lg:gap-36 gap-[40rem] w-full">
+                            <Botao className="max-lg:text-base" onClick={() => console.log()} texto="Cancelar" />
+                            <Botao className="max-lg:text-base" onClick={handleSubmit(onSubmitImovel)} texto="Salvar cadastro" />
                         </div>
                     </div>
                 </>

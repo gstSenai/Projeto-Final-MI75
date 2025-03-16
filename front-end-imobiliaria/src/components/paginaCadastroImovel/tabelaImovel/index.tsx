@@ -127,25 +127,25 @@ export default function TabelaImovel() {
 
   return (
     <>
-      <div className="flex flex-col gap-10 sm:flex-col md:flex-col lg:flex-row">
+      <div className="flex flex-col gap-10 sm:flex-col md:flex-col lg:flex-row font-montserrat">
         <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6 w-full">
           <div className="overflow-x-auto max-h-[500px]">
             <table className="w-full border-separate border-spacing-0">
               <thead>
                 <tr className="bg-vermelho text-white sticky top-0 z-10">
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
+                  <th className="p-4 text-center font-bold border border-[#E0D6CE] whitespace-nowrap">
                     <p>Código</p>
                   </th>
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
+                  <th className="p-4 text-center font-bold border border-[#E0D6CE] whitespace-nowrap">
                     <p>Nome da Propriedade</p>
                   </th>
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
+                  <th className="p-4 text-center font-bold border border-[#E0D6CE] whitespace-nowrap">
                     <p>Tipo de imóvel</p>
                   </th>
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
+                  <th className="p-4 text-center font-bold border border-[#E0D6CE] whitespace-nowrap">
                     <p>Tipo Transação</p>
                   </th>
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
+                  <th className="p-4 text-center font-bold border border-[#E0D6CE] whitespace-nowrap">
                     <p>Status</p>
                   </th>
                 </tr>
@@ -153,7 +153,7 @@ export default function TabelaImovel() {
               <tbody>
                 {isLoading ? (
                   <tr>
-                    <td colSpan={5} className="p-4 text-center border border-[#E0D6CE]">
+                    <td colSpan={5} className="p-4 text-center border border-[#E0D6CE] whitespace-nowrap">
                       Carregando...
                     </td>
                   </tr>
@@ -198,7 +198,7 @@ export default function TabelaImovel() {
         <div className="flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full ">
           <button
             onClick={handleAddImovel}
-            className="w-36 lg:h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start ">
@@ -209,7 +209,7 @@ export default function TabelaImovel() {
 
           <button
             onClick={handleRemoveImovel}
-            className="w-36 lg:h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
@@ -220,7 +220,7 @@ export default function TabelaImovel() {
 
           <button
             onClick={handleEditImovel}
-            className="w-36 lg:h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading || selectedImoveis.length !== 1}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">

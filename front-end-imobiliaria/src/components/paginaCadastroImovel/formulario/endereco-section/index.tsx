@@ -34,14 +34,16 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
 
     return (
         <>
-            <div className="font-inter flex-col justify-between max-lg:justify-center">
-                <hr className="mt-16 mb-4 w-full h-2 rounded-2xl bg-vermelho max-lg:h-3 max-lg:mt-10"></hr>
-                <div className="flex flex-row items-center max-lg:justify-center">
-                    <p className="text-2xl xl:text-4xl font-semibold my-10 max-lg:hidden">Endereço:</p>
+            <div className="font-inter flex-col">
+                <div className="flex flex-row">
+                    <p className="text-2xl xl:text-4xl font-semibold lg:pt-10 lg:pb-5">Endereço:</p>
                 </div>
+                
+                <hr className="mb-10 w-full h-2 rounded-2xl bg-vermelho max-lg:mt-5"></hr>
+
             </div>
-            <div className="flex flex-col lg:gap-4">
-                <div className="flex lg:gap-10">
+            <div className="flex flex-col lg:gap-4 font-montserrat">
+                <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput
                         placeholder="UF:"
                         name="endereco.uf"
@@ -68,7 +70,7 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
                         required
                     />
                 </div>
-                <div className="flex lg:gap-10">
+                <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput
                         placeholder="Bairro:"
                         name="endereco.bairro"
@@ -94,7 +96,7 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
                         required
                     />
                 </div>
-                <div className="flex lg:gap-10">
+                <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:py-4 gap-10">
                     <FormularioInput
                         placeholder="Complemento:"
                         name="endereco.complemento"
