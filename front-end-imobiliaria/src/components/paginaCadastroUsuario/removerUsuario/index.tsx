@@ -77,11 +77,11 @@ export function RemoveUsuario({ selectedUsers, onComplete }: RemoveUsuarioProps)
     return (
         <>
             {showModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed inset-0  max-sm:px-4 max-lg:px-10  bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-2xl p-8 max-w-md w-full">
                         <div className="flex flex-col">
-                            <h2 className="text-3xl font-semibold text-vermelho mb-4">Remover Usuários</h2>
-                            <p className="mb-6 text-xl">
+                            <h2 className="max-lg:text-2xl text-3xl font-semibold text-vermelho mb-4">Remover Usuários</h2>
+                            <p className="mb-6 max-lg:text-base text-xl">
                                 Tem certeza que deseja remover {selectedUsers.length} usuário(s) selecionado(s)? Esta ação não pode
                                 ser desfeita.
                             </p>
@@ -98,7 +98,7 @@ export function RemoveUsuario({ selectedUsers, onComplete }: RemoveUsuarioProps)
                         </div>
 
                         <div className="flex justify-center">
-                            <div className="flex justify-around items-center gap-10 w-[90%]">
+                            <div className="flex justify-around items-center max-sm:gap-4 gap-10 w-[90%]">
                                 <Botao
                                     onClick={handleCancel}
                                     texto="Cancelar"

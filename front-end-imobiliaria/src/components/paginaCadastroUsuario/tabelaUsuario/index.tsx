@@ -133,25 +133,25 @@ export default function TabelaUsuario() {
 
   return (
     <>
-      <div className="flex flex-col gap-10 sm:flex-col md:flex-col lg:flex-row font-montserrat">
+      <div className="flex flex-col gap-10 sm:flex-col lg:flex-row font-montserrat">
         <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6 w-full">
           <div className="overflow-x-auto max-h-[500px]">
             <table className="w-full border-separate border-spacing-0">
               <thead>
                 <tr className="bg-vermelho text-white sticky top-0 z-10">
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
+                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Nome</p>
                   </th>
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
+                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>E-mail</p>
                   </th>
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
+                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>CPF</p>
                   </th>
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
+                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Tipo Conta</p>
                   </th>
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
+                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Telefone</p>
                   </th>
                 </tr>
@@ -204,33 +204,33 @@ export default function TabelaUsuario() {
         <div className="flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full ">
           <button
             onClick={handleAddUsuario}
-            className="w-36 lg:h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start ">
-              <img src="./iconsForms/sinalAdd.png" alt="sinal de adição" className="lg:w-4" />
+              <img src="./iconsForms/sinalAdd.png" alt="sinal de adição" className="w-4" />
               <p className="text-lg font-medium">Adicionar</p>
             </div>
           </button>
 
           <button
             onClick={handleRemoveUsuario}
-            className="w-36 lg:h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" className="lg:w-4" />
+              <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" className="w-4" />
               <p className="text-lg font-medium">Remover</p>
             </div>
           </button>
 
           <button
             onClick={handleEditusuario}
-            className="w-36 lg:h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading || selectedUsuarios.length !== 1}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" className="lg:w-4" />
+              <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" className="w-4" />
               <p className="text-lg font-medium">Editar</p>
             </div>
           </button>

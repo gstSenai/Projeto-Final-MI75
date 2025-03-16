@@ -43,7 +43,7 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
     return (
         <>
             <div className="flex flex-col mt-6 lg:gap-4 font-montserrat">
-                <div className="flex lg:gap-10">
+                <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput
                         placeholder="CEP:"
                         interName='00000-000'
@@ -79,7 +79,7 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
                     />
 
                 </div>
-                <div className="flex lg:gap-10">
+                <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:pt-4 gap-10">
                     <FormularioInput
                         placeholder="Bairro:"
                         name="endereco.bairro"
@@ -97,8 +97,6 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
                         options={["Casa", "Apartamento"]}
                         required
                     />
-                    <div className="flex lg:gap-10">
-                    </div>
                     <FormularioInput
                         placeholder="Número do Imovel:"
                         name="endereco.numero_imovel"
@@ -108,7 +106,7 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
                         required
                     />
                 </div>
-                <div className="flex lg:gap-10">
+                <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:pt-4 gap-10">
                     <FormularioInput
                         placeholder="Número Apartamento (Caso tenha):"
                         name="endereco.numero_apartamento"
