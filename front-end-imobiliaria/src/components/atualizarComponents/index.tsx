@@ -18,7 +18,7 @@ export default function AtualizarComponents() {
                 <div className="bg-white flex flex-col md:flex-row items-center justify-between w-full md:max-w-[1125px] h-auto md:h-[200px] rounded-[30px] p-4 md:p-6 shadow-lg">
                     {/* Texto */}
                     <div className="text-left flex-1">
-                        <h2 className="font-semibold opacity-75 text-[20px] sm:text-[24px] md:text-[30px] lg:text-[40px]">
+                        <h2 className="font-semibold opacity-75 text-[20px] sm:text-[24px] md:text-[28px] lg:text-[34px] xl:text-[40px]">
                             Receba Atualizações
                         </h2>
                         <p className="font-light text-base sm:text-lg md:text-xl lg:text-2xl">

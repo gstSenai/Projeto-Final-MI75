@@ -35,10 +35,11 @@ export function Footer() {
                     </div>
                 </div>
 
+                <div>
                 {/* Bloco de Links */}
-                <div className="flex flex-wrap gap-8 md:gap-20 xl:gap-36">
+                <div className="flex flex-wrap gap-20 md:gap-20 xl:gap-36">
                     {/* Serviços */}
-                    <div className='flex gap-20 md:gap-20 xl:gap-36'>
+                    
                         <div className="flex flex-col gap-3">
                             <p className="text-xl xl:text-2xl font-extrabold">Serviços</p>
                             <div className="font-light text-sm md:text-base flex flex-col gap-2">
@@ -59,7 +60,6 @@ export function Footer() {
                                 <p><a href="#">Reclame Aqui</a></p>
                             </div>
                         </div>
-                    </div>
                     {/* Links Rápidos */}
                     <div className="flex flex-col gap-3">
                         <p className="text-xl xl:text-2xl font-extrabold">Links Rápidos</p>
@@ -78,18 +78,24 @@ export function Footer() {
                     alt="Imagem Imóvel"
                     width={466}
                     height={490}
-                    className="absolute  bottom-2 -right-60 xl:-bottom-20 xl:-right-44 md:block"
+                    className="absolute bottom-14 sm:bottom-14 md:bottom-1 lg:bottom-1 xl:bottom-14 2xl:-bottom-20  -right-60 xl:-right-44 md:block"
                 />
+                </div>
 
             </section>
 
             {/* Rodapé */}
-            <section className="relative bg-[#2B2A28]  text-white py-4 px-4 flex justify-center items-center">
-
+            <section className="relative bg-[#2B2A28] text-white py-4 px-4 flex justify-center items-center">
                 <p className="text-center text-xs md:text-sm lg:text-base">
-                    © 2024 HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. Termos de Uso | Política de Privacidade | Política de Cookies.
+                    <span className="hidden lg:inline">
+                        © 2024 HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. Termos de Uso | Política de Privacidade | Política de Cookies.
+                    </span>
+                    <span className="lg:hidden">
+                        © 2024 HAV Imobiliária. Todos os direitos reservados.
+                    </span>
                 </p>
             </section>
         </footer>
     );
 }
+
