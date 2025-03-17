@@ -19,19 +19,29 @@ interface AuthFormProps {
 }
 
 const schema = z.object({
-  nomeUsuario: z.string().min(5, "O nome deve ter pelo menos 5 caracteres.").regex(/^[a-zA-Z0-9_.]+$/, "O nome só pode conter letras, números, _ e .").max(15, "O nome deve ter no máximo 15 caracteres.").refine((nome) => !nome.includes(" "), {
-    message: "O nome não pode conter espaços.",
-  })
+  nomeUsuario: z.string()
+    .min(1, "O nome de usuário é obrigatório.")
+    .min(5, "O nome deve ter pelo menos 5 caracteres.")
+    .regex(/^[a-zA-Z0-9_.]+$/, "O nome só pode conter letras, números, _ e .")
+    .max(15, "O nome deve ter no máximo 15 caracteres.")
+    .refine((nome) => !nome.includes(" "), {
+      message: "O nome não pode conter espaços.",
+    })
     .refine((nome) => /^[a-zA-Z0-9]/.test(nome), {
-      message: `O nome não pode começar com um caractere especial.`,
+      message: "O nome não pode começar com um caractere especial.",
     })
     .refine((nome) => /[a-zA-Z0-9]$/.test(nome), {
       message: "O nome não pode terminar com um caractere especial.",
     }),
-  email: z.string().email("E-mail inválido."),
-  senha: z.string().min(8, "A senha deve ter no mínimo 8 caracteres.").refine((senha) => /[A-Z]/.test(senha), {
-    message: "A senha deve conter pelo menos uma letra maiúscula.",
-  })
+  email: z.string()
+    .min(1, "O e-mail é obrigatório.")
+    .email("E-mail inválido."),
+  senha: z.string()
+    .min(1, "A senha é obrigatória.")
+    .min(8, "A senha deve ter no mínimo 8 caracteres.")
+    .refine((senha) => /[A-Z]/.test(senha), {
+      message: "A senha deve conter pelo menos uma letra maiúscula.",
+    })
     .refine((senha) => /[a-z]/.test(senha), {
       message: "A senha deve conter pelo menos uma letra minúscula.",
     })
@@ -44,7 +54,8 @@ const schema = z.object({
     .refine((senha) => !/^(1234|senha|abcd)$/.test(senha), {
       message: "A senha não pode conter sequências óbvias.",
     }),
-  confirmarSenha: z.string(),
+  confirmarSenha: z.string()
+    .min(1, "Confirme sua senha."),
 }).refine((data) => data.senha === data.confirmarSenha, {
   message: "As senhas não coincidem.",
   path: ["confirmarSenha"],
@@ -144,33 +155,67 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                 {errors.email && <p className="max-w-xs break-words text-[#CF2020] opacity-80 text-sm">{errors.email}</p>}
               </div>
 
-              {!errors.email && (
+              {isCadastro && (
                 <>
-                  <div className="mb-2 relative">
-                    <label className="text-gray-700">Senha</label>
-                    <div className="flex flex-col items-center ">
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        name="senha"
-                        value={formData.senha}
-                        onChange={handleChange}
-                        className="block px-4 py-2 w-[320px] rounded-lg focus:ring-2 focus:ring-blue-500 border-black border-opacity-30"
-                        placeholder="Digite sua senha"
-                      />
-                      <button
-                        type="button"
-                        onClick={togglePasswordVisibility}
-                        className="absolute inset-y-11 right-4 flex items-center"
-                      >
-                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                      </button>
-                    </div>
-                    {errors.senha && <p className="w-[300px] text-[#CF2020] opacity-80 text-sm">{errors.senha}</p>}
-                  </div>
+                  {!errors.email && (
+                    <>
+                      <div className="mb-2 relative">
+                        <label className="text-gray-700">Senha</label>
+                        <div className="flex flex-col items-center ">
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            name="senha"
+                            value={formData.senha}
+                            onChange={handleChange}
+                            className="block px-4 py-2 w-[320px] rounded-lg focus:ring-2 focus:ring-blue-500 border-black border-opacity-30"
+                            placeholder="Digite sua senha"
+                          />
+                          <button
+                            type="button"
+                            onClick={togglePasswordVisibility}
+                            className="absolute inset-y-11 right-4 flex items-center"
+                          >
+                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                          </button>
+                        </div>
+                        {errors.senha && <p className="w-[300px] text-[#CF2020] opacity-80 text-sm">{errors.senha}</p>}
+                      </div>
+                    </>
+                  )}
                 </>
               )}
 
-              {errors.email && (
+              {isCadastro && (
+                <>
+                  {errors.email && (
+                    <>
+                      <div className="mb-2 relative">
+                        <label className="text-gray-700">Senha</label>
+                        <div className="flex flex-col items-center ">
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            name="senha"
+                            value={formData.senha}
+                            onChange={handleChange}
+                            className="block px-4 py-2 w-[320px] rounded-lg focus:ring-2 focus:ring-blue-500 border-black border-opacity-30"
+                            placeholder="Digite sua senha"
+                          />
+                          <button
+                            type="button"
+                            onClick={togglePasswordVisibility}
+                            className="absolute inset-y-11 right-4 pb-4 flex items-center"
+                          >
+                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                          </button>
+                        </div>
+                        {errors.senha && <p className="w-[300px] text-[#CF2020] opacity-80 text-sm">{errors.senha}</p>}
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
+
+              {!isCadastro && (
                 <>
                   <div className="mb-2 relative">
                     <label className="text-gray-700">Senha</label>
@@ -191,32 +236,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                       </button>
                     </div>
-                    {errors.senha && <p className="w-[300px] text-[#CF2020] opacity-80 text-sm">{errors.senha}</p>}
                   </div>
                 </>
-              )}
-
-              {!isCadastro && (
-                <div className="mb-2 relative">
-                  <label className="text-gray-700">Senha</label>
-                  <div className="flex flex-col items-center ">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      name="senha"
-                      value={formData.senha}
-                      onChange={handleChange}
-                      className="block px-4 py-2 w-[320px] rounded-lg focus:ring-2 focus:ring-blue-500 border-black border-opacity-30"
-                      placeholder="Digite sua senha"
-                    />
-                    <button
-                      type="button"
-                      onClick={togglePasswordVisibility}
-                      className="absolute inset-y-11 right-4 pb-4 flex items-center"
-                    >
-                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                    </button>
-                  </div>
-                </div>
               )}
 
 
