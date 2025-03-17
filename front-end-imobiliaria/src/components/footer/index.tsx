@@ -11,10 +11,10 @@ const montserrat = Montserrat({
 export function Footer() {
     return (
         <footer className="font-montserrat bg-[#1D1D1D] relative text-white overflow-hidden">
-            <section className="flex flex-col xl:flex-row p-6 md:p-8 lg:p-12 xl:p-16 pt-16 md:pt-16 lg:pt-20 xl:pt-24  gap-10 xl:gap-20 relative">
+            <section className="flex flex-col xl:flex-row p-6 md:p-8 lg:p-12 xl:p-16 pt-16 md:pt-16 lg:pt-20 xl:pt-24 gap-10 xl:gap-20 relative z-10"> {/* Adicionado z-10 aqui */}
 
                 {/* Bloco de Informações */}
-                <div className="flex flex-col items-start">
+                <div className="flex flex-col items-start z-20"> {/* Adicionado z-20 aqui */}
                     <p className="text-xl xl:text-2xl font-extrabold">Informações</p>
                     <p className="font-light text-sm md:text-base xl:max-w-[450px]">
                         Nosso objetivo é fornecer soluções imobiliárias de alta qualidade, garantindo satisfação e confiança em cada transação.
@@ -35,11 +35,10 @@ export function Footer() {
                     </div>
                 </div>
 
-                <div>
-                {/* Bloco de Links */}
-                <div className="flex flex-wrap gap-20 md:gap-20 xl:gap-36">
-                    {/* Serviços */}
-                    
+                <div className="z-20"> {/* Adicionado z-20 aqui */}
+                    {/* Bloco de Links */}
+                    <div className="flex flex-wrap gap-20 md:gap-20 xl:gap-36">
+                        {/* Serviços */}
                         <div className="flex flex-col gap-3">
                             <p className="text-xl xl:text-2xl font-extrabold">Serviços</p>
                             <div className="font-light text-sm md:text-base flex flex-col gap-2">
@@ -60,14 +59,16 @@ export function Footer() {
                                 <p><a href="#">Reclame Aqui</a></p>
                             </div>
                         </div>
-                    {/* Links Rápidos */}
-                    <div className="flex flex-col gap-3">
-                        <p className="text-xl xl:text-2xl font-extrabold">Links Rápidos</p>
-                        <div className="font-light text-sm md:text-base flex flex-col gap-2">
-                            <p><a href="#">Página Inicial</a></p>
-                            <p><a href="#">Sobre Nós</a></p>
-                            <p><a href="#">Comprar</a></p>
-                            <p><a href="#">Vender</a></p>
+
+                        {/* Links Rápidos */}
+                        <div className="flex flex-col gap-3">
+                            <p className="text-xl xl:text-2xl font-extrabold">Links Rápidos</p>
+                            <div className="font-light text-sm md:text-base flex flex-col gap-2">
+                                <p><a href="#">Página Inicial</a></p>
+                                <p><a href="#">Sobre Nós</a></p>
+                                <p><a href="#">Comprar</a></p>
+                                <p><a href="#">Vender</a></p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -78,14 +79,12 @@ export function Footer() {
                     alt="Imagem Imóvel"
                     width={466}
                     height={490}
-                    className="absolute bottom-14 sm:bottom-14 md:bottom-1 lg:bottom-1 xl:bottom-14 2xl:-bottom-20  -right-60 xl:-right-44 md:block"
+                    className="absolute bottom-14 sm:bottom-10 md:-bottom-2 2xl:-bottom-20 -right-60 xl:-right-44 md:block z-0" // Alterado para z-0
                 />
-                </div>
-
             </section>
 
             {/* Rodapé */}
-            <section className="relative bg-[#2B2A28] text-white py-4 px-4 flex justify-center items-center">
+            <section className="relative bg-[#2B2A28] text-white py-4 px-4 flex justify-center items-center z-20"> {/* Adicionado z-20 aqui */}
                 <p className="text-center text-xs md:text-sm lg:text-base">
                     <span className="hidden lg:inline">
                         © 2024 HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. Termos de Uso | Política de Privacidade | Política de Cookies.
@@ -98,4 +97,3 @@ export function Footer() {
         </footer>
     );
 }
-
