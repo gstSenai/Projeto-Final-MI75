@@ -64,7 +64,7 @@ export function FormularioInput({
           {placeholder}
         </label>
         <div
-          className={`relative ${custumizacaoClass} p-2 flex items-center w-full rounded-lg bg-white border ${errorMessage ? "border-red-500" : "border-gray-500"}`}
+          className={`relative ${custumizacaoClass} p-2 flex items-center gap-4 w-full rounded-lg bg-white border ${errorMessage ? "border-red-500" : "border-gray-500"}`}
         >
           {iconCaneta && <img src="/iconsForms/canetaEditar.png" alt="Editar" className="h-6 ml-4" />}
           {iconPath && <img src={iconPath || "/placeholder.svg"} alt={`Ícone ${icon?.type}`} className="h-6 lg:h-9" />}

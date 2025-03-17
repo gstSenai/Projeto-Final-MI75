@@ -51,9 +51,10 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
     const [usuarioId, setUsuarioId] = useState<number>()
     const [enderecoId, setEnderecoId] = useState<number>()
     const [isEditar] = useState(false)
-    const [uf, setUf] = useState<string>("")
+    const [uf, setUf] = useState<Estado | "">("");
     const [cidade, setCidade] = useState<string>("")
     const [cidades, setCidades] = useState<string[]>([])
+    const [refreshTrigger, setRefreshTrigger] = useState(0)
 
     const estados = ["SC"]
 
@@ -72,7 +73,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
 
     const handleUfChange = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
         if (event.target instanceof HTMLSelectElement) {
-            setUf(event.target.value)
+            setUf(event.target.value as Estado)
         } else if (event.target instanceof HTMLInputElement) {
             setCidade(event.target.value)
         }
@@ -81,7 +82,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
     const editarUsers = async (data: Partial<UsuarioProps>) => {
         try {
             console.log("📤 Enviando dados para atualização:", data);
-    
+
             const responses = await Promise.all(
                 selectedUsuarios.map(async (usuario) => {
                     const usuarioAtualizado = {
@@ -91,30 +92,28 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
                             ...usuario.endereco
                         },
                     };
-    
+
                     return request("PUT", `http://localhost:9090/usuario/update/${usuario.id}`, usuarioAtualizado);
                 })
             );
-    
+
             return responses;
         } catch (error) {
             console.error("❌ Erro ao editar usuário:", error);
             throw error;
         }
     };
-    
-
 
     const editarEndereco = async (data: EnderecoImovelProps) => {
         try {
             console.log("📤 Enviando endereço do usuário:", data);
-    
+
             for (const usuario of selectedUsuarios) {
                 if (!usuario.endereco || !usuario.endereco.id) {
                     console.warn("⚠️ Usuário sem endereço cadastrado:", usuario);
                     continue;
                 }
-    
+
                 const enderecoAtualizado = {
                     id: usuario.endereco.id,
                     cep: data.cep,
@@ -126,7 +125,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
                     cidade: data.cidade,
                     uf: data.uf
                 };
-    
+
                 const response = await request("PUT", `http://localhost:9090/enderecoUsuario/update/${usuario.endereco.id}`, enderecoAtualizado);
                 console.log("✅ Endereço atualizado com sucesso:", response);
                 return response
@@ -136,9 +135,6 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
             throw error;
         }
     };
-    
-    
-        
 
     const onSubmitEditUsers: SubmitHandler<{ usuario: UsuarioProps; }> = async (data) => {
         if (isSubmitting) return
@@ -164,7 +160,9 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
                 data_nascimento: usuario.data_nascimento,
                 email: usuario.email,
                 senha: usuario.senha,
-                endereco: usuarioSelecionadoEndereco,
+                endereco: {
+                    ...usuarioSelecionadoEndereco
+                },
             }
 
             console.log("Dados do usuário a serem enviados:", usuarioAtualizado)
@@ -235,6 +233,26 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
         }
     }
 
+    const refreshData = () => {
+        setRefreshTrigger((atualizar) => atualizar + 1)
+    }
+
+    const handleEditarUsuarioDados = () => {
+        setShowEditUsuario(!showEditUsuario)
+        setShowEditEndereco(false)
+        if (showEditUsuario) {
+            refreshData()
+        }
+    }
+
+    const handleEditarUsuarioEndereco = () => {
+        setShowEditEndereco(!showEditEndereco)
+        setShowEditUsuario(false)
+        if (showEditEndereco) {
+            refreshData()
+        }
+    }
+
     const handleCancel = () => {
         setShowModal(false)
         if (onComplete) {
@@ -262,14 +280,14 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
                                 <button
                                     className="bg-[#DFDAD0] py-2 px-4 rounded-full text-vermelho lg:text-2xl transition-transform duration-300 hover:scale-110
                              hover:bg-vermelho hover:text-[#DFDAD0]"
-                                    onClick={() => setShowEditUsuario(!showEditUsuario)}
+                                    onClick={handleEditarUsuarioDados}
                                 >
                                     <p className="text-xl">Dados Usuário</p>
                                 </button>
                                 <button
                                     className="bg-[#DFDAD0] py-2 px-4 rounded-full text-vermelho lg:text-2xl transition-transform duration-300 hover:scale-110
                              hover:bg-vermelho hover:text-[#DFDAD0]"
-                                    onClick={() => setShowEditEndereco(!showEditEndereco)}
+                                    onClick={handleEditarUsuarioEndereco}
                                 >
                                     <p className="text-xl">Dados Endereço</p>
                                 </button>
@@ -444,7 +462,8 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
                                                                     <FormularioEditarInput
                                                                         placeholder="00000-000:"
                                                                         name="endereco.cep"
-                                                                        register={register}
+                                                                        value={usuario.endereco.cep}
+                                                                        register={registerEndereco}
                                                                         custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                         required
                                                                     />
@@ -457,6 +476,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
                                                                     <FormularioEditarInput
                                                                         placeholder="UF:"
                                                                         name="endereco.uf"
+                                                                        value={usuario.endereco.uf}
                                                                         register={registerEndereco}
                                                                         onChange={handleUfChange}
                                                                         custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -472,12 +492,14 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
                                                                     <FormularioEditarInput
                                                                         placeholder="Cidade:"
                                                                         name="endereco.cidade"
+                                                                        value={usuario.endereco.cidade}
                                                                         register={registerEndereco}
-                                                                        custumizacaoClass="w-full p-2  border border-gray-500 rounded"
-                                                                        options={cidades}
+                                                                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
+                                                                        options={cidadesPorEstado.SC}
                                                                         required
                                                                     />
                                                                 </div>
+
 
                                                                 <div className="w-full">
                                                                     <label htmlFor={`rua_${usuario.id}`} className="block text-lg">
@@ -486,6 +508,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
                                                                     <FormularioEditarInput
                                                                         placeholder=""
                                                                         name="endereco.rua"
+                                                                        value={usuario.endereco.rua}
                                                                         register={registerEndereco}
                                                                         custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                         required
@@ -499,6 +522,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
                                                                     <FormularioEditarInput
                                                                         placeholder=""
                                                                         name="endereco.bairro"
+                                                                        value={usuario.endereco.bairro}
                                                                         register={registerEndereco}
                                                                         custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                         required
@@ -512,6 +536,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
                                                                     <FormularioEditarInput
                                                                         placeholder=""
                                                                         name="endereco.tipo_residencia"
+                                                                        value={usuario.endereco.tipo_residencia}
                                                                         register={registerEndereco}
                                                                         custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                         options={["Casa", "Apartamento"]}
@@ -526,6 +551,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
                                                                     <FormularioEditarInput
                                                                         placeholder="Ex: 009:"
                                                                         name="endereco.numero_imovel"
+                                                                        value={usuario.endereco.numero_imovel}
                                                                         register={registerEndereco}
                                                                         custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                         required
@@ -539,6 +565,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioPro
                                                                     <FormularioEditarInput
                                                                         placeholder="Ex: 009:"
                                                                         name="endereco.numero_apartamento"
+                                                                        value={usuario.endereco.numero_apartamento || ""}
                                                                         register={registerEndereco}
                                                                         custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                     />

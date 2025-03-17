@@ -7,7 +7,7 @@ import request from "@/routes/request"
 import { Botao } from "@/components/botao"
 
 interface ImovelProps {
-    id: number;
+    id: number
     codigo?: number
     nome_propriedade: string
     tipo_transacao: string
@@ -26,8 +26,20 @@ interface ImovelProps {
     descricao?: string
 }
 
-interface EnderecoImovelProps {
+interface ImovelCaracteristicas {
     id?: number
+    idImovel: number
+    numero_quartos: number
+    numero_banheiros: number
+    numero_suites: number
+    numero_vagas: number
+    test_piscina?: string
+    piscina: boolean
+    numero_salas: number
+}
+
+interface EnderecoImovelProps {
+    id: number
     cep: string
     rua: string
     numero: string
@@ -42,12 +54,13 @@ interface InputDadosImovelProps {
 }
 
 export function Formulario({ onComplete }: InputDadosImovelProps) {
-    const { register, handleSubmit, formState: { errors } } = useForm<{ imovel: ImovelProps; endereco: EnderecoImovelProps }>();
+    const { register, handleSubmit, formState: { errors } } = useForm<{ imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas; endereco: EnderecoImovelProps }>();
     const [showForm, setShowForm] = useState(true)
     const [showModal, setShowModal] = useState(false)
     const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [enderecoId, setEnderecoId] = useState<number>();
+    const [imovelId, setImovelId] = useState<number>();
 
     const addEndereco = async (data: EnderecoImovelProps) => {
         try {
@@ -85,6 +98,19 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         }
     }
 
+    const addCaracteristicasImovel = async (data: ImovelCaracteristicas) => {
+        try {
+            console.log("Carac Imovel", data)
+
+            const response = await request("POST", "http://localhost:9090/caracteristicaImovel/create", data)
+
+            return response
+        } catch (error) {
+            console.error("Erro ao adicionar imóvel:", error)
+            throw error
+        }
+    }
+
     const deleteImovel = async (imoveId: number): Promise<void> => {
         try {
             await request('DELETE', `http://localhost:9090/imovel/delete/${imoveId}`)
@@ -94,7 +120,9 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         }
     }
 
-    const onSubmitImovel = async (data: { imovel: ImovelProps; endereco: EnderecoImovelProps }) => {
+
+
+    const onSubmitImovel = async (data: { imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas; endereco: EnderecoImovelProps }) => {
         if (isSubmitting) return;
 
         try {
@@ -102,10 +130,11 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
 
             console.log("Dados recebidos para validação:", data);
 
-            const { imovel, endereco } = data;
+            const { imovel, endereco, imovelCaracteristicas } = data;
 
             console.log("Dados do Endereço:", endereco);
             console.log("Dados do Imóvel:", imovel);
+            console.log("Dados do Imóvel:", imovelCaracteristicas);
 
             const responseEndereco = await addEndereco(endereco);
 
@@ -129,9 +158,30 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
             };
 
             console.log("Dados do imóvel a serem enviados:", immobileData);
-
             const response = await addImovel(immobileData);
+
+            if (response && response.id) {
+                setImovelId(response.id);
+            } else {
+                throw new Error("Erro ao criar imóvel, id não retornado.");
+            }
             console.log("Resposta do servidor:", response);
+
+            const imovelCarac = {
+                id: imovelCaracteristicas.id,
+                idImovel: response.id,
+                numero_quartos: imovelCaracteristicas.numero_quartos,
+                numero_banheiros: imovelCaracteristicas.numero_banheiros,
+                numero_suites: imovelCaracteristicas.numero_suites,
+                numero_vagas: imovelCaracteristicas.numero_vagas,
+                piscina: imovelCaracteristicas.test_piscina === "Sim",
+                numero_salas: imovelCaracteristicas.numero_salas
+            };
+
+
+            const responseCaracImovel = await addCaracteristicasImovel(imovelCarac)
+
+            console.log("Resposta do servidor:", responseCaracImovel);
             if (response) {
                 setLastAddedImovel(response);
                 setShowForm(false);
@@ -142,7 +192,6 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
 
             if (onComplete) onComplete();
 
-            setTimeout(() => setShowModal(false), 5000);
         } catch (error) {
             console.error("Erro ao salvar Endereço:", error);
             alert(`Erro ao salvar endereço: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);

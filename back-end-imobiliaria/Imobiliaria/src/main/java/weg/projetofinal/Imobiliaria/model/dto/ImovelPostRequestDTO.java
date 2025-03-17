@@ -1,5 +1,6 @@
 package weg.projetofinal.Imobiliaria.model.dto;
 
+import weg.projetofinal.Imobiliaria.model.entity.CaracteristicaImovel;
 import weg.projetofinal.Imobiliaria.model.entity.Endereco;
 import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.model.entity.Usuario;
@@ -19,6 +20,5 @@ public record ImovelPostRequestDTO(
         Double area_construida,
         Double area_terreno,
         String descricao,
-        Endereco id_endereco,
-        Usuario id_usuario) {
+        Endereco id_endereco) {
 }

@@ -6,11 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import weg.projetofinal.Imobiliaria.model.entity.EnderecoUsuario;
 import weg.projetofinal.Imobiliaria.model.entity.Usuario;
-import weg.projetofinal.Imobiliaria.repository.EnderecoRepository;
+import org.springframework.beans.BeanUtils;
 import weg.projetofinal.Imobiliaria.repository.UsuarioRepository;
-
-import java.util.Optional;
-
 
 @Service
 @AllArgsConstructor
@@ -47,17 +44,20 @@ public class UsuarioService {
     }
 
     public Usuario updateUser(Usuario usuario, Integer id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID do usuário não pode ser nulo.");
-        }
-
         Usuario usuarioExistente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
 
-        usuario.setId(id);
+        BeanUtils.copyProperties(usuario, usuarioExistente,
+                "id", "enderecoUsuario");
 
-        return repository.save(usuario);
+        if (usuario.getEnderecoUsuario() != null) {
+            usuarioExistente.setEnderecoUsuario(usuario.getEnderecoUsuario());
+        }
+
+        return repository.save(usuarioExistente);
     }
+
+
 
 
 

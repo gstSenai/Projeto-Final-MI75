@@ -1,7 +1,7 @@
 import { Card } from '@/components/cardImovel/index';
-import { ImoveisAlugados } from '@/components/NumeroAtualizaveis/ImoveisAlugados';
-import { ImoveisDisponiveis } from '@/components/NumeroAtualizaveis/ImoveisDisponiveis';
-import { ImoveisVendidos } from '@/components/NumeroAtualizaveis/ImoveisVendidos';
+import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
+import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
+import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
 import { PesquisaPaginaInicial } from '@/components/PaginaInicial/PesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
 import Carousel from '@/components/PaginaInicial/carrossel';

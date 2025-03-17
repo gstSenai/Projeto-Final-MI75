@@ -10,7 +10,7 @@ const montserrat = Montserrat({
 export function Footer() {
     return (
         <>
-            <footer className="font-montserrat bg-[#000000]/80 max-lg:h-[900px] h-[500px] w-full relative mt-auto">
+            <footer className="font-montserrat bg-[#000000]/80 max-lg:h-[900px] h-[500px] w-full relative mt-[200px]">
                 <div className="flex justify-between">
                     <section className="pt-24 px-10 max-lg:px-20  max-sm:px-8 flex flex-row max-lg:flex-col max-xl:gap-16 max-2xl:gap-20 gap-32">
                         <div className="text-white flex flex-col gap-3">
@@ -62,7 +62,7 @@ export function Footer() {
                             </div>
                         </div>
                     </section>
-                    <div className="flex right-0 absolute top-0 lg:p-[2px] max-lg:transform max-lg:translate-y-[300px] max-md:translate-y-[350px] max-sm:translate-y-[400px]">
+                    <div className="flex right-0 absolute top-0 lg:p-[2px] lg:translate-y-[20px] max-lg:transform max-lg:translate-y-[250px]">
                         <img src="/iconFooter/imagemFooterLogo.png" alt="Imagem footer" className="object-cover" />
                     </div>
                 </div>

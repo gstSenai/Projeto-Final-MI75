@@ -16,6 +16,7 @@ import weg.projetofinal.Imobiliaria.service.CaracteriscaImovelService;
 
 @RestController
 @RequestMapping("/caracteristicaImovel")
+@CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
 public class CaracteristicaImovelController {
 

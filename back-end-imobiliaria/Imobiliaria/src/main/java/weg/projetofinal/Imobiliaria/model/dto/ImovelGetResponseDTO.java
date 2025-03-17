@@ -16,6 +16,7 @@ public record ImovelGetResponseDTO(
         Double area_construida,
         Double area_terreno,
         String descricao,
+
         EnderecoImovelGetResponseDTO id_endereco) {
 
 

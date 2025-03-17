@@ -126,7 +126,7 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                 </div>
 
                 <div className="flex max-lg:flex-col max-lg:gap-4 gap-10 mt-4 whitespace-nowrap">
-                    <div className="flex flex-col lg:gap-10">
+                    <div className="flex flex-col gap-4">
                         <FormularioInput
                             placeholder="Área Construída (m²):"
                             name="imovel.area_construida"
@@ -135,9 +135,34 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                             icon={{ type: "areaCT" }}
                             custumizacaoClass="lg:w-full"
                         />
+
+                        <FormularioInput
+                            placeholder="Número de Quartos:"
+                            name="imovelCaracteristicas.numero_quartos"
+                            interName="Ex: 4"
+                            register={register}
+                            icon={{ type: "dormitorio" }}
+                            custumizacaoClass="lg:w-full"
+                        />
+                        <FormularioInput
+                            placeholder="Número de Suítes:"
+                            name="imovelCaracteristicas.numero_suites"
+                            interName="Ex: 2"
+                            register={register}
+                            icon={{ type: "suite" }}
+                            custumizacaoClass="lg:w-full"
+                        />
+                        <FormularioInput
+                            placeholder="Contém Piscina:"
+                            name="imovelCaracteristicas.test_piscina"
+                            register={register}
+                            icon={{ type: "praia" }}
+                            custumizacaoClass="lg:w-full"
+                            options={["Sim", "Não"]}
+                        />
                     </div>
 
-                    <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
+                    <div className="flex flex-col max-lg:flex-col gap-4">
                         <FormularioInput
                             placeholder="Área do Terreno (m²):"
                             name="imovel.area_terreno"
@@ -146,9 +171,33 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                             icon={{ type: "areaCT" }}
                             custumizacaoClass="lg:w-full"
                         />
+                        <FormularioInput
+                            placeholder="Número de Banheiros:"
+                            name="imovelCaracteristicas.numero_banheiros"
+                            interName="Ex: 1"
+                            register={register}
+                            icon={{ type: "banheiro" }}
+                            custumizacaoClass="lg:w-full"
+                        />
+                        <FormularioInput
+                            placeholder="Vagas de Garagem:"
+                            name="imovelCaracteristicas.numero_vagas"
+                            interName="Ex: 2"
+                            register={register}
+                            icon={{ type: "garagem" }}
+                            custumizacaoClass="lg:w-full"
+                        />
+                        <FormularioInput
+                            placeholder="Número de Salas:"
+                            name="imovelCaracteristicas.numero_salas"
+                            interName="Ex: 3"
+                            register={register}
+                            icon={{ type: "sala" }}
+                            custumizacaoClass="lg:w-[full]"
+                        />
                     </div>
 
-                    <div className="flex flex-col justify-end lg:gap-10 w-full 2xl:w-full">
+                    <div className="flex flex-col justify-end gap-4 w-full 2xl:w-full">
                         <ImageUpload title="Fotos do Imóvel" className="h-full" />
                     </div>
                 </div>
