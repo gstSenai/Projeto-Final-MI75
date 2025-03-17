@@ -49,13 +49,13 @@ export function PesquisaPaginaInicial() {
                     className='py-4 flex items-center gap-2'
                     onClick={() => setMostrarAvançado(!mostrarAvançado)}
                 >
-                    <Image className={`transition-transform duration-300 w-6 h-6  ${mostrarAvançado ? 'rotate-180' : ''}`} src="/seta.png" alt="Ícone avançado" width={48} height={48} />
+                    <Image className={`transition-transform duration-300 w-6 h-6  ${mostrarAvançado ? 'rotate-180' : ''}`} src="/paginaInicial/paginasInicialDetalhes/seta.png" alt="Ícone avançado" width={48} height={48} />
                     <span className='text-xl'>Avançado</span>
                 </button>
 
                 <button className="rounded-md p-2 w-[180px] bg-[#DFDAD0] text-[#702632] items-center focus:outline-none focus:ring-0 active:bg-[#dfd0d0]">
                     <div className='flex items-center gap-2'>
-                        <Image src="/lupa.png" alt="Ícone de pesquisa" width={30} height={30} />
+                        <Image src="/paginaInicial/paginasInicialDetalhes/lupa.png" alt="Ícone de pesquisa" width={30} height={30} />
                         <p className='text-[#702632] font-medium'>Pesquisa</p>
                     </div>
                 </button>
