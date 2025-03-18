@@ -1,50 +1,64 @@
 package weg.projetofinal.Imobiliaria.service;
 
-import io.awspring.cloud.s3.S3Template;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.utils.IoUtils;
 
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class S3Service {
 
-    private final S3Client s3Client;
-    private final S3Template s3Template;
-
-    @Value("${aws.s3.bucket.name")
+    @Value("${application.bucket.name}")
     private String bucketName;
 
-    public S3Service(S3Client s3Client, S3Template s3Template) {
-        this.s3Client = s3Client;
-        this.s3Template = s3Template;
-    }
+    @Autowired
+    private AmazonS3 s3Client;
 
-    public String uploadFile(MultipartFile file) throws IOException {
-        String fileName = UUID.randomUUID() + file.getOriginalFilename();
-        Path tempFile = Files.createTempFile("s3-upload", file.getOriginalFilename());
-
-        Files.write(tempFile, file.getBytes());
-
-        s3Client.putObject(
-                PutObjectRequest.builder().
-                bucket(bucketName).
-                key(fileName).build(),
-                tempFile);
-
-        Files.delete(tempFile);
-
+    public String uploadFile(MultipartFile file)  {
+        File fileObj=convertMultiPartToFile(file);
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
+        fileObj.delete();
         return fileName;
     }
 
-    public Resource downloadFile(String fileName) {
-        return s3Template.download(bucketName, fileName);
+    public byte[] downloadFile(String fileName) {
+        S3Object s3Object = s3Client.getObject(bucketName, fileName);
+        S3ObjectInputStream inputStream = s3Object.getObjectContent();
+        try{
+            byte[] content = IoUtils.toByteArray(inputStream);
+            return content;
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String deleteFile(String fileName) {
+        s3Client.deleteObject(bucketName, fileName);
+        return fileName;
+    }
+
+    private File convertMultiPartToFile(MultipartFile file) {
+        File convertedFile = new File(file.getOriginalFilename());
+        try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
+            fos.write(file.getBytes());
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        return convertedFile;
     }
 }
