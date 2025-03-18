@@ -18,16 +18,13 @@ public class CaracteriscaImovelService {
 
     private CaracteristicaImovelRepository repository;
 
-    private ImovelRepository imovelRepository;
 
-    public CaracteristicaImovel createCaracteristica(CaracteristicaImovelPostRequestDTO dto) {
-        Imovel imovel = imovelRepository.findById(dto.idImovel())
-                .orElseThrow(() -> new RuntimeException("Imóvel não encontrado com ID: " + dto.idImovel()));
-        CaracteristicaImovel caracteristica = CaracteristicaImovelMapper.INSTANCE
-                .caracteristicaImovelPostRequestDTOToCaracteristicaImovel(dto);
-        caracteristica.setImovel(imovel);
-        return repository.save(caracteristica);
+    public CaracteristicaImovel createCaracteristica(CaracteristicaImovelPostRequestDTO caracteristicaImovelDTO) {
+        CaracteristicaImovel caracteristicaImovel = CaracteristicaImovelMapper.INSTANCE.caracteristicaImovelPostRequestDTOToCaracteristicaImovel(caracteristicaImovelDTO);
+
+        return repository.save(caracteristicaImovel);
     }
+
 
     public Page<CaracteristicaImovel> getAll(Pageable pageable) {
         return repository.findAll(pageable);

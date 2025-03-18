@@ -11,6 +11,7 @@ import weg.projetofinal.Imobiliaria.model.dto.CaracteristicaImovelGetResponseDTO
 import weg.projetofinal.Imobiliaria.model.dto.CaracteristicaImovelPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.dto.CaracteristicasImovelPutRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.CaracteristicaImovel;
+import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.model.mapper.CaracteristicaImovelMapper;
 import weg.projetofinal.Imobiliaria.service.CaracteriscaImovelService;
 
