@@ -10,7 +10,7 @@ const montserrat = Montserrat({
 export default function Sobre() {
     return (
         <div className="bg-[#DFDAD0] min-h-screen flex flex-col items-center p-6 font-montserrat">
-            {/* Seção Sobre Nós */}
+
             <div className="relative w-full max-w-6xl mb-12 p-6">
                 <div className="relative rounded-lg overflow-hidden">
                     <img 
@@ -29,9 +29,8 @@ export default function Sobre() {
                 </div>
             </div>
 
-            {/* Seção Principal */}
             <div className=" w-full max-w-6xl p-6  font-montserrat">
-                {/* Missões */}
+
                 <div className="flex flex-col md:flex-row items-center gap-14 mb-28">
                     <img
                         src="/imgSobreNos/missoes.png"
@@ -45,7 +44,6 @@ export default function Sobre() {
                     </div>
                 </div>
 
-                {/* Visão */}
                 <div className="flex flex-col md:flex-row-reverse items-center gap-14 mb-28">
                     <img
                         src="/imgSobreNos/visao.png"
@@ -59,7 +57,6 @@ export default function Sobre() {
                     </div>
                 </div>
 
-                {/* Sede */}
                 <div className="flex flex-col md:flex-row justify-between items-center gap-10">
                     <div className="text-left leading-[30px] text-black">
                         <h2 className="text-[30px] font-bold mb-2">Sede da HAV Imobiliária</h2>
