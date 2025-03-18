@@ -33,7 +33,7 @@ export default function AtualizarComponents() {
                             type="email"
                             placeholder="Escreva seu E-mail"
                         />
-                        <button className="bg-[#6A2525] text-white px-4 py-2 sm:px-5 sm:py-3 rounded-full hover:bg-[#541D1D] transition-all w-full md:w-auto font-light text-sm sm:text-base">
+                        <button className="bg-[#6A2525] border-8 border-[#6A2525] text-white px-4 py-2 sm:px-5 sm:py-3 rounded-full hover:bg-[#541D1D] hover:border-[#541D1D] transition-all w-full md:w-auto font-light text-sm sm:text-base">
                             Inscreva-se
                         </button>
                     </div>
