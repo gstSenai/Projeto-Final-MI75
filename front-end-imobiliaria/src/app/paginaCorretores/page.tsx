@@ -46,19 +46,17 @@ export default function Equipe() {
   return (
     <div className="bg-[#EFE5DA] p-8 rounded-lg shadow-lg text-center font-montserrat">
 
-      <div className="p-6 max-w-5xl mx-auto">
+      <div className="p-2 max-w-5xl mx-auto">
 
       <h2 className="ml-3 text-xl font-bold text-gray-800 text-left mb-10 border-b-2 border-[#702632] pb-2 w-32">
   Corretores
 </h2>
 
 
-        <div className="relative w-[800px] h-[400px] mb-4 mx-auto">
-          <Image
+        <div className="relative w-[100%] h-[20%] mb-4 mx-auto">
+          <img
             src="/iconsPaginaCorretores/corretores.png"
             alt="Equipe de corretores"
-            layout="fill"
-            objectFit="cover"
             className="rounded-lg"
           />
         </div>
