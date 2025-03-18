@@ -27,8 +27,7 @@ interface ImovelProps {
 }
 
 interface ImovelCaracteristicas {
-    id?: number
-    idImovel: number
+    id: number
     numero_quartos: number
     numero_banheiros: number
     numero_suites: number
@@ -136,6 +135,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
             console.log("Dados do Imóvel:", imovel);
             console.log("Dados do Imóvel:", imovelCaracteristicas);
 
+            const responseCaracImovel = await addCaracteristicasImovel(imovelCaracteristicas)
             const responseEndereco = await addEndereco(endereco);
 
             const immobileData = {
@@ -154,7 +154,8 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
                 area_construida: imovel.area_construida || 0,
                 area_terreno: imovel.area_terreno || 0,
                 descricao: imovel.descricao || "",
-                id_endereco: responseEndereco,
+                idEndereco: responseEndereco,
+                id_caracteristicaImovel: responseCaracImovel,
             };
 
             console.log("Dados do imóvel a serem enviados:", immobileData);
@@ -167,28 +168,6 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
             }
             console.log("Resposta do servidor:", response);
 
-            const imovelCarac = {
-                id: imovelCaracteristicas.id,
-                idImovel: response.id,
-                numero_quartos: imovelCaracteristicas.numero_quartos,
-                numero_banheiros: imovelCaracteristicas.numero_banheiros,
-                numero_suites: imovelCaracteristicas.numero_suites,
-                numero_vagas: imovelCaracteristicas.numero_vagas,
-                piscina: imovelCaracteristicas.test_piscina === "Sim",
-                numero_salas: imovelCaracteristicas.numero_salas
-            };
-
-
-            const responseCaracImovel = await addCaracteristicasImovel(imovelCarac)
-
-            console.log("Resposta do servidor:", responseCaracImovel);
-            if (response) {
-                setLastAddedImovel(response);
-                setShowForm(false);
-                setShowModal(true);
-            } else {
-                console.error("Erro: Resposta inválida ao adicionar imóvel.");
-            }
 
             if (onComplete) onComplete();
 
