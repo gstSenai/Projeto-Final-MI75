@@ -1,7 +1,6 @@
 "use client";
 import { useState, ReactNode, useRef, Children, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import BotaoImageTexto from "../BotaoImageTexto"; // Importe o componente BotaoImageTexto
 
 interface CarouselProps {
     children: ReactNode | ReactNode[];
