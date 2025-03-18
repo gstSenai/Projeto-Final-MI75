@@ -37,7 +37,7 @@ export function Footer() {
 
                 <div className="z-20"> {/* Adicionado z-20 aqui */}
                     {/* Bloco de Links */}
-                    <div className="flex flex-wrap gap-20 md:gap-20 xl:gap-36">
+                    <div className="flex flex-wrap gap-24 md:gap-20 xl:gap-36">
                         {/* Serviços */}
                         <div className="flex flex-col gap-3">
                             <p className="text-xl xl:text-2xl font-extrabold">Serviços</p>
@@ -64,8 +64,8 @@ export function Footer() {
                         <div className="flex flex-col gap-3">
                             <p className="text-xl xl:text-2xl font-extrabold">Links Rápidos</p>
                             <div className="font-light text-sm md:text-base flex flex-col gap-2">
-                                <p><a href="#">Página Inicial</a></p>
-                                <p><a href="#">Sobre Nós</a></p>
+                                <p><a href="/PaginaInicial">Página Inicial</a></p>
+                                <p><a href="/sobreNos">Sobre Nós</a></p>
                                 <p><a href="#">Comprar</a></p>
                                 <p><a href="#">Vender</a></p>
                             </div>
@@ -79,7 +79,7 @@ export function Footer() {
                     alt="Imagem Imóvel"
                     width={466}
                     height={490}
-                    className="absolute bottom-14 sm:bottom-10 md:-bottom-2 2xl:-bottom-20 -right-60 xl:-right-44 md:block z-0" // Alterado para z-0
+                    className="absolute bottom-20 sm:bottom-10 md:-bottom-2 lg:-bottom-20 2xl:-bottom-20 -right-56 xl:-right-44 md:block z-0" // Alterado para z-0
                 />
             </section>
 

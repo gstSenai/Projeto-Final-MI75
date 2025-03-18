@@ -44,7 +44,7 @@ export default function PaginaInicial() {
                 <div className="relative flex justify-center xl:-ml-[700px] mt-[5rem] lg:-mt-[15rem] z-10">
                     <PesquisaPaginaInicial />
                 </div>
-                <section className='px-2 sm:px-8 md:px-10 lg:px-14 xl:px-20'>
+                <section className='px-4 sm:px-8 md:px-10 lg:px-14 xl:px-20'>
                     <section>
                         <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-40  2xl:pt-56'>
                             <div className='w-[1000px]'>
@@ -155,7 +155,7 @@ export default function PaginaInicial() {
                         </div>
 
                     </div>
-                    <div className=" relative flex justify-center -mt-[17.2rem] lg:mt-[-12.5rem] z-10 max-lg:px-4 px-20">
+                    <div className=" relative flex justify-center -mt-[17.2rem] lg:mt-[-12.5rem] z-20 max-lg:px-4 px-20">
                         <AtualizarComponents />
                     </div>
                     <div className='relative  md:-mt-[110.5px] lg:-mt-[85.5px]'>
