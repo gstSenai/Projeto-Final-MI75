@@ -9,23 +9,20 @@ const montserrat = Montserrat({
 
 export default function TermosUso() {
     return (
-
-        <div className="flex flex-col font-montserrat">
-
-            <h2 className="ml-44 mt-11 text-xl text-[25px] font-bold text-gray-800  mb-10 border-b-2 border-[#702632] pb-2 w-1/2">
-                Política de Privacidade e Termos de Uso
-            </h2>
-            <div className="flex border-b border-gray-300 mt-7 ml-60">
-                <a href='/PoliticaPrivacidade' className="text-xs md:text-sm px-4 py-2 bg-[#702632] text-white rounded-t-lg opacity-80 hover:bg-[#4B151E] transition">
-                    Política de Privacidade
-                </a>
-                <button className="text-xs md:text-sm px-4 py-2 bg-[#702632] text-gray-300  rounded-t-lg  hover:bg-[#4B151E] transition ">
-                    Termos de Uso
-                </button>
-            </div>
-
-            <div className="flex flex-col items-center mb-12">
+        
+            <div className="flex flex-col font-montserrat items-center mb-12">
                 <div className="flex flex-col justify-center max-w-5xl">
+                    <h2 className="ml-6 w-[75%] text-[26px] md:text-[25px] mt-11 text-xl text-[25px] font-bold text-gray-800 mb-10 border-b-2 border-[#702632] pb-2 w-1/2">
+                        Política de Privacidade e Termos de Uso
+                    </h2>
+                    <div className="ml-11 md:flex border-b border-gray-300 mt-7 ml-60">
+                        <a href='/PoliticaPrivacidade' className="text-xs md:text-sm px-4 py-2 bg-[#702632] text-white rounded-t-lg opacity-80 hover:bg-[#4B151E] transition">
+                            Política de Privacidade
+                        </a>
+                        <button className="text-xs md:text-sm px-4 py-2 bg-[#702632] text-gray-300  rounded-t-lg  hover:bg-[#4B151E] transition ">
+                            Termos de Uso
+                        </button>
+                    </div>
                     <div className="flex justify-center items-center mt-[-2] bg-[#DFDAD0] px-4">
                         <div className="bg-[#702632] text-white p-6 md:p-8 rounded-lg shadow-lg max-w-5xl w-full">
 
@@ -89,6 +86,5 @@ export default function TermosUso() {
                     </div>
                 </div>
             </div>
-        </div >
     );
 }

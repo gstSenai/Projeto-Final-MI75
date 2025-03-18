@@ -16,23 +16,19 @@ export default function PoliticaPrivacidade() {
   };
 
   return (
-    <div className="flex flex-col font-montserrat">
-
-      <h2 className="ml-44 mt-11 text-xl text-[25px] font-bold text-gray-800 mb-10 border-b-2 border-[#702632] pb-2 w-1/2">
-        Política de Privacidade e Termos de Uso
-      </h2>
-
-      <div className="flex border-b border-gray-300 mt-7 ml-60">
-        <button className="text-xs md:text-sm px-4 py-2 bg-[#702632] text-white rounded-t-lg hover:bg-[#4B151E] transition">
-          Política de Privacidade
-        </button>
-        <a href='/TermosUso' className="text-xs md:text-sm px-4 py-2 bg-[#702632] text-gray-300 opacity-80 rounded-t-lg hover:bg-[#4B151E] transition ">
-          Termos de Uso
-        </a>
-      </div>
-
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center font-montserrat">
         <div className="flex flex-col justify-center max-w-5xl">
+          <h2 className="ml-6 w-[75%] text-[26px] md:text-[25px] mt-11 text-xl text-[25px] font-bold text-gray-800 mb-10 border-b-2 border-[#702632] pb-2 w-1/2">
+            Política de Privacidade e Termos de Uso
+          </h2>
+          <div className="ml-11 md:flex border-b border-gray-300 mt-7 ml-60">
+            <button className="text-xs md:text-sm px-4 py-2 bg-[#702632] text-white rounded-t-lg hover:bg-[#4B151E] transition">
+              Política de Privacidade
+            </button>
+            <a href='/TermosUso' className="text-xs md:text-sm px-4 py-2 bg-[#702632] text-gray-300 opacity-80 rounded-t-lg hover:bg-[#4B151E] transition ">
+              Termos de Uso
+            </a>
+          </div>
           <div className="flex justify-center items-center mt-[-2] bg-[#DFDAD0] px-4">
             <div className="bg-[#702632] text-white p-6 md:p-8 rounded-lg shadow-lg max-w-5xl w-full">
 
@@ -128,7 +124,7 @@ export default function PoliticaPrivacidade() {
                   <h3 className="text-sm text-gray-200 mb-4 mt-4">- As análises de terceiros são usadas para rastrear e medir o uso deste site, para que possamos continuar produzindo conteúdo atrativo. Esses cookies podem rastrear itens como o tempo que você passa no site ou as páginas visitadas, o que nos ajuda a entender como podemos melhorar o site para você.</h3>
                   <h3 className="text-sm text-gray-200 mb-4 mt-4">- Periodicamente, testamos novos recursos e fazemos alterações subtis na maneira como o site se apresenta. Quando ainda estamos testando novos recursos, esses cookies podem ser usados ​​para garantir que você receba uma experiência consistente enquanto estiver no site, enquanto entendemos quais otimizações os nossos usuários mais apreciam.</h3>
                   <h3 className="text-sm text-gray-200 mb-4 mt-4">- À medida que vendemos produtos, é importante entendermos as estatísticas sobre quantos visitantes de nosso site realmente compram e, portanto, esse é o tipo de dados que esses cookies rastrearão. Isso é importante para você, pois significa que podemos fazer previsões de negócios com precisão que nos permitem analizar nossos custos de publicidade e produtos para garantir o melhor preço possível.</h3>
-
+                  -
                   <h3 className="text-sm font-semibold mb-2">Compromisso do Usuário</h3>
                   <p className="text-sm text-gray-200 mb-4">
                     O usuário se compromete a fazer uso adequado dos conteúdos e da informação que a Imobiliária HAV oferece no site e com caráter enunciativo, mas não limitativo
@@ -155,7 +151,8 @@ export default function PoliticaPrivacidade() {
                     Esperemos que esteja esclarecido e, como mencionado anteriormente, se houver algo que você não tem certeza se precisa ou não, geralmente é mais seguro deixar os cookies ativados, caso interaja com um dos recursos que você usa em nosso site.
                   </p>
                   <p className="text-sm text-gray-200 mb-4">
-                    Esta política é efetiva a partir de Nov/2024.                  </p>
+                    Esta política é efetiva a partir de Nov/2024.
+                  </p>
                 </>
               )}
 
@@ -164,16 +161,16 @@ export default function PoliticaPrivacidade() {
 
             </div>
           </div>
+          <div className="flex justify-end mr-12 md:flex items-end pb-10">
+            <button
+              className="bg-[#702632] text-white px-6 py-2 rounded-b-lg text-sm hover:bg-[#4B151E] transition"
+              onClick={toggleShowMore}
+            >
+              {showMore ? 'Ver menos' : 'Ver mais'}
+            </button>
+          </div>
         </div>
+
       </div>
-      <div className="flex justify-end mr-52 pb-10">
-        <button
-          className="bg-[#702632] text-white px-6 py-2 rounded-b-lg text-sm hover:bg-[#4B151E] transition"
-          onClick={toggleShowMore}
-        >
-          {showMore ? 'Ver menos' : 'Ver mais'}
-        </button>
-      </div>
-    </div>
   );
 }
