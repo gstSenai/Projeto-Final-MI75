@@ -1,10 +1,12 @@
 package weg.projetofinal.Imobiliaria.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import weg.projetofinal.Imobiliaria.model.entity.Imovel;
+import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 import weg.projetofinal.Imobiliaria.repository.ImovelRepository;
 
 import java.util.NoSuchElementException;
@@ -39,10 +41,17 @@ public class ImovelService {
 
 
     public Imovel updateImovel(Imovel imovel, Integer id) {
-        if(repository.existsById(id)) {
-            imovel.setId(id);
-            return repository.save(imovel);
+
+        Imovel imovelExistente = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Imóvel não encontrado com ID: " + id));
+
+        BeanUtils.copyProperties(imovel, imovelExistente,
+                "id", "id_endereco");
+
+        if (imovel.getId_endereco() != null) {
+            imovelExistente.setId_endereco(imovel.getId_endereco());
         }
-        throw new NoSuchElementException();
+
+        return repository.save(imovelExistente);
     }
 }

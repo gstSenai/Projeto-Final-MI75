@@ -8,6 +8,6 @@ public record EnderecoUsuarioPostRequestDTO(
         Integer numero_apartamento,
         String bairro,
         String cidade,
-        String estado
+        String uf
 ) {
 }

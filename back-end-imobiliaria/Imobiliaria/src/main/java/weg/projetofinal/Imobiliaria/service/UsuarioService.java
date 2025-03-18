@@ -12,10 +12,8 @@ import weg.projetofinal.Imobiliaria.model.entity.EnderecoUsuario;
 import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 import weg.projetofinal.Imobiliaria.model.mapper.UsuarioMapper;
 import weg.projetofinal.Imobiliaria.repository.EnderecoRepository;
+import org.springframework.beans.BeanUtils;
 import weg.projetofinal.Imobiliaria.repository.UsuarioRepository;
-
-import java.util.Optional;
-
 
 @Service
 public class UsuarioService {
@@ -61,23 +59,21 @@ public class UsuarioService {
         repository.deleteById(id);
     }
 
-    public Usuario updateUser(Usuario usuario, Integer id, Integer idEnderecoUsuario) {
-        Usuario usuarioExistente = repository.findById(id).get();
-        if (usuarioExistente == null) {
-            throw new RuntimeException("Usuário não encontrado com ID: " + id);
+    public Usuario updateUser(Usuario usuario, Integer id) {
+        Usuario usuarioExistente = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
+
+        BeanUtils.copyProperties(usuario, usuarioExistente,
+                "id", "enderecoUsuario");
+
+        if (usuario.getEnderecoUsuario() != null) {
+            usuarioExistente.setEnderecoUsuario(usuario.getEnderecoUsuario());
         }
-
-        EnderecoUsuario enderecoUsuario = enderecoUsuarioService.findById(idEnderecoUsuario);
-
-        if (enderecoUsuario == null) {
-            throw new RuntimeException("Endereço não encontrado com ID: " + idEnderecoUsuario);
-        }
-
-        usuario.setId(id);
-        usuario.setEnderecoUsuario(enderecoUsuario);
-
-        return repository.save(usuario);
+        return repository.save(usuarioExistente);
     }
+
+
+
 
 
 

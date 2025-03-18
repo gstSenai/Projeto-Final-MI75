@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.br.CPF;
 import java.util.Date;
 
 public record UsuarioPostRequestDTO(
+        Integer id,
         @NotBlank String nome,
         @NotBlank String sobrenome,
         @CPF @NotBlank String cpf,
