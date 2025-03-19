@@ -11,7 +11,7 @@ export default function TermosUso() {
     return (
             <div className="flex flex-col font-montserrat items-center mb-12">
                 <div className="flex flex-col justify-center max-w-5xl">
-                    <h2 className="ml-6 w-[75%] text-[26px] md:text-[25px] mt-11 text-xl text-[25px] font-bold text-gray-800 mb-10 border-b-2 border-[#702632] pb-2 w-1/2">
+                    <h2 className="ml-6 w-[75%] text-[26px] md:text-[25px] mt-11 text-xl font-bold text-gray-800 mb-10 border-b-2 border-[#702632] pb-2 w-1/2">
                         Política de Privacidade e Termos de Uso
                     </h2>
                     <div className="ml-11 md:flex border-b border-gray-300 mt-7">
