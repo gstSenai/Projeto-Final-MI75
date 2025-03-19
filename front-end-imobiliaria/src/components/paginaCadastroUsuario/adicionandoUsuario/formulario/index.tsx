@@ -3,8 +3,9 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { EnderecoSection } from "../formulario/endereco-section"
 import { DadosUsuarioSection } from "./dados-imovel-section"
-import request from "@/routes/request"
 import { Botao } from "@/components/botao"
+import request from "@/routes/request"
+import { fileURLToPath } from "url"
 
 interface UsuarioProps {
     id: number
@@ -16,7 +17,6 @@ interface UsuarioProps {
     data_nascimento: string
     email: string
     senha: string
-    imagem_usuario: string
 }
 
 interface EnderecoImovelProps {
@@ -32,48 +32,60 @@ interface EnderecoImovelProps {
 }
 
 interface InputDadosUsuarioProps {
-    onComplete?: () => void;
+    onComplete?: () => void
 }
 
 export function Formulario({ onComplete }: InputDadosUsuarioProps) {
-    const { register, handleSubmit, formState: { errors } } = useForm<{ usuario: UsuarioProps; endereco: EnderecoImovelProps }>();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<{ usuario: UsuarioProps; endereco: EnderecoImovelProps }>()
     const [showForm, setShowForm] = useState(true)
     const [showModal, setShowModal] = useState(false)
     const [lastAddedUsuario, setLastAddedUsuario] = useState<UsuarioProps | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [enderecoId, setEnderecoId] = useState<number>();
+    const [enderecoId, setEnderecoId] = useState<number>()
+    const [imageFile, setImageFile] = useState<string | null>(null)
 
     const addEndereco = async (data: EnderecoImovelProps) => {
         try {
-            console.log("Sending address data:", data);
+            console.log("Sending address data:", data)
 
-            if (!data.cep || !data.rua || !data.tipo_residencia
-                || !data.numero_imovel || !data.numero_apartamento
-                || !data.bairro || !data.cidade || !data.uf) {
-                throw new Error('Todos os campos obrigatórios devem ser preenchidos');
+            if (
+                !data.cep ||
+                !data.rua ||
+                !data.tipo_residencia ||
+                !data.numero_imovel ||
+                !data.numero_apartamento ||
+                !data.bairro ||
+                !data.cidade ||
+                !data.uf
+            ) {
+                throw new Error("Todos os campos obrigatórios devem ser preenchidos")
             }
 
-            const response = await request("POST", "http://localhost:9090/enderecoUsuario/create", data);
+            const response = await request("POST", "http://localhost:9090/enderecoUsuario/create", data)
 
             if (response && response.id) {
                 setEnderecoId(response.id)
-                return response;
+                return response
             }
 
-            console.error("Resposta do servidor:", response);
-            throw new Error(`Falha ao criar o endereço: ${response.status}`);
+            console.error("Resposta do servidor:", response)
+            throw new Error(`Falha ao criar o endereço: ${response.status}`)
         } catch (error) {
-            console.error("Erro ao adicionar endereço:", error);
-            throw error;
+            console.error("Erro ao adicionar endereço:", error)
+            throw error
         }
-    };
+    }
 
-    const addUsuario = async (data: UsuarioProps) => {
+    const addUsuario = async (formData: FormData) => {
         try {
-
-            console.log("Sending address data:", data);
-
-            const response = await request("POST", "http://localhost:9090/usuario/create", data)
+            const response = await request("POST", "http://localhost:9090/usuario/create", formData)
+            if (response) {
+                setLastAddedUsuario(response)
+            }
             return response
         } catch (error) {
             console.error("Erro ao adicionar usuário:", error)
@@ -83,10 +95,10 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
 
     const deleteUsuario = async (userId: number): Promise<void> => {
         try {
-            await request('DELETE', `http://localhost:9090/usuario/delete/${userId}`)
+            await request("DELETE", `http://localhost:9090/usuario/delete/${userId}`)
         } catch (error) {
             console.error("Erro ao deletar imóvel:", error)
-            throw error;
+            throw error
         }
     }
 
@@ -115,14 +127,25 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                 data_nascimento: usuario.data_nascimento,
                 email: usuario.email,
                 senha: usuario.senha,
-                imagem_usuario: usuario.imagem_usuario,
                 idEnderecoUsuario: enderecoId,
             };
 
-            console.log("Dados do imóvel a serem enviados:", usuarioAdd);
+            const formData = new FormData();
 
-            const response = await addUsuario(usuarioAdd);
+            Object.entries(usuarioAdd).forEach(([key, value]) => {
+                if (value !== undefined && value !== null && key !== "imagem_usuario") {
+                    formData.append(key, value.toString());
+                }
+            });
+
+            if (imageFile) {
+                formData.append("imagem", imageFile);
+            }
+
+            const response = await addUsuario(formData);
+
             console.log("Resposta do servidor:", response);
+
             if (response) {
                 setLastAddedUsuario(response);
                 setShowForm(false);
@@ -136,11 +159,11 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
             setTimeout(() => setShowModal(false), 5000);
         } catch (error) {
             console.error("Erro ao salvar usuário:", error);
-            alert(`Erro ao salvar usuário: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+            alert(`Erro ao salvar usuário: ${error instanceof Error ? error.message : "Erro desconhecido"}`);
         } finally {
             setIsSubmitting(false);
         }
-    };
+    }
 
     const onSubmitDelete = async () => {
         if (lastAddedUsuario) {
@@ -150,18 +173,16 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                 setLastAddedUsuario(null)
             }
             if (onComplete) {
-                onComplete();
+                onComplete()
             }
         }
     }
-
 
     return (
         <>
             {showForm && (
                 <>
                     <DadosUsuarioSection register={register} />
-
                     <EnderecoSection register={register} />
 
                     <div className="flex items-center gap-16 mt-10">
@@ -175,11 +196,9 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
 
             {showModal && lastAddedUsuario && (
                 <div className="w-full bottom-16 pl-10 items-center relative">
-                    <div className='bg-vermelho w-72 flex gap-1 p-3 rounded-[20px] text-white'>
+                    <div className="bg-vermelho w-72 flex gap-1 p-3 rounded-[20px] text-white">
                         <p>Adicionado com Sucesso!</p>
-                        <button
-                            onClick={onSubmitDelete}
-                            className='underline'>
+                        <button onClick={onSubmitDelete} className="underline">
                             Desfazer
                         </button>
                     </div>

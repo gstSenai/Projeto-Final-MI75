@@ -25,19 +25,20 @@ interface UsuarioProps {
   data_nascimento: string
   email: string
   senha: string
-  endereco:EnderecoImovelProps
+  imagem_usuario: string
+  endereco: EnderecoImovelProps
 }
 
 interface EnderecoImovelProps {
-    id: number
-    cep: string
-    rua: string
-    tipo_residencia: string
-    numero_imovel: number
-    numero_apartamento: number
-    bairro: string
-    cidade: string
-    uf: string
+  id: number
+  cep: string
+  rua: string
+  tipo_residencia: string
+  numero_imovel: number
+  numero_apartamento: number
+  bairro: string
+  cidade: string
+  uf: string
 }
 
 interface ResponseProps {
