@@ -9,17 +9,22 @@ const montserrat = Montserrat({
 
 export default function Sobre() {
     return (
-        <div className="bg-[#DFDAD0] min-h-screen flex flex-col items-center p-6 font-montserrat">
+        <div className=" p-1 md: bg-[#DFDAD0] min-h-screen flex flex-col items-center font-montserrat">
 
-            <div className="relative w-full max-w-6xl mb-12 p-6">
-                <div className="relative rounded-lg overflow-hidden">
-                    
+            <div className=" md: relative w-full max-w-6xl mb-12 p-6">
+                <div className="w-full md: relative rounded-lg overflow-hidden">
+                    <img
+                        src="/imgSobreNos/capa.png"
+                        alt="Sobre nós"
+                        className="h-[500px] md:w-max object-cover "
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-25"></div>
                     <div className="absolute inset-0 flex items-center p-6">
-                        <div className="text-white max-w-md ml-14 ">
-                            <h2 className="text-[40px] font-black mb-6">Sobre nós</h2>
-                            <p className="text-[15px] w-72">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.        
-                        </p>
+                        <div className="justify-start text-white md:text-white max-w-md  md:ml-14">
+                            <h2 className="ml-7 text-[40px] font-black mb-6">Sobre nós</h2>
+                            <p className="ml-5 text-balance text-[15px] w-72">
+                                Apaixonados por qualidade e inovação.
+                                Criamos experiências autênticas, unindo compromisso e excelência para oferecer o melhor a você.                        </p>
                         </div>
                     </div>
                 </div>
@@ -36,7 +41,7 @@ export default function Sobre() {
                     <div>
                         <h2 className="text-[30px] font-bold mb-2">Missões</h2>
                         <p className="text-black">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.                        </p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.                        </p>
                     </div>
                 </div>
 
@@ -49,7 +54,7 @@ export default function Sobre() {
                     <div>
                         <h2 className="text-[30px] font-bold mb-2">Visão</h2>
                         <p className="text-black">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.                        </p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.                        </p>
                     </div>
                 </div>
 
