@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import type { UseFormRegister } from "react-hook-form"
+import type { UseFormRegister, FieldError } from "react-hook-form"
 
 interface FormularioInputProps {
   placeholder?: string
@@ -9,10 +9,10 @@ interface FormularioInputProps {
   name: string
   showOptions?: boolean
   onChange?: (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
-  custumizacaoClass: string
+  customizacaoClass: string
   options?: string[]
   register: UseFormRegister<any>
-  errorMessage?: string
+  errors?: FieldError | undefined
   required?: boolean
   icon?: {
     type: "areaCT" | "sala" | "banheiro" | "dormitorio" | "suite" | "garagem" | "praia"
@@ -25,14 +25,14 @@ export function FormularioInput({
   interName,
   name,
   showOptions = false,
-  custumizacaoClass,
+  customizacaoClass,
   options,
   register,
-  errorMessage,
+  errors,
   required = false,
   icon,
   onChange,
-  iconCaneta
+  iconCaneta,
 }: FormularioInputProps) {
   const getIconPath = () => {
     switch (icon?.type) {
@@ -58,53 +58,45 @@ export function FormularioInput({
   const iconPath = getIconPath()
 
   return (
-    <>
-      <div className="w-full">
-        <label className="block text-lg">
-          {placeholder}
-        </label>
-        <div
-          className={`relative ${custumizacaoClass} p-2 flex items-center w-full rounded-lg bg-white border ${errorMessage ? "border-red-500" : "border-gray-500"} `}
-        >
-          {iconCaneta && <img src="/iconsForms/canetaEditar.png" alt="Editar" className="h-6 ml-4" />}
-          {iconPath && <img src={iconPath || "/placeholder.svg"} alt={`Ícone ${icon?.type}`} className="h-6 lg:h-9" />}
+    <div className="w-full">
+      <label className="block text-lg">{placeholder}</label>
+      <div
+        className={`relative ${customizacaoClass} p-2 flex items-center w-full rounded-lg bg-white border ${errors ? "border-red-500" : "border-gray-500"}`}
+      >
+        {iconCaneta && <img src="/iconsForms/canetaEditar.png" alt="Editar" className="h-6 ml-4" />}
+        {iconPath && <img src={iconPath || "/placeholder.svg"} alt={`Ícone ${icon?.type}`} className="h-6 lg:h-9" />}
 
+        {options ? (
+          <select
+            {...register(name, { required: required })}
+            onChange={onChange}
+            defaultValue=""
+            className="w-full bg-transparent outline-none text-gray-900"
+          >
+            <option value="" disabled>
+              {required ? "*" : ""}
+            </option>
+            {options.map((option, index) => (
+              <option key={index} value={option} className="text-black">
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <input
+            type="text"
+            placeholder={`${interName} ${required ? "*" : ""}`}
+            {...register(name, { required: required })}
+            onChange={onChange}
+            className="w-full outline-none text-gray-900"
+          />
+        )}
 
-          {options ? (
-            <>
-              <select
-                {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
-                onChange={onChange}
-                defaultValue=""
-                className="w-full bg-transparent outline-none text-gray-900"
-              >
-
-                <option value="" disabled className=""> {required ? "*" : ""}
-                </option>
-                {options.map((option, index) => (
-                  <option key={index} value={option} className="text-black">
-                    {option}
-                  </option>
-
-                ))}
-              </select>
-            </>
-          ) : (
-            <input
-              type="text"
-              placeholder={`${interName} ${required ? "*" : ""}`}
-              {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
-              onChange={onChange}
-              className="w-full outline-none text-gray-900"
-            />
-
-          )}
-
-
-          {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-6" />}
-        </div>
-        {errorMessage && <span className="text-red-500 text-sm absolute -bottom-5 left-0">{errorMessage}</span>}
+        {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-6" />}
       </div>
-    </>
+
+      {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
+    </div>
   )
 }
+

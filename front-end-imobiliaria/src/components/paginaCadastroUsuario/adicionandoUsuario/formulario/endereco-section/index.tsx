@@ -12,7 +12,13 @@ const inter = Montserrat({
     display: 'swap',
 });
 
-export function EnderecoSection({ register }: { register: UseFormRegister<any> }) {
+interface DadosEnderecoUsuarioSectionProps {
+    register: UseFormRegister<any>
+    errors: any
+}
+
+
+export function EnderecoSection({ register, errors }: DadosEnderecoUsuarioSectionProps) {
     const [uf, setUf] = useState<string>('');
     const [cidade, setCidade] = useState<string>('');
     const [cidades, setCidades] = useState<string[]>([]);
@@ -49,33 +55,37 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
                         interName='00000-000'
                         name="endereco.cep"
                         register={register}
-                        custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                        customizacaoClass="w-full p-2  border border-gray-500 rounded"
                         required
+                        errors={errors?.cep}
                     />
                     <FormularioInput
                         placeholder="UF:"
                         name="endereco.uf"
                         register={register}
                         onChange={handleUfChange}
-                        custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                        customizacaoClass="w-full p-2  border border-gray-500 rounded"
                         options={estados}
                         required
+                        errors={errors?.uf}
                     />
                     <FormularioInput
                         placeholder="Cidade:"
                         name="endereco.cidade"
                         register={register}
-                        custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                        customizacaoClass="w-full p-2  border border-gray-500 rounded"
                         options={cidades}
                         required
+                        errors={errors?.cidade}
                     />
                     <FormularioInput
                         placeholder="Rua:"
                         name="endereco.rua"
                         interName=''
                         register={register}
-                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
+                        customizacaoClass="w-full p-2 border border-gray-500 rounded"
                         required
+                        errors={errors?.rua}
                     />
 
                 </div>
@@ -85,25 +95,28 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
                         name="endereco.bairro"
                         interName=''
                         register={register}
-                        custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                        customizacaoClass="w-full p-2  border border-gray-500 rounded"
                         required
+                        errors={errors?.bairro}
                     />
                     <FormularioInput
                         placeholder="Tipo de Residência:"
                         name="endereco.tipo_residencia"
                         interName=""
                         register={register}
-                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
+                        customizacaoClass="w-full p-2 border border-gray-500 rounded"
                         options={["Casa", "Apartamento"]}
                         required
+                        errors={errors?.tipo_residencia}
                     />
                     <FormularioInput
                         placeholder="Número do Imovel:"
                         name="endereco.numero_imovel"
                         interName='Ex: 009'
                         register={register}
-                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
+                        customizacaoClass="w-full p-2 border border-gray-500 rounded"
                         required
+                        errors={errors?.numero_imovel}
                     />
                 </div>
                 <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:pt-4 gap-10">
@@ -112,7 +125,8 @@ export function EnderecoSection({ register }: { register: UseFormRegister<any> }
                         name="endereco.numero_apartamento"
                         interName="Ex: 009"
                         register={register}
-                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
+                        customizacaoClass="w-full p-2 border border-gray-500 rounded"
+                        errors={errors?.numero_apartamento}
                     />
                 </div>
 

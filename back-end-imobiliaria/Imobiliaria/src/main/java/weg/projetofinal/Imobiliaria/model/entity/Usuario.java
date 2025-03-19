@@ -28,7 +28,6 @@ public class Usuario {
     private String sobrenome;
 
     @Column(nullable = false, unique = true, length = 11)
-    @CPF
     private String cpf;
 
     @Column(nullable = false)
@@ -41,13 +40,11 @@ public class Usuario {
     private Date data_nascimento;
 
     @Column(nullable = false, unique = true)
-    @Email
     private String email;
 
     @Column(nullable = false)
     private String senha;
 
-    @JsonIgnore
     private String imagem_usuario;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
