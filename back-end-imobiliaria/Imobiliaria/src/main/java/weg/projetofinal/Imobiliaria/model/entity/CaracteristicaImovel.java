@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 public class CaracteristicaImovel {
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @MapsId
-    @JoinColumn(name = "id_imovel", referencedColumnName = "id_imovel", foreignKey = @ForeignKey(name = "fk_caracteristica_imovel"))
+    @OneToOne(mappedBy = "caracteristicaImovel", cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "id_imovel")
     private Imovel imovel;
     private Integer numero_quartos;
     private Integer numero_banheiros;

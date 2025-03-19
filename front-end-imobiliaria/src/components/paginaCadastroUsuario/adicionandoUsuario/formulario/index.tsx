@@ -16,6 +16,7 @@ interface UsuarioProps {
     data_nascimento: string
     email: string
     senha: string
+    imagem_usuario: string
 }
 
 interface EnderecoImovelProps {
@@ -114,6 +115,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                 data_nascimento: usuario.data_nascimento,
                 email: usuario.email,
                 senha: usuario.senha,
+                imagem_usuario: usuario.imagem_usuario,
                 idEnderecoUsuario: enderecoId,
             };
 

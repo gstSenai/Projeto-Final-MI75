@@ -1,12 +1,12 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Botao } from "@/components/botao"
 import request from "@/routes/request"
-import { FormularioEditarInput } from "../editarImovel/formularioEditarInput";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { FormularioEditarInput } from "../editarImovel/formularioEditarInput"
+import { type SubmitHandler, useForm } from "react-hook-form"
 
 interface ImovelProps {
-    id: number;
+    id: number
     codigo?: number
     nome_propriedade: string
     tipo_transacao: string
@@ -24,12 +24,11 @@ interface ImovelProps {
     area_terreno: number
     descricao?: string
     id_endereco: EnderecoImovelProps
-    caracteristicas: ImovelCaracteristicas
+    id_caracteristicasImovel: ImovelCaracteristicas
 }
 
 interface ImovelCaracteristicas {
-    id?: number
-    idImovel: number
+    id: number
     numero_quartos: number
     numero_banheiros: number
     numero_suites: number
@@ -50,15 +49,17 @@ interface EnderecoImovelProps {
     complemento?: string
 }
 
-
 interface EditarImovelProps {
     selectedImoveis: ImovelProps[]
-    selectedImoveisCaracteristicas: ImovelCaracteristicas[]
     onComplete?: () => void
 }
 
 export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps) {
-    const { register, handleSubmit, formState: { errors } } = useForm<{ imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas; endereco: EnderecoImovelProps }>();
+    const { register, handleSubmit, formState: { errors }, } = useForm<{
+        imovel: ImovelProps
+        id_caracteristicasImovel: ImovelCaracteristicas;
+        endereco: EnderecoImovelProps;
+    }>()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [showEditTrue, setShowEditTrue] = useState(false)
     const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
@@ -67,28 +68,29 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
     const [isEditar] = useState(false)
     const [showEditImovel, setShowEditImovel] = useState(false)
     const [showEditEndereco, setShowEditEndereco] = useState(false)
-    const [imovelCaracteristicas, setImovelCaracteristicas] = useState<ImovelCaracteristicas | null>(null);
+    const [imovelCaracteristicas, setImovelCaracteristicas] = useState<ImovelCaracteristicas | null>(null)
     const [refreshTrigger, setRefreshTrigger] = useState(0)
 
-    const editarImovel = async (data: ImovelProps) => {
+    const editarImovel = async (data: Partial<ImovelProps>) => {
         try {
+            console.log("Sending address imovel:", data)
 
-            console.log("Sending address imovel:", data);
-
-            for (const imovel of selectedImoveis) {
-                const response = await request('PUT', `http://localhost:9090/imovel/update/${imovel.id}`, data)
-                return response
-            }
-        } catch (error) {
-            console.error("Erro ao editar imóvel:", error)
-            throw error
-        }
-    }
-
-    const getCaracImovel = async (id: number) => {
-        try {
-            const response = await request('GET', `http://localhost:9090/caracteristicaImovel/getById/${id}`)
-            return response;
+            const responses = await Promise.all(
+                selectedImoveis.map(async (imovel) => {
+                    const imoveisAtualizado = {
+                        ...imovel,
+                        ...data,
+                        enderecoUsuario: {
+                            ...imovel.id_endereco,
+                        },
+                        id_caracteristicasImovel: {
+                            ...imovel.id_caracteristicasImovel,
+                        },
+                    }
+                    return request("PUT", `http://localhost:9090/imovel/update/${imovel.id}`, imoveisAtualizado)
+                }),
+            )
+            return responses
         } catch (error) {
             console.error("Erro ao editar imóvel:", error)
             throw error
@@ -97,11 +99,28 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
 
     const editarCaracImovel = async (data: ImovelCaracteristicas) => {
         try {
+            for (const imovel of selectedImoveis) {
+                if (!imovel.id_caracteristicasImovel) {
+                    console.warn("⚠️ Imóvel sem características cadastradas:", imovel)
+                    continue
+                }
 
-            console.log("Sending address imovel:", data);
+                const imovelCaracteristicasAtualizado = {
+                    id: imovel.id_caracteristicasImovel.id,
+                    numero_quartos: imovel.id_caracteristicasImovel.numero_quartos,
+                    numero_banheiros: imovel.id_caracteristicasImovel.numero_banheiros,
+                    numero_suites: imovel.id_caracteristicasImovel.numero_suites,
+                    numero_vagas: imovel.id_caracteristicasImovel.numero_vagas,
+                    piscina: imovel.id_caracteristicasImovel.test_piscina,
+                    numero_salas: imovel.id_caracteristicasImovel.numero_salas,
+                }
 
-            for (const imovelCaracteristicas of selectedImoveis) {
-                const response = await request('PUT', `http://localhost:9090/caracteristicaImovel/update/${imovelCaracteristicas.id}`, data)
+                const response = await request(
+                    "PUT",
+                    `http://localhost:9090/imovel/update/${imovel.id_caracteristicasImovel.id}`,
+                    imovelCaracteristicasAtualizado,
+                )
+                console.log("✅ Caracteristicas do imóvel atualizado com sucesso:", response)
                 return response
             }
         } catch (error) {
@@ -110,15 +129,14 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
         }
     }
 
-
     const editarEndereco = async (data: EnderecoImovelProps) => {
         try {
-            console.log("📤 Enviando endereço do usuário:", data);
+            console.log("📤 Enviando endereço do usuário:", data)
 
             for (const imovel of selectedImoveis) {
                 if (!imovel.id_endereco || !imovel.id_endereco.id) {
-                    console.warn("⚠️ Usuário sem endereço cadastrado:", imovel);
-                    continue;
+                    console.warn("⚠️ Usuário sem endereço cadastrado:", imovel)
+                    continue
                 }
 
                 const enderecoAtualizado = {
@@ -130,31 +148,36 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                     cidade: data.cidade,
                     uf: data.uf,
                     complemento: data.complemento,
-                };
+                }
 
-                const response = await request("PUT", `http://localhost:9090/endereco/update/${imovel.id_endereco.id}`, enderecoAtualizado);
-                console.log("✅ Endereço atualizado com sucesso:", response);
+                const response = await request(
+                    "PUT",
+                    `http://localhost:9090/endereco/update/${imovel.id_endereco.id}`,
+                    enderecoAtualizado,
+                )
+                console.log("✅ Endereço atualizado com sucesso:", response)
                 return response
             }
         } catch (error) {
-            console.error("❌ Erro ao editar endereço:", error);
-            throw error;
+            console.error("❌ Erro ao editar endereço:", error)
+            throw error
         }
-    };
+    }
 
-
-    const onSubmitEditImovel: SubmitHandler<{ imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas; }> = async (data) => {
-        if (isSubmitting) return;
+    const onSubmitEditImovel: SubmitHandler<{ imovel: ImovelProps }> = async (data) => {
+        console.log("Dados recebidos no submit:", data);
+        if (isSubmitting) return
 
         try {
-            setIsSubmitting(true);
+            setIsSubmitting(true)
 
-            console.log("Dados recebidos para validação:", data);
+            console.log("Dados recebidos para validação:", data)
 
-            const { imovel, imovelCaracteristicas } = data;
+            const { imovel } = data
 
-            const imovelSelecionado = selectedImoveis[0];
+            const imovelSelecionado = selectedImoveis[0]
             const imovelSelecionadoEndereco = selectedImoveis[0].id_endereco
+            const imovelSelecionadoCarac = selectedImoveis[0].id_caracteristicasImovel
 
             const imovelAtualizado = {
                 ...imovelSelecionado,
@@ -172,87 +195,33 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                 area_terreno: imovel.area_terreno || 0,
                 descricao: imovel.descricao || "",
                 id_endereco: {
-                    ...imovelSelecionadoEndereco
+                    ...imovelSelecionadoEndereco,
+                },
+                id_caracteristicasImovel: {
+                    ...imovelSelecionadoCarac,
                 },
             }
 
-            console.log("Dados do imóvel a serem enviados:", data);
+            console.log("Dados do imóvel a serem enviados:", data)
 
-            const response = await editarImovel(imovelAtualizado);
-
-            if (response) {
-            } else {
-                throw new Error("Erro ao criar imóvel, id não retornado.");
-            }
-
-            console.log("Resposta do servidor:", response);
-
-            const imovelCaracAtualizado = {
-                id: imovelCaracteristicas?.id,
-                idImovel: response.id,
-                numero_quartos: imovelCaracteristicas?.numero_quartos ?? 0,
-                numero_banheiros: imovelCaracteristicas?.numero_banheiros ?? 0,
-                numero_suites: imovelCaracteristicas?.numero_suites ?? 0,
-                numero_vagas: imovelCaracteristicas?.numero_vagas ?? 0,
-                piscina: imovelCaracteristicas?.test_piscina === "Sim",
-                numero_salas: imovelCaracteristicas?.numero_salas ?? 0
-            };
-
-
-            const responseCarac = await editarCaracImovel(imovelCaracAtualizado)
-
-            setCaracteristicasImovel(responseCarac)
-            console.log("Resposta do servidor:", responseCarac);
+            const response = await editarImovel(imovelAtualizado)
 
             if (response) {
-                setLastAddedImovel(response[0]);
-                setShowModal(false);
-                setShowEditTrue(true);
+                setLastAddedImovel(response[0])
+                setShowModal(false)
+                setShowEditTrue(true)
             } else {
-                console.error("Erro: Resposta inválida ao adicionar imóvel.");
+                throw new Error("Erro ao criar imóvel, id não retornado.")
             }
 
-            const imovelAtualizadoCompleto = {
-                ...imovelSelecionado,
-                nome_propriedade: imovel.nome_propriedade,
-                tipo_transacao: imovel.tipo_transacao,
-                valor_venda: imovel.valor_venda || 0,
-                tipo_imovel: imovel.tipo_imovel,
-                status_imovel: imovel.status_imovel,
-                valor_promocional: imovel.valor_promocional,
-                destaque: imovel.test_destaque === "Sim",
-                visibilidade: imovel.test_visibilidade === "Público",
-                valor_iptu: imovel.valor_iptu || 0,
-                condominio: imovel.condominio || 0,
-                area_construida: imovel.area_construida || 0,
-                area_terreno: imovel.area_terreno || 0,
-                descricao: imovel.descricao || "",
-                id_endereco: {
-                    ...imovelSelecionadoEndereco
-                },
-                caracteristicasImovel: {
-                    ...imovelCaracAtualizado
-                }
-            }
+            if (onComplete) onComplete()
 
-            console.log("Dados do imóvel a serem enviados:", data);
-
-            const responseAtualizadaCompleto = await editarImovel(imovelAtualizado);
-
-            if (responseAtualizadaCompleto) {
-            } else {
-                throw new Error("Erro ao criar imóvel, id não retornado.");
-            }
-
-
-            if (onComplete) onComplete();
-
-            setTimeout(() => setShowEditTrue(false), 5000);
+            setTimeout(() => setShowEditTrue(false), 5000)
         } catch (error) {
-            console.error("Erro ao editar Imóvel:", error);
-            alert(`Erro ao editar imóvel: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+            console.error("Erro ao editar Imóvel:", error)
+            alert(`Erro ao editar imóvel: ${error instanceof Error ? error.message : "Erro desconhecido"}`)
         } finally {
-            setIsSubmitting(false);
+            setIsSubmitting(false)
         }
     }
 
@@ -300,6 +269,58 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
         }
     }
 
+    const onSubmitEditImovelCaracteristicas: SubmitHandler<{ id_caracteristicasImovel: ImovelCaracteristicas }> = async (
+        data,
+    ) => {
+        if (isSubmitting) return
+
+        try {
+            setIsSubmitting(true)
+
+            console.log("Dados recebidos para validação:", data)
+
+            const imovelSelecionado = selectedImoveis[0]
+
+            if (!imovelSelecionado.id_caracteristicasImovel) {
+                console.error("Erro: Imóvel sem características cadastradas")
+                alert("Erro: Imóvel sem características cadastradas")
+                setIsSubmitting(false)
+                return
+            }
+
+            const imovelCaracteristicasAtualizado = {
+                ...imovelSelecionado,
+                id: data.id_caracteristicasImovel.id,
+                numero_quartos: data.id_caracteristicasImovel.numero_quartos,
+                numero_banheiros: data.id_caracteristicasImovel.numero_banheiros,
+                numero_suites: data.id_caracteristicasImovel.numero_suites,
+                numero_vagas: data.id_caracteristicasImovel.numero_vagas,
+                piscina: data.id_caracteristicasImovel.test_piscina === "Sim",
+                numero_salas: data.id_caracteristicasImovel.numero_salas,
+            }
+
+            console.log("Dados do usuário a serem enviados:", data)
+
+            const response = await editarCaracImovel(imovelCaracteristicasAtualizado)
+            console.log("Resposta do servidor:", response)
+            if (response) {
+                setShowModal(false)
+                setShowEditTrue(true)
+            } else {
+                console.error("Erro: Resposta inválida ao adicionar usuário.")
+            }
+
+            if (onComplete) onComplete()
+
+            setTimeout(() => setShowEditTrue(false), 5000)
+        } catch (error) {
+            console.error("Erro ao editar usuário:", error)
+            alert(`Erro ao editar usuário: ${error instanceof Error ? error.message : "Erro desconhecido"}`)
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
     const refreshData = () => {
         setRefreshTrigger((atualizar) => atualizar + 1)
     }
@@ -327,16 +348,6 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
         }
     }
 
-    useEffect(() => {
-        if (selectedImoveis.length > 0) {
-            const imovelSelecionado = selectedImoveis[0];
-            getCaracImovel(imovelSelecionado.id).then((caracteristicas) => {
-                setImovelCaracteristicas(caracteristicas);
-            });
-        }
-    }, [selectedImoveis]);
-
-
     return (
         <>
             {showModal && (
@@ -347,7 +358,9 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                 className="bg-[#DFDAD0] py-2 px-4 rounded-full text-vermelho lg:text-2xl transition-transform duration-300 hover:scale-110
                              hover:bg-vermelho hover:text-[#DFDAD0]"
                                 onClick={handleCancel}
-                            >X</button>
+                            >
+                                X
+                            </button>
                         </div>
                         <div className="flex flex-col w-full overflow-y-auto max-h-[80vh] pt-5 px-10">
                             <h2 className="text-3xl font-semibold text-vermelho mb-4">Editar Imóveis</h2>
@@ -368,7 +381,6 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                 {selectedImoveis.map((imovel) => (
                                                     <div key={imovel.id} className="space-y-4 pt-10">
                                                         <div className="flex flex-col gap-4">
-
                                                             <div className="w-full">
                                                                 <label htmlFor={`nome_propriedade_${imovel.id}`} className="block text-lg">
                                                                     Nome da Propriedade:
@@ -415,7 +427,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
 
                                                             <div className="w-full">
                                                                 <label htmlFor={`valor_venda_${imovel.id}`} className="block text-lg">
-                                                                    Valor de Venda  (R$):
+                                                                    Valor de Venda (R$):
                                                                 </label>
 
                                                                 <FormularioEditarInput
@@ -557,8 +569,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                 </label>
                                                                 <FormularioEditarInput
                                                                     placeholder="Número de Quartos:"
-                                                                    name="imovelCaracteristicas.numero_quartos"
-                                                                    value={imovel.caracteristicas.numero_quartos}
+                                                                    name="id_caracteristicasImovel.numero_quartos"
+                                                                    value={imovel.id_caracteristicasImovel?.numero_quartos || 0}
                                                                     register={register}
                                                                     icon={{ type: "dormitorio" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -571,8 +583,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                 </label>
                                                                 <FormularioEditarInput
                                                                     placeholder="Número de Suítes:"
-                                                                    name="imovelCaracteristicas.numero_suites"
-                                                                    value={imovel.caracteristicas.numero_suites}
+                                                                    name="id_caracteristicasImovel.numero_suites"
+                                                                    value={imovel.id_caracteristicasImovel?.numero_suites || 0}
                                                                     register={register}
                                                                     icon={{ type: "suite" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -585,8 +597,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                 </label>
                                                                 <FormularioEditarInput
                                                                     placeholder="Contém Piscina:"
-                                                                    name="imovelCaracteristicas.test_piscina"
-                                                                    value={imovel.caracteristicas.piscina}
+                                                                    name="id_caracteristicasImovel.test_piscina"
+                                                                    value={imovel.id_caracteristicasImovel?.piscina}
                                                                     register={register}
                                                                     icon={{ type: "praia" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -600,8 +612,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                 </label>
                                                                 <FormularioEditarInput
                                                                     placeholder="Número de Banheiros:"
-                                                                    name="imovelCaracteristicas.numero_banheiros"
-                                                                    value={imovel.caracteristicas.numero_banheiros}
+                                                                    name="id_caracteristicasImovel.numero_banheiros"
+                                                                    value={imovel.id_caracteristicasImovel?.numero_banheiros || 0}
                                                                     register={register}
                                                                     icon={{ type: "banheiro" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -614,8 +626,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                 </label>
                                                                 <FormularioEditarInput
                                                                     placeholder="Vagas de Garagem:"
-                                                                    name="imovelCaracteristicas.numero_vagas"
-                                                                    value={imovel.caracteristicas.numero_vagas}
+                                                                    name="id_caracteristicasImovel.numero_vagas"
+                                                                    value={imovel.id_caracteristicasImovel?.numero_vagas || 0}
                                                                     register={register}
                                                                     icon={{ type: "garagem" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -628,8 +640,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                 </label>
                                                                 <FormularioEditarInput
                                                                     placeholder="Número de Salas:"
-                                                                    name="imovelCaracteristicas.numero_salas"
-                                                                    value={imovel.caracteristicas.numero_salas}
+                                                                    name="id_caracteristicasImovel.numero_salas"
+                                                                    value={id_caracteristicasImovel?.numero_salas || 0}
                                                                     register={register}
                                                                     icon={{ type: "sala" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -653,28 +665,21 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                     </div>
                                                 ))}
                                             </div>
-
                                         )}
                                     </form>
                                 </div>
                             </div>
                             <div className="flex justify-end pt-6">
                                 <div className="flex justify-around items-center gap-10 w-[50%]">
-                                    <Botao
-                                        onClick={handleCancel}
-                                        texto="Cancelar"
-                                    />
-                                    <Botao
-                                        onClick={handleSubmit(onSubmitEditImovel)}
-                                        texto={isEditar ? "Editando..." : "Editar"}
-                                    />
+                                    <Botao onClick={handleCancel} texto="Cancelar" />
+                                    <Botao onClick={handleSubmit(onSubmitEditImovel)} texto={isEditar ? "Editando..." : "Editar"} />
                                 </div>
                             </div>
                         </div>
-                    </div >
-                </div >
-            )
-            }
+                    </div>
+                </div>
+            )}
         </>
     )
 }
+

@@ -1,9 +1,7 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
@@ -14,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "tb_imoveis")
 public class Imovel {
+
     @Id
     @Column(name = "id_imovel")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,7 +54,7 @@ public class Imovel {
     @OneToMany(mappedBy = "imovel", cascade = CascadeType.REMOVE)
     private List<Imagem> imagem;
 
-    @OneToOne(mappedBy = "imovel", cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.REMOVE)
     private CaracteristicaImovel caracteristicaImovel;
 
 }

@@ -23,9 +23,13 @@ public class ImovelController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ImovelGetResponseDTO create(@RequestBody ImovelPostRequestDTO imovelPostDTO) {
-        Imovel imovel = ImovelMapper.INSTANCE.imovelPostRequestDTOToImovel(imovelPostDTO);
-        Imovel savedImovel = service.createImovel(imovel);
-        return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(savedImovel);
+        try {
+            Imovel imovel = ImovelMapper.INSTANCE.imovelPostRequestDTOToImovel(imovelPostDTO);
+            Imovel savedImovel = service.createImovel(imovel);
+            return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(savedImovel);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao criar imóvel: " + e.getMessage());
+        }
     }
 
     @GetMapping("/getAll")
@@ -51,8 +55,12 @@ public class ImovelController {
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ImovelGetResponseDTO update(@PathVariable Integer id, @RequestBody ImovelPostRequestDTO imovelPostDTO) {
-        Imovel imovel = ImovelMapper.INSTANCE.imovelPostRequestDTOToImovel(imovelPostDTO);
-        Imovel updatedImovel = service.updateImovel(imovel, id);
-        return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(updatedImovel);
+        try {
+            Imovel imovel = ImovelMapper.INSTANCE.imovelPostRequestDTOToImovel(imovelPostDTO);
+            Imovel updatedImovel = service.updateImovel(imovel, id);
+            return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(updatedImovel);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar imóvel: " + e.getMessage());
+        }
     }
 }

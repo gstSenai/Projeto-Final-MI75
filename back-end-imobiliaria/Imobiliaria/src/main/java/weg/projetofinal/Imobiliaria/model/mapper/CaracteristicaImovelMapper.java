@@ -13,13 +13,10 @@ public interface CaracteristicaImovelMapper {
 
     CaracteristicaImovelMapper INSTANCE = Mappers.getMapper(CaracteristicaImovelMapper.class);
 
-    @Mapping(source = "imovel.id", target = "idImovel")
     CaracteristicaImovelGetResponseDTO caracteristicaImovelToCaracteristicaImovelGetResponseDTO(CaracteristicaImovel caracteristica);
 
-    @Mapping(source = "idImovel", target = "imovel.id")
     CaracteristicaImovel caracteristicaImovelPostRequestDTOToCaracteristicaImovel(CaracteristicaImovelPostRequestDTO caracteristicaImovelPostRequestDTO);
 
-    @Mapping(source = "idImovel", target = "imovel.id")
     CaracteristicaImovel caracteristicaImovelPutRequestDTOToCaracteristicaImovel(CaracteristicasImovelPutRequestDTO caracteristicaImovelPutRequestDTO);
 }
 

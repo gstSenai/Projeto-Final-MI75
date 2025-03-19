@@ -1,7 +1,7 @@
 package weg.projetofinal.Imobiliaria.model.dto;
 
 public record CaracteristicaImovelGetResponseDTO(
-        Integer idImovel,
+        Integer id,
         Integer numero_quartos,
         Integer numero_banheiros,
         Integer numero_suites,
