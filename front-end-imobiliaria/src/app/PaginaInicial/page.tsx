@@ -22,7 +22,9 @@ import Image from 'next/image';
 export default function PaginaInicial() {
     return (
         <div>
-            <Header />
+           <header>
+        <Header />
+        </header>
 
             <div className={`${montserrat.className} pt-8`}>
                 <main className='max-lg:px-4 px-20'>
