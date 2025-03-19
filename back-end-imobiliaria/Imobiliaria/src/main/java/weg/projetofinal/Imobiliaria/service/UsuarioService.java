@@ -1,6 +1,5 @@
 package weg.projetofinal.Imobiliaria.service;
 
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +10,6 @@ import weg.projetofinal.Imobiliaria.model.dto.UsuarioPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.EnderecoUsuario;
 import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 import weg.projetofinal.Imobiliaria.model.mapper.UsuarioMapper;
-import weg.projetofinal.Imobiliaria.repository.EnderecoRepository;
 import org.springframework.beans.BeanUtils;
 import weg.projetofinal.Imobiliaria.repository.UsuarioRepository;
 
@@ -29,29 +27,24 @@ public class UsuarioService {
         this.s3Service = s3Service;
     }
 
-    public UsuarioGetResponseDTO createUser(UsuarioPostRequestDTO usuarioDTO, MultipartFile imagem) {
+    public Usuario createUser(UsuarioPostRequestDTO usuarioDTO, MultipartFile imagem) {
         EnderecoUsuario enderecoUsuario = enderecoUsuarioService.findById(usuarioDTO.idEnderecoUsuario());
         if (enderecoUsuario == null) {
             throw new RuntimeException("Endereço não encontrado com ID: " + usuarioDTO.idEnderecoUsuario());
         }
-        String imagemUrl = (imagem != null && !imagem.isEmpty()) ? s3Service.uploadFile(imagem) : null;
-
+        String imagemUrl = s3Service.uploadFile(imagem);
         Usuario usuario = UsuarioMapper.INSTANCE.usuarioPostRequestDTOToUsuario(usuarioDTO);
         usuario.setEnderecoUsuario(enderecoUsuario);
         usuario.setImagem_usuario(imagemUrl);
-
-        Usuario usuarioCriado = repository.save(usuario);
-
-        return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuarioCriado);
+        return repository.save(usuario);
     }
 
-    public Page<Usuario> findAll(Pageable pageable) {
 
+    public Page<Usuario> findAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
     public Usuario findById(Integer id) {
-
         return repository.findById(id).get();
     }
 
@@ -59,21 +52,16 @@ public class UsuarioService {
         repository.deleteById(id);
     }
 
-    public Usuario updateUser(Usuario usuario, Integer id) {
+    public Usuario updateUser(Usuario usuario, Integer id, MultipartFile imagem) {
         Usuario usuarioExistente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
-
-        BeanUtils.copyProperties(usuario, usuarioExistente,
-                "id", "enderecoUsuario");
-
-        if (usuario.getEnderecoUsuario() != null) {
-            usuarioExistente.setEnderecoUsuario(usuario.getEnderecoUsuario());
+        BeanUtils.copyProperties(usuario, usuarioExistente, "id", "enderecoUsuario", "imagem_usuario");
+        if (imagem != null && !imagem.isEmpty()) {
+            String novaImagemUrl = s3Service.uploadFile(imagem);
+            usuarioExistente.setImagem_usuario(novaImagemUrl);
         }
         return repository.save(usuarioExistente);
     }
-
-
-
 
 
 

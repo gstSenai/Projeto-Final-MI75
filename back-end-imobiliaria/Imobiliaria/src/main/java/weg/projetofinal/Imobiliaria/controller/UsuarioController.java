@@ -40,11 +40,9 @@ public class UsuarioController {
             @RequestPart(name = "usuario") String usuarioJson,
             @RequestPart(name = "imagem", required = false) MultipartFile imagem) throws IOException {
         UsuarioPostRequestDTO usuarioDTO = objectMapper.readValue(usuarioJson, UsuarioPostRequestDTO.class);
-        UsuarioGetResponseDTO usuarioCriado = service.createUser(usuarioDTO, imagem);
-        return usuarioCriado;
+        Usuario usuarioCriado = service.createUser(usuarioDTO, imagem);
+        return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuarioCriado);
     }
-
-
 
 
     @GetMapping("/getAll")
@@ -77,9 +75,15 @@ public class UsuarioController {
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioGetResponseDTO update(@RequestBody @Valid UsuarioPutRequestDTO usuarioDTO, @PathVariable Integer id) {
+    public UsuarioGetResponseDTO update(
+            @RequestPart(name = "usuario") String usuarioJson,
+            @RequestPart(name = "imagem", required = false) MultipartFile imagem,
+            @PathVariable Integer id) throws IOException {
+
+        UsuarioPutRequestDTO usuarioDTO = objectMapper.readValue(usuarioJson, UsuarioPutRequestDTO.class);
         Usuario usuario = UsuarioMapper.INSTANCE.usuarioPutRequestDTOToUsuario(usuarioDTO);
-        Usuario usuarioUpdate = service.updateUser(usuario,id);
-        return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuarioUpdate);
+        Usuario usuarioAtualizado = service.updateUser(usuario, id, imagem);
+        return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuarioAtualizado);
     }
+
 }
