@@ -18,10 +18,10 @@ public class ImovelService {
     private ImovelRepository repository;
 
 
-    public Imovel createImovel(ImovelPostRequestDTO imovelDTO) {
-        Imovel imovel = imovelDTO.convert();
+    public Imovel createImovel(Imovel imovel) {
         return repository.save(imovel);
     }
+
 
     public Page<Imovel> getAllImovel(Pageable pageable) {
         return repository.findAll(pageable);

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import weg.projetofinal.Imobiliaria.model.dto.ImovelGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.ImovelPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Imovel;
+import weg.projetofinal.Imobiliaria.model.mapper.ImovelMapper;
 import weg.projetofinal.Imobiliaria.service.ImovelService;
 
 
@@ -16,26 +17,28 @@ import weg.projetofinal.Imobiliaria.service.ImovelService;
 @AllArgsConstructor
 public class ImovelController {
 
-    private ImovelService service;
+    private final ImovelService service;
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Imovel create(@RequestBody ImovelPostRequestDTO imovelPostDTO) {
-        return service.createImovel(imovelPostDTO);
+    public ImovelGetResponseDTO create(@RequestBody ImovelPostRequestDTO imovelPostDTO) {
+        Imovel imovel = ImovelMapper.INSTANCE.imovelPostRequestDTOToImovel(imovelPostDTO);
+        Imovel savedImovel = service.createImovel(imovel);
+        return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(savedImovel);
     }
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
     public Page<ImovelGetResponseDTO> list(Pageable pageable) {
         Page<Imovel> imoveisPage = service.getAllImovel(pageable);
-        return imoveisPage.map(Imovel::convert);
+        return imoveisPage.map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO);
     }
 
     @GetMapping("/getById/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ImovelGetResponseDTO getById(@PathVariable Integer id) {
         Imovel imovel = service.getByIdImovel(id);
-        return imovel.convert();
+        return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(imovel);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -46,9 +49,9 @@ public class ImovelController {
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ImovelGetResponseDTO update(@PathVariable Integer id,@RequestBody Imovel imovel) {
-        Imovel imovel1 = service.updateImovel(imovel, id);
-        return imovel1.convert();
+    public ImovelGetResponseDTO update(@PathVariable Integer id, @RequestBody ImovelPostRequestDTO imovelPostDTO) {
+        Imovel imovel = ImovelMapper.INSTANCE.imovelPostRequestDTOToImovel(imovelPostDTO);
+        Imovel updatedImovel = service.updateImovel(imovel, id);
+        return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(updatedImovel);
     }
-
 }

@@ -20,10 +20,10 @@ export function Header() {
                         <div>
                             <nav>
                                 <ul className="flex flex-row text-xl whitespace-nowrap gap-12 lg:gap-6 text-[#303030] max-lg:hidden">
-                                    <li><a href="#">Início</a></li>
+                                    <li><a href="/PaginaInicial">Início</a></li>
                                     <li><a href="#">Propriedades</a></li>
                                     <li><a href="#">Corretores</a></li>
-                                    <li><a href="#">Sobre nós</a></li>
+                                    <li><a href="/sobreNos">Sobre nós</a></li>
                                 </ul>
                             </nav>
                         </div>
