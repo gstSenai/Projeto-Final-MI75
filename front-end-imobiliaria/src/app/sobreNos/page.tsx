@@ -11,7 +11,6 @@ const montserrat = Montserrat({
 export default function Sobre() {
     return (
         <>
-            <Header />
             <div className="bg-[#DFDAD0] min-h-screen flex flex-col items-center p-6 font-montserrat">
 
                 <div className="relative w-full max-w-6xl mb-12 p-6">
@@ -79,7 +78,6 @@ export default function Sobre() {
                     </div>
                 </div>
             </div>
-            <Footer/>
         </>
     );
 }

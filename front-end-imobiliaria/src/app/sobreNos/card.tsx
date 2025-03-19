@@ -4,7 +4,6 @@ import { Header } from "@/components/header";
 export default function SobreNos() {
   return (
     <>
-      <Header/>
       <div className="relative bg-gray-100 min-h-screen flex justify-center p-6">
         {/* Seção Sobre Nós */}
         <div className="relative w-full max-w-5xl">
@@ -25,7 +24,6 @@ export default function SobreNos() {
           </div>
         </div>
       </div>
-      <Footer/>
     </>
   );
 }
