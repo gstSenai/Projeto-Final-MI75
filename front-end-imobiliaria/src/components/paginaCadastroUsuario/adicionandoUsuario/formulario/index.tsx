@@ -1,11 +1,13 @@
 "use client"
 import { useState } from "react"
+import type React from "react"
+
 import { useForm } from "react-hook-form"
 import { EnderecoSection } from "../formulario/endereco-section"
 import { DadosUsuarioSection } from "./dados-imovel-section"
 import { Botao } from "@/components/botao"
 import request from "@/routes/request"
-import { fileURLToPath } from "url"
+import { FormularioImagem } from "./formularioImagem"
 
 interface UsuarioProps {
     id: number
@@ -17,6 +19,7 @@ interface UsuarioProps {
     data_nascimento: string
     email: string
     senha: string
+    idEnderecoUsuario: number
 }
 
 interface EnderecoImovelProps {
@@ -36,43 +39,27 @@ interface InputDadosUsuarioProps {
 }
 
 export function Formulario({ onComplete }: InputDadosUsuarioProps) {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<{ usuario: UsuarioProps; endereco: EnderecoImovelProps }>()
+    const { register, handleSubmit } = useForm<{ usuario: UsuarioProps; endereco: EnderecoImovelProps }>()
     const [showForm, setShowForm] = useState(true)
     const [showModal, setShowModal] = useState(false)
     const [lastAddedUsuario, setLastAddedUsuario] = useState<UsuarioProps | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [enderecoId, setEnderecoId] = useState<number>()
-    const [imageFile, setImageFile] = useState<string | null>(null)
+    const [imageFile, setImageFile] = useState<File | null>(null)
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setImageFile(e.target.files[0])
+        }
+    }
 
     const addEndereco = async (data: EnderecoImovelProps) => {
         try {
-            console.log("Sending address data:", data)
-
-            if (
-                !data.cep ||
-                !data.rua ||
-                !data.tipo_residencia ||
-                !data.numero_imovel ||
-                !data.numero_apartamento ||
-                !data.bairro ||
-                !data.cidade ||
-                !data.uf
-            ) {
-                throw new Error("Todos os campos obrigatórios devem ser preenchidos")
-            }
-
             const response = await request("POST", "http://localhost:9090/enderecoUsuario/create", data)
-
             if (response && response.id) {
                 setEnderecoId(response.id)
                 return response
             }
-
-            console.error("Resposta do servidor:", response)
             throw new Error(`Falha ao criar o endereço: ${response.status}`)
         } catch (error) {
             console.error("Erro ao adicionar endereço:", error)
@@ -80,13 +67,28 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
         }
     }
 
-    const addUsuario = async (formData: FormData) => {
+    const addUsuario = async (usuario: UsuarioProps, imagem: File | null) => {
         try {
-            const response = await request("POST", "http://localhost:9090/usuario/create", formData)
-            if (response) {
-                setLastAddedUsuario(response)
+            const formData = new FormData()
+
+            formData.append("usuario", JSON.stringify(usuario))
+
+            if (imagem) {
+                formData.append("imagem", imagem)
             }
-            return response
+
+            const response = await fetch("http://localhost:9090/usuario/create", {
+                method: "POST",
+                body: formData,
+            })
+
+            if (!response.ok) {
+                throw new Error(`Falha na requisição: ${response.status}`)
+            }
+
+            const data = await response.json()
+            setLastAddedUsuario(data)
+            return data
         } catch (error) {
             console.error("Erro ao adicionar usuário:", error)
             throw error
@@ -103,78 +105,40 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
     }
 
     const onSubmitUsuario = async (data: { usuario: UsuarioProps; endereco: EnderecoImovelProps }) => {
-        if (isSubmitting) return;
-
+        if (isSubmitting) return
         try {
-            setIsSubmitting(true);
+            setIsSubmitting(true)
+            const { usuario, endereco } = data
 
-            console.log("Dados recebidos para validação:", data);
+            const enderecoResponse = await addEndereco(endereco)
 
-            const { usuario, endereco } = data;
-
-            console.log("Dados do Endereço:", endereco);
-            console.log("Dados do Usuário:", usuario);
-
-            const responseEndereco = await addEndereco(endereco);
-
-            const usuarioAdd = {
-                id: usuario.id,
-                nome: usuario.nome,
-                sobrenome: usuario.sobrenome,
-                cpf: usuario.cpf,
-                tipo_conta: usuario.tipo_conta,
-                telefone: usuario.telefone,
-                data_nascimento: usuario.data_nascimento,
-                email: usuario.email,
-                senha: usuario.senha,
-                idEnderecoUsuario: enderecoId,
-            };
-
-            const formData = new FormData();
-
-            Object.entries(usuarioAdd).forEach(([key, value]) => {
-                if (value !== undefined && value !== null && key !== "imagem_usuario") {
-                    formData.append(key, value.toString());
-                }
-            });
-
-            if (imageFile) {
-                formData.append("imagem", imageFile);
+            const usuarioData = {
+                ...usuario,
+                idEnderecoUsuario: enderecoResponse.id,
             }
 
-            const response = await addUsuario(formData);
-
-            console.log("Resposta do servidor:", response);
+            const response = await addUsuario(usuarioData, imageFile)
 
             if (response) {
-                setLastAddedUsuario(response);
-                setShowForm(false);
-                setShowModal(true);
-            } else {
-                console.error("Erro: Resposta inválida ao adicionar usuário.");
+                setShowForm(false)
+                setShowModal(true)
+                if (onComplete) onComplete()
+                setTimeout(() => setShowModal(false), 5000)
             }
-
-            if (onComplete) onComplete();
-
-            setTimeout(() => setShowModal(false), 5000);
         } catch (error) {
-            console.error("Erro ao salvar usuário:", error);
-            alert(`Erro ao salvar usuário: ${error instanceof Error ? error.message : "Erro desconhecido"}`);
+            console.error("Erro ao salvar usuário:", error)
+            alert(`Erro ao salvar usuário: ${error instanceof Error ? error.message : "Erro desconhecido"}`)
         } finally {
-            setIsSubmitting(false);
+            setIsSubmitting(false)
         }
     }
 
     const onSubmitDelete = async () => {
-        if (lastAddedUsuario) {
-            if (lastAddedUsuario.id) {
-                await deleteUsuario(lastAddedUsuario.id)
-                setShowModal(false)
-                setLastAddedUsuario(null)
-            }
-            if (onComplete) {
-                onComplete()
-            }
+        if (lastAddedUsuario && lastAddedUsuario.id) {
+            await deleteUsuario(lastAddedUsuario.id)
+            setShowModal(false)
+            setLastAddedUsuario(null)
+            if (onComplete) onComplete()
         }
     }
 
@@ -182,9 +146,20 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
         <>
             {showForm && (
                 <>
-                    <DadosUsuarioSection register={register} />
-                    <EnderecoSection register={register} />
+                    <div className="font-inter flex">
+                        <div className="flex flex-row items-center">
+                            <p className="text-2xl xl:text-3xl font-semibold mt-10 mb-5">Dados do Usuário:</p>
+                        </div>
+                    </div>
 
+                    <hr className="mb-10 w-full h-2 rounded-2xl bg-vermelho"></hr>
+                    
+                    <FormularioImagem
+                        handleImageChange={handleImageChange}
+                    />
+                    <DadosUsuarioSection register={register} />
+
+                    <EnderecoSection register={register} />
                     <div className="flex items-center gap-16 mt-10">
                         <div className="flex max-sm:gap-12 max-lg:gap-36 gap-[40rem] w-full">
                             <Botao className="max-lg:text-base" onClick={() => console.log()} texto="Cancelar" />
@@ -193,7 +168,6 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                     </div>
                 </>
             )}
-
             {showModal && lastAddedUsuario && (
                 <div className="w-full bottom-16 pl-10 items-center relative">
                     <div className="bg-vermelho w-72 flex gap-1 p-3 rounded-[20px] text-white">
@@ -207,3 +181,4 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
         </>
     )
 }
+

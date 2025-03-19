@@ -2,9 +2,7 @@
 import { UseFormRegister } from "react-hook-form"
 import { FormularioInput } from "../formularioInput"
 import { Montserrat } from "next/font/google"
-import { FormularioImagem } from "../formularioImagem"
 
-// Carregando a fonte Montserrat
 const montserrat = Montserrat({
     subsets: ['latin'],
     weight: ['400', '800'],
@@ -19,22 +17,6 @@ export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
 
     return (
         <div className="flex flex-col font-montserrat">
-            <div className="font-inter flex">
-                <div className="flex flex-row items-center">
-                    <p className="text-2xl xl:text-3xl font-semibold my-10">Dados do Usuário:</p>
-                </div>
-            </div>
-
-            <hr className="mb-10 w-full h-2 rounded-2xl bg-vermelho"></hr>
-
-            <div className="flex flex-col items-center justify-center mb-10">
-                <p className="text-2xl xl:text-3xl font-medium my-10 ">Dados do Usuário:</p>
-                <FormularioImagem
-                    register={register}
-                />
-            </div>
-
-
             <div className="flex flex-col gap-6">
                 <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput

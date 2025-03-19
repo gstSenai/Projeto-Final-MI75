@@ -1,51 +1,59 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import type { UseFormRegister } from "react-hook-form"
-import PanZoom from "react-easy-panzoom"
+import { useState } from "react";
+import { Montserrat } from "next/font/google";
+import PanZoom from "react-easy-panzoom";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "800"],
+  display: "swap",
+});
 
 interface FormularioImagemProps {
-    register: UseFormRegister<any>
-    onImageUpload?: (file: File) => void
+  handleImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function FormularioImagem({ register, onImageUpload }: FormularioImagemProps) {
-    const [preview, setPreview] = useState<string | null>(null)
+export function FormularioImagem({ handleImageChange }: FormularioImagemProps) {
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files[0]) {
-            const file = event.target.files[0]
-            const imageUrl = URL.createObjectURL(file)
-            setPreview(imageUrl)
-            onImageUpload?.(file)
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleImageChange(event);
+    const file = event.target.files?.[0];
 
-            if (onImageUpload) {
-                onImageUpload(file)
-            }
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target) {
+          setImagePreview(e.target.result as string);
         }
+      };
+      reader.readAsDataURL(file);
     }
+  };
 
-    return (
-        <div className="flex items-center justify-center">
-            <label className="cursor-pointer bg-slate-500/70 h-[14rem] w-[14rem] rounded-full flex items-center justify-center overflow-hidden">
-                {preview ? (
-                    <PanZoom>
-                        <img src={preview || "/placeholder.svg"} alt="Preview" className="h-full w-full object-cover" />
-                    </PanZoom>
-                ) : (
-                    <div className="text-gray-300">+</div>
-                )}
-                <input
-                    type="file"
-                    accept="image/*"
-                    {...register("imagem")}
-                    onChange={(event) => {
-                        register("imagem").onChange(event)
-                        handleImageChange(event)
-                    }}
-                    className="hidden"
-                />
-            </label>
-        </div>
-    )
+  return (
+    <div className="flex flex-col font-montserrat items-center gap-2 mb-10">
+      <label className="text-xl font-medium text-black">Foto de perfil</label>
+      <div className="relative cursor-pointer bg-gray-300 hover:bg-gray-400 h-56 w-56 rounded-full flex items-center justify-center overflow-hidden transition border border-gray-500 shadow-lg">
+        {imagePreview ? (
+          <PanZoom>
+            <img
+              src={imagePreview}
+              alt="Pré-visualização"
+              className="w-full h-full object-cover"
+            />
+          </PanZoom>
+        ) : (
+          <span className="text-gray-600 text-sm">Clique para enviar</span>
+        )}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+        />
+      </div>
+    </div>
+  );
 }
