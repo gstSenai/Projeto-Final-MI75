@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { Montserrat } from 'next/font/google';
+import { Header } from '@/components/header';
+import { Footer } from '@/components/footer';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -16,6 +18,8 @@ export default function PoliticaPrivacidade() {
   };
 
   return (
+    <>
+      <Header/>
       <div className="flex flex-col items-center font-montserrat">
         <div className="flex flex-col justify-center max-w-5xl">
           <h2 className="ml-6 w-[75%] text-[26px] md:text-[25px] mt-11 text-xl text-[25px] font-bold text-gray-800 mb-10 border-b-2 border-[#702632] pb-2 w-1/2">
@@ -172,5 +176,7 @@ export default function PoliticaPrivacidade() {
         </div>
 
       </div>
+      <Footer/>
+    </>
   );
 }
