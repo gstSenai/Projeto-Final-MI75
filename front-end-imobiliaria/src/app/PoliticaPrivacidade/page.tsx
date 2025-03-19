@@ -21,7 +21,7 @@ export default function PoliticaPrivacidade() {
           <h2 className="ml-6 w-[75%] text-[26px] md:text-[25px] mt-11 text-xl text-[25px] font-bold text-gray-800 mb-10 border-b-2 border-[#702632] pb-2 w-1/2">
             Política de Privacidade e Termos de Uso
           </h2>
-          <div className="ml-11 md:flex border-b border-gray-300 mt-7 ml-60">
+          <div className="ml-11 md:flex border-b border-gray-300 mt-7">
             <button className="text-xs md:text-sm px-4 py-2 bg-[#702632] text-white rounded-t-lg hover:bg-[#4B151E] transition">
               Política de Privacidade
             </button>
