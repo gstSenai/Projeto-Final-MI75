@@ -13,11 +13,7 @@ export default function Sobre() {
 
             <div className="relative w-full max-w-6xl mb-12 p-6">
                 <div className="relative rounded-lg overflow-hidden">
-                    <img 
-                        src="/imgSobreNos/capa.png" 
-                        alt="Sobre nós"
-                        className="w-max h-max object-cover "
-                    />
+                    
                     <div className="absolute inset-0 flex items-center p-6">
                         <div className="text-white max-w-md ml-14 ">
                             <h2 className="text-[40px] font-black mb-6">Sobre nós</h2>
