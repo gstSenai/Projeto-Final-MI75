@@ -3,6 +3,7 @@ import { UseFormRegister } from "react-hook-form"
 import { FormularioInput } from "../formularioInput"
 import { ImageUpload } from "../image-upload"
 import { Montserrat } from "next/font/google"
+import { FormularioImagem } from "../formularioImagem"
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
@@ -26,6 +27,10 @@ export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
             </div>
 
             <hr className="mb-10 w-full h-2 rounded-2xl bg-vermelho"></hr>
+
+            <FormularioImagem
+                register={register}
+            />
 
             <div className="flex flex-col gap-6">
                 <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
