@@ -86,8 +86,11 @@ export default function PaginaInicial() {
                             <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
                         </div>
                     </div>
+                    <div className='flex'>
                     <Card></Card>
-
+                    <Card></Card>
+                    <Card></Card>
+                    </div>
                 </section>
                 <section>
                     <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-[600px]  2xl:pt-96'>
