@@ -10,7 +10,7 @@ const inter = Inter({
 export function Header() {
     return (
         <>
-            <header className={`${inter.className} bg-[#DFDAD0] px-10 pt-6 max-lg:px-10 lg:px-30 xl:px-20 font-inter font-medium`}>
+            <header className="font-inter bg-[#DFDAD0] px-10 pt-6 max-lg:px-10 lg:px-30 xl:px-20 font-medium">
                 <section className="flex flex-row justify-between ">
                     <div className="flex flex-row items-center lg:gap-16 xl:gap-26">
                         <div className="flex items-center gap-6">
@@ -20,10 +20,10 @@ export function Header() {
                         <div>
                             <nav>
                                 <ul className="flex flex-row text-xl whitespace-nowrap gap-12 lg:gap-6 text-[#303030] max-lg:hidden">
-                                    <li>Início</li>
-                                    <li>Propriedades</li>
-                                    <li>Corretores</li>
-                                    <li>Sobre nós</li>
+                                    <li><a href="/PaginaInicial">Início</a></li>
+                                    <li><a href="#">Propriedades</a></li>
+                                    <li><a href="#">Corretores</a></li>
+                                    <li><a href="/sobreNos">Sobre nós</a></li>
                                 </ul>
                             </nav>
                         </div>

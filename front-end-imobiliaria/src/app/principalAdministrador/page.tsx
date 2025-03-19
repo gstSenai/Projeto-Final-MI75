@@ -8,14 +8,14 @@ const montserrat = Montserrat({
     display: 'swap',
 });
 
-import Botao from '@/components/Botao';
+import {Botao} from '@/components/Botao';
 import Image from 'next/image';
 
 export default function PaginaAdministrador() {
     return (
         <div className={`${montserrat.className} pb-24 pt-3 lg:pt-14 lg:pb-52`}>
             <main className="relative flex h-[811px] w-full max-w-[1810px] mx-auto overflow-hidden ">
-                <Image src="/montanhaPaginaAdministrador.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100}/>
+                <Image src="/imagensPaginaEDADM/montanhaPaginaAdministrador.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100}/>
                 <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32">
                     <h1 className="text-[2.5rem] lg:text-[4.375rem] text-center 2xl:text-start font-bold">Bem-vindo à Área do Administrador!</h1>
                     {/* Linha vermelha */}
@@ -51,7 +51,7 @@ export default function PaginaAdministrador() {
                         <Botao texto="Gerenciar" />
                     </div>
                     <div className='flex flex-col items-center w-80 py-10 md:py-10 2xl:py-0'>
-                        <Image src="/gerenciamentoUsuarios.png" alt="Gerenciamento de Usúarios" width={110} height={123} />
+                        <Image src="/imagensPaginaEDADM/gerenciamentoUsuarios.png" alt="Gerenciamento de Usúarios" width={110} height={123} />
                         <p className='text-4xl  font-medium opacity-75 text-center leading-tight py-16 min-h-[120px]'>Gerenciamento de Usúarios</p>
                         <Botao texto="Gerenciar" />
                     </div>

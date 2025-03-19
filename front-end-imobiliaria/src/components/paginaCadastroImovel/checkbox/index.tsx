@@ -1,7 +1,9 @@
 "use client";
 import { FormValorImovel } from "@/components/paginaCadastroImovel/formularioValoresImovel"
 import { FormDadosImovel } from "@/components/paginaCadastroImovel/formularioDadosDoImovel"
+import { Botao } from "@/components/Botao";
 import { useState } from "react";
+
 
 export function CheckBoxComponent() {
     const [selectedVenda, setSelectedVenda] = useState(false);
@@ -58,6 +60,11 @@ export function CheckBoxComponent() {
                     <FormDadosImovel />
 
                     <hr className="mt-5 mb-4 w-full h-2 rounded-2xl bg-[#702632] max-lg:h-3 max-lg:mt-10"></hr>
+
+                    <div className=" flex justify-between items-center gap-[30rem]  mt-10">
+                        <Botao texto="Cancelar" />
+                        <Botao texto="Cadastrar" />
+                    </div>
                 </div>
             )}
 
@@ -77,6 +84,11 @@ export function CheckBoxComponent() {
                     <FormDadosImovel />
 
                     <hr className="mt-5 mb-4 w-full h-2 rounded-2xl bg-[#702632] max-lg:h-3 max-lg:mt-10"></hr>
+
+                    <div className="flex items-center justify-between mt-10">
+                        <Botao texto="Cancelar" />
+                        <Botao texto="Cadastrar" />
+                    </div>
                 </div>
             )}
         </>

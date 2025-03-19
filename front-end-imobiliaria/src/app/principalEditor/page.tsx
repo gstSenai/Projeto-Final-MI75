@@ -1,5 +1,6 @@
 import { Montserrat } from 'next/font/google';
-
+import { Botao } from '@/components/Botao';
+import Image from 'next/image';
 
 // Carregando a fonte Inter
 const montserrat = Montserrat({
@@ -8,14 +9,12 @@ const montserrat = Montserrat({
     display: 'swap',
 });
 
-import Botao from '@/components/Botao';
-import Image from 'next/image';
 
 export default function PaginaEditor() {
     return (
         <div className={`${montserrat.className} pt-3 pb-24 lg:pt-14 lg:pb-52`}>
             <main className="relative flex h-[811px] w-full max-w-[1810px] mx-auto overflow-hidden ">
-                <Image src="/cidadePaginaEditor.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100}/>
+                <Image className='rounded-lg' src="/imagensPaginaEditor-Adm/cidadePaginaEditor.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100}/>
                 <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32">
                     <h1 className="text-[2.5rem] lg:text-[4.375rem] text-center 2xl:text-start font-bold">Bem-vindo à Área do Editor!</h1>
                     {/* Linha vermelha */}
@@ -27,7 +26,7 @@ export default function PaginaEditor() {
                 <h2 className='flex justify-center text-center text-5xl lg:text-6xl font-medium p-24'>Explore nossos recursos:</h2>
                 <div className='flex flex-col lg:flex-row 2xl:flex-row items-center justify-center  sm:items-center sm:justify-center md:justify-around ' >
                     <div className='flex flex-col items-center w-80  py-10 md:py-10 2xl:py-0'>
-                        <Image src="/gerenciamentoImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
+                        <Image src="/imagensPaginaEditor-Adm/imagensPaginaEDADM/gerenciamentoImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
                         <p className='text-4xl font-medium opacity-75 text-center leading-tight py-16 min-h-[120px]'>Gerenciamento de Imóveis</p>
                         <Botao texto="Gerenciar" />
                     </div>
@@ -37,18 +36,14 @@ export default function PaginaEditor() {
                         <Botao texto="Gerenciar" />
                     </div>
                     <div className='flex flex-col items-center w-80 py-10 md:py-10 2xl:py-0'>
-                        <Image src="/cadastroImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
+                        <Image src="/imagensPaginaEditor-Adm/cadastroImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
                         <p className='text-4xl  font-medium opacity-75 text-center leading-tight py-16 min-h-[120px]'>Cadastrar Imóveis</p>
                         <Botao texto="Gerenciar" />
                     </div>
                 </div>
             </section>
         </div>
-
-
     );
-
-
 }
 
 //sm: md: lg: 2xl:
