@@ -22,7 +22,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/usuario")
-@CrossOrigin(origins = "http://localhost:3001")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UsuarioController {
 
     private final UsuarioService service;
