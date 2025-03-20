@@ -2,13 +2,12 @@
 import { useState } from "react"
 import type React from "react"
 
-
 import { EnderecoSection } from "../formulario/endereco-section"
 import { DadosUsuarioSection } from "./dados-imovel-section"
 import { Botao } from "@/components/botao"
 import request from "@/routes/request"
 import { FormularioImagem } from "./formularioImagem"
-import { useForm } from "react-hook-form"
+import { useForm } from 'react-hook-form';
 import UsuarioProps from "../../schema/UsuarioProps"
 import EnderecoProps from "../../schema/EnderecoProps"
 import { z } from "zod"
@@ -28,7 +27,7 @@ interface InputDadosUsuarioProps {
 }
 
 export function Formulario({ onComplete }: InputDadosUsuarioProps) {
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormData>({
         resolver: zodResolver(FormSchema)
     })
     
@@ -150,7 +149,8 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
 
                     <FormularioImagem handleImageChange={handleImageChange} />
                     <DadosUsuarioSection register={register} errors={errors.usuario} />
-                    <EnderecoSection register={register} errors={errors.endereco} />
+
+                    <EnderecoSection register={register} errors={errors.endereco} setValue={setValue} />
 
                     <div className="flex items-center gap-16 mt-10">
                         <div className="flex max-sm:gap-12 max-lg:gap-36 gap-[40rem] w-full">
