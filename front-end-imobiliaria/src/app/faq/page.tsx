@@ -10,7 +10,7 @@ export default function FAQPage() {
     {
       question: "Qual é o valor de entrada necessário para comprar um imóvel?",
       answer:
-        "O tempo pode variar dependendo do financiamento, análise de crédito e burocracia do cartório. Em média, pode levar de 30 a 90 dias.",
+        "O valor de entrada para comprar um imóvel geralmente é 20% do valor total, mas pode variar. ",
     },
     {
       question: "Posso negociar o valor do imóvel? ",
