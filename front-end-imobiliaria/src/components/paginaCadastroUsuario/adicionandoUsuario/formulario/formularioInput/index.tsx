@@ -7,6 +7,7 @@ interface FormularioInputProps {
   placeholder?: string
   interName?: string
   name: string
+  value?: string
   showOptions?: boolean
   onChange?: (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
   customizacaoClass: string
@@ -14,6 +15,7 @@ interface FormularioInputProps {
   register: UseFormRegister<any>
   errors?: FieldError | undefined
   required?: boolean
+  disabled?: boolean
   icon?: {
     type: "areaCT" | "sala" | "banheiro" | "dormitorio" | "suite" | "garagem" | "praia"
   }
@@ -24,12 +26,14 @@ export function FormularioInput({
   placeholder,
   interName,
   name,
+  value,
   showOptions = false,
   customizacaoClass,
   options,
   register,
   errors,
   required = false,
+  disabled = false,
   icon,
   onChange,
   iconCaneta,
@@ -59,22 +63,25 @@ export function FormularioInput({
 
   return (
     <div className="w-full">
-      <label className="block text-lg">{placeholder}</label>
+      {placeholder && <label className="block text-lg">{placeholder}</label>}
       <div
-        className={`relative ${customizacaoClass} p-2 flex items-center w-full rounded-lg bg-white border ${errors ? "border-red-500" : "border-gray-500"}`}
+        className={`relative ${customizacaoClass} p-2 flex items-center w-full rounded-lg bg-white border ${
+          errors ? "border-red-500" : "border-gray-500"
+        }`}
       >
         {iconCaneta && <img src="/iconsForms/canetaEditar.png" alt="Editar" className="h-6 ml-4" />}
-        {iconPath && <img src={iconPath || "/placeholder.svg"} alt={`Ícone ${icon?.type}`} className="h-6 lg:h-9" />}
+        {iconPath && <img src={iconPath} alt={`Ícone ${icon?.type}`} className="h-6 lg:h-9" />}
 
         {options ? (
           <select
-            {...register(name, { required: required })}
+            {...register(name, { required })}
+            value={value}
             onChange={onChange}
-            defaultValue=""
-            className="w-full bg-transparent outline-none text-gray-900"
+            disabled={disabled}
+            className="w-full bg-transparent outline-none text-gray-900 disabled:opacity-50"
           >
             <option value="" disabled>
-              {required ? "*" : ""}
+              {interName} {required ? "*" : ""}
             </option>
             {options.map((option, index) => (
               <option key={index} value={option} className="text-black">
@@ -86,9 +93,11 @@ export function FormularioInput({
           <input
             type="text"
             placeholder={`${interName} ${required ? "*" : ""}`}
-            {...register(name, { required: required })}
+            {...register(name, { required })}
+            value={value}
             onChange={onChange}
-            className="w-full outline-none text-gray-900"
+            disabled={disabled}
+            className="w-full outline-none text-gray-900 disabled:opacity-50"
           />
         )}
 
@@ -99,4 +108,3 @@ export function FormularioInput({
     </div>
   )
 }
-
