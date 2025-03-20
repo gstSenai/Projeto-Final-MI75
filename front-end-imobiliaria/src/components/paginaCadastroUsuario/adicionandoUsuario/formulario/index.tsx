@@ -2,12 +2,13 @@
 import { useState } from "react"
 import type React from "react"
 
-import { useForm } from "react-hook-form"
+
 import { EnderecoSection } from "../formulario/endereco-section"
 import { DadosUsuarioSection } from "./dados-imovel-section"
 import { Botao } from "@/components/botao"
 import request from "@/routes/request"
 import { FormularioImagem } from "./formularioImagem"
+import { useForm } from "react-hook-form"
 
 interface UsuarioProps {
     id: number

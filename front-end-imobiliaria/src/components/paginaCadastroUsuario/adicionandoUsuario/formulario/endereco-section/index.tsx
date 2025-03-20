@@ -5,7 +5,6 @@ import { UseFormRegister } from 'react-hook-form';
 import { FormularioInput } from '../formularioInput';
 import { Montserrat } from "next/font/google"
 
-// Carregando a fonte Montserrat
 const inter = Montserrat({
     subsets: ['latin'],
     weight: ['400', '800'],
