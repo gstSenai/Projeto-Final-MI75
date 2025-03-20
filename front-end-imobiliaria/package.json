@@ -17,6 +17,7 @@
     "react-dom": "^19.0.0",
     "react-easy-panzoom": "^0.4.4",
     "react-hook-form": "^7.54.2",
+    "react-input-mask": "^2.0.4",
     "vue-router": "^4.5.0",
     "zod": "^3.24.2"
   },
@@ -25,6 +26,7 @@
     "@types/node": "^20",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@types/react-input-mask": "^3.0.6",
     "eslint": "^9",
     "eslint-config-next": "15.1.7",
     "postcss": "^8",

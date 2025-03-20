@@ -22,5 +22,4 @@ public class Imagem {
     @JoinColumn(name = "idImovel", nullable = false)
     private Imovel imovel;
 
-
 }

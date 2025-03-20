@@ -9,66 +9,59 @@ import { Botao } from "@/components/botao"
 import request from "@/routes/request"
 import { FormularioImagem } from "./formularioImagem"
 import { useForm } from "react-hook-form"
+import UsuarioProps from "../../schema/UsuarioProps"
+import EnderecoProps from "../../schema/EnderecoProps"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
-interface UsuarioProps {
-    id: number
-    nome: string
-    sobrenome: string
-    cpf: string
-    tipo_conta: string
-    telefone: string
-    data_nascimento: string
-    email: string
-    senha: string
-    idEnderecoUsuario: number
-}
+const FormSchema = z.object({
+    usuario: UsuarioProps,
+    endereco: EnderecoProps
+})
 
-interface EnderecoImovelProps {
-    id: number
-    cep: string
-    rua: string
-    tipo_residencia: string
-    numero_imovel: number
-    numero_apartamento: number
-    bairro: string
-    cidade: string
-    uf: string
-}
+type UsuarioData = z.infer<typeof UsuarioProps>
+type EnderecoImovelProps = z.infer<typeof EnderecoProps>
+type FormData = z.infer<typeof FormSchema>
 
 interface InputDadosUsuarioProps {
     onComplete?: () => void
 }
 
 export function Formulario({ onComplete }: InputDadosUsuarioProps) {
-    const { register, handleSubmit } = useForm<{ usuario: UsuarioProps; endereco: EnderecoImovelProps }>()
+    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+        resolver: zodResolver(FormSchema)
+    })
+    
     const [showForm, setShowForm] = useState(true)
     const [showModal, setShowModal] = useState(false)
-    const [lastAddedUsuario, setLastAddedUsuario] = useState<UsuarioProps | null>(null)
+    const [lastAddedUsuario, setLastAddedUsuario] = useState<UsuarioData | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [enderecoId, setEnderecoId] = useState<number>()
-    const [imageFile, setImageFile] = useState<File | null>(null)
+    const [imagem, setImagem] = useState<File | null>(null)
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            setImageFile(e.target.files[0])
+            setImagem(e.target.files[0])
         }
     }
 
     const addEndereco = async (data: EnderecoImovelProps) => {
         try {
             const response = await request("POST", "http://localhost:9090/enderecoUsuario/create", data)
-            if (response && response.id) {
+
+            if (response && typeof response.id !== "undefined") {
                 setEnderecoId(response.id)
                 return response
             }
-            throw new Error(`Falha ao criar o endereço: ${response.status}`)
+            throw new Error(`Falha ao criar o endereço.`);
+
         } catch (error) {
             console.error("Erro ao adicionar endereço:", error)
             throw error
         }
     }
 
-    const addUsuario = async (usuario: UsuarioProps, imagem: File | null) => {
+    const addUsuario = async (usuario: UsuarioData, imagem: File | null) => {
         try {
             const formData = new FormData()
 
@@ -105,7 +98,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
         }
     }
 
-    const onSubmitUsuario = async (data: { usuario: UsuarioProps; endereco: EnderecoImovelProps }) => {
+    const onSubmitUsuario = async (data: FormData) => {
         if (isSubmitting) return
         try {
             setIsSubmitting(true)
@@ -118,7 +111,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                 idEnderecoUsuario: enderecoResponse.id,
             }
 
-            const response = await addUsuario(usuarioData, imageFile)
+            const response = await addUsuario(usuarioData, imagem)
 
             if (response) {
                 setShowForm(false)
@@ -154,13 +147,11 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                     </div>
 
                     <hr className="mb-10 w-full h-2 rounded-2xl bg-vermelho"></hr>
-                    
-                    <FormularioImagem
-                        handleImageChange={handleImageChange}
-                    />
-                    <DadosUsuarioSection register={register} />
 
-                    <EnderecoSection register={register} />
+                    <FormularioImagem handleImageChange={handleImageChange} />
+                    <DadosUsuarioSection register={register} errors={errors.usuario} />
+                    <EnderecoSection register={register} errors={errors.endereco} />
+
                     <div className="flex items-center gap-16 mt-10">
                         <div className="flex max-sm:gap-12 max-lg:gap-36 gap-[40rem] w-full">
                             <Botao className="max-lg:text-base" onClick={() => console.log()} texto="Cancelar" />
@@ -182,4 +173,3 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
         </>
     )
 }
-

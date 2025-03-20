@@ -1,7 +1,7 @@
 "use client"
-import { UseFormRegister } from "react-hook-form"
 import { FormularioInput } from "../formularioInput"
 import { Montserrat } from "next/font/google"
+import { UseFormRegister } from "react-hook-form"
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -11,10 +11,10 @@ const montserrat = Montserrat({
 
 interface DadosUsuarioSectionProps {
     register: UseFormRegister<any>
+    errors: any
 }
 
-export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
-
+export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionProps) {
     return (
         <div className="flex flex-col font-montserrat">
             <div className="flex flex-col gap-6">
@@ -25,7 +25,8 @@ export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
                         interName='Ex: Caio'
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
+                        errors={errors?.nome}
                     />
                     <FormularioInput
                         placeholder="Sobrenome:"
@@ -33,7 +34,8 @@ export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
                         interName='Ex: Souza'
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
+                        errors={errors?.sobrenome}
                     />
                     <FormularioInput
                         placeholder="CPF:"
@@ -41,7 +43,8 @@ export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
                         interName='Ex: 123.456.789-00'
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
+                        errors={errors?.cpf}
                     />
                 </div>
                 <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
@@ -50,8 +53,9 @@ export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
                         name="usuario.tipo_conta"
                         required
                         register={register}
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
                         options={['Usuario', 'Corretor', 'Administrador', 'Editor']}
+                        errors={errors?.tipo_conta}
                     />
                     <FormularioInput
                         placeholder="Telefone"
@@ -59,7 +63,8 @@ export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
                         interName="Ex: (00) 0000-0000"
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
+                        errors={errors?.telefone}
                     />
                     <FormularioInput
                         placeholder="Data de Nascimento:"
@@ -67,7 +72,8 @@ export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
                         interName="Ex: 22/02/2005"
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
+                        errors={errors?.data_nascimento}
                     />
                 </div>
 
@@ -78,7 +84,8 @@ export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
                         interName="Ex: jaja@gmail.com"
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
+                        errors={errors?.email}
                     />
                     <FormularioInput
                         placeholder="Senha:"
@@ -86,7 +93,8 @@ export function DadosUsuarioSection({ register }: DadosUsuarioSectionProps) {
                         interName="Ex: 123"
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
+                        errors={errors?.senha}
                     />
                 </div>
             </div>

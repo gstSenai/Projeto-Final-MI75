@@ -14,7 +14,7 @@ import weg.projetofinal.Imobiliaria.service.ImovelService;
 
 @RestController
 @RequestMapping("/imovel")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3001")
 @AllArgsConstructor
 public class ImovelController {
 
