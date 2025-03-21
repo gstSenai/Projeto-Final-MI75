@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Botao } from "@/components/botao"
 import request from "@/routes/request"
 import { FormularioEditarInput } from "../editarImovel/formularioEditarInput"
@@ -98,14 +98,53 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                 status_imovel: "",
                 test_visibilidade: "",
                 destaque: false,
-                visibilidade: false
+                visibilidade: false,
+                valor_venda: 0,
+                valor_promocional: 0,
+                valor_iptu: 0,
+                condominio: 0,
+                area_construida: 0,
+                area_terreno: 0,
+                nome_propriedade: "",
+                descricao: "",
+                id_endereco: {
+                    id: 0,
+                    cep: "",
+                    rua: "",
+                    numero: "",
+                    bairro: "",
+                    cidade: "",
+                    uf: "",
+                    complemento: ""
+                },
+                id_caracteristicasImovel: {
+                    id: 0,
+                    numero_quartos: 0,
+                    numero_banheiros: 0,
+                    numero_suites: 0,
+                    numero_vagas: 0,
+                    piscina: false,
+                    numero_salas: 0
+                }
             },
             imovelCaracteristicas: {
-                test_piscina: "",
-                piscina: false
+                id: 0,
+                numero_quartos: 0,
+                numero_banheiros: 0,
+                numero_suites: 0,
+                numero_vagas: 0,
+                test_piscina: "Não",
+                piscina: false,
+                numero_salas: 0
             },
             endereco: {
-                uf: ""
+                cep: "",
+                rua: "",
+                numero: "",
+                bairro: "",
+                cidade: "",
+                uf: "",
+                complemento: ""
             }
         },
     })
@@ -156,7 +195,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                     numero_banheiros: imovel.id_caracteristicasImovel.numero_banheiros,
                     numero_suites: imovel.id_caracteristicasImovel.numero_suites,
                     numero_vagas: imovel.id_caracteristicasImovel.numero_vagas,
-                    piscina: imovel.id_caracteristicasImovel.test_piscina,
+                    piscina: imovel.id_caracteristicasImovel.piscina,
                     numero_salas: imovel.id_caracteristicasImovel.numero_salas,
                 }
 
@@ -222,7 +261,15 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
 
             const imovelSelecionado = selectedImoveis[0]
             const imovelSelecionadoEndereco = selectedImoveis[0].id_endereco
-            const imovelSelecionadoCarac = selectedImoveis[0].id_caracteristicasImovel
+            const imovelSelecionadoCarac = selectedImoveis[0].id_caracteristicasImovel || {
+                id: 0,
+                numero_quartos: 0,
+                numero_banheiros: 0,
+                numero_suites: 0,
+                numero_vagas: 0,
+                piscina: false,
+                numero_salas: 0
+            }
 
             const imovelAtualizado = {
                 ...imovelSelecionado,
@@ -340,7 +387,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                 numero_banheiros: data.id_caracteristicasImovel.numero_banheiros,
                 numero_suites: data.id_caracteristicasImovel.numero_suites,
                 numero_vagas: data.id_caracteristicasImovel.numero_vagas,
-                piscina: data.id_caracteristicasImovel.test_piscina === "Sim",
+                piscina: data.id_caracteristicasImovel.piscina,
                 numero_salas: data.id_caracteristicasImovel.numero_salas,
             }
 
@@ -393,6 +440,55 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
         }
     }
 
+    useEffect(() => {
+        console.log(selectedImoveis)
+        console.log(errors)
+    }, [selectedImoveis, errors])
+
+    useEffect(() => {
+        if (selectedImoveis.length > 0) {
+            const imovel = selectedImoveis[0];
+            
+            const caracteristicasPadrao = {
+                id: 0,
+                numero_quartos: 0,
+                numero_banheiros: 0,
+                numero_suites: 0,
+                numero_vagas: 0,
+                piscina: false,
+                numero_salas: 0
+            };
+
+            setValue("imovel", {
+                ...imovel,
+                test_destaque: imovel.destaque ? "Sim" : "Não",
+                test_visibilidade: imovel.visibilidade ? "Pública" : "Privada",
+                id_caracteristicasImovel: imovel.id_caracteristicasImovel || caracteristicasPadrao
+            });
+            
+            setValue("endereco", {
+                cep: imovel.id_endereco?.cep || "",
+                rua: imovel.id_endereco?.rua || "",
+                numero: imovel.id_endereco?.numero || "",
+                bairro: imovel.id_endereco?.bairro || "",
+                cidade: imovel.id_endereco?.cidade || "",
+                uf: imovel.id_endereco?.uf || "",
+                complemento: imovel.id_endereco?.complemento || ""
+            });
+            
+            setValue("imovelCaracteristicas", {
+                id: imovel.id_caracteristicasImovel?.id || 0,
+                numero_quartos: imovel.id_caracteristicasImovel?.numero_quartos || 0,
+                numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
+                numero_suites: imovel.id_caracteristicasImovel?.numero_suites || 0,
+                numero_vagas: imovel.id_caracteristicasImovel?.numero_vagas || 0,
+                test_piscina: imovel.id_caracteristicasImovel?.piscina ? "Sim" : "Não",
+                piscina: imovel.id_caracteristicasImovel?.piscina || false,
+                numero_salas: imovel.id_caracteristicasImovel?.numero_salas || 0
+            });
+        }
+    }, [selectedImoveis, setValue]);
+
     return (
         <>
             {showModal && (
@@ -427,11 +523,9 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                     <div key={imovel.id} className="space-y-4 pt-10">
                                                         <div className="flex flex-col gap-4">
                                                             <div className="w-full">
-                                                                <label htmlFor={`nome_propriedade_${imovel.id}`} className="block text-lg">
-                                                                    Nome da Propriedade:
-                                                                </label>
                                                                 <FormularioEditarInput
-                                                                    placeholder=""
+                                                                    label="Nome da Propriedade:"
+                                                                    placeholder="Nome da Propriedade:"
                                                                     name="imovel.nome_propriedade"
                                                                     value={imovel.nome_propriedade}
                                                                     register={register}
@@ -441,10 +535,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`tipo_imovel_${imovel.id}`} className="block text-lg">
-                                                                    Tipo do imóvel:
-                                                                </label>
                                                                 <FormularioEditarInput
+                                                                    label="Tipo do imóvel:"
                                                                     placeholder="Tipo do imóvel:"
                                                                     name="imovel.tipo_imovel"
                                                                     value={imovel.tipo_imovel}
@@ -456,10 +548,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full max-h-[80vh] overflow-y-auto">
-                                                                <label htmlFor={`tipo_transacao_${imovel.id}`} className="block text-lg">
-                                                                    Tipo de Transação:
-                                                                </label>
                                                                 <FormularioEditarInput
+                                                                    label="Tipo de Transação:"
                                                                     placeholder=" Tipo de Transação:"
                                                                     name="imovel.tipo_transacao"
                                                                     value={imovel.tipo_transacao}
@@ -471,11 +561,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`valor_venda_${imovel.id}`} className="block text-lg">
-                                                                    Valor de Venda (R$):
-                                                                </label>
-
                                                                 <FormularioEditarInput
+                                                                    label="Valor de Venda (R$):"
                                                                     placeholder="Valor de Venda (R$)"
                                                                     name="imovel.valor_venda"
                                                                     value={imovel.valor_venda}
@@ -486,11 +573,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`valor_venda_${imovel.id}`} className="block text-lg">
-                                                                    Valor Promocional (R$):
-                                                                </label>
-
                                                                 <FormularioEditarInput
+                                                                    label="Valor Promocional (R$):"
                                                                     placeholder="Valor Promocional (R$)"
                                                                     name="imovel.valor_promocional"
                                                                     value={imovel.valor_promocional}
@@ -501,14 +585,11 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`valor_venda_${imovel.id}`} className="block text-lg">
-                                                                    Permitir destaque:
-                                                                </label>
-
                                                                 <FormularioEditarInput
+                                                                    label="Permitir destaque:"
                                                                     placeholder="Permitir destaque:"
                                                                     name="imovel.test_destaque"
-                                                                    value={String(imovel.destaque)}
+                                                                    value={imovel.destaque ? "Sim" : "Não"}
                                                                     register={register}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -517,14 +598,11 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`visibilidade_${imovel.id}`} className="block text-lg">
-                                                                    Visibilidade:
-                                                                </label>
-
                                                                 <FormularioEditarInput
+                                                                    label="Visibilidade:"
                                                                     placeholder="Visibilidade"
                                                                     name="imovel.test_visibilidade"
-                                                                    value={String(imovel.visibilidade)}
+                                                                    value={imovel.visibilidade ? "Pública" : "Privada"}
                                                                     register={register}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -533,11 +611,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`valor_venda_${imovel.id}`} className="block text-lg">
-                                                                    Valor do IPTU (R$):
-                                                                </label>
-
                                                                 <FormularioEditarInput
+                                                                    label="Valor do IPTU (R$):"
                                                                     placeholder="Valor do IPTU (R$)"
                                                                     name="imovel.valor_iptu"
                                                                     value={imovel.valor_promocional}
@@ -548,11 +623,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`valor_venda_${imovel.id}`} className="block text-lg">
-                                                                    Taxa de Condomínio (R$):
-                                                                </label>
-
                                                                 <FormularioEditarInput
+                                                                    label="Taxa de Condomínio (R$):"
                                                                     placeholder="Taxa de Condomínio Caso tenha (R$)"
                                                                     name="imovel.condominio"
                                                                     value={imovel.condominio}
@@ -563,11 +635,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`valor_venda_${imovel.id}`} className="block text-lg">
-                                                                    Status do imóvel:
-                                                                </label>
-
                                                                 <FormularioEditarInput
+                                                                    label="Status do imóvel:"
                                                                     placeholder="Status do imóvel"
                                                                     name="imovel.status_imovel"
                                                                     value={imovel.status_imovel}
@@ -579,14 +648,12 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`valor_venda_${imovel.id}`} className="block text-lg">
-                                                                    Área Construída (m²):
-                                                                </label>
-
                                                                 <FormularioEditarInput
+                                                                    label="Área Construída (m²):"
                                                                     placeholder="Área Construída (m²)"
                                                                     name="imovel.area_construida"
                                                                     value={imovel.area_construida}
+                                                                    icon={{ type: "areaCT" }}
                                                                     register={register}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -594,13 +661,11 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`area_terreno_${imovel.id}`} className="block text-lg">
-                                                                    Área do Terreno (m²):
-                                                                </label>
-
                                                                 <FormularioEditarInput
+                                                                    label="Área do Terreno (m²):"
                                                                     placeholder="Valor do IPTU (R$)"
                                                                     name="imovel.area_terreno"
+                                                                    icon={{ type: "areaCT" }}
                                                                     value={imovel.area_terreno}
                                                                     register={register}
                                                                     required
@@ -609,10 +674,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`numero_quartos_${imovel.id}`} className="block text-lg">
-                                                                    Número de Quartos:
-                                                                </label>
                                                                 <FormularioEditarInput
+                                                                    label="Número de Quartos:"
                                                                     placeholder="Número de Quartos:"
                                                                     name="id_caracteristicasImovel.numero_quartos"
                                                                     value={imovel.id_caracteristicasImovel?.numero_quartos || 0}
@@ -623,10 +686,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`numero_suites_${imovel.id}`} className="block text-lg">
-                                                                    Número de Suítes:
-                                                                </label>
                                                                 <FormularioEditarInput
+                                                                    label="Número de Suítes:"
                                                                     placeholder="Número de Suítes:"
                                                                     name="id_caracteristicasImovel.numero_suites"
                                                                     value={imovel.id_caracteristicasImovel?.numero_suites || 0}
@@ -637,10 +698,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`test_piscina_${imovel.id}`} className="block text-lg">
-                                                                    Contém Piscina:
-                                                                </label>
                                                                 <FormularioEditarInput
+                                                                    label="Contém Piscina:"
                                                                     placeholder="Contém Piscina:"
                                                                     name="id_caracteristicasImovel.test_piscina"
                                                                     value={imovel.id_caracteristicasImovel?.piscina ? "Sim" : "Não"}
@@ -652,10 +711,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`numero_banheiros_${imovel.id}`} className="block text-lg">
-                                                                    Número de Banheiros:
-                                                                </label>
                                                                 <FormularioEditarInput
+                                                                    label="Número de Banheiros:"
                                                                     placeholder="Número de Banheiros:"
                                                                     name="id_caracteristicasImovel.numero_banheiros"
                                                                     value={imovel.id_caracteristicasImovel?.numero_banheiros || 0}
@@ -666,10 +723,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`numero_vagas_${imovel.id}`} className="block text-lg">
-                                                                    Vagas de Garagem:
-                                                                </label>
                                                                 <FormularioEditarInput
+                                                                    label="Vagas de Garagem:"
                                                                     placeholder="Vagas de Garagem:"
                                                                     name="id_caracteristicasImovel.numero_vagas"
                                                                     value={imovel.id_caracteristicasImovel?.numero_vagas || 0}
@@ -680,13 +735,11 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`numero_salas_${imovel.id}`} className="block text-lg">
-                                                                    Número de Salas:
-                                                                </label>
                                                                 <FormularioEditarInput
+                                                                    label="Número de Salas:"
                                                                     placeholder="Número de Salas:"
                                                                     name="id_caracteristicasImovel.numero_salas"
-                                                                    value={imovel.id_caracteristicasImovel.numero_salas || 0}
+                                                                    value={imovel.id_caracteristicasImovel?.numero_salas || 0}
                                                                     register={register}
                                                                     icon={{ type: "sala" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -694,17 +747,20 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                             </div>
 
                                                             <div className="w-full">
-                                                                <label htmlFor={`descricao${imovel.id}`} className="block text-lg">
-                                                                    Descrição:
-                                                                </label>
-
                                                                 <FormularioEditarInput
+                                                                    label="Descrição:"
                                                                     placeholder="Descrição"
                                                                     name="imovel.descricao"
                                                                     value={imovel.descricao || ""}
                                                                     register={register}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                 />
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex justify-end pt-6">
+                                                            <div className="flex justify-around items-center gap-10 w-[50%]">
+                                                                <Botao onClick={handleCancel} texto="Cancelar" />
+                                                                <Botao onClick={handleSubmit(onSubmitEditImovel)} texto={isEditar ? "Editando..." : "Editar"} />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -714,12 +770,6 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                     </form>
                                 </div>
                             </div>
-                            <div className="flex justify-end pt-6">
-                                <div className="flex justify-around items-center gap-10 w-[50%]">
-                                    <Botao onClick={handleCancel} texto="Cancelar" />
-                                    <Botao onClick={handleSubmit(onSubmitEditImovel)} texto={isEditar ? "Editando..." : "Editar"} />
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -727,4 +777,5 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
         </>
     )
 }
+
 

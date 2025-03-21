@@ -102,15 +102,7 @@ export function FormularioInput({
 
         {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-6" />}
       </div>
-
       {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
-      {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
-      {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
-      {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
-      {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
-      {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
-      {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
-
     </div>
   )
 }

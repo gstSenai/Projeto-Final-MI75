@@ -146,7 +146,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                             icon={{ type: "areaCT" }}
                             customizacaoClass="lg:w-full"
                             required
-                            errors={errors?.imovel?.area_construida?.message}
+                            errors={errors?.imovel?.area_construida}
                         />
 
                         <FormularioInput
@@ -157,7 +157,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                             icon={{ type: "dormitorio" }}
                             customizacaoClass="lg:w-full"
                             required
-                            errors={errors?.imovelCaracteristicas?.numero_quartos?.message}
+                            errors={errors?.imovelCaracteristicas?.numero_quartos}
                         />
                         <FormularioInput
                             placeholder="Número de Suítes:"
@@ -167,7 +167,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                             icon={{ type: "suite" }}
                             customizacaoClass="lg:w-full"
                             required
-                            errors={errors?.imovelCaracteristicas?.numero_suites?.message}
+                            errors={errors?.imovelCaracteristicas?.numero_suites}
                         />
                         <FormularioInput
                             placeholder="Contém Piscina:"
@@ -177,7 +177,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                             customizacaoClass="lg:w-full"
                             options={["Sim", "Não"]}
                             required
-                            errors={errors?.imovelCaracteristicas?.test_piscina?.message}
+                            errors={errors?.imovelCaracteristicas?.test_piscina}
                         />
                     </div>
 
@@ -190,7 +190,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                             icon={{ type: "areaCT" }}
                             customizacaoClass="lg:w-full"
                             required
-                            errors={errors?.imovel?.area_terreno?.message}
+                            errors={errors?.imovel?.area_terreno}
                         />
                         <FormularioInput
                             placeholder="Número de Banheiros:"
@@ -200,7 +200,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                             icon={{ type: "banheiro" }}
                             customizacaoClass="lg:w-full"
                             required
-                            errors={errors?.imovelCaracteristicas?.numero_banheiros?.message}
+                            errors={errors?.imovelCaracteristicas?.numero_banheiros}
                         />
                         <FormularioInput
                             placeholder="Vagas de Garagem:"
@@ -210,7 +210,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                             icon={{ type: "garagem" }}
                             customizacaoClass="lg:w-full"
                             required
-                            errors={errors?.imovelCaracteristicas?.numero_vagas?.message}
+                            errors={errors?.imovelCaracteristicas?.numero_vagas}
                         />
                         <FormularioInput
                             placeholder="Número de Salas:"
@@ -220,7 +220,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                             icon={{ type: "sala" }}
                             customizacaoClass="lg:w-[full]"
                             required
-                            errors={errors?.imovelCaracteristicas?.numero_salas?.message}
+                            errors={errors?.imovelCaracteristicas?.numero_salas}
                         />
                     </div>
 

@@ -16,7 +16,7 @@ const ImovelProps = z.object({
     valor_venda: z.coerce.number().min(1, { message: "Valor de venda é obrigatório" }),
     tipo_imovel: z.string().min(1, { message: "Tipo de imóvel é obrigatório" }),
     status_imovel: z.string().min(1, { message: "Status do imóvel é obrigatório" }),
-    valor_promocional: z.coerce.number().min(1, { message: "Valor promocional é obrigatório" }),
+    numero_imovel: z.string().min(1, { message: "Número do imóvel é obrigatório" }),
     test_destaque: z.string().optional(),
     test_visibilidade: z.string().optional(),
     destaque: z.boolean().default(false),
@@ -71,6 +71,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         defaultValues: {
             imovel: {
                 tipo_imovel: "",
+                codigo: 0,
                 tipo_transacao: "",
                 test_destaque: "",
                 status_imovel: "",
@@ -170,13 +171,13 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
 
             const immobileData = {
                 id: imovel.id,
-                codigo: imovel.codigo || imovel.valor_venda,
+                codigo: imovel.valor_venda,
                 nome_propriedade: imovel.nome_propriedade,
                 tipo_transacao: imovel.tipo_transacao,
                 valor_venda: imovel.valor_venda || 0,
                 tipo_imovel: imovel.tipo_imovel,
                 status_imovel: imovel.status_imovel,
-                valor_promocional: imovel.valor_promocional || 0,
+                numero_imovel: imovel.numero_imovel,
                 destaque: imovel.test_destaque === "Sim",
                 visibilidade: imovel.test_visibilidade === "Público",
                 valor_iptu: imovel.valor_iptu || 0,
