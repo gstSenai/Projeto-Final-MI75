@@ -19,6 +19,7 @@ import weg.projetofinal.Imobiliaria.model.mapper.UsuarioMapper;
 import weg.projetofinal.Imobiliaria.service.UsuarioService;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/usuario")
@@ -60,12 +61,16 @@ public class UsuarioController {
         return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuario);
     }
 
-    @GetMapping("/getByNome/{nome}")
+    @GetMapping("/filtroUsuario")
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioGetResponseDTO getByNome(@PathVariable String nome) {
-        Usuario usuario = service.getByNomeUsuario(nome);
-        return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuario);
+    public List<UsuarioGetResponseDTO> buscarUsuario(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String sobrenome,
+            @RequestParam(required = false) String cpf) {
+        List<Usuario> usuarios = service.buscarUsuario(nome, sobrenome, cpf);
+        return usuarios.stream().map(UsuarioMapper.INSTANCE::usuarioToUsuarioGetResponseDTO).toList();
     }
+
 
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

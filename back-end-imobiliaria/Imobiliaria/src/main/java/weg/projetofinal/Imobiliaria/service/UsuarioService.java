@@ -3,6 +3,7 @@ package weg.projetofinal.Imobiliaria.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import weg.projetofinal.Imobiliaria.model.dto.UsuarioGetResponseDTO;
@@ -12,6 +13,9 @@ import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 import weg.projetofinal.Imobiliaria.model.mapper.UsuarioMapper;
 import org.springframework.beans.BeanUtils;
 import weg.projetofinal.Imobiliaria.repository.UsuarioRepository;
+import weg.projetofinal.Imobiliaria.service.specification.UsuarioSpecification;
+
+import java.util.List;
 
 @Service
 public class UsuarioService {
@@ -61,7 +65,6 @@ public class UsuarioService {
         if (imagem != null && !imagem.isEmpty()) {
             usuarioExistente.setImagem_usuario(s3Service.uploadFile(imagem));
         }
-
         if (usuario.getEnderecoUsuario() != null && usuario.getEnderecoUsuario().getId() != null) {
             EnderecoUsuario endereco = enderecoUsuarioService.findById(usuario.getEnderecoUsuario().getId());
             usuarioExistente.setEnderecoUsuario(endereco);
@@ -70,7 +73,15 @@ public class UsuarioService {
         return repository.save(usuarioExistente);
     }
 
-    public Usuario getByNomeUsuario(String nome) {
-        return repository.findByNome(nome).get();
+    public List<Usuario> buscarUsuario(String nome, String sobrenome, String cpf) {
+        Specification<Usuario> usuarioSpecification;
+        if ((nome != null && !nome.isEmpty()) || (sobrenome != null && !sobrenome.isEmpty())) {
+            usuarioSpecification = Specification.where(UsuarioSpecification.hasNome(nome))
+                    .and(UsuarioSpecification.hasSobrenome(sobrenome));
+        } else {
+            usuarioSpecification = UsuarioSpecification.hasCpf(cpf);
+        }
+        return repository.findAll(usuarioSpecification);
     }
+
 }
