@@ -79,7 +79,7 @@ export default function PaginaInicial() {
                                 <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
                             </div>
                         </div>
-                        <div className='grid grid-flow-col'>
+                        <div className='grid grid-flow-row lg:grid-flow-col'>
                             <Card></Card>
                             <Card></Card>
                             <Card></Card>
@@ -92,7 +92,7 @@ export default function PaginaInicial() {
                                 <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
                             </div>
                         </div>
-                        <div className='grid grid-flow-col'>
+                        <div className='grid grid-flow-row lg:grid-flow-col'>
                             <Card></Card>
                             <Card></Card>
                             <Card></Card>
@@ -105,7 +105,7 @@ export default function PaginaInicial() {
                                 <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
                             </div>
                         </div>
-                        <div className='grid grid-flow-col'>
+                        <div className='grid grid-flow-row lg:grid-flow-col'>
                             <Card></Card>
                             <Card></Card>
                             <Card></Card>
