@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/usuario")
-@CrossOrigin(origins = "http://localhost:3001")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UsuarioController {
 
     private final UsuarioService service;
@@ -90,5 +90,6 @@ public class UsuarioController {
         Usuario usuarioAtualizado = service.updateUser(usuario, id, imagem);
         return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuarioAtualizado);
     }
+
 
 }

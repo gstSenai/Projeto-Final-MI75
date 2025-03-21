@@ -6,8 +6,8 @@ import org.mapstruct.factory.Mappers;
 import weg.projetofinal.Imobiliaria.model.dto.UsuarioGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.UsuarioPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.dto.UsuarioPutRequestDTO;
+import weg.projetofinal.Imobiliaria.model.entity.EnderecoUsuario;
 import weg.projetofinal.Imobiliaria.model.entity.Usuario;
-
 
 @Mapper
 public interface UsuarioMapper {
@@ -18,5 +18,6 @@ public interface UsuarioMapper {
 
     Usuario usuarioPostRequestDTOToUsuario(UsuarioPostRequestDTO usuarioPostRequestDTO);
 
+    @Mapping(target = "enderecoUsuario.id", source = "idEnderecoUsuario")
     Usuario usuarioPutRequestDTOToUsuario(UsuarioPutRequestDTO usuarioPutRequestDTO);
 }

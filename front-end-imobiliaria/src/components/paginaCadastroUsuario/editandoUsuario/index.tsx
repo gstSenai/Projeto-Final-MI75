@@ -1,24 +1,48 @@
 "use client"
 import { useState, useEffect } from "react"
-import type React from "react"
+import React from "react"
 
 import { Botao } from "@/components/botao"
 import request from "@/routes/request"
 import { FormularioEditarInput } from "../editandoUsuario/formularioEditarInput"
 import { type SubmitHandler, useForm } from "react-hook-form"
-import UsuarioData from "../schema/UsuarioPropsEdit"
-import EnderecoProps from "../schema/EnderecoProps"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { FormularioImagem } from "../adicionandoUsuario/formulario/formularioImagem"
-import { FormularioImagemEdit } from "./formularioImagemEdit"
 
-const FormSchema = z.object({
-    usuario: UsuarioData,
-    endereco: EnderecoProps,
+const EnderecoProps = z.object({
+    id: z.number().optional(),
+    cep: z.string().min(1, { message: "CEP é obrigatório" }),
+    rua: z.string().min(1, { message: "Rua é obrigatória" }),
+    tipo_residencia: z.string().min(1, { message: "Tipo de residência é obrigatório" }),
+    numero_imovel: z.string().min(1, { message: "Número do imóvel é obrigatório" }),
+    numero_apartamento: z.string().optional(),
+    bairro: z.string().min(1, { message: "Bairro é obrigatório" }),
+    cidade: z.string().min(1, { message: "Cidade é obrigatória" }),
+    uf: z.string().min(1, { message: "UF é obrigatório" }),
 })
 
-type UsuarioData = z.infer<typeof UsuarioData>
+const UsuarioProps = z.object({
+    id: z.number().optional(),
+    nome: z.string().min(1, { message: "O nome é obrigatório" }),
+    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+    cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
+    tipo_conta: z.enum(["Usuario", "Corretor", "Administrador", "Editor"], {
+        message: "Selecione um tipo de conta válido",
+    }),
+    telefone: z.string().min(10, { message: "Telefone inválido" }),
+    data_nascimento: z.string(),
+    email: z.string().email({ message: "E-mail inválido" }),
+    senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+    idEnderecoUsuario: z.number().optional(),
+    endereco: EnderecoProps.optional(),
+})
+
+const FormSchema = z.object({
+    usuario: UsuarioProps,
+    endereco: EnderecoProps
+})
+
+type UsuarioData = z.infer<typeof UsuarioProps>
 type EnderecoImovelProps = z.infer<typeof EnderecoProps>
 type FormData = z.infer<typeof FormSchema>
 
@@ -35,9 +59,26 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
     } = useForm<FormData>({
         resolver: zodResolver(FormSchema),
     })
-    const { register: registerEndereco, handleSubmit: handleSubmitEndereco } = useForm<FormData>({
-        resolver: zodResolver(FormSchema),
+
+    const {
+        register: registerEndereco,
+        handleSubmit: handleSubmitEndereco,
+        formState: { errors: errorsEndereco },
+        setValue,
+    } = useForm<EnderecoImovelProps>({
+        resolver: zodResolver(EnderecoProps),
+        defaultValues: {
+            cep: "",
+            rua: "",
+            tipo_residencia: "",
+            numero_imovel: "",
+            numero_apartamento: "",
+            bairro: "",
+            cidade: "",
+            uf: "",
+        }
     })
+
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [imagem, setImagem] = useState<File | null>(null)
     const [imagePreview, setImagePreview] = useState<string>()
@@ -68,6 +109,20 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
             setCidade("")
         }
     }, [uf])
+
+    useEffect(() => {
+        if (selectedUsuarios && selectedUsuarios.length > 0 && selectedUsuarios[0].endereco) {
+            const endereco = selectedUsuarios[0].endereco
+            setValue("cep", endereco.cep)
+            setValue("rua", endereco.rua)
+            setValue("tipo_residencia", endereco.tipo_residencia)
+            setValue("numero_imovel", endereco.numero_imovel)
+            setValue("numero_apartamento", endereco.numero_apartamento || "")
+            setValue("bairro", endereco.bairro)
+            setValue("cidade", endereco.cidade)
+            setValue("uf", endereco.uf)
+        }
+    }, [selectedUsuarios, setValue])
 
     const handleUfChange = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
         if (event.target instanceof HTMLSelectElement) {
@@ -108,19 +163,18 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
         }
     }
 
-
     const editarEndereco = async (data: EnderecoImovelProps) => {
         try {
             console.log("📤 Enviando endereço do usuário:", data)
 
             for (const usuario of selectedUsuarios) {
-                if (!usuario.endereco || !usuario.endereco.id) {
+                if (!usuario.idEnderecoUsuario) {
                     console.warn("⚠️ Usuário sem endereço cadastrado:", usuario)
                     continue
                 }
 
                 const enderecoAtualizado = {
-                    id: usuario.endereco.id,
+                    id: usuario.idEnderecoUsuario,
                     cep: data.cep,
                     rua: data.rua,
                     tipo_residencia: data.tipo_residencia,
@@ -133,7 +187,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
 
                 const response = await request(
                     "PUT",
-                    `http://localhost:9090/enderecoUsuario/update/${usuario.endereco.id}`,
+                    `http://localhost:9090/enderecoUsuario/update/${usuario.idEnderecoUsuario}`,
                     enderecoAtualizado,
                 )
                 console.log("✅ Endereço atualizado com sucesso:", response)
@@ -156,7 +210,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
             const { usuario } = data
 
             const usuarioSelecionadoId = selectedUsuarios[0].id
-            const usuarioSelecionadoEndereco = selectedUsuarios[0].endereco
+            const usuarioSelecionadoEndereco = selectedUsuarios[0].idEnderecoUsuario
 
             const usuarioAtualizado = {
                 ...usuario,
@@ -169,9 +223,8 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                 data_nascimento: usuario.data_nascimento,
                 email: usuario.email,
                 senha: usuario.senha,
-                endereco: {
-                    ...usuarioSelecionadoEndereco,
-                },
+                imagem_usuario: "psdad.jpg",
+                idEnderecoUsuario: usuarioSelecionadoEndereco,
             }
 
             console.log("Dados do usuário a serem enviados:", usuarioAtualizado)
@@ -197,7 +250,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
         }
     }
 
-    const onSubmitEditUsersEndereco: SubmitHandler<{ endereco: EnderecoImovelProps }> = async (data) => {
+    const onSubmitEditUsersEndereco: SubmitHandler<EnderecoImovelProps> = async (data) => {
         if (isSubmitting) return
 
         try {
@@ -207,20 +260,16 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
 
             const usuarioSelecionado = selectedUsuarios[0]
 
-            const endereco = {
-                ...usuarioSelecionado,
-                id: enderecoId || usuarioSelecionado.id,
-                cep: data.endereco.cep,
-                rua: data.endereco.rua,
-                tipo_residencia: data.endereco.tipo_residencia,
-                numero_imovel: data.endereco.numero_imovel,
-                numero_apartamento: data.endereco.numero_apartamento,
-                bairro: data.endereco.bairro,
-                cidade: data.endereco.cidade,
-                uf: data.endereco.uf,
+            if (!usuarioSelecionado?.idEnderecoUsuario) {
+                throw new Error("Usuário não possui endereço cadastrado")
             }
 
-            console.log("Dados do usuário a serem enviados:", data)
+            const endereco = {
+                ...data,
+                id: usuarioSelecionado.idEnderecoUsuario,
+            }
+
+            console.log("Dados do endereço a serem enviados:", endereco)
 
             const response = await editarEndereco(endereco)
             console.log("Resposta do servidor:", response)
@@ -228,15 +277,15 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                 setShowModal(false)
                 setShowEditTrue(true)
             } else {
-                console.error("Erro: Resposta inválida ao adicionar usuário.")
+                console.error("Erro: Resposta inválida ao atualizar endereço.")
             }
 
             if (onComplete) onComplete()
 
             setTimeout(() => setShowEditTrue(false), 5000)
         } catch (error) {
-            console.error("Erro ao editar usuário:", error)
-            alert(`Erro ao editar usuário: ${error instanceof Error ? error.message : "Erro desconhecido"}`)
+            console.error("Erro ao editar endereço:", error)
+            alert(`Erro ao editar endereço: ${error instanceof Error ? error.message : "Erro desconhecido"}`)
         } finally {
             setIsSubmitting(false)
         }
@@ -269,20 +318,19 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
         }
     }
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            setImagem(file);
-
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                if (event.target) {
-                    setImagePreview(event.target.result as string);
-                }
-            };
-            reader.readAsDataURL(file);
-        }
+    const handleClick = () => {
+        console.log("Botão clicado!");
+        handleSubmit(onSubmitEditUsers)();
     };
+
+    useEffect(() => {
+        if (selectedUsuarios && selectedUsuarios.length > 0) {
+            console.log("Dados do usuário:", selectedUsuarios)
+            console.log("Dados do endereço:", selectedUsuarios[0].idEnderecoUsuario)
+            console.log(errors)
+        }
+    }, [selectedUsuarios, errors])
+
 
     return (
         <>
@@ -328,154 +376,138 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                 {selectedUsuarios.length > 0 && (
                                                     <div>
                                                         {selectedUsuarios.map((usuario) => (
-                                                            <>
-                                                                <div key={usuario.id}>
-                                                                    <FormularioImagemEdit
-                                                                        usuarioId={usuario?.id ?? 0}
-                                                                        handleImageUpload={(file: File) => {
-                                                                            setImagem(file);
-                                                                            const reader = new FileReader();
-                                                                            reader.onload = (event) => {
-                                                                                if (event.target) {
-                                                                                    setImagePreview(event.target.result as string);
-                                                                                }
-                                                                            };
-                                                                            reader.readAsDataURL(file);
-                                                                        }}
-                                                                    />
+                                                            <React.Fragment key={usuario.id}>
+                                                                <div className="space-y-4 pt-10">
+                                                                    <div className="flex flex-col gap-4">
+                                                                        <div className="w-full">
+                                                                            <label htmlFor={`nome_${usuario.id}`} className="block text-lg">
+                                                                                Nome:
+                                                                            </label>
+                                                                            <FormularioEditarInput
+                                                                                placeholder="Ex: Caio"
+                                                                                name="usuario.nome"
+                                                                                value={usuario.nome}
+                                                                                register={register}
+                                                                                required
+                                                                                custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                                                                                errors={errors?.usuario?.nome}
+                                                                            />
+                                                                        </div>
 
-                                                                    <div key={usuario.id} className="space-y-4 pt-10">
-                                                                        <div className="flex flex-col gap-4">
-                                                                            <div className="w-full">
-                                                                                <label htmlFor={`nome_${usuario.id}`} className="block text-lg">
-                                                                                    Nome:
-                                                                                </label>
-                                                                                <FormularioEditarInput
-                                                                                    placeholder="Ex: Caio"
-                                                                                    name="usuario.nome"
-                                                                                    value={usuario.nome}
-                                                                                    register={register}
-                                                                                    required
-                                                                                    custumizacaoClass="w-full p-2  border border-gray-500 rounded"
-                                                                                    errors={errors?.usuario?.nome}
-                                                                                />
-                                                                            </div>
+                                                                        <div className="w-full">
+                                                                            <label htmlFor={`sobrenome_${usuario.id}`} className="block text-lg">
+                                                                                Sobrenome:
+                                                                            </label>
+                                                                            <FormularioEditarInput
+                                                                                placeholder="Ex: Souza"
+                                                                                name="usuario.sobrenome"
+                                                                                value={usuario.sobrenome}
+                                                                                register={register}
+                                                                                required
+                                                                                custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                                                                                errors={errors?.usuario?.nome}
+                                                                            />
+                                                                        </div>
 
-                                                                            <div className="w-full">
-                                                                                <label htmlFor={`sobrenome_${usuario.id}`} className="block text-lg">
-                                                                                    Sobrenome:
-                                                                                </label>
-                                                                                <FormularioEditarInput
-                                                                                    placeholder="Ex: Souza"
-                                                                                    name="usuario.sobrenome"
-                                                                                    value={usuario.sobrenome}
-                                                                                    register={register}
-                                                                                    required
-                                                                                    custumizacaoClass="w-full p-2  border border-gray-500 rounded"
-                                                                                    errors={errors?.usuario?.nome}
-                                                                                />
-                                                                            </div>
+                                                                        <div className="w-full max-h-[80vh] overflow-y-auto">
+                                                                            <label htmlFor={`cpf_${usuario.id}`} className="block text-lg">
+                                                                                CPF:
+                                                                            </label>
+                                                                            <FormularioEditarInput
+                                                                                mask="999.999.999-99"
+                                                                                placeholder="Ex: 000.000.000-00"
+                                                                                name="usuario.cpf"
+                                                                                value={usuario.cpf}
+                                                                                register={register}
+                                                                                required
+                                                                                custumizacaoClass="w-full p-2 border border-gray-500 rounded"
+                                                                                errors={errors?.usuario?.cpf}
+                                                                            />
+                                                                        </div>
 
-                                                                            <div className="w-full max-h-[80vh] overflow-y-auto">
-                                                                                <label htmlFor={`cpf_${usuario.id}`} className="block text-lg">
-                                                                                    CPF:
-                                                                                </label>
-                                                                                <FormularioEditarInput
-                                                                                    mask="999.999.999-99"
-                                                                                    placeholder="Ex: 000.000.000-00"
-                                                                                    name="usuario.cpf"
-                                                                                    value={usuario.cpf}
-                                                                                    register={register}
-                                                                                    required
-                                                                                    custumizacaoClass="w-full p-2 border border-gray-500 rounded"
-                                                                                    errors={errors?.usuario?.cpf}
-                                                                                />
-                                                                            </div>
+                                                                        <div className="w-full">
+                                                                            <label htmlFor={`tipo_conta_${usuario.id}`} className="block text-lg">
+                                                                                Tipo da Conta:
+                                                                            </label>
 
-                                                                            <div className="w-full">
-                                                                                <label htmlFor={`tipo_conta_${usuario.id}`} className="block text-lg">
-                                                                                    Tipo da Conta:
-                                                                                </label>
+                                                                            <FormularioEditarInput
+                                                                                placeholder=""
+                                                                                name="usuario.tipo_conta"
+                                                                                value={usuario.tipo_conta}
+                                                                                register={register}
+                                                                                required
+                                                                                custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                                                                                options={["Usuario", "Corretor", "Administrador", "Editor"]}
+                                                                                errors={errors?.usuario?.tipo_conta}
+                                                                            />
+                                                                        </div>
 
-                                                                                <FormularioEditarInput
-                                                                                    placeholder=""
-                                                                                    name="usuario.tipo_conta"
-                                                                                    value={usuario.tipo_conta}
-                                                                                    register={register}
-                                                                                    required
-                                                                                    custumizacaoClass="w-full p-2  border border-gray-500 rounded"
-                                                                                    options={["Usuario", "Corretor", "Administrador", "Editor"]}
-                                                                                    errors={errors?.usuario?.tipo_conta}
-                                                                                />
-                                                                            </div>
+                                                                        <div className="w-full">
+                                                                            <label htmlFor={`telefone_${usuario.id}`} className="block text-lg">
+                                                                                Telefone:
+                                                                            </label>
 
-                                                                            <div className="w-full">
-                                                                                <label htmlFor={`telefone_${usuario.id}`} className="block text-lg">
-                                                                                    Telefone:
-                                                                                </label>
+                                                                            <FormularioEditarInput
+                                                                                placeholder="(00) 0000-0000"
+                                                                                name="usuario.telefone"
+                                                                                value={usuario.telefone}
+                                                                                register={register}
+                                                                                required
+                                                                                custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                                                                                errors={errors?.usuario?.telefone}
+                                                                            />
+                                                                        </div>
 
-                                                                                <FormularioEditarInput
-                                                                                    placeholder="(00) 0000-0000"
-                                                                                    name="usuario.telefone"
-                                                                                    value={usuario.telefone}
-                                                                                    register={register}
-                                                                                    required
-                                                                                    custumizacaoClass="w-full p-2  border border-gray-500 rounded"
-                                                                                    errors={errors?.usuario?.telefone}
-                                                                                />
-                                                                            </div>
+                                                                        <div className="w-full">
+                                                                            <label htmlFor={`data_nascimento_${usuario.id}`} className="block text-lg">
+                                                                                Data de Nascimento:
+                                                                            </label>
 
-                                                                            <div className="w-full">
-                                                                                <label htmlFor={`data_nascimento_${usuario.id}`} className="block text-lg">
-                                                                                    Data de Nascimento:
-                                                                                </label>
+                                                                            <FormularioEditarInput
+                                                                                placeholder="Ex: 22/02/2005"
+                                                                                name="usuario.data_nascimento"
+                                                                                value={usuario.data_nascimento}
+                                                                                register={register}
+                                                                                required
+                                                                                custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                                                                                errors={errors?.usuario?.data_nascimento}
+                                                                            />
+                                                                        </div>
 
-                                                                                <FormularioEditarInput
-                                                                                    placeholder="Ex: 22/02/2005"
-                                                                                    name="usuario.data_nascimento"
-                                                                                    value={usuario.data_nascimento}
-                                                                                    register={register}
-                                                                                    required
-                                                                                    custumizacaoClass="w-full p-2  border border-gray-500 rounded"
-                                                                                    errors={errors?.usuario?.data_nascimento}
-                                                                                />
-                                                                            </div>
+                                                                        <div className="w-full">
+                                                                            <label htmlFor={`email_${usuario.id}`} className="block text-lg">
+                                                                                E-mail:
+                                                                            </label>
 
-                                                                            <div className="w-full">
-                                                                                <label htmlFor={`email_${usuario.id}`} className="block text-lg">
-                                                                                    E-mail:
-                                                                                </label>
+                                                                            <FormularioEditarInput
+                                                                                placeholder="Ex: caio@gmail.com"
+                                                                                name="usuario.email"
+                                                                                value={usuario.email}
+                                                                                register={register}
+                                                                                required
+                                                                                custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                                                                                errors={errors?.usuario?.email}
+                                                                            />
+                                                                        </div>
 
-                                                                                <FormularioEditarInput
-                                                                                    placeholder="Ex: caio@gmail.com"
-                                                                                    name="usuario.email"
-                                                                                    value={usuario.email}
-                                                                                    register={register}
-                                                                                    required
-                                                                                    custumizacaoClass="w-full p-2  border border-gray-500 rounded"
-                                                                                    errors={errors?.usuario?.email}
-                                                                                />
-                                                                            </div>
+                                                                        <div className="w-full">
+                                                                            <label htmlFor={`senha_${usuario.id}`} className="block text-lg">
+                                                                                Senha:
+                                                                            </label>
 
-                                                                            <div className="w-full">
-                                                                                <label htmlFor={`senha_${usuario.id}`} className="block text-lg">
-                                                                                    Senha:
-                                                                                </label>
-
-                                                                                <FormularioEditarInput
-                                                                                    placeholder=""
-                                                                                    name="usuario.senha"
-                                                                                    value={usuario.senha}
-                                                                                    register={register}
-                                                                                    required
-                                                                                    custumizacaoClass="w-full p-2  border border-gray-500 rounded"
-                                                                                    errors={errors?.usuario?.senha}
-                                                                                />
-                                                                            </div>
+                                                                            <FormularioEditarInput
+                                                                                placeholder=""
+                                                                                name="usuario.senha"
+                                                                                value={usuario.senha}
+                                                                                register={register}
+                                                                                required
+                                                                                custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                                                                                errors={errors?.usuario?.senha}
+                                                                            />
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </>
+                                                            </React.Fragment>
                                                         ))}
                                                     </div>
                                                 )}
@@ -486,7 +518,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                         <div className="flex justify-around items-center gap-10 w-[50%]">
                                             <Botao onClick={handleCancel} texto="Cancelar" />
                                             <Botao
-                                                onClick={() => handleSubmit(onSubmitEditUsers)()}
+                                                onClick={handleClick}
                                                 texto={isEditar ? "Editando..." : "Editar"}
                                             />
                                         </div>
@@ -500,7 +532,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                         <h1 className="text-3xl font-semibold text-vermelho mb-4">Editar Dados do Endereço</h1>
                                     </div>
                                     <div>
-                                        <form className="space-y-4">
+                                        <form onSubmit={handleSubmitEndereco(onSubmitEditUsersEndereco)} className="space-y-4">
                                             {selectedUsuarios.length > 0 && (
                                                 <div>
                                                     {selectedUsuarios.map((usuario) => (
@@ -512,8 +544,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                     </label>
                                                                     <FormularioEditarInput
                                                                         placeholder="00000-000:"
-                                                                        name="endereco.cep"
-                                                                        value={usuario.endereco.cep}
+                                                                        name="cep"
                                                                         register={registerEndereco}
                                                                         custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                         required
@@ -526,8 +557,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                     </label>
                                                                     <FormularioEditarInput
                                                                         placeholder="UF:"
-                                                                        name="endereco.uf"
-                                                                        value={usuario.endereco.uf}
+                                                                        name="uf"
                                                                         register={registerEndereco}
                                                                         onChange={handleUfChange}
                                                                         custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -542,8 +572,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                     </label>
                                                                     <FormularioEditarInput
                                                                         placeholder="Cidade:"
-                                                                        name="endereco.cidade"
-                                                                        value={usuario.endereco.cidade}
+                                                                        name="cidade"
                                                                         register={registerEndereco}
                                                                         custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                         options={cidadesPorEstado.SC}
@@ -557,8 +586,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                     </label>
                                                                     <FormularioEditarInput
                                                                         placeholder=""
-                                                                        name="endereco.rua"
-                                                                        value={usuario.endereco.rua}
+                                                                        name="rua"
                                                                         register={registerEndereco}
                                                                         custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                         required
@@ -571,8 +599,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                     </label>
                                                                     <FormularioEditarInput
                                                                         placeholder=""
-                                                                        name="endereco.bairro"
-                                                                        value={usuario.endereco.bairro}
+                                                                        name="bairro"
                                                                         register={registerEndereco}
                                                                         custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                         required
@@ -585,8 +612,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                     </label>
                                                                     <FormularioEditarInput
                                                                         placeholder=""
-                                                                        name="endereco.tipo_residencia"
-                                                                        value={usuario.endereco.tipo_residencia}
+                                                                        name="tipo_residencia"
                                                                         register={registerEndereco}
                                                                         custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                         options={["Casa", "Apartamento"]}
@@ -600,8 +626,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                     </label>
                                                                     <FormularioEditarInput
                                                                         placeholder="Ex: 009:"
-                                                                        name="endereco.numero_imovel"
-                                                                        value={usuario.endereco.numero_imovel}
+                                                                        name="numero_imovel"
                                                                         register={registerEndereco}
                                                                         custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                         required
@@ -614,8 +639,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                     </label>
                                                                     <FormularioEditarInput
                                                                         placeholder="Ex: 009:"
-                                                                        name="endereco.numero_apartamento"
-                                                                        value={usuario.endereco.numero_apartamento || ""}
+                                                                        name="numero_apartamento"
                                                                         register={registerEndereco}
                                                                         custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                     />
@@ -631,7 +655,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                         <div className="flex justify-around items-center gap-10 w-[50%]">
                                             <Botao onClick={handleCancel} texto="Cancelar" />
                                             <Botao
-                                                onClick={() => handleSubmitEndereco(onSubmitEditUsersEndereco)()}
+                                                onClick={() => handleSubmitEndereco(onSubmitEditUsersEndereco)}
                                                 texto={isEditar ? "Editando..." : "Editar"}
                                             />
                                         </div>
@@ -645,4 +669,5 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
         </>
     )
 }
+
 

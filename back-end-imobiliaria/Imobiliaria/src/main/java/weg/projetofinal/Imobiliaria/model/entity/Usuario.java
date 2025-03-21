@@ -47,7 +47,7 @@ public class Usuario {
 
     private String imagem_usuario;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "id_endereco_usuario")
     private EnderecoUsuario enderecoUsuario;
 
