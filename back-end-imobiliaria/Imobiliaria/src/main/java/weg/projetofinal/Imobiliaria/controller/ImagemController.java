@@ -5,13 +5,18 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import weg.projetofinal.Imobiliaria.model.dto.ImagemGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.ImagemPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.dto.ImagemPutResponseDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Imagem;
 import weg.projetofinal.Imobiliaria.service.ImagemService;
 import weg.projetofinal.Imobiliaria.model.mapper.ImagemMapper;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/imagens")
@@ -20,12 +25,16 @@ public class ImagemController {
 
     private final ImagemService imagemService;
 
-    @PostMapping("/create")
+    @PostMapping("/imovel/{idImovel}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ImagemGetResponseDTO create(@RequestBody @Valid ImagemPostRequestDTO imagemPostDTO) {
-        Imagem imagem = ImagemMapper.INSTANCE.imagemPostRequestDTOToImagem(imagemPostDTO);
-        Imagem imagemSaved = imagemService.createImagem(imagem);
-        return ImagemMapper.INSTANCE.imagemToImagemGetResponseDTO(imagemSaved);
+    public ResponseEntity<List<ImagemGetResponseDTO>> uploadImagens(
+            @PathVariable Integer idImovel,
+            @RequestParam("arquivos") List<MultipartFile> arquivos) {
+        List<Imagem> imagens = imagemService.createImagem(arquivos, idImovel);
+        List<ImagemGetResponseDTO> response = imagens.stream()
+                .map(ImagemMapper.INSTANCE::imagemToImagemGetResponseDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/getAll")
