@@ -18,18 +18,18 @@ const FAQ = ({ title, faqs }) => {
   };
 
   return (
-    <div className="p-8 md:w font-montserrat">
+    <div className="p-8  font-montserrat md:bg-[url('/iconsFaq/imgFundo.png')] bg-cover bg-center">
       <div className="flex flex-col items-start pt-11 pb-5 md:pl-8">
         <h2 className="text-[18px] md:text-2xl font-bold text-gray-800 mb-10 border-b-2 border-[#702632] pb-2 md:w-72 text-left lg:ml-20">
           {title}
         </h2>
       </div>
-      <div className="pt-8 w-5xl">
+      <div className="pt-3 w-5xl">
         <h2 className="font-extralight  text-[20px] md:text-[28px] text-gray pb-5 text-center mb-3">
           Como podemos ajudar?
         </h2>
       </div>
-      <div className="flex flex-col items-center min-h-screen bg-[#DFDAD0]">
+      <div className="flex flex-col items-center min-h-screen ">
         <div className="relative w-full max-w-xl mb-6">
           <input
             type="text"
@@ -40,7 +40,8 @@ const FAQ = ({ title, faqs }) => {
             src="/iconsFaq/Vector.png"
             alt="Ícone"
             className="absolute left-3 top-4 w-5 h-5 text-gray-500"
-          />        </div>
+          />
+        </div>
         <div className="pt-8 w-5xl">
           <h2 className="text-[17px] font-semibold text-gray-800 pb-5">
             Pesquisar tópicos de ajuda

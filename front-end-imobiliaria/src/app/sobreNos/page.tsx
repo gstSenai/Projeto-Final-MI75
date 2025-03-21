@@ -1,6 +1,6 @@
 export default function Sobre() {
     return (
-      <div className="bg-[#e3ddd6] min-h-screen flex justify-center p-6">
+      <div className="bg-[#e3ddd6] min-h-screen flex justify-center p-6 ">
         <div className="max-w-4xl w-full  p-6  ">
           {/* Missões */}
           <div className="flex flex-col md:flex-row items-center gap-14 mb-28">
