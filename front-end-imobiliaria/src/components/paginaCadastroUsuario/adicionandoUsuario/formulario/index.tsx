@@ -16,7 +16,7 @@ const UsuarioProps = z.object({
     nome: z.string().min(1, { message: "O nome é obrigatório" }),
     sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
     cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
-    tipo_conta: z.enum(["Usuario", "Corretor", "Administrador", "Editor"], {
+    tipo_conta: z.string().min(1, {
         message: "Selecione um tipo de conta válido",
     }),
     telefone: z.string().min(10, { message: "Telefone inválido" }),
@@ -55,9 +55,17 @@ interface InputDadosUsuarioProps {
 
 export function Formulario({ onComplete }: InputDadosUsuarioProps) {
     const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormData>({
-        resolver: zodResolver(FormSchema)
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+            usuario: {
+                tipo_conta: "",
+            },
+            endereco: {
+                tipo_residencia: "",
+            }
+        },
     })
-    
+
     const [showForm, setShowForm] = useState(true)
     const [showModal, setShowModal] = useState(false)
     const [lastAddedUsuario, setLastAddedUsuario] = useState<UsuarioData | null>(null)
@@ -175,6 +183,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                     <hr className="mb-10 w-full h-2 rounded-2xl bg-vermelho"></hr>
 
                     <FormularioImagem handleImageChange={handleImageChange} />
+
                     <DadosUsuarioSection register={register} errors={errors.usuario} />
 
                     <EnderecoSection register={register} errors={errors.endereco} setValue={setValue} />

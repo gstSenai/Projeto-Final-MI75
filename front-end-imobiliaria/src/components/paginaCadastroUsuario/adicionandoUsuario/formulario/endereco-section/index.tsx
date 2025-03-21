@@ -54,10 +54,11 @@ export function EnderecoSection({ register, setValue, errors }: DadosEnderecoUsu
         <FormularioInput
           placeholder="CEP:"
           name="endereco.cep"
+          interName='00000-000'
           register={register}
           customizacaoClass="w-full p-2 border border-gray-500 rounded"
           required
-          errors={errors?.cep}
+          errors={errors?.cep?.message}
           onChange={(e) => {
             const novoCep = e.target.value
             setCep(novoCep)
@@ -67,6 +68,7 @@ export function EnderecoSection({ register, setValue, errors }: DadosEnderecoUsu
         <FormularioInput
           placeholder="UF:"
           name="endereco.uf"
+          interName="Ex: SC"
           register={register}
           customizacaoClass="w-full p-2 border border-gray-500 rounded"
           required
@@ -76,6 +78,7 @@ export function EnderecoSection({ register, setValue, errors }: DadosEnderecoUsu
         <FormularioInput
           placeholder="Cidade:"
           name="endereco.cidade"
+          interName="Ex: Joinville"
           register={register}
           customizacaoClass="w-full p-2 border border-gray-500 rounded"
           required
@@ -85,6 +88,7 @@ export function EnderecoSection({ register, setValue, errors }: DadosEnderecoUsu
         <FormularioInput
           placeholder="Rua:"
           name="endereco.rua"
+          interName="Ex: Rua das Flores"
           register={register}
           customizacaoClass="w-full p-2 border border-gray-500 rounded"
           required
@@ -96,6 +100,7 @@ export function EnderecoSection({ register, setValue, errors }: DadosEnderecoUsu
         <FormularioInput
           placeholder="Bairro:"
           name="endereco.bairro"
+          interName="Ex: Centro"
           register={register}
           customizacaoClass="w-full p-2 border border-gray-500 rounded"
           required
@@ -105,6 +110,7 @@ export function EnderecoSection({ register, setValue, errors }: DadosEnderecoUsu
         <FormularioInput
           placeholder="Tipo de Residência:"
           name="endereco.tipo_residencia"
+          interName="Ex: Casa"
           register={register}
           customizacaoClass="w-full p-2 border border-gray-500 rounded"
           options={["Casa", "Apartamento"]}
@@ -115,6 +121,7 @@ export function EnderecoSection({ register, setValue, errors }: DadosEnderecoUsu
           placeholder="Número do Imóvel:"
           name="endereco.numero_imovel"
           register={register}
+          interName="Ex: 100"
           customizacaoClass="w-full p-2 border border-gray-500 rounded"
           required
           errors={errors?.numero_imovel}
@@ -124,8 +131,9 @@ export function EnderecoSection({ register, setValue, errors }: DadosEnderecoUsu
         <FormularioInput
           placeholder="Número Apartamento (Caso tenha):"
           name="endereco.numero_apartamento"
-          register={register}
+          register={register} 
           customizacaoClass="w-full p-2 border border-gray-500 rounded"
+          interName="Ex: 100"
           errors={errors?.numero_apartamento}
         />
       </div>

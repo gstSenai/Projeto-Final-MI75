@@ -6,9 +6,10 @@ import { Descricao } from "../descricao"
 
 interface DadosImovelSectionProps {
     register: UseFormRegister<any>
+    errors: any
 }
 
-export function DadosImovelSection({ register }: DadosImovelSectionProps) {
+export function DadosImovelSection({ register, errors }: DadosImovelSectionProps) {
 
     return (
         <div className="flex flex-col">
@@ -28,16 +29,18 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                         interName='Ex: Casa Alto Padrão'
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
+                        errors={errors?.imovel?.nome_propriedade?.message}
                     />
                     <FormularioInput
                         placeholder="Tipo do imóvel:"
                         name="imovel.tipo_imovel"
-                        interName='Casa'
+                        interName=''
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
                         options={["Casa", "Apartamento", "Terreno"]}
+                        errors={errors?.imovel?.tipo_imovel?.message}
                     />
                     <FormularioInput
                         placeholder="Tipo de transação:"
@@ -45,8 +48,9 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                         interName=''
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
                         options={["Venda", "Locação", "Venda e Locação"]}
+                        errors={errors?.imovel?.tipo_transacao?.message}
                     />
                 </div>
                 <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:pt-4 gap-10">
@@ -56,7 +60,8 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                         interName="Ex: R$100000,00"
                         required
                         register={register}
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
+                        errors={errors?.imovel?.valor_venda?.message}
                     />
                     <FormularioInput
                         placeholder="Valor do Preço Promocional (R$):"
@@ -64,15 +69,17 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                         interName="Ex: R$100000,00"
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
+                        errors={errors?.imovel?.valor_promocional?.message}
                     />
                     <FormularioInput
                         placeholder="Permitir destaque:"
                         name="imovel.test_destaque"
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
                         options={["Sim", "Não"]}
+                        errors={errors?.imovel?.test_destaque?.message}
                     />
                 </div>
 
@@ -83,7 +90,8 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                         interName="Ex: R$100000,00"
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
+                        errors={errors?.imovel?.valor_iptu?.message}
                     />
                     <FormularioInput
                         placeholder="Taxa de Condomínio (R$):"
@@ -91,15 +99,17 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                         interName="Ex: R$100000,00"
                         register={register}
                         required
-                        custumizacaoClass="lg:w-full"
+                        customizacaoClass="lg:w-full"
+                        errors={errors?.imovel?.condominio?.message}
                     />
                     <FormularioInput
                         placeholder="Status do imóvel:"
                         name="imovel.status_imovel"
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
                         options={["Vendido", "Disponivel"]}
+                        errors={errors?.imovel?.status_imovel?.message}
                     />
                 </div>
 
@@ -109,8 +119,9 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                         name="imovel.test_visibilidade"
                         register={register}
                         required
-                        custumizacaoClass="w-full"
+                        customizacaoClass="w-full"
                         options={["Público", "Privado"]}
+                        errors={errors?.imovel?.test_visibilidade?.message}
                     />
                 </div>
             </div>
@@ -133,7 +144,9 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                             interName="Ex: 12"
                             register={register}
                             icon={{ type: "areaCT" }}
-                            custumizacaoClass="lg:w-full"
+                            customizacaoClass="lg:w-full"
+                            required
+                            errors={errors?.imovel?.area_construida?.message}
                         />
 
                         <FormularioInput
@@ -142,7 +155,9 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                             interName="Ex: 4"
                             register={register}
                             icon={{ type: "dormitorio" }}
-                            custumizacaoClass="lg:w-full"
+                            customizacaoClass="lg:w-full"
+                            required
+                            errors={errors?.imovelCaracteristicas?.numero_quartos?.message}
                         />
                         <FormularioInput
                             placeholder="Número de Suítes:"
@@ -150,15 +165,19 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                             interName="Ex: 2"
                             register={register}
                             icon={{ type: "suite" }}
-                            custumizacaoClass="lg:w-full"
+                            customizacaoClass="lg:w-full"
+                            required
+                            errors={errors?.imovelCaracteristicas?.numero_suites?.message}
                         />
                         <FormularioInput
                             placeholder="Contém Piscina:"
                             name="imovelCaracteristicas.test_piscina"
                             register={register}
                             icon={{ type: "praia" }}
-                            custumizacaoClass="lg:w-full"
+                            customizacaoClass="lg:w-full"
                             options={["Sim", "Não"]}
+                            required
+                            errors={errors?.imovelCaracteristicas?.test_piscina?.message}
                         />
                     </div>
 
@@ -169,7 +188,9 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                             interName="Ex: 12"
                             register={register}
                             icon={{ type: "areaCT" }}
-                            custumizacaoClass="lg:w-full"
+                            customizacaoClass="lg:w-full"
+                            required
+                            errors={errors?.imovel?.area_terreno?.message}
                         />
                         <FormularioInput
                             placeholder="Número de Banheiros:"
@@ -177,7 +198,9 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                             interName="Ex: 1"
                             register={register}
                             icon={{ type: "banheiro" }}
-                            custumizacaoClass="lg:w-full"
+                            customizacaoClass="lg:w-full"
+                            required
+                            errors={errors?.imovelCaracteristicas?.numero_banheiros?.message}
                         />
                         <FormularioInput
                             placeholder="Vagas de Garagem:"
@@ -185,7 +208,9 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                             interName="Ex: 2"
                             register={register}
                             icon={{ type: "garagem" }}
-                            custumizacaoClass="lg:w-full"
+                            customizacaoClass="lg:w-full"
+                            required
+                            errors={errors?.imovelCaracteristicas?.numero_vagas?.message}
                         />
                         <FormularioInput
                             placeholder="Número de Salas:"
@@ -193,7 +218,9 @@ export function DadosImovelSection({ register }: DadosImovelSectionProps) {
                             interName="Ex: 3"
                             register={register}
                             icon={{ type: "sala" }}
-                            custumizacaoClass="lg:w-[full]"
+                            customizacaoClass="lg:w-[full]"
+                            required
+                            errors={errors?.imovelCaracteristicas?.numero_salas?.message}
                         />
                     </div>
 

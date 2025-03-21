@@ -1,65 +1,96 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { EnderecoSection } from "../formulario/endereco-section"
 import { DadosImovelSection } from "./dados-imovel-section"
 import request from "@/routes/request"
 import { Botao } from "@/components/botao"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
-interface ImovelProps {
-    id: number
-    codigo?: number
-    nome_propriedade: string
-    tipo_transacao: string
-    valor_venda: number
-    tipo_imovel: string
-    status_imovel: string
-    valor_promocional: number
-    test_destaque?: string
-    test_visibilidade?: string
-    destaque: boolean
-    visibilidade: boolean
-    valor_iptu: number
-    condominio: number
-    area_construida: number
-    area_terreno: number
-    descricao?: string
-}
+const ImovelProps = z.object({
+    id: z.number().optional(),
+    codigo: z.coerce.number().optional(),
+    nome_propriedade: z.string().min(1, { message: "Nome da propriedade é obrigatório" }),
+    tipo_transacao: z.string().min(1, { message: "Tipo de transação é obrigatório" }),
+    valor_venda: z.coerce.number().min(1, { message: "Valor de venda é obrigatório" }),
+    tipo_imovel: z.string().min(1, { message: "Tipo de imóvel é obrigatório" }),
+    status_imovel: z.string().min(1, { message: "Status do imóvel é obrigatório" }),
+    valor_promocional: z.coerce.number().min(1, { message: "Valor promocional é obrigatório" }),
+    test_destaque: z.string().optional(),
+    test_visibilidade: z.string().optional(),
+    destaque: z.boolean().default(false),
+    visibilidade: z.boolean().default(false),
+    valor_iptu: z.coerce.number().min(1, { message: "Valor do IPTU é obrigatório" }),
+    condominio: z.coerce.number().min(1, { message: "Valor do condomínio é obrigatório" }),
+    area_construida: z.coerce.number().min(1, { message: "Área construída é obrigatória" }),
+    area_terreno: z.coerce.number().min(1, { message: "Área do terreno é obrigatória" }),
+    descricao: z.string().optional(),
+})
 
-interface ImovelCaracteristicas {
-    id: number
-    numero_quartos: number
-    numero_banheiros: number
-    numero_suites: number
-    numero_vagas: number
-    test_piscina?: string
-    piscina: boolean
-    numero_salas: number
-}
+const ImovelCaracteristicas = z.object({
+    id: z.number().optional(),
+    numero_quartos: z.coerce.number().min(1, { message: "Número de quartos é obrigatório" }),
+    numero_banheiros: z.coerce.number().min(1, { message: "Número de banheiros é obrigatório" }),
+    numero_suites: z.coerce.number().min(1, { message: "Número de suítes é obrigatório" }),
+    numero_vagas: z.coerce.number().min(1, { message: "Número de vagas é obrigatório" }),
+    test_piscina: z.string().optional(),
+    piscina: z.boolean().default(false),
+    numero_salas: z.coerce.number().min(1, { message: "Número de salas é obrigatório" }),
+})
 
-interface EnderecoImovelProps {
-    id: number
-    cep: string
-    rua: string
-    numero: string
-    bairro: string
-    cidade: string
-    uf: string
-    complemento?: string
-}
+const EnderecoImovelProps = z.object({
+    id: z.number().optional(),
+    cep: z.string().min(1, { message: "CEP é obrigatório" }),
+    rua: z.string().min(1, { message: "Rua é obrigatória" }),
+    numero: z.string().min(1, { message: "Número é obrigatório" }),
+    bairro: z.string().min(1, { message: "Bairro é obrigatório" }),
+    cidade: z.string().min(1, { message: "Cidade é obrigatória" }),
+    uf: z.string().min(1, { message: "UF é obrigatória" }),
+    complemento: z.string().optional(),
+})
+
+const FormSchema = z.object({
+    imovel: ImovelProps,
+    imovelCaracteristicas: ImovelCaracteristicas,
+    endereco: EnderecoImovelProps
+})
+
+type ImovelProps = z.infer<typeof ImovelProps>
+type ImovelCaracteristicas = z.infer<typeof ImovelCaracteristicas>
+type EnderecoImovelProps = z.infer<typeof EnderecoImovelProps>
+type FormData = z.infer<typeof FormSchema>
 
 interface InputDadosImovelProps {
     onComplete?: () => void;
 }
 
 export function Formulario({ onComplete }: InputDadosImovelProps) {
-    const { register, handleSubmit, formState: { errors } } = useForm<{ imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas; endereco: EnderecoImovelProps }>();
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormData>({
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+            imovel: {
+                tipo_imovel: "",
+                tipo_transacao: "",
+                test_destaque: "",
+                status_imovel: "",
+                test_visibilidade: "",
+                destaque: false,
+                visibilidade: false
+            },
+            imovelCaracteristicas: {
+                test_piscina: "",
+                piscina: false
+            },
+            endereco: {
+                uf: ""
+            }
+        },
+    })
     const [showForm, setShowForm] = useState(true)
     const [showModal, setShowModal] = useState(false)
     const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [enderecoId, setEnderecoId] = useState<number>();
-    const [imovelId, setImovelId] = useState<number>();
 
     const addEndereco = async (data: EnderecoImovelProps) => {
         try {
@@ -72,7 +103,6 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
             const response = await request("POST", "http://localhost:9090/endereco/create", data);
 
             if (response && response.id) {
-                setEnderecoId(response.id)
                 return response;
             }
 
@@ -162,7 +192,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
             const response = await addImovel(immobileData);
 
             if (response && response.id) {
-                setImovelId(response.id);
+                console.log("Imóvel criado com sucesso:", response);
             } else {
                 throw new Error("Erro ao criar imóvel, id não retornado.");
             }
@@ -192,14 +222,16 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         }
     }
 
-
+    useEffect(() => {
+        console.log("Errors", errors)
+    }, [errors])
     return (
         <>
             {showForm && (
                 <>
-                    <EnderecoSection register={register} />
+                    <EnderecoSection register={register} errors={errors} setValue={setValue} />
 
-                    <DadosImovelSection register={register} />
+                    <DadosImovelSection register={register} errors={errors} />
 
                     <div className="flex items-center gap-16 mt-10">
                         <div className="flex max-sm:gap-12 max-lg:gap-36 gap-[40rem] w-full">

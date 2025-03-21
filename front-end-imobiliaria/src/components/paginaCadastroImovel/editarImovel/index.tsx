@@ -5,49 +5,82 @@ import request from "@/routes/request"
 import { FormularioEditarInput } from "../editarImovel/formularioEditarInput"
 import { type SubmitHandler, useForm } from "react-hook-form"
 
-interface ImovelProps {
-    id: number
-    codigo?: number
-    nome_propriedade: string
-    tipo_transacao: string
-    valor_venda: number
-    tipo_imovel: string
-    status_imovel: string
-    valor_promocional: number
-    test_destaque?: string
-    test_visibilidade?: string
-    destaque: boolean
-    visibilidade: boolean
-    valor_iptu: number
-    condominio: number
-    area_construida: number
-    area_terreno: number
-    descricao?: string
-    id_endereco: EnderecoImovelProps
-    id_caracteristicasImovel: ImovelCaracteristicas
-}
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
-interface ImovelCaracteristicas {
-    id: number
-    numero_quartos: number
-    numero_banheiros: number
-    numero_suites: number
-    numero_vagas: number
-    test_piscina?: string
-    piscina: boolean
-    numero_salas: number
-}
+const ImovelProps = z.object({
+    id: z.number().optional(),
+    codigo: z.coerce.number().optional(),
+    nome_propriedade: z.string().min(1, { message: "Nome da propriedade é obrigatório" }),
+    tipo_transacao: z.string().min(1, { message: "Tipo de transação é obrigatório" }),
+    valor_venda: z.coerce.number().min(1, { message: "Valor de venda é obrigatório" }),
+    tipo_imovel: z.string().min(1, { message: "Tipo de imóvel é obrigatório" }),
+    status_imovel: z.string().min(1, { message: "Status do imóvel é obrigatório" }),
+    valor_promocional: z.coerce.number().min(1, { message: "Valor promocional é obrigatório" }),
+    test_destaque: z.string().optional(),
+    test_visibilidade: z.string().optional(),
+    destaque: z.boolean().default(false),
+    visibilidade: z.boolean().default(false),
+    valor_iptu: z.coerce.number().min(1, { message: "Valor do IPTU é obrigatório" }),
+    condominio: z.coerce.number().min(1, { message: "Valor do condomínio é obrigatório" }),
+    area_construida: z.coerce.number().min(1, { message: "Área construída é obrigatória" }),
+    area_terreno: z.coerce.number().min(1, { message: "Área do terreno é obrigatória" }),
+    descricao: z.string().optional(),
+    id_endereco: z.object({
+        id: z.number(),
+        cep: z.string(),
+        rua: z.string(),
+        numero: z.string(),
+        bairro: z.string(),
+        cidade: z.string(),
+        uf: z.string(),
+        complemento: z.string().optional()
+    }),
+    id_caracteristicasImovel: z.object({
+        id: z.number(),
+        numero_quartos: z.number(),
+        numero_banheiros: z.number(),
+        numero_suites: z.number(),
+        numero_vagas: z.number(),
+        piscina: z.boolean(),
+        numero_salas: z.number()
+    })
+})
 
-interface EnderecoImovelProps {
-    id: number
-    cep: string
-    rua: string
-    numero: string
-    bairro: string
-    cidade: string
-    uf: string
-    complemento?: string
-}
+const ImovelCaracteristicas = z.object({
+    id: z.number(),
+    numero_quartos: z.coerce.number().min(1, { message: "Número de quartos é obrigatório" }),
+    numero_banheiros: z.coerce.number().min(1, { message: "Número de banheiros é obrigatório" }),
+    numero_suites: z.coerce.number().min(1, { message: "Número de suítes é obrigatório" }),
+    numero_vagas: z.coerce.number().min(1, { message: "Número de vagas é obrigatório" }),
+    test_piscina: z.string().optional(),
+    piscina: z.boolean().default(false),
+    numero_salas: z.coerce.number().min(1, { message: "Número de salas é obrigatório" }),
+})
+
+
+const EnderecoImovelProps = z.object({
+    id: z.number().optional(),
+    cep: z.string().min(1, { message: "CEP é obrigatório" }),
+    rua: z.string().min(1, { message: "Rua é obrigatória" }),
+    numero: z.string().min(1, { message: "Número é obrigatório" }),
+    bairro: z.string().min(1, { message: "Bairro é obrigatório" }),
+    cidade: z.string().min(1, { message: "Cidade é obrigatória" }),
+    uf: z.string().min(1, { message: "UF é obrigatória" }),
+    complemento: z.string().optional(),
+})
+
+const FormSchema = z.object({
+    imovel: ImovelProps,
+    imovelCaracteristicas: ImovelCaracteristicas,
+    endereco: EnderecoImovelProps
+})
+
+type ImovelProps = z.infer<typeof ImovelProps>
+type ImovelCaracteristicas = z.infer<typeof ImovelCaracteristicas>
+type EnderecoImovelProps = z.infer<typeof EnderecoImovelProps>
+type FormData = z.infer<typeof FormSchema>
+
 
 interface EditarImovelProps {
     selectedImoveis: ImovelProps[]
@@ -55,11 +88,27 @@ interface EditarImovelProps {
 }
 
 export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps) {
-    const { register, handleSubmit, formState: { errors }, } = useForm<{
-        imovel: ImovelProps
-        id_caracteristicasImovel: ImovelCaracteristicas;
-        endereco: EnderecoImovelProps;
-    }>()
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormData>({
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+            imovel: {
+                tipo_imovel: "",
+                tipo_transacao: "",
+                test_destaque: "",
+                status_imovel: "",
+                test_visibilidade: "",
+                destaque: false,
+                visibilidade: false
+            },
+            imovelCaracteristicas: {
+                test_piscina: "",
+                piscina: false
+            },
+            endereco: {
+                uf: ""
+            }
+        },
+    })
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [showEditTrue, setShowEditTrue] = useState(false)
     const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
@@ -80,12 +129,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                     const imoveisAtualizado = {
                         ...imovel,
                         ...data,
-                        enderecoUsuario: {
-                            ...imovel.id_endereco,
-                        },
-                        id_caracteristicasImovel: {
-                            ...imovel.id_caracteristicasImovel,
-                        },
+                        enderecoUsuario: imovel.id_endereco,
+                        id_caracteristicasImovel: imovel.id_caracteristicasImovel
                     }
                     return request("PUT", `http://localhost:9090/imovel/update/${imovel.id}`, imoveisAtualizado)
                 }),
@@ -463,7 +508,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                 <FormularioEditarInput
                                                                     placeholder="Permitir destaque:"
                                                                     name="imovel.test_destaque"
-                                                                    value={imovel.destaque}
+                                                                    value={String(imovel.destaque)}
                                                                     register={register}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -479,7 +524,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                 <FormularioEditarInput
                                                                     placeholder="Visibilidade"
                                                                     name="imovel.test_visibilidade"
-                                                                    value={imovel.visibilidade}
+                                                                    value={String(imovel.visibilidade)}
                                                                     register={register}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -598,7 +643,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                 <FormularioEditarInput
                                                                     placeholder="Contém Piscina:"
                                                                     name="id_caracteristicasImovel.test_piscina"
-                                                                    value={imovel.id_caracteristicasImovel?.piscina}
+                                                                    value={imovel.id_caracteristicasImovel?.piscina ? "Sim" : "Não"}
                                                                     register={register}
                                                                     icon={{ type: "praia" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -641,7 +686,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                 <FormularioEditarInput
                                                                     placeholder="Número de Salas:"
                                                                     name="id_caracteristicasImovel.numero_salas"
-                                                                    value={id_caracteristicasImovel?.numero_salas || 0}
+                                                                    value={imovel.id_caracteristicasImovel.numero_salas || 0}
                                                                     register={register}
                                                                     icon={{ type: "sala" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
