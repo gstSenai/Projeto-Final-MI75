@@ -54,7 +54,9 @@ export default function Chat() {
           <button className="p-2 bg-gray-200 rounded-lg">
             <img src='/iconDownload.png' alt='ícone download' className="w-6 h-6 text-gray-600" />
           </button>
-          <button className="ml-2 p-2 bg-[#702632] text-white rounded-lg">➤</button>
+          <button className="ml-2 py-2 px-3 bg-[#702632] text-white rounded-lg">
+            <img src="/arrowChat.png" alt="Enviar mensagem"/>
+          </button>
         </div>
       </div>
     </div>
