@@ -55,15 +55,20 @@ public class UsuarioService {
     public Usuario updateUser(Usuario usuario, Integer id, MultipartFile imagem) {
         Usuario usuarioExistente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
+
         BeanUtils.copyProperties(usuario, usuarioExistente, "id", "enderecoUsuario", "imagem_usuario");
+
         if (imagem != null && !imagem.isEmpty()) {
-            String novaImagemUrl = s3Service.uploadFile(imagem);
-            usuarioExistente.setImagem_usuario(novaImagemUrl);
+            usuarioExistente.setImagem_usuario(s3Service.uploadFile(imagem));
         }
+
+        if (usuario.getEnderecoUsuario() != null && usuario.getEnderecoUsuario().getId() != null) {
+            EnderecoUsuario endereco = enderecoUsuarioService.findById(usuario.getEnderecoUsuario().getId());
+            usuarioExistente.setEnderecoUsuario(endereco);
+        }
+
         return repository.save(usuarioExistente);
     }
-
-
 
     public Usuario getByNomeUsuario(String nome) {
         return repository.findByNome(nome).get();
