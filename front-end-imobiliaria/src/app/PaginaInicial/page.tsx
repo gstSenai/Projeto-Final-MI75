@@ -22,7 +22,6 @@ import Image from 'next/image';
 export default function PaginaInicial() {
     return (
         <div>
-            <Header />
 
             <div className={`${montserrat.className} pt-8`}>
                 <main className='max-lg:px-4 px-20'>
@@ -77,7 +76,7 @@ export default function PaginaInicial() {
                                 <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
                             </div>
                         </div>
-                        <div className='grid grid-flow-col'>
+                        <div className='grid grid-flow-row xl:grid-flow-col'>
                             <Card></Card>
                             <Card></Card>
                             <Card></Card>
@@ -90,7 +89,7 @@ export default function PaginaInicial() {
                                 <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
                             </div>
                         </div>
-                        <div className='grid grid-flow-col'>
+                        <div className='grid grid-flow-row xl:grid-flow-col'>
                             <Card></Card>
                             <Card></Card>
                             <Card></Card>
@@ -103,7 +102,7 @@ export default function PaginaInicial() {
                                 <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
                             </div>
                         </div>
-                        <div className='grid grid-flow-col'>
+                        <div className='grid grid-flow-row xl:grid-flow-col'>
                             <Card></Card>
                             <Card></Card>
                             <Card></Card>
@@ -165,7 +164,7 @@ export default function PaginaInicial() {
                     </div>
                     <div className='relative  md:-mt-[110.5px] lg:-mt-[85.5px]'>
 
-                        <Footer />
+              
                     </div>
                 </footer>
             </div>

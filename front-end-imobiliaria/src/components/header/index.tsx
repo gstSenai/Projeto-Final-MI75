@@ -13,9 +13,11 @@ export function Header() {
             <header className="font-inter bg-[#DFDAD0] px-10 pt-6 max-lg:px-10 lg:px-30 xl:px-20 font-medium">
                 <section className="flex flex-row justify-between ">
                     <div className="flex flex-row items-center lg:gap-16 xl:gap-26">
-                        <div className="flex items-center gap-6">
-                            <img src="/imagensHeader/Logo HAV.png" alt="Logo HAV" className="max-h-full lg:w-[60px] w-[40px] mt-[-0.5rem]" />
-                            <p className="text-2xl xl:text-3xl font-bold text-[#702632]">HAV</p>
+                        <div>
+                            <a className='flex items-center gap-6' href="/PaginaInicial">
+                                <img src="/imagensHeader/Logo HAV.png" alt="Logo HAV" className="max-h-full lg:w-[60px] w-[40px] mt-[-0.5rem]" />
+                                <p className="text-2xl xl:text-3xl font-bold text-[#702632]">HAV</p>
+                            </a>
                         </div>
                         <div>
                             <nav>
