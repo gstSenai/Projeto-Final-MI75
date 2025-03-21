@@ -39,6 +39,9 @@ export default function paginaAgendamento() {
                             <div className='pt-11 sm:pt-14 md:pt-20 lg:pt-28 sm:px-1 md:px-5 lg:px-10'>
                                 <h2 className='center md:text-lg lg:text-xl xl:text-3xl 2xl:text-5xl font-bold text-center text-[#702632]'>Escolha a data, o horário e o corretor para agendar sua visita!</h2>
                                 <div className='flex justify-center'>
+
+
+                                    
                                     <button className='bg-[#702632] h-[73px] xl:h-[109px] w-[260px] xl:w-[390px] rounded-[20px] '>
                                         <p className='text-white font-medium text-2xl md:text-2xl lg:text-3xl xl:text-4xl'>Agendar visita</p>
                                     </button>
