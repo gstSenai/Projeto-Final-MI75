@@ -28,8 +28,8 @@ public class ImovelService {
     }
 
     public Imovel getByIdImovel(Integer id) {
-
-        return repository.findById(id).get();
+        return repository.findById(id).
+                orElseThrow(() -> new NoSuchElementException("Imóvel com ID " + id + " não encontrado."));
     }
 
     public void deleteImovel(Integer id) {
@@ -41,9 +41,10 @@ public class ImovelService {
     }
 
     public List<Imovel> filtroImovel(String tipo_imovel, Double valor_min, Double valor_max){
-        Specification<Imovel> imovelSpecification = Specification.where(ImovelSpecification.hasTipo(tipo_imovel))
-                                                                        .and(ImovelSpecification.hasPrecoMinimo(valor_min))
-                                                                        .and(ImovelSpecification.hasPrecoMaximo(valor_max));
+        Specification<Imovel> imovelSpecification =
+                Specification.where(ImovelSpecification.hasTipo(tipo_imovel))
+                        .and(ImovelSpecification.hasPrecoMinimo(valor_min))
+                        .and(ImovelSpecification.hasPrecoMaximo(valor_max));
         return repository.findAll(imovelSpecification);
 
     }

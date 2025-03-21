@@ -1,6 +1,5 @@
 package weg.projetofinal.Imobiliaria.service;
 
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,12 +59,9 @@ public class ImagemService {
                 .orElseThrow(() -> new RuntimeException("Imagem não encontrada para o ID: " + id));
 
         imagemExistente.setCaminho_foto(imagemDTO.getCaminho_foto());
-
         if (imagemDTO.getImovel() != null) {
             imagemExistente.setImovel(imagemDTO.getImovel());
         }
-
         return repository.save(imagemExistente);
     }
-
 }
