@@ -45,7 +45,7 @@ export function PesquisaPaginaInicial() {
                     <div className=' py-2 w-64 xl:w-[320px]'>
                         <p className='font-medium lg:font-bold text-2xl pb-2'>Localização:</p>
                         <div className='rounded-md w-full bg-[#DFDAD0] flex items-center p-1 gap-2'>
-                            <Image src="/paginaInicial/paginasInicialDetalhes/localização.png" alt="Ícone de localização" width={30} height={30} />
+                            <Image src="/paginaInicial/paginasInicialDetalhes/localização.png" alt="Ícone de localização" width={28} height={28} />
                             <input className='rounded-md w-full bg-[#DFDAD0] text-[#702632]' type="text" placeholder='Busca por Localização' />
                         </div>
                     </div>
