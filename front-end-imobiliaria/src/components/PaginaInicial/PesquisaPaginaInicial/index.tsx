@@ -37,11 +37,17 @@ export function PesquisaPaginaInicial() {
                 <div className='flex flex-col  py-4 lg:flex-row 2xl:flex-row justify-between '>
                     <div className=' py-2 w-64 xl:w-[320px]'>
                         <p className='font-medium lg:font-bold text-2xl pb-2'>Código:</p>
-                        <input className='rounded-md p-2 w-full bg-[#DFDAD0] text-[#702632]' placeholder='Busca por Código' type="text" />
+                        <div className='rounded-md w-full bg-[#DFDAD0] flex items-center p-1 gap-2'>
+                            <Image src="/paginaInicial/paginasInicialDetalhes/lupa.png" alt="Ícone de pesquisa" width={30} height={30} />
+                            <input className='rounded-md w-full bg-[#DFDAD0] text-[#702632]' placeholder='Busca por Código' type="text" />
+                        </div>
                     </div>
                     <div className=' py-2 w-64 xl:w-[320px]'>
                         <p className='font-medium lg:font-bold text-2xl pb-2'>Localização:</p>
-                        <input className='rounded-md p-2  w-full bg-[#DFDAD0] text-[#702632]' type="text" placeholder='Busca por Localização' />
+                        <div className='rounded-md w-full bg-[#DFDAD0] flex items-center p-1 gap-2'>
+                            <Image src="/paginaInicial/paginasInicialDetalhes/localização.png" alt="Ícone de localização" width={28} height={28} />
+                            <input className='rounded-md w-full bg-[#DFDAD0] text-[#702632]' type="text" placeholder='Busca por Localização' />
+                        </div>
                     </div>
                 </div>
 
@@ -65,11 +71,17 @@ export function PesquisaPaginaInicial() {
                         <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between '>
                             <div className='py-2 w-64 xl:w-[320px]'>
                                 <p className='font-medium lg:font-bold text-2xl'>Min Valor:</p>
-                                <input className='rounded-md p-2 w-full bg-[#DFDAD0] text-[#702632]' type="value" placeholder='Busca por Valor Minimo' />
+                                <div className='rounded-md w-full bg-[#DFDAD0] flex items-center p-1 gap-2'>
+                                <Image src="/paginaInicial/paginasInicialDetalhes/cifrao.png" alt="Ícone de cifrão" width={24} height={24} />
+                                    <input className='rounded-md w-full bg-[#DFDAD0] text-[#702632]' type="value" placeholder='Busca por Valor Minimo' />
+                                </div>
                             </div>
                             <div className='py-2 w-64 xl:w-[320px]'>
                                 <p className='font-medium lg:font-bold text-2xl'>Max Valor:</p>
-                                <input className='rounded-md p-2  w-full bg-[#DFDAD0] text-[#702632]' type="value" placeholder='Busca por Valor Maximo' />
+                                <div className='rounded-md w-full bg-[#DFDAD0] flex items-center p-1 gap-2'>
+                                <Image src="/paginaInicial/paginasInicialDetalhes/cifrao.png" alt="Ícone de cifrão" width={24} height={24} />
+                                    <input className='rounded-md w-full bg-[#DFDAD0] text-[#702632]' type="value" placeholder='Busca por Valor Maximo' />
+                                </div>
                             </div>
                         </div>
                         <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between gap-4 '>
