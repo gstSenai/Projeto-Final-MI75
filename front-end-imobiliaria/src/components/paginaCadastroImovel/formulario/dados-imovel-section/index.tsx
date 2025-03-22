@@ -30,7 +30,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                         register={register}
                         required
                         customizacaoClass="w-full"
-                        errors={errors?.imovel?.nome_propriedade?.message}
+                        errors={errors?.imovel?.nome_propriedade}
                     />
                     <FormularioInput
                         placeholder="Tipo do imóvel:"
@@ -40,7 +40,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                         required
                         customizacaoClass="w-full"
                         options={["Casa", "Apartamento", "Terreno"]}
-                        errors={errors?.imovel?.tipo_imovel?.message}
+                        errors={errors?.imovel?.tipo_imovel}
                     />
                     <FormularioInput
                         placeholder="Tipo de transação:"
@@ -50,7 +50,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                         required
                         customizacaoClass="w-full"
                         options={["Venda", "Locação", "Venda e Locação"]}
-                        errors={errors?.imovel?.tipo_transacao?.message}
+                        errors={errors?.imovel?.tipo_transacao}
                     />
                 </div>
                 <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:pt-4 gap-10">
@@ -61,7 +61,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                         required
                         register={register}
                         customizacaoClass="w-full"
-                        errors={errors?.imovel?.valor_venda?.message}
+                        errors={errors?.imovel?.valor_venda}
                     />
                     <FormularioInput
                         placeholder="Valor do Preço Promocional (R$):"
@@ -70,7 +70,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                         register={register}
                         required
                         customizacaoClass="w-full"
-                        errors={errors?.imovel?.valor_promocional?.message}
+                        errors={errors?.imovel?.valor_promocional}
                     />
                     <FormularioInput
                         placeholder="Permitir destaque:"
@@ -79,7 +79,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                         required
                         customizacaoClass="w-full"
                         options={["Sim", "Não"]}
-                        errors={errors?.imovel?.test_destaque?.message}
+                        errors={errors?.imovel?.test_destaque}
                     />
                 </div>
 
@@ -91,7 +91,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                         register={register}
                         required
                         customizacaoClass="w-full"
-                        errors={errors?.imovel?.valor_iptu?.message}
+                        errors={errors?.imovel?.valor_iptu}
                     />
                     <FormularioInput
                         placeholder="Taxa de Condomínio (R$):"
@@ -100,7 +100,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                         register={register}
                         required
                         customizacaoClass="lg:w-full"
-                        errors={errors?.imovel?.condominio?.message}
+                        errors={errors?.imovel?.condominio}
                     />
                     <FormularioInput
                         placeholder="Status do imóvel:"
@@ -109,7 +109,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                         required
                         customizacaoClass="w-full"
                         options={["Vendido", "Disponivel"]}
-                        errors={errors?.imovel?.status_imovel?.message}
+                        errors={errors?.imovel?.status_imovel}
                     />
                 </div>
 
@@ -121,7 +121,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                         required
                         customizacaoClass="w-full"
                         options={["Público", "Privado"]}
-                        errors={errors?.imovel?.test_visibilidade?.message}
+                        errors={errors?.imovel?.test_visibilidade}
                     />
                 </div>
             </div>

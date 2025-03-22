@@ -119,12 +119,12 @@ export function EnderecoSection({ register, setValue, errors }: DadosEnderecoUsu
                 />
                 <FormularioInput
                     placeholder="Número do Imóvel:"
-                    name="endereco.numero_imovel"
+                    name="endereco.numero"
                     register={register}
                     interName="Ex: 100"
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
                     required
-                    errors={errors?.endereco?.numero_imovel}
+                    errors={errors?.endereco?.numero}
                 />
             </div>
             <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:pt-4 gap-10">
