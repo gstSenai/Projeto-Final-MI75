@@ -6,6 +6,7 @@ import request from "@/routes/request"
 import { Formulario } from "../adicionandoUsuario/formulario"
 import { RemoveUsuario } from "../removerUsuario"
 import { EditarUsuario } from "../editandoUsuario"
+import { z } from "zod"
 
 
 // Carregando a fonte Montserrat
@@ -15,31 +16,37 @@ const montserrat = Montserrat({
   display: "swap",
 })
 
-interface UsuarioProps {
-  id: number
-  nome: string
-  sobrenome: string
-  cpf: string
-  tipo_conta: string
-  telefone: string
-  data_nascimento: string
-  email: string
-  senha: string
-  imagem_usuario: string
-  endereco: EnderecoImovelProps
-}
+const UsuarioProps = z.object({
+    id: z.number().optional(),
+    nome: z.string().min(1, { message: "O nome é obrigatório" }),
+    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+    cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
+    tipo_conta: z.string().min(1, {
+        message: "Selecione um tipo de conta válido",
+    }),
+    telefone: z.string().min(10, { message: "Telefone inválido" }),
+    data_nascimento: z.string(),
+    email: z.string().email({ message: "E-mail inválido" }),
+    senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+    idEnderecoUsuario: z.number().optional(),
+})
 
-interface EnderecoImovelProps {
-  id: number
-  cep: string
-  rua: string
-  tipo_residencia: string
-  numero_imovel: number
-  numero_apartamento: number
-  bairro: string
-  cidade: string
-  uf: string
-}
+
+const EnderecoProps = z.object({
+    id: z.number().optional(),
+    cep: z.string().min(1, { message: "CEP é obrigatório" }),
+    rua: z.string().min(1, { message: "Rua é obrigatória" }),
+    tipo_residencia: z.string().min(1, { message: "Tipo de residência é obrigatório" }),
+    numero_imovel: z.coerce.number().min(1, { message: "Número do imóvel é obrigatório" }),
+    numero_apartamento: z.coerce.number().optional(),
+    bairro: z.string().min(1, { message: "Bairro é obrigatório" }),
+    cidade: z.string().min(1, { message: "Cidade é obrigatória" }),
+    uf: z.string().min(1, { message: "UF é obrigatório" }),
+})
+
+
+type UsuarioProps = z.infer<typeof UsuarioProps>
+type EnderecoProps = z.infer<typeof EnderecoProps>
 
 interface ResponseProps {
   content: UsuarioProps[]
