@@ -1,7 +1,7 @@
-import Card from '@/components/CardImovel/Card';
-import { ImoveisAlugados } from '@/components/NumeroAtualizaveis/ImoveisAlugados';
-import { ImoveisDisponiveis } from '@/components/NumeroAtualizaveis/ImoveisDisponiveis';
-import { ImoveisVendidos } from '@/components/NumeroAtualizaveis/ImoveisVendidos';
+import { Card } from '@/components/cardImovel/index';
+import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
+import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
+import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
 import { PesquisaPaginaInicial } from '@/components/PaginaInicial/PesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
 import Carousel from '@/components/PaginaInicial/carrossel';
@@ -91,7 +91,7 @@ export default function PaginaInicial() {
                                 <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
                             </div>
                         </div>
-                        <Card></Card>
+                        <Card />
 
                     </section>
                     <section>
@@ -101,7 +101,7 @@ export default function PaginaInicial() {
                                 <p className='flex justify-center text-center text-xl lg:text-3xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
                             </div>
                         </div>
-                        <Card></Card>
+                        <Card />
 
                     </section>
                 </section>

@@ -2,17 +2,14 @@ package weg.projetofinal.Imobiliaria.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import weg.projetofinal.Imobiliaria.model.dto.ImagemGetResponseDTO;
 
 @Entity
 @Table(name = "tb_fotos_imovel")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Imagem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +19,7 @@ public class Imagem {
     private String caminho_foto;
 
     @ManyToOne
-    @JoinColumn(name = "idImovel")
+    @JoinColumn(name = "idImovel", nullable = false)
     private Imovel imovel;
-
 
 }

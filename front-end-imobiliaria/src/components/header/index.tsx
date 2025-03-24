@@ -15,7 +15,7 @@ export function Header() {
                     <div className="flex flex-row items-center lg:gap-16 xl:gap-26">
                         <div className="flex items-center gap-6">
                             <img src="/imagensHeader/Logo HAV.png" alt="Logo HAV" className="max-h-full lg:w-[60px] w-[40px] mt-[-0.5rem]" />
-                            <p className="text-2xl xl:text-3xl font-bold text-[#702632]">HAV</p>
+                            <p className="text-2xl xl:text-3xl font-bold text-vermelho">HAV</p>
                         </div>
                         <div>
                             <nav>

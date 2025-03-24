@@ -5,9 +5,7 @@ import org.mapstruct.factory.Mappers;
 import weg.projetofinal.Imobiliaria.model.dto.ImagemGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.ImagemPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.dto.ImagemPutResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelImagemGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Imagem;
-import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 
 @Mapper(componentModel = "spring")
 public interface ImagemMapper {

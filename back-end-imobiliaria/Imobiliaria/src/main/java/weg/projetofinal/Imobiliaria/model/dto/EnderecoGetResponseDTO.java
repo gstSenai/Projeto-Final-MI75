@@ -1,6 +1,5 @@
 package weg.projetofinal.Imobiliaria.model.dto;
 
-import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 
 public record EnderecoGetResponseDTO(
         Integer id,

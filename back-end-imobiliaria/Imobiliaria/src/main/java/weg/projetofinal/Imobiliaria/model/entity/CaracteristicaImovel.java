@@ -1,6 +1,5 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,19 +8,17 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@Builder
 @Entity
 @NoArgsConstructor
 @Table(name = "tb_caracteristicas_imovel")
 public class CaracteristicaImovel {
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "id_imovel", referencedColumnName = "id_imovel", foreignKey = @ForeignKey(name = "fk_caracteristica_imovel"))
-    @JsonIgnore
+    @OneToOne(mappedBy = "caracteristicaImovel", cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "id_imovel")
     private Imovel imovel;
     private Integer numero_quartos;
     private Integer numero_banheiros;
