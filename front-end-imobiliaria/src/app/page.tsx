@@ -1,9 +1,21 @@
-import { Footer } from "@/components/footer";
+import { Montserrat } from 'next/font/google';
+import Link from 'next/link';
 
-export default function footer() {
+
+// Carregando a fonte Inter
+const montserrat = Montserrat({
+    subsets: ['latin'],
+    weight: ['400', '800'],
+    display: 'swap',
+});
+
+export default function PaginaEditor() {
     return (
-        <>
-            <Footer />
-        </>
-    )
+        <div className='flex gap-14 text-2xl'>
+            <Link href="./login">Login</Link>
+            <Link href="./cadastro">Cadastro</Link> 
+        </div>
+    );
+
+
 }
