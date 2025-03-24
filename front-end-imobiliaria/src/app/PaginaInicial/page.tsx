@@ -1,12 +1,15 @@
-import Card from '@/components/CardImovel/Card';
-import { ImoveisAlugados } from '@/components/NumeroAtualizaveis/ImoveisAlugados';
-import { ImoveisDisponiveis } from '@/components/NumeroAtualizaveis/ImoveisDisponiveis';
-import { ImoveisVendidos } from '@/components/NumeroAtualizaveis/ImoveisVendidos';
+import { Card } from '@/components/cardImovel/index';
+import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
+import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
+import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
 import { PesquisaPaginaInicial } from '@/components/PaginaInicial/PesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
 import Carousel from '@/components/PaginaInicial/carrossel';
 import BotaoImageTexto from '@/components/PaginaInicial/BotaoImageTexto';
 import AtualizarComponents from '@/components/atualizarComponents';
+import { Header } from '@/components/header';
+import { Footer } from '@/components/footer';
+
 
 // Carregando a fonte Inter
 const montserrat = Montserrat({
@@ -20,6 +23,7 @@ import Image from 'next/image';
 
 export default function PaginaInicial() {
     return (
+      <>
         <div className={`${montserrat.className} pt-3`}>
             <main className='max-lg:px-4 px-20'>
                 <div className="relative flex h-[881px] w-full rounded-[20px] mx-auto overflow-hidden pb-24 lg:pt-14 lg:pb-52 ">
@@ -158,6 +162,7 @@ export default function PaginaInicial() {
                 </div>
             </footer>
         </div>
+        </>
     );
 
 

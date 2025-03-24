@@ -1,15 +1,15 @@
 import { Montserrat } from 'next/font/google';
-
-
-// Carregando a fonte Inter
-const montserrat = Montserrat({
-    subsets: ['latin'],
-    weight: ['400', '800'],
-    display: 'swap',
-});
-
-import Botao from '@/components/Botao';
+import { Botao } from '@/components/botao';
 import Image from 'next/image';
+import { Header } from '@/components/header';
+import { Footer } from '@/components/footer';
+
+// Carregando a fonte Montserrat
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['400', '800'],
+  display: 'swap',
+});
 
 export default function PaginaEditor() {
     return (
@@ -47,8 +47,4 @@ export default function PaginaEditor() {
 
 
     );
-
-
 }
-
-//sm: md: lg: 2xl:
