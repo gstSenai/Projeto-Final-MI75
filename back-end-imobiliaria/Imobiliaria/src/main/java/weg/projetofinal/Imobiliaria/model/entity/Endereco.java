@@ -1,6 +1,5 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@Builder
 @Entity
 @NoArgsConstructor
 @Table(name = "tb_endereco")
@@ -38,7 +36,11 @@ public class Endereco {
 
     private String complemento;
 
-    @OneToOne(mappedBy = "id_endereco")
+    @OneToOne(mappedBy = "id_endereco", cascade = CascadeType.REMOVE)
     private Imovel imovel;
+
+
+
+
 
 }

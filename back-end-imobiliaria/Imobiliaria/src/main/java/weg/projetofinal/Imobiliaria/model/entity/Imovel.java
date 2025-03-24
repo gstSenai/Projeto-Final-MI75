@@ -2,17 +2,17 @@ package weg.projetofinal.Imobiliaria.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tb_imoveis")
-@Builder
 public class Imovel {
+
     @Id
     @Column(name = "id_imovel")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,13 +47,14 @@ public class Imovel {
 
     private String descricao;
 
-    @OneToOne
-    @JoinColumn(name = "id_endereco", nullable = false)
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "id_endereco", nullable = false, unique = true)
     private Endereco id_endereco;
 
-    @ManyToOne
-    @JoinColumn(name = "id_usuario")
-    private Usuario id_usuario;
+    @OneToMany(mappedBy = "imovel", cascade = CascadeType.REMOVE)
+    private List<Imagem> imagem;
 
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private CaracteristicaImovel caracteristicaImovel;
 
 }

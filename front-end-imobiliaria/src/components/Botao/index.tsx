@@ -1,23 +1,28 @@
-interface Botao {
-    texto: string
+import { Montserrat } from 'next/font/google';
+
+const montserrat = Montserrat({
+    subsets: ['latin'],
+    weight: ['400', '800'],
+    display: 'swap',
+});
+
+interface BotaoProps {
+    texto: string;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    className?: string;
+    type?: "button" | "submit" | "reset";
 }
 
-
-
-export default function botao({ texto }: Botao) {
-
+export function Botao({ texto, onClick, className, type = "button" }: BotaoProps) {
     return (
-        <>
-            <div className=" font-montserrat font-normal leading-normal text-black hover:text-white text-[1.25rem]  sm:text-[1.25rem] md:text-[1.75rem] lg:text-[1.975rem] 2xl:text-[2.2rem]">
-                <button className="bg-[#702632] bg-opacity-40 hover:bg-opacity-100 transition-all duration-300 ease-in-out shrink-0 text-center rounded-[20px] w-[242px] h-[46px] sm:w-[242px] sm:h-[46px] md:w-[306px] md:h-[55px] lg:w-[314px] lg:h-[56px] 2xl:w-[370px] 2xl:h-[64px]">
-                    {texto}
-                </button>
-            </div>
-        </>
-
-
-    )
-
-
+        <div className="flex justify-center max-sm:text-lg max-md:text-xl max-lg:text-xl lg:text-xl w-full leading-normal text-black hover:text-white">
+            <button
+                type={type}
+                onClick={onClick}
+                className={`${montserrat.className} bg-vermelho bg-opacity-40 hover:bg-opacity-100 transition-all duration-300 ease-in-out shrink-0 text-center rounded-[20px] h-[45px] w-full ${className || ''}`}
+            >
+                {texto}
+            </button>
+        </div>
+    );
 }
-

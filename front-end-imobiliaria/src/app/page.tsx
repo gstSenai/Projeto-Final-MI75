@@ -1,4 +1,5 @@
 import { Montserrat } from 'next/font/google';
+import Link from 'next/link';
 
 
 // Carregando a fonte Inter
@@ -8,18 +9,11 @@ const montserrat = Montserrat({
   display: 'swap',
 });
 
-import Botao from '@/components/Botao';
-import Image from 'next/image';
-import Link from 'next/link';
-
 export default function PaginaEditor() {
-  return (
-    <>
-      <Link href='./RelatorioAnalise'>Relatorio</Link>
-    </>
-  );
-
-
+    return (
+        <div className='flex gap-14 text-2xl'>
+            <Link href="./login">Login</Link>
+            <Link href="./cadastro">Cadastro</Link> 
+        </div>
+    );
 }
-
-//sm: md: lg: 2xl:

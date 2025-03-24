@@ -5,34 +5,47 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import weg.projetofinal.Imobiliaria.model.dto.ImovelGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.ImovelPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Imovel;
+import weg.projetofinal.Imobiliaria.model.mapper.ImovelMapper;
 import weg.projetofinal.Imobiliaria.service.ImovelService;
+
+import java.util.List;
 
 
 @RestController
 @RequestMapping("/imovel")
+@CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
 public class ImovelController {
 
-    private ImovelService service;
+    private final ImovelService service;
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Imovel create(@RequestBody ImovelPostRequestDTO imovelPostDTO) {
-        return service.createImovel(imovelPostDTO);
+    public ImovelGetResponseDTO create(@RequestBody ImovelPostRequestDTO imovelPostDTO) {
+        try {
+            Imovel imovel = ImovelMapper.INSTANCE.imovelPostRequestDTOToImovel(imovelPostDTO);
+            Imovel savedImovel = service.createImovel(imovel);
+            return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(savedImovel);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao criar imóvel: " + e.getMessage());
+        }
     }
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public Page<Imovel> list(Pageable pageable) {
-        return service.getAllImovel(pageable);
+    public Page<ImovelGetResponseDTO> list(Pageable pageable) {
+        Page<Imovel> imoveisPage = service.getAllImovel(pageable);
+        return imoveisPage.map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO);
     }
 
     @GetMapping("/getById/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Imovel getById(@PathVariable Integer id) {
-        return service.getByIdImovel(id);
+    public ImovelGetResponseDTO getById(@PathVariable Integer id) {
+        Imovel imovel = service.getByIdImovel(id);
+        return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(imovel);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -43,8 +56,23 @@ public class ImovelController {
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Imovel update(@PathVariable Integer id,@RequestBody Imovel imovel) {
-        return service.updateImovel(imovel, id);
+    public ImovelGetResponseDTO update(@PathVariable Integer id, @RequestBody ImovelPostRequestDTO imovelPostDTO) {
+        try {
+            Imovel imovel = ImovelMapper.INSTANCE.imovelPostRequestDTOToImovel(imovelPostDTO);
+            Imovel updatedImovel = service.updateImovel(imovel, id);
+            return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(updatedImovel);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar imóvel: " + e.getMessage());
+        }
     }
 
+    @GetMapping("/filtroImovel")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ImovelGetResponseDTO> filtroImovel(
+            @RequestParam(required = false) String tipo_imovel,
+            @RequestParam(required = false) Double valor_min,
+            @RequestParam(required = false) Double valor_max){
+        List<Imovel> imovel = service.filtroImovel(tipo_imovel, valor_min, valor_max);
+        return imovel.stream().map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO).toList();
+    }
 }

@@ -1,10 +1,12 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import org.hibernate.validator.constraints.br.CPF;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class Usuario {
     @Column(nullable = false)
     private String sobrenome;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 11)
     private String cpf;
 
     @Column(nullable = false)
@@ -43,7 +45,10 @@ public class Usuario {
     @Column(nullable = false)
     private String senha;
 
-    @OneToMany(mappedBy = "id_usuario")
-    private List<Imovel> imovel;
+    private String imagem_usuario;
+
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "id_endereco_usuario")
+    private EnderecoUsuario enderecoUsuario;
 
 }
