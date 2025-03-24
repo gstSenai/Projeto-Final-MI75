@@ -11,11 +11,9 @@ const montserrat = Montserrat({
 
 export default function PaginaEditor() {
     return (
-        <div className='flex gap-14 text-2xl'>
+        <div className={`flex gap-14 text-2xl font-montserrat`}>
             <Link href="./login">Login</Link>
             <Link href="./cadastro">Cadastro</Link> 
         </div>
     );
-
-
 }
