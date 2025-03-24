@@ -1,21 +1,21 @@
 import { Montserrat } from 'next/font/google';
-
-
-// Carregando a fonte Inter
-const montserrat = Montserrat({
-    subsets: ['latin'],
-    weight: ['400', '800'],
-    display: 'swap',
-});
-
-import Botao from '@/components/Botao';
+import { Botao } from '@/components/botao';
 import Image from 'next/image';
+import { Header } from '@/components/header';
+import { Footer } from '@/components/footer';
+
+// Carregando a fonte Montserrat
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['400', '800'],
+  display: 'swap',
+});
 
 export default function PaginaEditor() {
     return (
         <div className={`${montserrat.className} pt-3 pb-24 lg:pt-14 lg:pb-52`}>
             <main className="relative flex h-[811px] w-full max-w-[1810px] mx-auto overflow-hidden ">
-                <Image src="/cidadePaginaEditor.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100}/>
+                <Image className='rounded-lg' src="/cidadePaginaEditor.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100}/>
                 <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32">
                     <h1 className="text-[2.5rem] lg:text-[4.375rem] text-center 2xl:text-start font-bold">Bem-vindo à Área do Editor!</h1>
                     {/* Linha vermelha */}
@@ -47,8 +47,4 @@ export default function PaginaEditor() {
 
 
     );
-
-
 }
-
-//sm: md: lg: 2xl:
