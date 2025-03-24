@@ -19,5 +19,3 @@ export default function PaginaEditor() {
 
 
 }
-
-//sm: md: lg: 2xl:

@@ -1,8 +1,5 @@
 package weg.projetofinal.Imobiliaria.model.dto;
 
-import weg.projetofinal.Imobiliaria.model.entity.Endereco;
-import weg.projetofinal.Imobiliaria.model.entity.Usuario;
-
 public record ImovelGetResponseDTO(
         Integer id,
         Integer codigo,
@@ -20,7 +17,7 @@ public record ImovelGetResponseDTO(
         Double area_terreno,
         String descricao,
         EnderecoImovelGetResponseDTO id_endereco,
-        UsuarioImovelGetResponseDTO id_usuario) {
+        CaracteristicaImovelGetResponseDTO id_caracteristicasImovel) {
 
 
 }
