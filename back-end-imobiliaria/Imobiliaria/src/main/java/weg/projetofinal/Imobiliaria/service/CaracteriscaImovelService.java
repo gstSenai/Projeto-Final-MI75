@@ -25,7 +25,6 @@ public class CaracteriscaImovelService {
         return repository.save(caracteristicaImovel);
     }
 
-
     public Page<CaracteristicaImovel> getAll(Pageable pageable) {
         return repository.findAll(pageable);
     }

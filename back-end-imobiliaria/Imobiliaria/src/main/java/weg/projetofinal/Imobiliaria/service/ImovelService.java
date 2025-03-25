@@ -54,7 +54,8 @@ public class ImovelService {
         Imovel imovelExistente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Imóvel não encontrado com ID: " + id));
 
-        BeanUtils.copyProperties(imovel, imovelExistente, "id", "id_endereco", "caracteristicasImovel");
+        BeanUtils.copyProperties(imovel, imovelExistente, "id", "id_endereco",
+                "caracteristicasImovel");
 
         if (imovel.getId_endereco() != null) {
             imovelExistente.setId_endereco(imovel.getId_endereco());
