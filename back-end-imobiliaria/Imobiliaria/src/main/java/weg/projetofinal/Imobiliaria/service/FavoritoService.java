@@ -2,7 +2,6 @@ package weg.projetofinal.Imobiliaria.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import weg.projetofinal.Imobiliaria.model.dto.UsuarioGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Favorito;
 import weg.projetofinal.Imobiliaria.repository.FavoritoRepository;
 
@@ -27,7 +26,15 @@ public class FavoritoService {
         return favoritoRepository.save(favorito);
     }
 
-    public Favorito updateFavorito(Favorito favorito) {
+    public Favorito updateFavorito(Integer id, Favorito favorito) {
+        Favorito favoritoExistente = getFavoritoById(id);
+        favoritoExistente.setUsuario(favorito.getUsuario());
+        favoritoExistente.setImovel(favorito.getImovel());
 
+        return favoritoRepository.save(favoritoExistente);
+    }
+
+    public void deleteFavorito(Integer id) {
+        favoritoRepository.deleteById(id);
     }
 }
