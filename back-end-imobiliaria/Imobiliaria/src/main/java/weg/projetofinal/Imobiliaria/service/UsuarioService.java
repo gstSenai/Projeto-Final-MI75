@@ -85,4 +85,10 @@ public class UsuarioService {
         return repository.findAll(usuarioSpecification);
     }
 
+    public List<Usuario> listarCorretores() {
+        Specification<Usuario> usuarioSpecification =
+                UsuarioSpecification.hasTipo_conta("Corretor");
+        return repository.findAll(usuarioSpecification);
+    }
+
 }
