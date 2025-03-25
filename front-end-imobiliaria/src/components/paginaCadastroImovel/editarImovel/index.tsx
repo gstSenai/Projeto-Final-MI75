@@ -4,9 +4,15 @@ import { Botao } from "@/components/botao"
 import request from "@/routes/request"
 import { FormularioEditarInput } from "../editarImovel/formularioEditarInput"
 import { type SubmitHandler, useForm } from "react-hook-form"
-
+import { Montserrat } from "next/font/google"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+
+const montserrat = Montserrat({
+    subsets: ['latin'],
+    weight: ['400', '800'],
+    display: 'swap',
+});
 
 const ImovelProps = z.object({
     id: z.number().optional(),
@@ -415,7 +421,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
     return (
         <>
             {showModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-8 z-50">
+                <div className={`${montserrat.className} fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-8 z-50`}>
                     <div className="bg-white rounded-2xl p-8 max-w-3xl w-full">
                         <div className="flex justify-start w-1/12">
                             <button

@@ -10,7 +10,7 @@ const montserrat = Montserrat({
 
 export function Footer() {
     return (
-        <footer className="font-montserrat bg-[#1D1D1D] relative text-white overflow-hidden">
+        <footer className={`${montserrat.className} bg-[#1D1D1D] relative text-white overflow-hidden`}>
             <section className="flex flex-col xl:flex-row p-6 md:p-8 lg:p-12 xl:p-16 pt-16 md:pt-16 lg:pt-20 xl:pt-24 gap-10 xl:gap-20 relative z-10"> {/* Adicionado z-10 aqui */}
 
                 {/* Bloco de Informações */}

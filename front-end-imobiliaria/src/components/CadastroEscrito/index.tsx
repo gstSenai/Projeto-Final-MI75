@@ -16,7 +16,7 @@ export function CadastroEscrito({ texto }: CadastroEscritoProps) {
             <div className="flex justify-start max-lg:justify-center lg:pr-24 xl:pr-28 xl:py-4 2xl:pr-64 2xl:py-6 pl-4 py-3.5
                              bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent 
                              max-lg:p-0">
-                <p className="text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl xl:text-xl 2xl:text-xl whitespace-nowrap max-lg:text-black">{texto}</p>
+                <p className={`${montserrat.className} text-[#5C5C5C]/80 max-sm:text-lg max-md:text-2xl max-lg:text-3xl xl:text-xl 2xl:text-xl whitespace-nowrap max-lg:text-black`}>{texto}</p>
             </div>
         </>
     );

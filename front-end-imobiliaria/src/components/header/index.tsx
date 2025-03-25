@@ -10,7 +10,7 @@ const inter = Inter({
 export function Header() {
     return (
         <>
-            <header className="font-inter bg-[#DFDAD0] px-10 pt-6 max-lg:px-10 lg:px-30 xl:px-20 font-medium">
+            <header className={`${inter.className} bg-[#DFDAD0] px-10 pt-6 max-lg:px-10 lg:px-30 xl:px-20 font-medium`}>
                 <section className="flex flex-row justify-between ">
                     <div className="flex flex-row items-center lg:gap-16 xl:gap-26">
                         <div className="flex items-center gap-6">
