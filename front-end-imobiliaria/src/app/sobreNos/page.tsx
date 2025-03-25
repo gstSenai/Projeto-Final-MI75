@@ -22,7 +22,7 @@ export default function Sobre() {
                     <div className="absolute inset-0 flex items-center p-6">
                         <div className="justify-start text-white md:text-white max-w-md  md:ml-14">
                             <h2 className="ml-7 text-[40px] font-black mb-6">Sobre nós</h2>
-                            <p className="ml-5 text-balance text-[15px] w-72">
+                            <p className="ml-5 text-balance text-[15px] md:w-96">
                                 Apaixonados por qualidade e inovação.
                                 Criamos experiências autênticas, unindo compromisso e excelência para oferecer o melhor a você.                        </p>
                         </div>
@@ -40,7 +40,7 @@ export default function Sobre() {
                     />
                     <div>
                         <h2 className="text-[30px] font-bold mb-2">Missões</h2>
-                        <p className="text-black">
+                        <p className="text-black md:w-[100%] lg:w-[90%]">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.                        </p>
                     </div>
                 </div>
@@ -53,7 +53,7 @@ export default function Sobre() {
                     />
                     <div>
                         <h2 className="text-[30px] font-bold mb-2">Visão</h2>
-                        <p className="text-black">
+                        <p className="text-black md:w-[100%] lg:w-[90%]">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.                        </p>
                     </div>
                 </div>
