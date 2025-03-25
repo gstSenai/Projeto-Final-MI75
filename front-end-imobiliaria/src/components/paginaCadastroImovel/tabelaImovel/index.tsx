@@ -32,6 +32,25 @@ interface ImovelProps {
   area_construida: number
   area_terreno: number
   descricao?: string
+  idEndereco: {
+    id: number
+    cep: string
+    rua: string
+    numero: string
+    bairro: string
+    cidade: string
+    uf: string
+    complemento?: string
+  }
+  id_caracteristicaImovel: {
+    id: number
+    numero_quartos: number
+    numero_banheiros: number
+    numero_suites: number
+    numero_vagas: number
+    piscina: boolean
+    numero_salas: number
+  }
 }
 
 interface ResponseProps {
@@ -213,7 +232,7 @@ export default function TabelaImovel() {
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" className="lg:w-4" />
+              <img src="/iconsForms/sinalRemove.png" alt="sinal de remoção" className="lg:w-4" />
               <p className="text-lg font-medium">Remover</p>
             </div>
           </button>
@@ -224,7 +243,7 @@ export default function TabelaImovel() {
             disabled={isLoading || selectedImoveis.length !== 1}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" className="lg:w-4" />
+              <img src="/iconsForms/canetaEditarBranco.png" alt="sinal de edição" className="lg:w-4" />
               <p className="text-lg font-medium">Editar</p>
             </div>
           </button>

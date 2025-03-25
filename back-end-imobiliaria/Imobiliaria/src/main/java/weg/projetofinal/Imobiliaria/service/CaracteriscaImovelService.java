@@ -18,13 +18,11 @@ public class CaracteriscaImovelService {
 
     private CaracteristicaImovelRepository repository;
 
-
     public CaracteristicaImovel createCaracteristica(CaracteristicaImovelPostRequestDTO caracteristicaImovelDTO) {
         CaracteristicaImovel caracteristicaImovel = CaracteristicaImovelMapper.INSTANCE.caracteristicaImovelPostRequestDTOToCaracteristicaImovel(caracteristicaImovelDTO);
 
         return repository.save(caracteristicaImovel);
     }
-
 
     public Page<CaracteristicaImovel> getAll(Pageable pageable) {
         return repository.findAll(pageable);

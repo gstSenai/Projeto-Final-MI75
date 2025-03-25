@@ -1,6 +1,5 @@
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
-import { Formulario } from "@/components/paginaCadastroImovel/formulario"
 import TabelaImovel from "@/components/paginaCadastroImovel/tabelaImovel"
 
 export default function CadastroImovel() {
