@@ -164,9 +164,11 @@ export default function PaginaInicial() {
                 </div>
                 <div className="relative flex justify-center -mt-[16rem] lg:-mt-[9rem] z-10 max-lg:px-4 px-20">
                     <AtualizarComponents />
+
                 </div>
-            </footer>
             
+            </footer>
+
         </div>
         <Footer/>
         </>
@@ -175,3 +177,11 @@ export default function PaginaInicial() {
 
 
 }
+
+
+
+<div className='flex flex-wrap justify-evenly pt-36 pb-12'>
+<Card  titulo="Casa com 3 quartos"cidade="São Paulo"qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo= {12131}/>
+<Card  titulo="Casa com 3 quartos"cidade="São Paulo"qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo= {12131}/>
+<Card  titulo="Casa com 3 quartos"cidade="São Paulo"qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo= {12131}/>
+</div>
