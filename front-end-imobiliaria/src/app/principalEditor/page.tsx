@@ -17,15 +17,22 @@ export default function PaginaEditor() {
             <Header />
 
             <div className="font-montserrat pt-3 pb-24 lg:pt-14 lg:pb-52">
-                <main className="relative flex h-[811px] w-full max-w-[1810px] mx-auto overflow-hidden ">
-                    <Image className='rounded-lg' src="/cidadePaginaEditor.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100} />
-                    <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32">
-                        <h1 className="text-3xl lg:text-4xl text-center 2xl:text-start font-bold">Bem-vindo à Área do Editor!</h1>
-                        {/* Linha vermelha */}
-                        <div className="border-t-8 border-[#702632] w-[265px] md:w-[405px] 2xl:w-[405px] my-6"></div>
-                        <p className="text-2xl font-normal text-center 2xl:text-start max-w-4xl">Aqui você encontra todas as ferramentas necessárias para gerenciar todos os imóveis junto de ferramentas de cadastro de imóveis.</p>
+                <div className=" md:relative  mb-12 p-6">
+                    <div className=" md:relative rounded-lg overflow-hidder">
+                        <img
+                            src="imagensPaginaEditor-Adm/cidadePaginaEditor.png"
+                            alt="cidadePaginaEditor"
+                            className="h-[500px] md:h-max md:w-max object-cover "
+                        />
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="justify-start text-white  md:ml-14 ">
+                                <h2 className="ml-7 text-[2.15rem] font-bold mb-6">Bem-vindo à Área do Editor!</h2>
+                                <p className="ml-5 text-balance font-normal text-[1.08rem] w-[55%]">
+                                    Aqui você encontra todas as ferramentas necessárias para gerenciar todos os imóveis junto de ferramentas de cadastro de imóveis.</p>
+                            </div>
+                        </div>
                     </div>
-                </main>
+                </div>
                 <section>
                     <h2 className='flex justify-center text-center text-4xl lg:text-4xl font-medium p-24'>Explore nossos recursos:</h2>
                     <div className='flex flex-col lg:flex-row 2xl:flex-row items-center justify-center  sm:items-center sm:justify-center md:justify-around ' >
