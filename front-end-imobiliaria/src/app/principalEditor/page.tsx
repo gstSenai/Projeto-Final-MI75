@@ -1,10 +1,8 @@
 import { Montserrat } from 'next/font/google';
 
-
-// Carregando a fonte Inter
 const montserrat = Montserrat({
     subsets: ['latin'],
-    weight: ['400', '800'],
+    weight: ['400', '700', '800'],
     display: 'swap',
 });
 
@@ -13,16 +11,24 @@ import Image from 'next/image';
 
 export default function PaginaEditor() {
     return (
-        <div className={`${montserrat.className} pt-3 pb-24 lg:pt-14 lg:pb-52`}>
-            <main className="relative flex h-[811px] w-full max-w-[1200px] mx-auto overflow-hidden ">
-                <Image src="/cidadePaginaEditor.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100}/>
-                <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32">
-                    <h1 className="text-[2.5rem] lg:text-[4.375rem] text-center 2xl:text-start font-bold">Bem-vindo à Área do Editor!</h1>
-                    {/* Linha vermelha */}
-                    <div className="border-t-8 border-[#702632] w-[265px] md:w-[405px] 2xl:w-[405px] my-6"></div>
-                    <p className=" text-2xl lg:text-3xl  font-normal text-center 2xl:text-start max-w-4xl">Aqui você encontra todas as ferramentas necessárias para gerenciar todos os imóveis junto de ferramentas de cadastro de imóveis.</p>
+        <div className=" md:bg-[#DFDAD0] min-h-screen flex flex-col items-center font-montserrat">
+            <div className=" md:relative  mb-12 p-6">
+                <div className="w-full md:relative rounded-lg overflow-hidden ">
+                        <img
+                            src="/cidadePaginaEditor.png"
+                            alt="cidadePaginaEditor"
+                            className="h-[500px] md:w-max object-cover "
+                        />
+                    <div className="absolute inset-0 bg-black bg-opacity-10"></div>
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="justify-start text-white  md:ml-14 ">
+                            <h2 className="ml-7 text-[40px] font-bold mb-6">Bem-vindo à Área do Editor!</h2>
+                            <p className="ml-5 text-balance font-normal text-[17px] w-[55%]">
+                                Aqui você encontra todas as ferramentas necessárias para gerenciar todos os imóveis junto de ferramentas de cadastro de imóveis.</p>
+                        </div>
+                    </div>
                 </div>
-            </main>
+            </div>
             <section>
                 <h2 className='flex justify-center text-center text-5xl lg:text-6xl font-medium p-24'>Explore nossos recursos:</h2>
                 <div className='flex flex-col lg:flex-row 2xl:flex-row items-center justify-center  sm:items-center sm:justify-center md:justify-around ' >
