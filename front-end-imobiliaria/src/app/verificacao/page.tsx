@@ -38,11 +38,11 @@ export default function Verificacao() {
 
     return (
         <div className="font-montserrat flex items-center justify-center min-h-screen  max-w-full bg-[url('/icon2FA/imgFundo.png')] bg-cover bg-center">
-            <div className="flex flex-col bg-[#DFDAD0] shadow-lg rounded-lg p-8 w-[800px] h-[400px] text-center items-center">
-                <h2 className="text-3xl font-semibold text-[#702632] pb-9 pt-4">
+            <div className="flex flex-col bg-[#DFDAD0] shadow-lg rounded-lg w-[90%] p-8 lg:w-[800px] lg:h-[400px] text-center items-center">
+                <h2 className="text-[24px] md:text-3xl font-semibold text-[#702632] pb-9 pt-4">
                     Autenticação de duas etapas
                 </h2>
-                <p className="text-black mb-4 w-96 ">
+                <p className="text-black mb-4 w-[100%] md:w-96 ">
                     Digite o código enviado para o seu e-mail (e******@gmail.com). Não compartilhe este código com ninguém.        </p>
                 <div className="flex justify-center gap-2 mb-4">
                     {codigo.map((num, index) => (
@@ -53,7 +53,7 @@ export default function Verificacao() {
                             maxLength="1"
                             value={num}
                             onChange={(e) => handleChange(index, e.target.value)}
-                            className="w-12 h-12 text-xl text-center bg-transparent border border-black rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="w-10 h-10 md:w-12 md:h-12 text-xl text-center bg-transparent border border-black rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                     ))}
                 </div>
