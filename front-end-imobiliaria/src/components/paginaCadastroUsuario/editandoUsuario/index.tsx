@@ -5,9 +5,9 @@ import React from "react"
 import { Botao } from "@/components/botao"
 import request from "@/routes/request"
 import { FormularioEditarInput } from "../editandoUsuario/formularioEditarInput"
-import { type SubmitHandler, useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { type SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const EnderecoProps = z.object({
     id: z.number().optional(),
