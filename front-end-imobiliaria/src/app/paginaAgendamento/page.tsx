@@ -42,8 +42,8 @@ export default function paginaAgendamento() {
 
 
                                     
-                                    <button className='bg-[#702632] h-[73px] xl:h-[109px] w-[260px] xl:w-[390px] rounded-[20px] '>
-                                        <p className='text-white font-medium text-2xl md:text-2xl lg:text-3xl xl:text-4xl'>Agendar visita</p>
+                                    <button className='bg-[#702632] p-3 px-10 lg:p-3 lg:px-10 xl:p-3 xl:px-14 2xl:p-5 2xl:px-14 rounded-[20px] '>
+                                        <p className='text-white font-medium text-base md:text-lg lg:text-xl xl:text-2xl'>Agendar visita</p>
                                     </button>
                                 </div>
 
