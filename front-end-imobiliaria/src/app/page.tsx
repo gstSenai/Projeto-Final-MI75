@@ -4,9 +4,9 @@ import Link from 'next/link';
 
 // Carregando a fonte Inter
 const montserrat = Montserrat({
-    subsets: ['latin'],
-    weight: ['400', '800'],
-    display: 'swap',
+  subsets: ['latin'],
+  weight: ['400', '800'],
+  display: 'swap',
 });
 
 export default function PaginaEditor() {
