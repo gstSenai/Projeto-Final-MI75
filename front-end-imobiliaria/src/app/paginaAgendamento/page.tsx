@@ -3,7 +3,9 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Montserrat } from "next/font/google";
 import Calendario from '@/components/Calendario';
-import { Botao } from '@/components/Botao';
+import { FormularioInput } from '@/components/Calendario/selecaoData';
+import { register } from 'module';
+import { error } from 'console';
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -41,7 +43,15 @@ export default function paginaAgendamento() {
                                 <div className='flex justify-center'>
 
 
-                                    
+                                    <FormularioInput
+                                        placeholder='Horários'
+                                        name='Horario.dia'
+                                        interName='Horário'
+                                        register={register}
+                                        customizacaoClass='w-full p-2 border border-gray-500 rounded'
+                                        required
+                                        errors={errors?.dia}
+                                    />
                                     <button className='bg-[#702632] p-3 px-10 lg:p-3 lg:px-10 xl:p-3 xl:px-14 2xl:p-5 2xl:px-14 rounded-[20px] '>
                                         <p className='text-white font-medium text-base md:text-lg lg:text-xl xl:text-2xl'>Agendar visita</p>
                                     </button>

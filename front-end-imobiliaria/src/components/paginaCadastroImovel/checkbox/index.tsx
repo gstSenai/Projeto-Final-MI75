@@ -1,7 +1,7 @@
 "use client";
 import { FormValorImovel } from "@/components/paginaCadastroImovel/formularioValoresImovel"
 import { FormDadosImovel } from "@/components/paginaCadastroImovel/formularioDadosDoImovel"
-import { Botao } from "@/components/Botao";
+import { Botao } from "@/components/botao";
 import { useState } from "react";
 
 
