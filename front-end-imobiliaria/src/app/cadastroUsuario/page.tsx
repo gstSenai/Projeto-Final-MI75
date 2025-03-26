@@ -20,7 +20,7 @@ export default function CadastroUsuario() {
                     <div className="2xl:px-20 xl:px-20 lg:px-10 px-10 pt-14">
                         <div className="font-inter">
                             <div className="flex flex-col max-lg:justify-center">
-                                <p className="text-2xl xl:text-4xl font-semibold">Gerenciamento de Usuários</p>
+                                <p className="text-2xl xl:text-3xl font-semibold">Gerenciamento de Usuários</p>
                                 <hr className="mt-4 mb-20 w-40 h-1 rounded-2xl bg-vermelho"></hr>
                                 <TabelaUsuario />
                             </div>
