@@ -49,6 +49,7 @@ public class UsuarioService {
     }
 
     public Usuario findById(Integer id) {
+
         return repository.findById(id).get();
     }
 
@@ -91,4 +92,7 @@ public class UsuarioService {
         return repository.findAll(usuarioSpecification);
     }
 
+    public byte[] downloadImagem(String nomeArquivo) {
+        return s3Service.downloadFile(nomeArquivo);
+    }
 }
