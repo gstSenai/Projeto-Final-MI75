@@ -11,9 +11,12 @@ import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.model.mapper.ImovelMapper;
 import weg.projetofinal.Imobiliaria.service.ImovelService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/imovel")
+@CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
 public class ImovelController {
 
@@ -22,9 +25,13 @@ public class ImovelController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ImovelGetResponseDTO create(@RequestBody ImovelPostRequestDTO imovelPostDTO) {
-        Imovel imovel = ImovelMapper.INSTANCE.imovelPostRequestDTOToImovel(imovelPostDTO);
-        Imovel savedImovel = service.createImovel(imovel);
-        return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(savedImovel);
+        try {
+            Imovel imovel = ImovelMapper.INSTANCE.imovelPostRequestDTOToImovel(imovelPostDTO);
+            Imovel savedImovel = service.createImovel(imovel);
+            return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(savedImovel);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao criar imóvel: " + e.getMessage());
+        }
     }
 
     @GetMapping("/getAll")
@@ -50,8 +57,22 @@ public class ImovelController {
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ImovelGetResponseDTO update(@PathVariable Integer id, @RequestBody ImovelPostRequestDTO imovelPostDTO) {
-        Imovel imovel = ImovelMapper.INSTANCE.imovelPostRequestDTOToImovel(imovelPostDTO);
-        Imovel updatedImovel = service.updateImovel(imovel, id);
-        return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(updatedImovel);
+        try {
+            Imovel imovel = ImovelMapper.INSTANCE.imovelPostRequestDTOToImovel(imovelPostDTO);
+            Imovel updatedImovel = service.updateImovel(imovel, id);
+            return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(updatedImovel);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar imóvel: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/filtroImovel")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ImovelGetResponseDTO> filtroImovel(
+            @RequestParam(required = false) String tipo_imovel,
+            @RequestParam(required = false) Double valor_min,
+            @RequestParam(required = false) Double valor_max){
+        List<Imovel> imovel = service.filtroImovel(tipo_imovel, valor_min, valor_max);
+        return imovel.stream().map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO).toList();
     }
 }

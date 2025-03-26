@@ -5,9 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import weg.projetofinal.Imobiliaria.model.dto.EnderecoGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.EnderecoPostRequestDTO;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Endereco;
-import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 
 @Mapper
 public interface EnderecoMapper {
@@ -18,6 +16,4 @@ public interface EnderecoMapper {
     EnderecoGetResponseDTO enderecoToEnderecoGetResponseDTO(Endereco endereco);
 
     Endereco enderecoPostRequestDTOToEndereco(EnderecoPostRequestDTO enderecoPostRequestDTO);
-
-
 }

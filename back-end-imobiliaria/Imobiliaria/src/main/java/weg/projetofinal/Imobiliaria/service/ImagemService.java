@@ -4,12 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import weg.projetofinal.Imobiliaria.model.dto.ImagemPostRequestDTO;
-import weg.projetofinal.Imobiliaria.model.dto.ImagemPutResponseDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Imagem;
-import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.repository.ImagemRepository;
-import weg.projetofinal.Imobiliaria.repository.ImovelRepository;
 
 @Service
 @AllArgsConstructor
