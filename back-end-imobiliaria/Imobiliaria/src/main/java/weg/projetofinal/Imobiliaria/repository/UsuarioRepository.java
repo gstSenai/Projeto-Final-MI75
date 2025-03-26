@@ -7,6 +7,4 @@ import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer>, JpaSpecificationExecutor<Usuario> {
-
-
 }

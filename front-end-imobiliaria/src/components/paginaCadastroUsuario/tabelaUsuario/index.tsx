@@ -1,253 +1,253 @@
-"use client";
+"use client"
 
-import React, { use, useEffect, useState } from 'react';
-import { Montserrat } from 'next/font/google';
-import { Header } from '../../header';
-import { InputDadosUsuario } from '../../paginaCadastroUsuario/adicionandoUsuario/inputDadosUsuario';
-import { InputEnderecoPropriedade } from '../../paginaCadastroUsuario/adicionandoUsuario/inputEnderecoPropriedade';
-import { InputEditandoDadosUsuario } from '../../paginaCadastroUsuario/editandoUsuario/inputEditarDadosUsuario';
-import { Botao } from '../../botao';
+import { useEffect, useState } from "react"
+import { Montserrat } from 'next/font/google'
+import request from "@/routes/request"
+import { Formulario } from "../adicionandoUsuario/formulario"
+import { RemoveUsuario } from "../removerUsuario"
+import { EditarUsuario } from "../editandoUsuario"
+import { z } from "zod"
 
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['400', '800'],
-  display: 'swap',
-});
+  subsets: ["latin"],
+  weight: ["400", "800"],
+  display: "swap",
+})
 
-interface TableProps {
-  headers: string[];
-  data: (string | number)[][];
-}
+const UsuarioProps = z.object({
+    id: z.number().optional(),
+    nome: z.string().min(1, { message: "O nome é obrigatório" }),
+    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+    cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
+    tipo_conta: z.string().min(1, {
+        message: "Selecione um tipo de conta válido",
+    }),
+    telefone: z.string().min(10, { message: "Telefone inválido" }),
+    data_nascimento: z.string(),
+    email: z.string().email({ message: "E-mail inválido" }),
+    senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+    idEnderecoUsuario: z.number().optional(),
+})
 
-interface ImovelProps {
-  id: number;
-  nome_propriedade: string;
-  tipo_transacao: string;
-  valor_venda: number;
-  tipo_imovel: string;
-  status_imovel: string;
-  valor_promocional: number;
-  destaque?: boolean;
-  visibilidade: boolean;
-  condominio: number;
-  area_construida: number;
-  area_terreno: number;
-  descricao: string;
-}
 
-interface UsuarioProps {
-  id: number;
-  nome: string;
-  sobrenome: string;
-  cpf: string;
-  tipo_conta: string;
-  telefone: string;
-  data_nascimento: Date;
-  email: string;
-  senha: string;
-  imovel: string;
-}
+const EnderecoProps = z.object({
+    id: z.number().optional(),
+    cep: z.string().min(1, { message: "CEP é obrigatório" }),
+    rua: z.string().min(1, { message: "Rua é obrigatória" }),
+    tipo_residencia: z.string().min(1, { message: "Tipo de residência é obrigatório" }),
+    numero_imovel: z.coerce.number().min(1, { message: "Número do imóvel é obrigatório" }),
+    numero_apartamento: z.coerce.number().optional(),
+    bairro: z.string().min(1, { message: "Bairro é obrigatório" }),
+    cidade: z.string().min(1, { message: "Cidade é obrigatória" }),
+    uf: z.string().min(1, { message: "UF é obrigatório" }),
+})
+
+
+type UsuarioProps = z.infer<typeof UsuarioProps>
+type EnderecoProps = z.infer<typeof EnderecoProps>
 
 interface ResponseProps {
   content: UsuarioProps[]
 }
 
+export default function TabelaUsuario() {
+  const [selectedUsuarios, setSelectedUsuarios] = useState<UsuarioProps[]>([])
+  const [usuarios, setUsuarios] = useState<ResponseProps | null>(null)
+  const [adicionar, setAdicionar] = useState(false)
+  const [remover, setRemover] = useState(false)
+  const [editar, setEditar] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
 
-const request = async (
-  method: "GET" | "POST" | "PUT" | "DELETE",
-  url: string,
-  body?: any
-): Promise<any> => {
-  try {
-    const options: RequestInit = {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    if (body) {
-      options.body = JSON.stringify(body);
+  const handleAddUsuario = () => {
+    setAdicionar(!adicionar)
+    setEditar(false)
+    setRemover(false)
+    if (adicionar) {
+      refreshData()
     }
-
-    const response = await fetch(url, options);
-
-    if (!response.ok) {
-      throw new Error(`Falha na requisição: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Erro ao fazer a requisição:", error);
-    throw error;
   }
-};
 
+  const handleRemoveUsuario = () => {
+    if (selectedUsuarios.length === 0) {
+      alert("Selecione pelo menos um imóvel para remover")
+      return
+    }
 
-export default function GenericTable() {
-  const [selectedRow, setSelectedRow] = useState<number | null>(null);
-  const [selectedData, setSelectedData] = useState<(string | number)[] | null>(null);
-  const [dataUser, setDataUser] = useState<ResponseProps | null>(null);
-  ({ id: 0, nome: '', email: '', telefone: '', cpf: '', tipo_conta: '' });
-  const [users, setUsers] = useState<ResponseProps | null>(null);
-  const [adicionar, setAdicionar] = useState(false);
-  const [remover, setRemover] = useState(false);
-  const [editar, setEditar] = useState(false);
+    setAdicionar(false)
+    setEditar(false)
+    setRemover(!remover)
+    if (remover) {
+      refreshData()
+    }
+  }
 
-  const getUsers = async () => {
-    const usersGet = await request('GET', 'http://localhost:9090/users/getAll')
-    setUsers(usersGet)
-  };
+  const handleEditusuario = () => {
+    if (selectedUsuarios.length === 0) {
+      alert("Selecione um imóvel para editar")
+      return
+    } else if (selectedUsuarios.length > 1) {
+      alert("Pode editar um imóvel por vez")
+      return
+    }
 
-  const deleteUser = async (userId: number): Promise<ResponseProps> => {
-    return request('DELETE', `http://localhost:9090/users/delete/${userId}`);
-  };
+    setAdicionar(false)
+    setRemover(false)
+    setEditar(!editar)
+    if (editar) {
+      refreshData()
+    }
+  }
+
+  const getUsuario = async () => {
+    if (isLoading) return
+
+    setIsLoading(true)
+    try {
+      const usuariosGet = await request("GET", "http://localhost:9090/usuario/getAll")
+      setUsuarios(usuariosGet)
+    } catch (error) {
+      console.error("Error fetching usuarios:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const refreshData = () => {
+    setRefreshTrigger((atualizar) => atualizar + 1)
+    setSelectedUsuarios([])
+  }
+
+  const toggleUsuarioselection = (usuario: UsuarioProps) => {
+    setSelectedUsuarios(prevSelected => {
+      const isSelected = prevSelected.some(u => u.id === usuario.id)
+
+      if (isSelected) {
+        return prevSelected.filter(u => u.id !== usuario.id)
+      } else {
+        return [...prevSelected, usuario]
+      }
+    })
+  }
 
   useEffect(() => {
-    getUsers()
-  }, []);
+    getUsuario()
+    setAdicionar(false)
+    setEditar(false)
+    setRemover(false)
+  }, [refreshTrigger])
 
   return (
     <>
-      <div className="flex flex-col mb-20 sm:flex-col md:flex-col lg:flex-row 2xl:flex-row">
-        <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6">
+      <div className="flex flex-col gap-10 sm:flex-col lg:flex-row font-montserrat">
+        <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6 w-full">
           <div className="overflow-x-auto max-h-[500px]">
             <table className="w-full border-separate border-spacing-0">
               <thead>
-                <tr className="bg-[#702632] text-white sticky top-0 z-10">
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
+                <tr className="bg-vermelho text-white sticky top-0 z-10">
+                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Nome</p>
                   </th>
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
+                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>E-mail</p>
                   </th>
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
-                    <p>Telefone</p>
-                  </th>
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
+                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>CPF</p>
                   </th>
-                  <th className="p-4 text-center font-bold border border-[#E0D6CE]">
-                    <p>Tipo da Conta</p>
+                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
+                    <p>Tipo Conta</p>
+                  </th>
+                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
+                    <p>Telefone</p>
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {users?.content?.map((user) => (
-                  <tr
-                    key={user.id}
-                    className="bg-[#FAF6ED] hover:bg-[#702632] hover:bg-opacity-30 cursor-pointer border-b border-[#E0D6CE]"
-                  >
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.nome}
-                    </td>
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.email}
-                    </td>
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.telefone}
-                    </td>
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.cpf}
-                    </td>
-                    <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50">
-                      {user.tipo_conta}
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={5} className="p-4 text-center border border-[#E0D6CE]">
+                      Carregando...
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  usuarios?.content?.map((usuario) => {
+                    const isSelected = selectedUsuarios.some(u => u.id === usuario.id)
+                    return (
+                      <tr
+                        key={usuario.id}
+                        className={`cursor-pointer border-b border-[#E0D6CE] ${isSelected ? "bg-vermelho text-white" : "bg-[#FAF6ED] hover:bg-vermelho hover:bg-opacity-30"
+                          }`}
+                        onClick={() => toggleUsuarioselection(usuario)}
+                      >
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
+                          {usuario.nome}
+                        </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 max-w-[20rem] truncate whitespace-nowrap overflow-hidden">
+                          {usuario.email}
+                        </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
+                          {usuario.cpf}
+                        </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
+                          {usuario.tipo_conta}
+                        </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
+                          {usuario.telefone}
+                        </td>
+                      </tr>
+                    )
+                  })
+                )}
               </tbody>
             </table>
           </div>
+          {selectedUsuarios.length > 0 && (
+            <div className="p-3 bg-[#FAF6ED] border-t border-[#E0D6CE]">
+              <p className="text-vermelho font-medium">{selectedUsuarios.length} Usuário(s) selecionado(s)</p>
+            </div>
+          )}
         </div>
-        <div className='flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full '>
-          <button onClick={() => setAdicionar(!adicionar)} className='w-36 lg:h-[50px]  m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle'>
-            <div className='pl-5 flex items-center gap-3 justify-start '>
-              <img src="./iconsForms/sinalAdd.png" alt="sinal de adição" className='lg:w-4' />
-              <p className='text-lg font-medium'>Adicionar</p>
+        <div className="flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full ">
+          <button
+            onClick={handleAddUsuario}
+            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
+            disabled={isLoading}
+          >
+            <div className="pl-5 flex items-center gap-3 justify-start ">
+              <img src="./iconsForms/sinalAdd.png" alt="sinal de adição" className="w-4" />
+              <p className="text-lg font-medium">Adicionar</p>
             </div>
           </button>
 
-          <button onClick={() => setRemover(!remover)} className='w-36 lg:h-[50px] m-4 bg-[#702632] text-white rounded-[20px] text-center inline-block align-middle'>
-            <div className='pl-5 flex items-center gap-3 justify-start'>
-              <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" className='lg:w-4' />
-              <p className='text-lg font-medium'>Remover</p>
+          <button
+            onClick={handleRemoveUsuario}
+            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
+            disabled={isLoading}
+          >
+            <div className="pl-5 flex items-center gap-3 justify-start">
+              <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" className="w-4" />
+              <p className="text-lg font-medium">Remover</p>
             </div>
           </button>
 
-          <button onClick={() => setEditar(!editar)} className='w-36 lg:h-[50px] m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle'>
-            <div className='pl-5 flex items-center gap-3 justify-start'>
-              <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" className='lg:w-4' />
-              <p className='text-lg font-medium'>Editar</p>
+          <button
+            onClick={handleEditusuario}
+            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
+            disabled={isLoading || selectedUsuarios.length !== 1}
+          >
+            <div className="pl-5 flex items-center gap-3 justify-start">
+              <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" className="w-4" />
+              <p className="text-lg font-medium">Editar</p>
             </div>
           </button>
         </div>
-      </div >
+      </div>
 
-
-      {adicionar && !editar && (
-        <>
-          <div className="flex flex-col max-lg:justify-center">
-            <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
-
-            <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
-          </div>
-
-          <InputDadosUsuario />
-        </>
-      )
-      }
-
-      {
-        remover && !adicionar && !editar && (
-          <div>
-            <div className="flex flex-col max-lg:justify-center">
-              <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Dados do usuário</p>
-
-              <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
-            </div>
-
-            <InputDadosUsuario />
-
-            <div className="flex flex-col mt-20 max-lg:justify-center">
-              <p className="text-2xl xl:text-4xl font-semibold max-lg:hidden">Endereço do proprietário</p>
-
-              <hr className="mt-4 mb-10 w-40 h-1 rounded-2xl bg-[#702632] "></hr>
-            </div>
-
-            <InputEnderecoPropriedade />
-
-            <div className="flex items-center gap-16 mt-10">
-              
-            </div>
-          </div>
-        )
-      }
-
-      {
-        selectedData && editar && !adicionar && !remover && (
-          <InputEditandoDadosUsuario selectedData={selectedData} />
-        )
-      }
+      {adicionar && <Formulario onComplete={refreshData} />}
+      {remover && <RemoveUsuario selectedUsers={selectedUsuarios} onComplete={refreshData} />}
+      {editar && <EditarUsuario selectedUsuarios={selectedUsuarios} onComplete={refreshData} />}
     </>
-  );
+  )
 }
-
-const propertyHeaders = ['Código', 'Nome da Propriedade', 'Tipo de imóvel', 'Visibilidade', 'Estado'];
-const propertyData = [
-  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
-  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado'],
-  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
-  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado'],
-  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
-  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado'],
-  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
-  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado'],
-  ['4356AA353', 'Casa de Guaramirim', 'Venda', 'Permitida', 'Promoção'],
-  ['6541e9v564', 'Casa de João Pessoa', 'Locação', 'Bloqueada', 'Alugado']
-];
-
-const userHeaders = ['Nome', 'E-mail', 'Endereço', 'CPF', 'Telefone'];
-

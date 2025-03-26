@@ -24,10 +24,15 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
         <>
             <div className={`${inter.className} flex justify-center gap-14 lg:gap-4 py-10 2xl:gap-8 min-h-screen flex-col lg:flex-row bg-[#DFDAD0] px-10`}>
                 <button>
-                    <div className="flex justify-center items-center">
-                        <div className="flex flex-col w-full max-w-[375px] lg:max-w-[500px] lg:px-4">
-                            <div className="w-full">
-                                <Image src="/imagensImovel/fotoImovel.png" alt="Imagem Imovel" width={500} height={350} className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[500px]" />
+                <div className="flex justify-center items-center">
+                    <div className="flex flex-col w-full max-w-[375px] lg:max-w-[500px] lg:px-4">
+                        <div className="w-full">
+                            <img src="/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[400px]" />
+                        </div>
+                        <div className="w-full bg-white shadow-[5px_20px_100px_rgb(0,0,0,0.1)] rounded-b-[20px] py-2">
+                            <div className="flex flex-col justify-center items-center">
+                                <p className="text-lg 2xl:text-2xl font-black text-[#5C5C5C] [text-shadow:1px_1px_1px_#5C5C5C]">{titulo}</p>
+                                <p className="text-[#702632] font-semibold text-sm 2xl:text-lg">{cidade}</p>
                             </div>
                             <div className="w-full bg-white shadow-[5px_20px_100px_rgb(0,0,0,0.1)] rounded-b-[20px] py-2">
                                 <div className="flex flex-col justify-center items-center">
@@ -58,8 +63,12 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                             </div>
                         </div>
                     </div>
+                </div>
+
                 </button>
-            </div >
+        
+        
+            </div>
         </>
     );
 }

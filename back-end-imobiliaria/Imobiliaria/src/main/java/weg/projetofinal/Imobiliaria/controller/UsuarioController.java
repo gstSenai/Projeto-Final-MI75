@@ -96,4 +96,6 @@ public class UsuarioController {
         List<Usuario> usuario = service.listarCorretores();
         return usuario.stream().map(UsuarioMapper.INSTANCE::usuarioToUsuarioGetResponseDTO).toList();
     }
+
+
 }

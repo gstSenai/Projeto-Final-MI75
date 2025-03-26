@@ -1,4 +1,8 @@
+"use client"
+
 import { Inter } from 'next/font/google';
+import { useState } from 'react';
+import Image from 'next/image';
 
 // Carregando a fonte Inter
 const inter = Inter({
@@ -8,46 +12,94 @@ const inter = Inter({
 });
 
 export function Header() {
+    const [hamburguerMobile, setHambuguerMobile] = useState(false)
+
     return (
         <>
-            <header className="font-inter bg-[#DFDAD0] px-10 pt-6 max-lg:px-10 lg:px-30 xl:px-20 font-medium">
+            <header className={`${inter.className} bg-[#DFDAD0] px-10 pt-6 max-lg:px-10 lg:px-30 xl:px-20 font-medium`}>
                 <section className="flex flex-row justify-between ">
-                    <div className="flex flex-row items-center lg:gap-16 xl:gap-26">
-                        <div className="flex items-center gap-6">
-                            <img src="/imagensHeader/Logo HAV.png" alt="Logo HAV" className="max-h-full lg:w-[60px] w-[40px] mt-[-0.5rem]" />
-                            <p className="text-2xl xl:text-3xl font-bold text-[#702632]">HAV</p>
+                    <div className="flex flex-row items-center md:gap-10 lg:gap-16 xl:gap-26">
+                        <div className="flex items-center md:gap-4 gap-6">
+                            <Image src="/imagensHeader/Logo HAV.png" alt="Logo HAV" width={60} height={60} className="max-h-full lg:w-[60px] w-[40px] mt-[-0.5rem]" />
+                            <p className="md:text-xl text-2xl xl:text-3xl font-bold text-vermelho">HAV</p>
                         </div>
                         <div>
                             <nav>
-                                <ul className="flex flex-row text-xl whitespace-nowrap gap-12 lg:gap-6 text-[#303030] max-lg:hidden">
-                                    <li><a href="/PaginaInicial">Início</a></li>
+                                <ul className="flex flex-row max-lg:text-base text-xl whitespace-nowrap md:gap-4 lg:gap-6 text-[#303030] max-md:hidden">
+                                    <li><a href="#">Início</a></li>
                                     <li><a href="#">Propriedades</a></li>
                                     <li><a href="#">Corretores</a></li>
-                                    <li><a href="/sobreNos">Sobre nós</a></li>
+                                    <li><a href="#">Sobre nós</a></li>
                                 </ul>
                             </nav>
                         </div>
                     </div>
 
                     <div className="flex flex-row items-center font-medium ">
-                        <div className="flex flex-row items-center gap-6 max-lg:hidden">
-                            <div className="flex flex-row items-center pl-16" />
-                            <img src="/imagensHeader/Botão tema site.png" alt="Tema" />
+                        <div className="flex flex-row items-center gap-6 max-md:hidden">
+                            <div className="flex flex-row items-center md:pl-4 lg:pl-16">
+                                <Image src="/imagensHeader/Botão tema site.png" alt="Tema" width={24} height={24} />
+                            </div>
                         </div>
-                        <div className="flex flex-row items-center gap-2 px-8 max-lg:hidden">
-                            <img src="/imagensHeader/Brasil.png" alt="Idioma" />
-                            <p className="text-xl">Português</p>
-                            <img src="/imagensHeader/seta-para-baixo 2.png" alt="Abrir opções" />
+                        <div className="flex flex-row items-center md:gap-1 lg:gap-2 md:px-4 lg:px-8 max-md:hidden">
+                            <Image src="/imagensHeader/Brasil.png" alt="Idioma" width={24} height={24} />
+                            <p className="text-xl max-lg:text-base">Português</p>
+                            <Image src="/imagensHeader/seta-para-baixo 2.png" alt="Abrir opções" width={24} height={24} />
                         </div>
-                        <div className="flex flex-row items-center max-lg:hidden">
-                            <img src="/imagensHeader/PERFIL SEM LOGIN.png" alt="Perfil sem login" className="w-12 lg:w-[50px]" />
+                        <div className="flex flex-row items-center max-md:hidden">
+                            <Image src="/imagensHeader/PERFIL SEM LOGIN.png" alt="Perfil sem login" width={50} height={50} className="w-12 md:w-[40px] lg:w-[50px]" />
                         </div>
-                        <div className="flex flex-row items-center lg:hidden">
-                            <img src="/imagensHeader/HAMBURGUER.png" alt="Perfil sem login" className="w-12 lg:w-[50px]" />
+                        <div className="flex flex-row items-center md:hidden">
+                            <Image
+                                onClick={() => setHambuguerMobile(!hamburguerMobile)}
+                                src={hamburguerMobile ? "/imagensHeader/HAMBURGUER.png" : "/imagensHeader/HAMBURGUER.png"}
+                                alt={hamburguerMobile ? "Fechar menu" : "Abrir menu"}
+                                width={50}
+                                height={50}
+                                className="w-12 md:w-[40px] lg:w-[50px] cursor-pointer"
+                            />
                         </div>
                     </div>
                 </section >
             </header>
+
+            {hamburguerMobile && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 ">
+                    <div className="fixed inset-0 bg-[#DFDAD0] z-50">
+                        <div className="flex flex-col h-full px-10 py-10">
+                            <div className="flex flex-row justify-between w-full">
+                                <div className="w-full h-full">
+                                    <div className='bg-slate-500 w-[7rem] h-[250%]' />
+                                </div>
+                                <div className="flex justify-end mb-8">
+                                    <Image
+                                        onClick={() => setHambuguerMobile(false)}
+                                        src="/imagensHeader/HAMBURGUER.png"
+                                        alt="Fechar menu"
+                                        width={50}
+                                        height={50}
+                                        className="cursor-pointer"
+                                    />
+                                </div>
+                            </div>
+                            <ul className="space-y-8 text-center mt-20">
+                                <li>
+                                    <a href="#" className="text-3xl text-[#303030] hover:text-vermelho transition-colors">Início</a>
+                                </li>
+                                <li>
+                                    <a href="#" className="text-3xl text-[#303030] hover:text-vermelho transition-colors">Propriedades</a>
+                                </li>
+                                <li>
+                                    <a href="#" className="text-3xl text-[#303030] hover:text-vermelho transition-colors">Corretores</a>
+                                </li>
+                                <li>
+                                    <a href="#" className="text-3xl text-[#303030] hover:text-vermelho transition-colors">Sobre nós</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }
