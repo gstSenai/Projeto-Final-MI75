@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Data
@@ -20,6 +21,9 @@ public class Agendamento {
 
     @Column(nullable = false)
     private LocalDate data;
+
+    @Column(nullable = false)
+    private LocalTime horario;
 
     @ManyToOne
     private Usuario usuario;
