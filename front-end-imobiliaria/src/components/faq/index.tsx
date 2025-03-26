@@ -27,11 +27,11 @@ const FAQ = ({ title, faqs }: { title: string, faqs: { question: string, answer:
           </h2>
         </div>
         <div className="pt-3 w-5xl">
-          <h2 className="font-extralight  text-[20px] md:text-[28px] text-gray pb-5 text-center mb-3">
+          <h2 className="font-extralight  text-xl md:text-3xl text-gray pb-5 text-center mb-3">
             Como podemos ajudar?
           </h2>
         </div>
-        <div className="flex flex-col items-center min-h-screen ">
+        <div className="flex flex-col items-center mb-60">
           <div className="relative w-full max-w-xl mb-6">
             <input
               type="text"
