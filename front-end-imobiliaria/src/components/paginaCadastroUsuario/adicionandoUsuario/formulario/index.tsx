@@ -174,7 +174,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
         <>
             {showForm && (
                 <>
-                    <div className="font-inter flex">
+                    <div className="font-inter flex mt-20">
                         <div className="flex flex-row items-center">
                             <p className="text-2xl xl:text-3xl font-semibold mt-10 mb-5">Dados do Usuário:</p>
                         </div>
@@ -188,7 +188,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
 
                     <EnderecoSection register={register} errors={errors.endereco} setValue={setValue} />
 
-                    <div className="flex items-center gap-16 mt-10">
+                    <div className="flex items-center gap-16 mt-10 mb-20">
                         <div className="flex max-sm:gap-12 max-lg:gap-36 gap-[40rem] w-full">
                             <Botao className="max-lg:text-base" onClick={() => console.log()} texto="Cancelar" />
                             <Botao className="max-lg:text-base" onClick={handleSubmit(onSubmitUsuario)} texto="Salvar cadastro" />

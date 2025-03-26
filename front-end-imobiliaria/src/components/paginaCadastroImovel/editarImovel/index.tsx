@@ -4,9 +4,15 @@ import { Botao } from "@/components/botao"
 import request from "@/routes/request"
 import { FormularioEditarInput } from "../editarImovel/formularioEditarInput"
 import { type SubmitHandler, useForm } from "react-hook-form"
-
+import { Montserrat } from "next/font/google"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+
+const montserrat = Montserrat({
+    subsets: ['latin'],
+    weight: ['400', '800'],
+    display: 'swap',
+});
 
 const ImovelProps = z.object({
     id: z.number().optional(),
@@ -26,7 +32,7 @@ const ImovelProps = z.object({
     area_construida: z.coerce.number().min(1, { message: "Área construída é obrigatória" }),
     area_terreno: z.coerce.number().min(1, { message: "Área do terreno é obrigatória" }),
     descricao: z.string().optional(),
-    id_endereco: z.object({
+    idEndereco: z.object({
         id: z.number(),
         cep: z.string(),
         rua: z.string(),
@@ -36,7 +42,7 @@ const ImovelProps = z.object({
         uf: z.string(),
         complemento: z.string().nullable().optional()
     }),
-    id_caracteristicasImovel: z.object({
+    id_caracteristicaImovel: z.object({
         id: z.number(),
         numero_quartos: z.number(),
         numero_banheiros: z.number(),
@@ -107,7 +113,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                 area_terreno: 0,
                 nome_propriedade: "",
                 descricao: "",
-                id_endereco: {
+                idEndereco: {
                     id: 0,
                     cep: "",
                     rua: "",
@@ -117,7 +123,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                     uf: "",
                     complemento: undefined
                 },
-                id_caracteristicasImovel: {
+                id_caracteristicaImovel: {
                     piscina: false,
                 }
             },
@@ -138,13 +144,13 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
 
             const responses = await Promise.all(
                 selectedImoveis.map(async (imovel) => {
-                    const caracteristicasImovel = data.id_caracteristicasImovel;
+                    const caracteristicasImovel = data.id_caracteristicaImovel;
 
                     const imoveisAtualizado = {
                         ...imovel,
                         ...data,
-                        enderecoUsuario: imovel.id_endereco,
-                        id_caracteristicasImovel: caracteristicasImovel
+                        enderecoUsuario: imovel.idEndereco,
+                        id_caracteristicaImovel: caracteristicasImovel
                     }
 
                     if (caracteristicasImovel) {
@@ -155,7 +161,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                         );
                         
                         if (caracteristicasResponse) {
-                            imoveisAtualizado.id_caracteristicasImovel = caracteristicasResponse;
+                            imoveisAtualizado.id_caracteristicaImovel = caracteristicasResponse;
                         }
                     }
 
@@ -172,24 +178,24 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
     const editarCaracImovel = async (data: ImovelCaracteristicas) => {
         try {
             for (const imovel of selectedImoveis) {
-                if (!imovel.id_caracteristicasImovel) {
+                if (!imovel.id_caracteristicaImovel) {
                     console.warn("⚠️ Imóvel sem características cadastradas:", imovel)
                     continue
                 }
 
                 const imovelCaracteristicasAtualizado = {
-                    id: imovel.id_caracteristicasImovel.id,
-                    numero_quartos: imovel.id_caracteristicasImovel.numero_quartos,
-                    numero_banheiros: imovel.id_caracteristicasImovel.numero_banheiros,
-                    numero_suites: imovel.id_caracteristicasImovel.numero_suites,
-                    numero_vagas: imovel.id_caracteristicasImovel.numero_vagas,
-                    piscina: imovel.id_caracteristicasImovel.piscina,
-                    numero_salas: imovel.id_caracteristicasImovel.numero_salas,
+                    id: imovel.id_caracteristicaImovel.id,
+                    numero_quartos: imovel.id_caracteristicaImovel.numero_quartos,
+                    numero_banheiros: imovel.id_caracteristicaImovel.numero_banheiros,
+                    numero_suites: imovel.id_caracteristicaImovel.numero_suites,
+                    numero_vagas: imovel.id_caracteristicaImovel.numero_vagas,
+                    piscina: imovel.id_caracteristicaImovel.piscina,
+                    numero_salas: imovel.id_caracteristicaImovel.numero_salas,
                 }
 
                 const response = await request(
                     "PUT",
-                    `http://localhost:9090/imovel/update/${imovel.id_caracteristicasImovel.id}`,
+                    `http://localhost:9090/imovel/update/${imovel.id_caracteristicaImovel.id}`,
                     imovelCaracteristicasAtualizado,
                 )
                 console.log("✅ Caracteristicas do imóvel atualizado com sucesso:", response)
@@ -206,13 +212,13 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
             console.log("📤 Enviando endereço do usuário:", data)
 
             for (const imovel of selectedImoveis) {
-                if (!imovel.id_endereco || !imovel.id_endereco.id) {
+                if (!imovel.idEndereco || !imovel.idEndereco.id) {
                     console.warn("⚠️ Usuário sem endereço cadastrado:", imovel)
                     continue
                 }
 
                 const enderecoAtualizado = {
-                    idImovel: imovel.id_endereco.id,
+                    idImovel: imovel.idEndereco.id,
                     cep: data.cep,
                     rua: data.rua,
                     numero: data.numero,
@@ -224,7 +230,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
 
                 const response = await request(
                     "PUT",
-                    `http://localhost:9090/endereco/update/${imovel.id_endereco.id}`,
+                    `http://localhost:9090/endereco/update/${imovel.idEndereco.id}`,
                     enderecoAtualizado,
                 )
                 console.log("✅ Endereço atualizado com sucesso:", response)
@@ -248,7 +254,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
             const { imovel, imovelCaracteristicas } = data
 
             const imovelSelecionado = selectedImoveis[0]
-            const imovelSelecionadoEndereco = selectedImoveis[0].id_endereco
+            const imovelSelecionadoEndereco = selectedImoveis[0].idEndereco
 
             const imovelAtualizado = {
                 ...imovelSelecionado,
@@ -265,11 +271,11 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                 area_construida: imovel.area_construida || 0,
                 area_terreno: imovel.area_terreno || 0,
                 descricao: imovel.descricao || "",
-                id_endereco: {
+                idEndereco: {
                     ...imovelSelecionadoEndereco,
                 },
-                id_caracteristicasImovel: {
-                    ...imovelSelecionado.id_caracteristicasImovel,
+                id_caracteristicaImovel: {
+                    ...imovelSelecionado.id_caracteristicaImovel,
                     numero_quartos: imovelCaracteristicas.numero_quartos,
                     numero_banheiros: imovelCaracteristicas.numero_banheiros,
                     numero_suites: imovelCaracteristicas.numero_suites,
@@ -386,28 +392,28 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                 ...imovel,
                 test_destaque: imovel.destaque ? "Sim" : "Não",
                 test_visibilidade: imovel.visibilidade ? "Pública" : "Privada",
-                id_caracteristicasImovel: imovel.id_caracteristicasImovel
+                id_caracteristicaImovel: imovel.id_caracteristicaImovel
             });
             
             setValue("endereco", {
-                cep: imovel.id_endereco?.cep || "",
-                rua: imovel.id_endereco?.rua || "",
-                numero: imovel.id_endereco?.numero || "",
-                bairro: imovel.id_endereco?.bairro || "",
-                cidade: imovel.id_endereco?.cidade || "",
-                uf: imovel.id_endereco?.uf || "",
-                complemento: imovel.id_endereco?.complemento || ""
+                cep: imovel.idEndereco?.cep || "",
+                rua: imovel.idEndereco?.rua || "",
+                numero: imovel.idEndereco?.numero || "",
+                bairro: imovel.idEndereco?.bairro || "",
+                cidade: imovel.idEndereco?.cidade || "",
+                uf: imovel.idEndereco?.uf || "",
+                complemento: imovel.idEndereco?.complemento || ""
             });
             
             setValue("imovelCaracteristicas", {
-                id: imovel.id_caracteristicasImovel?.id || 0,
-                numero_quartos: imovel.id_caracteristicasImovel?.numero_quartos || 0,
-                numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
-                numero_suites: imovel.id_caracteristicasImovel?.numero_suites || 0,
-                numero_vagas: imovel.id_caracteristicasImovel?.numero_vagas || 0,
-                test_piscina: imovel.id_caracteristicasImovel?.piscina ? "Sim" : "Não",
-                piscina: imovel.id_caracteristicasImovel?.piscina || false,
-                numero_salas: imovel.id_caracteristicasImovel?.numero_salas || 0
+                id: imovel.id_caracteristicaImovel?.id || 0,
+                numero_quartos: imovel.id_caracteristicaImovel?.numero_quartos || 0,
+                numero_banheiros: imovel.id_caracteristicaImovel?.numero_banheiros || 0,
+                numero_suites: imovel.id_caracteristicaImovel?.numero_suites || 0,
+                numero_vagas: imovel.id_caracteristicaImovel?.numero_vagas || 0,
+                test_piscina: imovel.id_caracteristicaImovel?.piscina ? "Sim" : "Não",
+                piscina: imovel.id_caracteristicaImovel?.piscina || false,
+                numero_salas: imovel.id_caracteristicaImovel?.numero_salas || 0
             });
         }
     }, [selectedImoveis, setValue]);
@@ -415,7 +421,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
     return (
         <>
             {showModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-8 z-50">
+                <div className={`${montserrat.className} fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-8 z-50`}>
                     <div className="bg-white rounded-2xl p-8 max-w-3xl w-full">
                         <div className="flex justify-start w-1/12">
                             <button
@@ -601,7 +607,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     label="Número de Quartos:"
                                                                     placeholder="Número de Quartos:"
                                                                     name="imovelCaracteristicas.numero_quartos"
-                                                                    value={imovel.id_caracteristicasImovel?.numero_quartos || 0}
+                                                                    value={imovel.id_caracteristicaImovel?.numero_quartos || 0}
                                                                     register={register}
                                                                     icon={{ type: "dormitorio" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -613,7 +619,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     label="Número de Suítes:"
                                                                     placeholder="Número de Suítes:"
                                                                     name="imovelCaracteristicas.numero_suites"
-                                                                    value={imovel.id_caracteristicasImovel?.numero_suites || 0}
+                                                                    value={imovel.id_caracteristicaImovel?.numero_suites || 0}
                                                                     register={register}
                                                                     icon={{ type: "suite" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -625,7 +631,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     label="Contém Piscina:"
                                                                     placeholder="Contém Piscina:"
                                                                     name="imovelCaracteristicas.test_piscina"
-                                                                    value={imovel.id_caracteristicasImovel?.piscina ? "Sim" : "Não"}
+                                                                    value={imovel.id_caracteristicaImovel?.piscina ? "Sim" : "Não"}
                                                                     register={register}
                                                                     icon={{ type: "praia" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -638,7 +644,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     label="Número de Banheiros:"
                                                                     placeholder="Número de Banheiros:"
                                                                     name="imovelCaracteristicas.numero_banheiros"
-                                                                    value={imovel.id_caracteristicasImovel?.numero_banheiros || 0}
+                                                                    value={imovel.id_caracteristicaImovel?.numero_banheiros || 0}
                                                                     register={register}
                                                                     icon={{ type: "banheiro" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -650,7 +656,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     label="Vagas de Garagem:"
                                                                     placeholder="Vagas de Garagem:"
                                                                     name="imovelCaracteristicas.numero_vagas"
-                                                                    value={imovel.id_caracteristicasImovel?.numero_vagas || 0}
+                                                                    value={imovel.id_caracteristicaImovel?.numero_vagas || 0}
                                                                     register={register}
                                                                     icon={{ type: "garagem" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -662,7 +668,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     label="Número de Salas:"
                                                                     placeholder="Número de Salas:"
                                                                     name="imovelCaracteristicas.numero_salas"
-                                                                    value={imovel.id_caracteristicasImovel?.numero_salas || 0}
+                                                                    value={imovel.id_caracteristicaImovel?.numero_salas || 0}
                                                                     register={register}
                                                                     icon={{ type: "sala" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"

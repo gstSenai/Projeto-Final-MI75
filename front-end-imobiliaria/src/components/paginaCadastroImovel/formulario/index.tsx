@@ -88,7 +88,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
             }
         },
     })
-    const [showForm, setShowForm] = useState(true)
+    const [showForm] = useState(true)
     const [showModal, setShowModal] = useState(false)
     const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
