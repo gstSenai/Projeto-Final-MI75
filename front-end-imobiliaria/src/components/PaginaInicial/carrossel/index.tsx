@@ -1,7 +1,6 @@
 "use client";
-import { useState, ReactNode, useRef, Children } from "react";
+import { useState, ReactNode, useRef, Children, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import BotaoImageTexto from "../BotaoImageTexto"; // Importe o componente BotaoImageTexto
 
 interface CarouselProps {
     children: ReactNode | ReactNode[];
@@ -9,18 +8,32 @@ interface CarouselProps {
 
 export default function Carousel({ children }: CarouselProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [isMobile, setIsMobile] = useState(false); // Estado para armazenar se é mobile
     const childrenArray = Children.toArray(children); // Transforma children em um array
     const totalSlides = childrenArray.length;
     const carouselRef = useRef<HTMLDivElement>(null);
     let startX = 0;
     let isDragging = false;
 
+    // Efeito para verificar o tamanho da tela apenas no lado do cliente
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+
+        // Verifica o tamanho da tela ao montar o componente
+        handleResize();
+
+        // Adiciona um listener para redimensionamento da tela
+        window.addEventListener("resize", handleResize);
+
+        // Remove o listener ao desmontar o componente
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     // Define o número de itens por visualização com base no tamanho da tela
     const getItemsPerView = () => {
-        if (typeof window !== "undefined") {
-            return window.innerWidth < 768 ? 1 : 4; // 1 item no mobile, 4 no desktop
-        }
-        return 4; // Valor padrão para SSR
+        return isMobile ? 1 : 4; // 1 item no mobile, 4 no desktop
     };
 
     const itemsPerView = getItemsPerView();
@@ -69,8 +82,7 @@ export default function Carousel({ children }: CarouselProps) {
                 {childrenArray.map((child, index) => (
                     <div
                         key={index}
-                        className={`${window.innerWidth < 768 ? "w-full" : "w-1/4"
-                            } flex-shrink-0 px-3`}
+                        className={`${isMobile ? "w-full" : "w-1/4"} flex-shrink-0 px-3`}
                     >
                         {child}
                     </div>

@@ -45,9 +45,9 @@ const PlaceFilter = ({ texto, tipo }: PlaceFilterProps) => {
 
     if (tipo === "TipoLocal") {
         const images = [
-            { src: "/escolhaCasa.png", alt: "escolha Casa", label: "Casa" },
-            { src: "/escolhaApartamento.png", alt: "escolha Apartamento", label: "Apartamento" },
-            { src: "/escolhaTerreno.png", alt: "escolha Terreno", label: "Terreno" }
+            { src: "/paginaInicial/PaginaInicialProcura/escolhaCasa.png", alt: "escolha Casa", label: "Casa" },
+            { src: "/paginaInicial/PaginaInicialProcura/escolhaApartamento.png", alt: "escolha Apartamento", label: "Apartamento" },
+            { src: "/paginaInicial/PaginaInicialProcura/escolhaTerreno.png", alt: "escolha Terreno", label: "Terreno" }
         ];
 
         return (

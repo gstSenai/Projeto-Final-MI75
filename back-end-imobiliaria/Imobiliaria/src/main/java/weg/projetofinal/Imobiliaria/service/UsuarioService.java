@@ -60,7 +60,8 @@ public class UsuarioService {
         Usuario usuarioExistente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
 
-        BeanUtils.copyProperties(usuario, usuarioExistente, "id", "enderecoUsuario", "imagem_usuario");
+        BeanUtils.copyProperties(usuario, usuarioExistente, "id",
+                "enderecoUsuario", "imagem_usuario");
 
         if (imagem != null && !imagem.isEmpty()) {
             usuarioExistente.setImagem_usuario(s3Service.uploadFile(imagem));
@@ -81,6 +82,12 @@ public class UsuarioService {
         } else {
             usuarioSpecification = UsuarioSpecification.hasCpf(cpf);
         }
+        return repository.findAll(usuarioSpecification);
+    }
+
+    public List<Usuario> listarCorretores() {
+        Specification<Usuario> usuarioSpecification =
+                UsuarioSpecification.hasTipo_conta("Corretor");
         return repository.findAll(usuarioSpecification);
     }
 
