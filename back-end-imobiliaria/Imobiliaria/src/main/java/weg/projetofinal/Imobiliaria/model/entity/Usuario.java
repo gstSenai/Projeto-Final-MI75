@@ -51,4 +51,7 @@ public class Usuario {
     @JoinColumn(name = "id_endereco_usuario")
     private EnderecoUsuario enderecoUsuario;
 
+    @OneToMany(mappedBy = "usuario")
+    private List<Agendamento> agendamentos;
+
 }

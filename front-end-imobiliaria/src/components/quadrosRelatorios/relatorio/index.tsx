@@ -20,7 +20,7 @@ const data = [
 
 export function RelatoriosAnalises() {
   const [periodo, setPeriodo] = useState('MAX');
-  
+
   const dadosFiltrados = useMemo(() => {
     switch (periodo) {
       case '1D': return data.slice(-1);
@@ -38,9 +38,8 @@ export function RelatoriosAnalises() {
         {['1D', '5D', '1M', '6M', '1Y', 'MAX'].map((item) => (
           <button
             key={item}
-            className={`px-3 py-1 text-sm font-medium border rounded ${
-              periodo === item ? 'bg-gray-800 text-white' : 'bg-gray-200'
-            }`}
+            className={`px-3 py-1 text-sm font-medium border rounded ${periodo === item ? 'bg-gray-800 text-white' : 'bg-gray-200'
+              }`}
             onClick={() => setPeriodo(item)}
           >
             {item}

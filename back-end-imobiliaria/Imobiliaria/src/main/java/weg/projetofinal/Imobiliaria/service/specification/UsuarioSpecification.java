@@ -37,4 +37,15 @@ public class UsuarioSpecification {
             return criteriaBuilder.equal(root.get("cpf"), cpf);
         };
     }
+
+    public static Specification<Usuario> hasTipo_conta(String tipoConta) {
+        return (root,
+                query,
+                criteriaBuilder) -> {
+            if (tipoConta == null || tipoConta.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.equal(root.get("tipo_conta"), tipoConta);
+        };
+    }
 }

@@ -91,5 +91,11 @@ public class UsuarioController {
         return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuarioAtualizado);
     }
 
+    @GetMapping("/corretores")
+    public List<UsuarioGetResponseDTO> listarCorretores() {
+        List<Usuario> usuario = service.listarCorretores();
+        return usuario.stream().map(UsuarioMapper.INSTANCE::usuarioToUsuarioGetResponseDTO).toList();
+    }
+
 
 }
