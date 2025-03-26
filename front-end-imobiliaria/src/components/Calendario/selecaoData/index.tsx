@@ -16,7 +16,6 @@ interface FormularioInputProps {
   errors?: FieldError | undefined
   required?: boolean
   disabled?: boolean
-
   iconCaneta?: boolean
 }
 
@@ -36,7 +35,8 @@ export function FormularioInput({
   iconCaneta,
 }: FormularioInputProps) {
   const getIconPath = () => {
-
+    // Implementation for getIconPath if needed
+    return ""
   }
   const iconPath = getIconPath()
 
@@ -68,7 +68,7 @@ export function FormularioInput({
         ) : (
           <input
             type="text"
-            placeholder={${interName} ${required ? "*" : ""}}
+            placeholder={`${interName} ${required ? "*" : ""}`}
             {...register(name, { required })}
             value={value}
             onChange={onChange}
@@ -84,3 +84,4 @@ export function FormularioInput({
     </div>
   )
 }
+
