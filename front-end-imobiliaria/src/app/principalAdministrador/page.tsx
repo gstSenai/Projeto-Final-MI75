@@ -1,4 +1,5 @@
 import { Montserrat } from 'next/font/google';
+import { Footer } from '@/components/footer';
 
 
 // Carregando a fonte Inter
@@ -17,76 +18,63 @@ export default function PaginaAdministrador() {
         <>
             <Header />
 
-            <div className="font-montserrat pt-3 pb-24 lg:pt-14 lg:pb-52">
-                <main className="relative flex h-[811px] w-full max-w-[1810px] mx-auto overflow-hidden ">
-
-                    <Image src="/montanhaPaginaAdministrador.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100} />
-
-                    <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32">
-                        <h1 className="text-3xl lg:text-4xl text-center 2xl:text-start font-bold">Bem-vindo à Área do Administrador!</h1>
-
-                        <div className="border-t-4 border-vermelho w-[265px] md:w-[405px] 2xl:w-[405px] my-6"></div>
-
-                        <p className="text-2xl font-normal text-center 2xl:text-start max-w-4xl">
-                            Aqui você encontra todas as ferramentas necessárias para gerenciar todos os imóveis, usuários, cadastro de imóveis e Relatórios e Análises de dados.
-                        </p>
-                    </div>
-                </main>
-
-                <section>
-                    
-                    <h2 className='flex justify-center text-center text-4xl lg:text-4xl font-medium p-24'>Explore nossos recursos:</h2>
-                    
-                    <div className='flex flex-col lg:flex-row 2xl:flex-row items-center justify-center  sm:items-center sm:justify-center md:justify-around ' >
-                        <div className='flex flex-col items-center max-lg:py-4 py-10 md:py-10 2xl:py-0 w-full 2xl:w-96  '>
-                            
-                            <Image src="/gerenciamentoImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
-                            
-                            <p className='text-2xl lg:text-3xl font-medium opacity-75 text-center leading-tight max-lg:py-10 py-10 w-80'>Gerenciamento de Imóveis</p>
-                            
-                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2' texto="Gerenciar" />
-                        </div>
-                        <div className='flex flex-col items-center max-lg:py-4 py-10 md:py-10 2xl:py-0 w-full 2xl:w-96'>
-                            
-                            <Image src="/gerenciamentoProprietarios.png" alt="Cadastro de Imóveis" width={110} height={123} />
-                            
-                            <p className='text-2xl lg:text-3xl font-medium opacity-75 text-center leading-tight max-lg:py-10 py-10 w-80'>Gerenciamento de Proprietários</p>
-                            
-                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2' texto="Gerenciar" />
-                        </div>
-                        <div className='flex flex-col items-center max-lg:py-4 py-10 md:py-10 2xl:py-0 w-full 2xl:w-96'>
-                            
-                            <Image src="/cadastroImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
-                           
-                            <p className='text-2xl lg:text-3xl font-medium opacity-75 text-center leading-tight max-lg:py-10 py-14 w-80'>Cadastrar Imóveis</p>
-                            
-                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2' texto="Gerenciar" />
-                        </div>
-                    </div> 
-                </section>
-                
-                <section className='pt-3 lg:pt-32'>
-                    <div className='flex flex-col lg:flex-row 2xl:flex-row lg:gap-8 gap-20 items-center justify-center sm:items-center sm:justify-center' >
-                        <div className='flex flex-col items-center max-lg:py-4 py-10 md:py-10 2xl:py-0 w-full 2xl:w-96'>
-                            
-                            <Image src="/gerenciamentoImoveis.png" alt="Relatório de analise" width={110} height={123} />
-                            
-                            <p className='text-2xl lg:text-3xl font-medium opacity-75 text-center leading-tight max-lg:py-10 py-14 w-80'>Relatórios e Análises</p>
-                            
-                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2' texto="Gerenciar" />
-                        </div>
-                        <div className='flex flex-col items-center max-lg:py-4 py-10 md:py-10 2xl:py-0 w-full 2xl:w-96'>
-                            
-                            <Image src="/gerenciamentoUsuarios.png" alt="Gerenciamento de Usúarios" width={110} height={123} />
-                            
-                            <p className='text-2xl lg:text-3xl font-medium opacity-75 text-center leading-tight max-lg:py-10 py-10 w-80'>Gerenciamento de Usúarios</p>
-                            
-                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2' texto="Gerenciar" />
+            <div className="relative mb-6 md:mb-12 p-6">
+                <div className="relative rounded-lg overflow-hidder">
+                    <img
+                        src="/imagensPaginaEditor-Adm/montanhaPaginaAdministrador.png"
+                        alt="cidadePaginaEditor"
+                        className="h-[500px] md:h-max md:w-max object-cover rounded-lg "
+                    />
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="flex flex-col items-center md:items-start text-white  md:ml-14 ">
+                            <h2 className="mx-16 md:ml-7 text-[1.5rem] lg:text-[3.5rem] text-center font-bold mb-4">Bem-vindo à Área do Administrador!</h2>
+                            <hr className="bg-[#702632] flex border-none h-1 w-56 md:ml-5 md:w-[30%]" />
+                            <p className="ml-5 text-balance font-normal text-[1.08rem] md:text-[1.20rem] lg:text-[1.35rem] w-[55%] mt-10">
+                                Aqui você encontra todas as ferramentas necessárias para gerenciar todos os imóveis, usuários, cadastro de imóveis e Relatórios e Análises de dados.</p>
                         </div>
                     </div>
-                </section>
+                </div>
             </div>
+
+
+            <section className='mb-32'>
+                <h2 className='flex justify-center text-center text-[1.45rem] lg:text-4xl font-semibold p-20'>Explore nossos recursos:</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 place-items-center lg:gap-20 gap-10">
+                    <div className="flex flex-col items-center py-6 w-64">
+                        <Image src="/imagensPaginaEditor-Adm/gerenciamentoUsuarios.png" alt="Cadastrar Imóveis" width={100} height={100} />
+                        <p className=" text-xl lg:text-2xl font-medium opacity-75 text-center leading-tight pt-4 pb-2 w-72">
+                        Gerenciamento de Usúarios
+                        </p>
+                        <Botao className="w-2/3 md:w-56 h-8" texto="Gerenciar" />
+                    </div>
+
+                    <div className="flex flex-col items-center py-6 w-64">
+                        <Image src="/gerenciamentoProprietarios.png" alt="Gerenciamento de Proprietários" width={100} height={100} />
+                        <p className="text-xl lg:text-2xl font-medium opacity-75 text-center leading-tight pt-4 pb-2 w-72">
+                            Gerenciamento de Proprietários
+                        </p>
+                        <Botao className="w-2/3 md:w-56 h-8" texto="Gerenciar" />
+                    </div>
+                    <div className="flex flex-col items-center py-6 w-64">
+                        <Image src="/gerenciamentoImoveis.png" alt="Gerenciamento de Imóveis" width={100} height={100} />
+                        <p className="text-xl lg:text-2xl font-medium opacity-75 text-center leading-tight py-6 w-72">
+                            Gerenciamento de Imóveis
+                        </p>
+                        <Botao className="w-2/3 md:w-56 h-8" texto="Gerenciar" />
+                    </div>
+                    <div className="flex flex-col items-center py-6 w-64">
+                        <Image src="/gerenciamentoProprietarios.png" alt="Gerenciamento de Proprietários" width={100} height={100} />
+                        <p className="text-xl lg:text-2xl font-medium opacity-75 text-center leading-tight pt-6 pb-6 w-72">
+                            Relatórios e Análises
+                        </p>
+                        <Botao className="w-2/3 md:w-56 h-8" texto="Gerenciar" />
+                    </div>
+                    
+                </div>
+            </section>
+            <Footer />
         </>
+        
     );
 
 
