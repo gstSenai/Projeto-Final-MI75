@@ -5,6 +5,7 @@ import React from "react"
 import { Botao } from "@/components/botao"
 import request from "@/routes/request"
 import { FormularioEditarInput } from "../editandoUsuario/formularioEditarInput"
+import { FormularioImagemEdit } from "../editandoUsuario/formularioImagemEdit"
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -205,7 +206,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                 `http://localhost:9090/enderecoUsuario/update/${usuario.endereco.id}`,
                 endereco
             )
-            
+
             console.log("✅ Endereço atualizado com sucesso:", response)
             return response
 
@@ -411,6 +412,9 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                     <div>
                                                         {selectedUsuarios.map((usuario) => (
                                                             <React.Fragment key={usuario.id}>
+                                                                <FormularioImagemEdit
+                                                                    handleImageUpload={setImagem}
+                                                                />
                                                                 <div className="space-y-4 pt-10">
                                                                     <div className="flex flex-col gap-4">
                                                                         <div className="w-full">

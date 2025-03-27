@@ -1,16 +1,16 @@
 "use client"
-import { useForm, UseFormRegister } from "react-hook-form"
+import { UseFormRegister } from "react-hook-form"
 import { FormularioInput } from "../formularioInput"
-import { ImageUpload } from "../image-upload"
 import { Descricao } from "../descricao"
+import { FormularioImagem } from "../formularioImagem"
 
 interface DadosImovelSectionProps {
     register: UseFormRegister<any>
     errors: any
+    onImagesChange?: (files: File[]) => void;
 }
 
-export function DadosImovelSection({ register, errors }: DadosImovelSectionProps) {
-
+export function DadosImovelSection({ register, errors, onImagesChange }: DadosImovelSectionProps) {
     return (
         <div className="flex flex-col">
             <div className="font-inter flex max-lg:justify-center">
@@ -126,7 +126,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                 </div>
             </div>
 
-            <div className="mt-10">
+            <div className="mt-1">
                 <div className="font-inter flex flex-col justify-between max-lg:justify-center">
                     <div className="flex flex-row items-center max-lg:justify-center">
                         <p className="text-2xl xl:text-4xl font-semibold mt-10 mb-8 max-lg:hidden">Dados Imóvel</p>
@@ -136,7 +136,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
 
                 </div>
 
-                <div className="flex max-lg:flex-col max-lg:gap-4 gap-10 mt-4 whitespace-nowrap">
+                <div className="flex max-lg:flex-col  max-lg:gap-4 gap-10 mt-4 whitespace-nowrap">
                     <div className="flex flex-col gap-4">
                         <FormularioInput
                             placeholder="Área Construída (m²):"
@@ -225,7 +225,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                     </div>
 
                     <div className="flex flex-col justify-end gap-4 w-full 2xl:w-full">
-                        <ImageUpload title="Fotos do Imóvel" className="h-full" />
+                        <FormularioImagem onImagesChange={onImagesChange || (() => {})} />
                     </div>
                 </div>
             </div>
@@ -235,8 +235,7 @@ export function DadosImovelSection({ register, errors }: DadosImovelSectionProps
                     placeholder="Descrição"
                     name="imovel.descricao"
                     register={register}
-                    className="w-full h-80" />
-                <ImageUpload title="Fotos do Imóvel" className="h-80 lg:w-96" />
+                    className="w-full h-40" />
             </div>
         </div>
     )
