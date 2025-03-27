@@ -64,7 +64,7 @@ export function Footer() {
                         <div className="flex flex-col gap-3">
                             <p className="text-xl xl:text-2xl font-extrabold">Links Rápidos</p>
                             <div className="font-light text-sm md:text-base flex flex-col gap-2">
-                                <p><a href="/PaginaInicial">Página Inicial</a></p>
+                                <p><a href="/paginaInicial">Página Inicial</a></p>
                                 <p><a href="/sobreNos">Sobre Nós</a></p>
                                 <p><a href="#">Comprar</a></p>
                                 <p><a href="#">Vender</a></p>
