@@ -116,7 +116,7 @@ export default function CustomCalendar({ locale = "pt-BR", className }: Calendar
             onClick={() => handleDateClick(day)}
             disabled={isPast(day)}
             className={cn(
-              "flex justify-center items-center w-8 h-8 lg:w-10 lg:h-10 xl:w-12 xl:h-12 rounded-lg font-medium transition-all",
+              "flex justify-center items-center w-8 h-8 lg:w-10 lg:h-10 rounded-lg font-medium transition-all",
               isSelected(day)
                 ? "bg-[#702632] text-white"
                 : isPast(day)
@@ -156,16 +156,16 @@ export default function CustomCalendar({ locale = "pt-BR", className }: Calendar
   return (
     <div className={cn("bg-white rounded-xl p-6 xl:p-12 shadow-sm w-full h-full max-w-[955px] max-h-[827px]", className)}>
       <div className="flex items-center justify-between mb-6">
-        <button onClick={prevMonth} className="bg-[#F4F1EA] p-3 md:p-4 lg:p-5 xl:p-6 2xl:p-8 rounded-[10px] flex items-center justify-center shadow-md">
-          <ChevronLeft className="text-gray-400 h-5 w-5 md:h-5 md:w-5 lg:h-6 lg:w-6 xl:h-8 xl:w-8" />
+        <button onClick={prevMonth} className="bg-[#F4F1EA] p-3 md:p-4 lg:p-5 xl:p-2 2xl:p-3 rounded-[10px] flex items-center justify-center shadow-md">
+          <ChevronLeft className="text-gray-400" />
         </button>
 
-        <h2 className="text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-medium text-gray-800 capitalize">
+        <h2 className="text-base md:text-lg lg:text-xl font-medium text-gray-800 capitalize">
           {monthName} {currentYear}
         </h2>
 
-        <button onClick={nextMonth} className="bg-[#F4F1EA] p-3 md:p-4 lg:p-5 xl:p-6 2xl:p-8 rounded-[10px] flex items-center justify-center shadow-md">
-          <ChevronRight className="text-gray-400 h-5 w-5 md:h-5 md:w-5 lg:h-6 lg:w-6 xl:h-8 xl:w-8" /> 
+        <button onClick={nextMonth} className="bg-[#F4F1EA] p-3 md:p-4 lg:p-5 xl:p-2 2xl:p-8 rounded-[10px] flex items-center justify-center shadow-md">
+          <ChevronRight className="text-gray-400" /> 
         </button>
       </div>
 
