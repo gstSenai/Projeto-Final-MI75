@@ -3,7 +3,7 @@ package weg.projetofinal.Imobiliaria.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import weg.projetofinal.Imobiliaria.model.dto.ExceptionHandlerResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.exception.ExceptionHandlerResponseDTO;
 
 import java.time.LocalDateTime;
 import java.util.EmptyStackException;
