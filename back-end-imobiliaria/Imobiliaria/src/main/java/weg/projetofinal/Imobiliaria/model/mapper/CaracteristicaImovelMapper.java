@@ -1,11 +1,11 @@
 package weg.projetofinal.Imobiliaria.model.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-import weg.projetofinal.Imobiliaria.model.dto.CaracteristicaImovelGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.CaracteristicaImovelPostRequestDTO;
-import weg.projetofinal.Imobiliaria.model.dto.CaracteristicasImovelPutRequestDTO;
+
+import weg.projetofinal.Imobiliaria.model.dto.caracteriticas.CaracteristicaImovelGetResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.caracteriticas.CaracteristicaImovelPostRequestDTO;
+import weg.projetofinal.Imobiliaria.model.dto.caracteriticas.CaracteristicasImovelPutRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.CaracteristicaImovel;
 
 @Mapper
