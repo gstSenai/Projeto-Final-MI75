@@ -1,122 +1,142 @@
-'use client'
+"use client"
 
-import React, { useEffect, useState } from 'react';
-import { UseFormRegister } from 'react-hook-form';
-import { FormularioInput } from '../formularioInput';
+import React, { useEffect, useState } from "react"
+import type { UseFormRegister, UseFormSetValue } from "react-hook-form"
+
+import { FormularioInput } from "../formularioInput"
 import { Montserrat } from "next/font/google"
 
-// Carregando a fonte Montserrat
-const inter = Montserrat({
-    subsets: ['latin'],
-    weight: ['400', '800'],
-    display: 'swap',
-});
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "800"],
+  display: "swap",
+})
 
-export function EnderecoSection({ register }: { register: UseFormRegister<any> }) {
-    const [uf, setUf] = useState<string>('');
-    const [cidade, setCidade] = useState<string>('');
-    const [cidades, setCidades] = useState<string[]>([]);
+interface DadosEnderecoUsuarioSectionProps {
+  register: UseFormRegister<any>
+  setValue: UseFormSetValue<any>
+  errors: any
+}
 
-    const estados = ['SC'];
+export function EnderecoSection({ register, setValue, errors }: DadosEnderecoUsuarioSectionProps) {
+  const [cep, setCep] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
-    type Estado = 'SC';
+  const buscarCep = async (cepValue: string) => {
+    const cepFormatado = cepValue.replace(/\D/g, "")
+    if (cepFormatado.length !== 8) return
 
-    const cidadesPorEstado: Record<Estado, string[]> = {
-        'SC': ['Jaraguá do Sul', 'Joinville', 'Corupá']
-    };
+    setIsLoading(true)
 
-    useEffect(() => {
-        if (uf && cidadesPorEstado[uf as Estado]) {
-            setCidades(cidadesPorEstado[uf as Estado]);
-            setCidade('');
-        }
-    }, [uf]);
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cepFormatado}/json/`)
+      const data = await response.json()
 
-    const handleUfChange = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-        if (event.target instanceof HTMLSelectElement) {
-            setUf(event.target.value);
-        } else if (event.target instanceof HTMLInputElement) {
-            setCidade(event.target.value);
-        }
-    };
+      if (data.erro) {
+        alert("CEP não encontrado. Verifique o número informado.")
+        return
+      }
 
-    return (
-        <>
-            <div className="flex flex-col mt-6 lg:gap-4 font-montserrat">
-                <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
-                    <FormularioInput
-                        placeholder="CEP:"
-                        interName='00000-000'
-                        name="endereco.cep"
-                        register={register}
-                        custumizacaoClass="w-full p-2  border border-gray-500 rounded"
-                        required
-                    />
-                    <FormularioInput
-                        placeholder="UF:"
-                        name="endereco.uf"
-                        register={register}
-                        onChange={handleUfChange}
-                        custumizacaoClass="w-full p-2  border border-gray-500 rounded"
-                        options={estados}
-                        required
-                    />
-                    <FormularioInput
-                        placeholder="Cidade:"
-                        name="endereco.cidade"
-                        register={register}
-                        custumizacaoClass="w-full p-2  border border-gray-500 rounded"
-                        options={cidades}
-                        required
-                    />
-                    <FormularioInput
-                        placeholder="Rua:"
-                        name="endereco.rua"
-                        interName=''
-                        register={register}
-                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
-                        required
-                    />
+      setValue("endereco.uf", data.uf || "")
+      setValue("endereco.cidade", data.localidade || "")
+      setValue("endereco.bairro", data.bairro || "")
+      setValue("endereco.rua", data.logradouro || "")
+    } catch (error) {
+      alert("Erro ao buscar o CEP. Tente novamente mais tarde.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
-                </div>
-                <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:pt-4 gap-10">
-                    <FormularioInput
-                        placeholder="Bairro:"
-                        name="endereco.bairro"
-                        interName=''
-                        register={register}
-                        custumizacaoClass="w-full p-2  border border-gray-500 rounded"
-                        required
-                    />
-                    <FormularioInput
-                        placeholder="Tipo de Residência:"
-                        name="endereco.tipo_residencia"
-                        interName=""
-                        register={register}
-                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
-                        options={["Casa", "Apartamento"]}
-                        required
-                    />
-                    <FormularioInput
-                        placeholder="Número do Imovel:"
-                        name="endereco.numero_imovel"
-                        interName='Ex: 009'
-                        register={register}
-                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
-                        required
-                    />
-                </div>
-                <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:pt-4 gap-10">
-                    <FormularioInput
-                        placeholder="Número Apartamento (Caso tenha):"
-                        name="endereco.numero_apartamento"
-                        interName="Ex: 009"
-                        register={register}
-                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
-                    />
-                </div>
-
-            </div>
-        </>
-    );
+  return (
+    <div className="flex flex-col mt-6 lg:gap-4 font-montserrat">
+      <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
+        <FormularioInput
+          placeholder="CEP:"
+          name="endereco.cep"
+          interName='00000-000'
+          register={register}
+          customizacaoClass="w-full p-2 border border-gray-500 rounded"
+          required
+          errors={errors?.cep?.message}
+          onChange={(e) => {
+            const novoCep = e.target.value
+            setCep(novoCep)
+            if (novoCep.replace(/\D/g, "").length === 8) buscarCep(novoCep)
+          }}
+        />
+        <FormularioInput
+          placeholder="UF:"
+          name="endereco.uf"
+          interName="Ex: SC"
+          register={register}
+          customizacaoClass="w-full p-2 border border-gray-500 rounded"
+          required
+          errors={errors?.uf}
+          disabled={isLoading}
+        />
+        <FormularioInput
+          placeholder="Cidade:"
+          name="endereco.cidade"
+          interName="Ex: Joinville"
+          register={register}
+          customizacaoClass="w-full p-2 border border-gray-500 rounded"
+          required
+          errors={errors?.cidade}
+          disabled={isLoading}
+        />
+        <FormularioInput
+          placeholder="Rua:"
+          name="endereco.rua"
+          interName="Ex: Rua das Flores"
+          register={register}
+          customizacaoClass="w-full p-2 border border-gray-500 rounded"
+          required
+          errors={errors?.rua}
+          disabled={isLoading}
+        />
+      </div>
+      <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:pt-4 gap-10">
+        <FormularioInput
+          placeholder="Bairro:"
+          name="endereco.bairro"
+          interName="Ex: Centro"
+          register={register}
+          customizacaoClass="w-full p-2 border border-gray-500 rounded"
+          required
+          errors={errors?.bairro}
+          disabled={isLoading}
+        />
+        <FormularioInput
+          placeholder="Tipo de Residência:"
+          name="endereco.tipo_residencia"
+          interName="Ex: Casa"
+          register={register}
+          customizacaoClass="w-full p-2 border border-gray-500 rounded"
+          options={["Casa", "Apartamento"]}
+          required
+          errors={errors?.tipo_residencia}
+        />
+        <FormularioInput
+          placeholder="Número do Imóvel:"
+          name="endereco.numero_imovel"
+          register={register}
+          interName="Ex: 100"
+          customizacaoClass="w-full p-2 border border-gray-500 rounded"
+          required
+          errors={errors?.numero_imovel}
+        />
+      </div>
+      <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:pt-4 gap-10">
+        <FormularioInput
+          placeholder="Número Apartamento (Caso tenha):"
+          name="endereco.numero_apartamento"
+          register={register} 
+          customizacaoClass="w-full p-2 border border-gray-500 rounded"
+          interName="Ex: 100"
+          errors={errors?.numero_apartamento}
+        />
+      </div>
+    </div>
+  )
 }

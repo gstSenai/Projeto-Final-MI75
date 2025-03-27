@@ -6,7 +6,7 @@ import request from "@/routes/request"
 import { Formulario } from "../formulario"
 import { RemoveImovel } from "../removerImovel"
 import { EditarImovel } from "../editarImovel"
-
+import Image from "next/image"
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -32,6 +32,25 @@ interface ImovelProps {
   area_construida: number
   area_terreno: number
   descricao?: string
+  idEndereco: {
+    id: number
+    cep: string
+    rua: string
+    numero: string
+    bairro: string
+    cidade: string
+    uf: string
+    complemento?: string
+  }
+  id_caracteristicaImovel: {
+    id: number
+    numero_quartos: number
+    numero_banheiros: number
+    numero_suites: number
+    numero_vagas: number
+    piscina: boolean
+    numero_salas: number
+  }
 }
 
 interface ResponseProps {
@@ -127,7 +146,7 @@ export default function TabelaImovel() {
 
   return (
     <>
-      <div className="flex flex-col gap-10 sm:flex-col md:flex-col lg:flex-row font-montserrat">
+      <div className={`flex flex-col gap-10 sm:flex-col md:flex-col lg:flex-row ${montserrat.className}`}>
         <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6 w-full">
           <div className="overflow-x-auto max-h-[500px]">
             <table className="w-full border-separate border-spacing-0">
@@ -202,7 +221,7 @@ export default function TabelaImovel() {
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start ">
-              <img src="./iconsForms/sinalAdd.png" alt="sinal de adição" className="lg:w-4" />
+              <Image src="/iconsForms/sinalAdd.png" alt="sinal de adição" width={20} height={20} className="lg:w-4" />
               <p className="text-lg font-medium">Adicionar</p>
             </div>
           </button>
@@ -213,7 +232,7 @@ export default function TabelaImovel() {
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" className="lg:w-4" />
+              <Image src="/iconsForms/sinalRemove.png" alt="sinal de remoção" width={20} height={20} className="lg:w-4" />
               <p className="text-lg font-medium">Remover</p>
             </div>
           </button>
@@ -224,7 +243,7 @@ export default function TabelaImovel() {
             disabled={isLoading || selectedImoveis.length !== 1}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" className="lg:w-4" />
+              <Image src="/iconsForms/canetaEditarBranco.png" alt="sinal de edição" width={20} height={20} className="lg:w-4" />
               <p className="text-lg font-medium">Editar</p>
             </div>
           </button>

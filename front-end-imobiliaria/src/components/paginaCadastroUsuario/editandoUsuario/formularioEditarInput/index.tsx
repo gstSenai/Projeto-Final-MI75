@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import type React from "react"
-import type { UseFormRegister } from "react-hook-form"
+import type { UseFormRegister, FieldError } from "react-hook-form"
 
 interface FormularioEditarInputProps {
   placeholder: string
@@ -12,9 +12,10 @@ interface FormularioEditarInputProps {
   custumizacaoClass: string
   register: UseFormRegister<any>
   options?: string[]
-  errorMessage?: string
+  errors?: FieldError | undefined
   required?: boolean
   value?: string | number
+  mask?: string
   icon?: {
     type: "areaCT" | "sala" | "banheiro" | "dormitorio" | "suite" | "garagem" | "praia"
   }
@@ -27,7 +28,7 @@ export function FormularioEditarInput({
   custumizacaoClass,
   register,
   options,
-  errorMessage,
+  errors,
   required = false,
   value = "",
   icon,
@@ -66,40 +67,42 @@ export function FormularioEditarInput({
   const iconPath = getIconPath()
 
   return (
-    <div className={`relative  ${custumizacaoClass}`}>
-      <div className="flex items-center w-full rounded-lg">
-        {iconPath && <img src={iconPath || "/placeholder.svg"} alt={`Ícone ${icon?.type}`} className="h-5 mr-2" />}
+    <>
+      <div className={`relative  ${custumizacaoClass}`}>
+        <div className="flex items-center w-full rounded-lg">
+          {iconPath && <img src={iconPath || "/placeholder.svg"} alt={`Ícone ${icon?.type}`} className="h-5 mr-2" />}
 
-        {options ? (
-          <select
-            {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
-            onChange={handleChange}
-            value={inputValue}
-            className="w-full bg-transparent outline-none text-gray-900 "
-          >
-            <option value="" disabled className="text-gray-400 ">
-              {placeholder} {required ? "*" : ""}
-            </option>
-            {options.map((option, index) => (
-              <option key={index} value={option} className="text-black">
-                {option}
+          {options ? (
+            <select
+              {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
+              onChange={handleChange}
+              value={inputValue}
+              className="w-full bg-transparent outline-none text-gray-900 "
+            >
+              <option value="" disabled className="text-gray-400 ">
+                {placeholder} {required ? "*" : ""}
               </option>
-            ))}
-          </select>
-        ) : (
-          <input
-            type="text"
-            placeholder={`${placeholder} ${required ? "*" : ""}`}
-            {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
-            value={inputValue}
-            onChange={handleChange}
-            className="w-full outline-none text-gray-900"
-          />
-        )}
+              {options.map((option, index) => (
+                <option key={index} value={option} className="text-black">
+                  {option}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              type="text"
+              placeholder={`${placeholder} ${required ? "*" : ""}`}
+              {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
+              value={inputValue}
+              onChange={handleChange}
+              className="w-full outline-none text-gray-900"
+            />
+          )}
 
-        {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="h-5 ml-auto" />}
+          {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="h-5 ml-auto" />}
+        </div>
       </div>
-      {errorMessage && <span className="text-red-500 text-sm mt-1">{errorMessage}</span>}
-    </div>
+      {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
+    </>
   )
 }

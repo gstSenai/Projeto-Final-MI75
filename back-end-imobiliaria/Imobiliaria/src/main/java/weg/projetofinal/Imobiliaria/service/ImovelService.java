@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.repository.ImovelRepository;
+import weg.projetofinal.Imobiliaria.service.specification.ImovelSpecification;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -25,6 +28,7 @@ public class ImovelService {
     }
 
     public Imovel getByIdImovel(Integer id) {
+
         return repository.findById(id).get();
     }
 
@@ -36,13 +40,22 @@ public class ImovelService {
         }
     }
 
+    public List<Imovel> filtroImovel(String tipo_imovel, Double valor_min, Double valor_max){
+        Specification<Imovel> imovelSpecification = Specification.where(ImovelSpecification.hasTipo(tipo_imovel))
+                                                                        .and(ImovelSpecification.hasPrecoMinimo(valor_min))
+                                                                        .and(ImovelSpecification.hasPrecoMaximo(valor_max));
+        return repository.findAll(imovelSpecification);
+
+    }
+
 
     public Imovel updateImovel(Imovel imovel, Integer id) {
 
         Imovel imovelExistente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Imóvel não encontrado com ID: " + id));
 
-        BeanUtils.copyProperties(imovel, imovelExistente, "id", "id_endereco", "caracteristicasImovel");
+        BeanUtils.copyProperties(imovel, imovelExistente, "id", "id_endereco",
+                "caracteristicasImovel");
 
         if (imovel.getId_endereco() != null) {
             imovelExistente.setId_endereco(imovel.getId_endereco());

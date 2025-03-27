@@ -6,7 +6,8 @@ import request from "@/routes/request"
 import { Formulario } from "../adicionandoUsuario/formulario"
 import { RemoveUsuario } from "../removerUsuario"
 import { EditarUsuario } from "../editandoUsuario"
-
+import { z } from "zod"
+import Image from "next/image"
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
@@ -15,31 +16,37 @@ const montserrat = Montserrat({
   display: "swap",
 })
 
-interface UsuarioProps {
-  id: number
-  nome: string
-  sobrenome: string
-  cpf: string
-  tipo_conta: string
-  telefone: string
-  data_nascimento: string
-  email: string
-  senha: string
-  imagem_usuario: string
-  endereco: EnderecoImovelProps
-}
+const UsuarioProps = z.object({
+  id: z.number().optional(),
+  nome: z.string().min(1, { message: "O nome é obrigatório" }),
+  sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+  cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
+  tipo_conta: z.string().min(1, {
+    message: "Selecione um tipo de conta válido",
+  }),
+  telefone: z.string().min(10, { message: "Telefone inválido" }),
+  data_nascimento: z.string(),
+  email: z.string().email({ message: "E-mail inválido" }),
+  senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+  idEnderecoUsuario: z.number().optional(),
+})
 
-interface EnderecoImovelProps {
-  id: number
-  cep: string
-  rua: string
-  tipo_residencia: string
-  numero_imovel: number
-  numero_apartamento: number
-  bairro: string
-  cidade: string
-  uf: string
-}
+
+const EnderecoProps = z.object({
+  id: z.number().optional(),
+  cep: z.string().min(1, { message: "CEP é obrigatório" }),
+  rua: z.string().min(1, { message: "Rua é obrigatória" }),
+  tipo_residencia: z.string().min(1, { message: "Tipo de residência é obrigatório" }),
+  numero_imovel: z.coerce.number().min(1, { message: "Número do imóvel é obrigatório" }),
+  numero_apartamento: z.coerce.number().optional(),
+  bairro: z.string().min(1, { message: "Bairro é obrigatório" }),
+  cidade: z.string().min(1, { message: "Cidade é obrigatória" }),
+  uf: z.string().min(1, { message: "UF é obrigatório" }),
+})
+
+
+type UsuarioProps = z.infer<typeof UsuarioProps>
+type EnderecoProps = z.infer<typeof EnderecoProps>
 
 interface ResponseProps {
   content: UsuarioProps[]
@@ -134,7 +141,7 @@ export default function TabelaUsuario() {
 
   return (
     <>
-      <div className="flex flex-col gap-10 sm:flex-col lg:flex-row font-montserrat">
+      <div className={`flex flex-col gap-10 sm:flex-col lg:flex-row ${montserrat.className}`}>
         <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6 w-full">
           <div className="overflow-x-auto max-h-[500px]">
             <table className="w-full border-separate border-spacing-0">
@@ -209,7 +216,7 @@ export default function TabelaUsuario() {
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start ">
-              <img src="./iconsForms/sinalAdd.png" alt="sinal de adição" className="w-4" />
+              <Image src="/iconsForms/sinalAdd.png" alt="sinal de adição" width={20} height={20} className="w-4" />
               <p className="text-lg font-medium">Adicionar</p>
             </div>
           </button>
@@ -220,7 +227,7 @@ export default function TabelaUsuario() {
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" className="w-4" />
+              <Image src="/iconsForms/sinalRemove.png" alt="sinal de remoção" width={20} height={20} className="w-4" />
               <p className="text-lg font-medium">Remover</p>
             </div>
           </button>
@@ -231,7 +238,7 @@ export default function TabelaUsuario() {
             disabled={isLoading || selectedUsuarios.length !== 1}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" className="w-4" />
+              <Image src="/iconsForms/canetaEditarBranco.png" alt="sinal de edição" width={20} height={20} className="w-4" />
               <p className="text-lg font-medium">Editar</p>
             </div>
           </button>

@@ -2,72 +2,100 @@
 import { useState } from "react"
 import type React from "react"
 
-import { useForm } from "react-hook-form"
 import { EnderecoSection } from "../formulario/endereco-section"
 import { DadosUsuarioSection } from "./dados-imovel-section"
 import { Botao } from "@/components/botao"
 import request from "@/routes/request"
 import { FormularioImagem } from "./formularioImagem"
+import { useForm } from 'react-hook-form';
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
-interface UsuarioProps {
-    id: number
-    nome: string
-    sobrenome: string
-    cpf: string
-    tipo_conta: string
-    telefone: string
-    data_nascimento: string
-    email: string
-    senha: string
-    idEnderecoUsuario: number
-}
+const UsuarioProps = z.object({
+    id: z.number().optional(),
+    nome: z.string().min(1, { message: "O nome é obrigatório" }),
+    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+    cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
+    tipo_conta: z.string().min(1, {
+        message: "Selecione um tipo de conta válido",
+    }),
+    telefone: z.string().min(10, { message: "Telefone inválido" }),
+    data_nascimento: z.string(),
+    email: z.string().email({ message: "E-mail inválido" }),
+    senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+    idEnderecoUsuario: z.number().optional(),
+})
 
-interface EnderecoImovelProps {
-    id: number
-    cep: string
-    rua: string
-    tipo_residencia: string
-    numero_imovel: number
-    numero_apartamento: number
-    bairro: string
-    cidade: string
-    uf: string
-}
+
+const EnderecoProps = z.object({
+    id: z.number().optional(),
+    cep: z.string().min(1, { message: "CEP é obrigatório" }),
+    rua: z.string().min(1, { message: "Rua é obrigatória" }),
+    tipo_residencia: z.string().min(1, { message: "Tipo de residência é obrigatório" }),
+    numero_imovel: z.coerce.number().min(1, { message: "Número do imóvel é obrigatório" }),
+    numero_apartamento: z.coerce.number().optional(),
+    bairro: z.string().min(1, { message: "Bairro é obrigatório" }),
+    cidade: z.string().min(1, { message: "Cidade é obrigatória" }),
+    uf: z.string().min(1, { message: "UF é obrigatório" }),
+})
+
+
+const FormSchema = z.object({
+    usuario: UsuarioProps,
+    endereco: EnderecoProps
+})
+
+type UsuarioData = z.infer<typeof UsuarioProps>
+type EnderecoImovelProps = z.infer<typeof EnderecoProps>
+type FormData = z.infer<typeof FormSchema>
 
 interface InputDadosUsuarioProps {
     onComplete?: () => void
 }
 
 export function Formulario({ onComplete }: InputDadosUsuarioProps) {
-    const { register, handleSubmit } = useForm<{ usuario: UsuarioProps; endereco: EnderecoImovelProps }>()
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormData>({
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+            usuario: {
+                tipo_conta: "",
+            },
+            endereco: {
+                tipo_residencia: "",
+            }
+        },
+    })
+
     const [showForm, setShowForm] = useState(true)
     const [showModal, setShowModal] = useState(false)
-    const [lastAddedUsuario, setLastAddedUsuario] = useState<UsuarioProps | null>(null)
+    const [lastAddedUsuario, setLastAddedUsuario] = useState<UsuarioData | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [enderecoId, setEnderecoId] = useState<number>()
-    const [imageFile, setImageFile] = useState<File | null>(null)
+    const [imagem, setImagem] = useState<File | null>(null)
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            setImageFile(e.target.files[0])
+            setImagem(e.target.files[0])
         }
     }
 
     const addEndereco = async (data: EnderecoImovelProps) => {
         try {
             const response = await request("POST", "http://localhost:9090/enderecoUsuario/create", data)
-            if (response && response.id) {
+
+            if (response && typeof response.id !== "undefined") {
                 setEnderecoId(response.id)
                 return response
             }
-            throw new Error(`Falha ao criar o endereço: ${response.status}`)
+            throw new Error(`Falha ao criar o endereço.`);
+
         } catch (error) {
             console.error("Erro ao adicionar endereço:", error)
             throw error
         }
     }
 
-    const addUsuario = async (usuario: UsuarioProps, imagem: File | null) => {
+    const addUsuario = async (usuario: UsuarioData, imagem: File | null) => {
         try {
             const formData = new FormData()
 
@@ -104,7 +132,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
         }
     }
 
-    const onSubmitUsuario = async (data: { usuario: UsuarioProps; endereco: EnderecoImovelProps }) => {
+    const onSubmitUsuario = async (data: FormData) => {
         if (isSubmitting) return
         try {
             setIsSubmitting(true)
@@ -117,7 +145,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                 idEnderecoUsuario: enderecoResponse.id,
             }
 
-            const response = await addUsuario(usuarioData, imageFile)
+            const response = await addUsuario(usuarioData, imagem)
 
             if (response) {
                 setShowForm(false)
@@ -146,21 +174,21 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
         <>
             {showForm && (
                 <>
-                    <div className="font-inter flex">
+                    <div className="font-inter flex mt-20">
                         <div className="flex flex-row items-center">
                             <p className="text-2xl xl:text-3xl font-semibold mt-10 mb-5">Dados do Usuário:</p>
                         </div>
                     </div>
 
                     <hr className="mb-10 w-full h-2 rounded-2xl bg-vermelho"></hr>
-                    
-                    <FormularioImagem
-                        handleImageChange={handleImageChange}
-                    />
-                    <DadosUsuarioSection register={register} />
 
-                    <EnderecoSection register={register} />
-                    <div className="flex items-center gap-16 mt-10">
+                    <FormularioImagem handleImageChange={handleImageChange} />
+
+                    <DadosUsuarioSection register={register} errors={errors.usuario} />
+
+                    <EnderecoSection register={register} errors={errors.endereco} setValue={setValue} />
+
+                    <div className="flex items-center gap-16 mt-10 mb-20">
                         <div className="flex max-sm:gap-12 max-lg:gap-36 gap-[40rem] w-full">
                             <Botao className="max-lg:text-base" onClick={() => console.log()} texto="Cancelar" />
                             <Botao className="max-lg:text-base" onClick={handleSubmit(onSubmitUsuario)} texto="Salvar cadastro" />
@@ -181,4 +209,3 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
         </>
     )
 }
-

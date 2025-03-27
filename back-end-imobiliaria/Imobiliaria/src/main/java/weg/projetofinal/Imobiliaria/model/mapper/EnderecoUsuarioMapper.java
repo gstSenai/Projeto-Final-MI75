@@ -3,9 +3,8 @@ package weg.projetofinal.Imobiliaria.model.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-import weg.projetofinal.Imobiliaria.model.dto.EnderecoUsuarioGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.EnderecoUsuarioPostRequestDTO;
-import weg.projetofinal.Imobiliaria.model.entity.Endereco;
+import weg.projetofinal.Imobiliaria.model.dto.enderecoUser.EnderecoUsuarioGetResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.enderecoUser.EnderecoUsuarioPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.EnderecoUsuario;
 
 @Mapper

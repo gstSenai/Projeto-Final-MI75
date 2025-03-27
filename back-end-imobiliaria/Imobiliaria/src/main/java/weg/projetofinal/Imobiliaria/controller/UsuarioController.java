@@ -1,24 +1,25 @@
 package weg.projetofinal.Imobiliaria.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import weg.projetofinal.Imobiliaria.model.dto.UsuarioGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.UsuarioPostRequestDTO;
-import weg.projetofinal.Imobiliaria.model.dto.UsuarioPutRequestDTO;
+import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioGetResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioPostRequestDTO;
+import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioPutRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 import weg.projetofinal.Imobiliaria.model.mapper.UsuarioMapper;
 import weg.projetofinal.Imobiliaria.service.UsuarioService;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/usuario")
@@ -60,16 +61,22 @@ public class UsuarioController {
         return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuario);
     }
 
-    @GetMapping("/getByNome/{nome}")
+    @GetMapping("/filtroUsuario")
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioGetResponseDTO getByNome(@PathVariable String nome) {
-        Usuario usuario = service.getByNomeUsuario(nome);
-        return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuario);
+    public List<UsuarioGetResponseDTO> buscarUsuario(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String sobrenome,
+            @RequestParam(required = false) String cpf,
+            @RequestParam(required = false) String tipoConta) {
+        List<Usuario> usuarios = service.buscarUsuario(nome, sobrenome, cpf, tipoConta);
+        return usuarios.stream().map(UsuarioMapper.INSTANCE::usuarioToUsuarioGetResponseDTO).toList();
     }
+
 
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
+
         service.deleteById(id);
     }
 
@@ -86,4 +93,23 @@ public class UsuarioController {
         return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuarioAtualizado);
     }
 
+    @GetMapping("/corretores")
+    public List<UsuarioGetResponseDTO> listarCorretores() {
+        List<Usuario> usuario = service.listarCorretores();
+        return usuario.stream().map(UsuarioMapper.INSTANCE::usuarioToUsuarioGetResponseDTO).toList();
+    }
+
+
+    @GetMapping("/imagem/{nomeArquivo}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<byte[]> imagemUsuario(@PathVariable String nomeArquivo) {
+        byte[] imagemBytes = service.downloadImagem(nomeArquivo);
+        if (imagemBytes != null) {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(imagemBytes);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
