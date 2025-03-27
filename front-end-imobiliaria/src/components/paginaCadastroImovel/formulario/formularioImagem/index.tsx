@@ -79,19 +79,6 @@ export function FormularioImagem({ onImagesChange }: FormularioImagemProps) {
     }
   };
 
-  const handleImageDoubleClick = (index: number) => {
-    if (imagePreviews[index]) {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.onchange = (e) => {
-        const event = e as unknown as React.ChangeEvent<HTMLInputElement>;
-        handleFileChange(event, index);
-      };
-      input.click();
-    }
-  };
-
   const handleFullscreenClick = () => {
     setIsFullscreen(false);
     setSelectedImageIndex(null);
@@ -124,16 +111,15 @@ export function FormularioImagem({ onImagesChange }: FormularioImagemProps) {
 
   return (
     <div className="flex flex-col font-montserrat h-full gap-2">
-      <div className="bg-vermelho/100 rounded-2xl w-full h-full flex p-4">
-        <div className="flex flex-col w-full">
-          <label className="text-xl font-medium text-[#DFDAD0] mb-5">Foto do imóvel</label>
+      <div className=" rounded-2xl w-full h-full flex-row justi flex p-4">
+        <div className="flex flex-col">
+          <label className="text-xl font-medium text-black mb-5">Foto do imóvel</label>
 
           <ImageUpload
             imagePreview={selectedImageIndex !== null ? imagePreviews[selectedImageIndex] : imagePreviews[0]}
             handleFileChange={handleFileChange}
-            className="h-48 w-full"
+            className="h-48 w-[35rem]"
             onClick={() => handleImageClick(0)}
-            onDoubleClick={() => handleImageDoubleClick(0)}
             index={0}
           />
 
@@ -145,7 +131,6 @@ export function FormularioImagem({ onImagesChange }: FormularioImagemProps) {
                 handleFileChange={handleFileChange}
                 className="h-20 w-20"
                 onClick={() => handleImageClick(index + 1)}
-                onDoubleClick={() => handleImageDoubleClick(index + 1)}
                 index={index + 1}
               />
             ))}
@@ -159,7 +144,6 @@ export function FormularioImagem({ onImagesChange }: FormularioImagemProps) {
               handleFileChange={handleFileChange}
               className="h-20 w-20"
               onClick={() => handleImageClick(index + 7)}
-              onDoubleClick={() => handleImageDoubleClick(index + 7)}
               index={index + 7}
             />
           ))}

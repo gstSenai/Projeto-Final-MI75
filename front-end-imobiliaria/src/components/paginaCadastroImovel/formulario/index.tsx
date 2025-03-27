@@ -99,17 +99,35 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
     };
 
     const uploadImages = async (imovelId: number) => {
-        try {
-            for (const imagem of images) {
-                const formData = new FormData();
+        try {   
+            console.log(`Iniciando upload de ${images.length} imagens para o imóvel ${imovelId}`);
+            
+            const formData = new FormData();
+            images.forEach((imagem, index) => {
                 formData.append('arquivos', imagem);
-                await fetch(`http://localhost:9090/imagens/imovel/${imovelId}`, {
-                method:"POST", 
+                console.log(`Adicionando imagem ${index + 1}: ${imagem.name}`);
+            });
+
+            const response = await fetch(`http://localhost:9090/imagens/imovel/${imovelId}`, {
+                method: "POST",
                 body: formData
             });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Erro na resposta do upload:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    errorText
+                });
+                throw new Error(`Falha no upload das imagens: ${response.status} ${response.statusText}`);
             }
+
+            const data = await response.json();
+            console.log('Upload realizado com sucesso:', data);
+            return data;
         } catch (error) {
-            console.error("Erro ao fazer upload das imagens:", error);
+            console.error("Erro detalhado ao fazer upload das imagens:", error);
             throw error;
         }
     };
@@ -185,7 +203,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
 
             const immobileData = {
                 id: imovel.id,
-                codigo: imovel.codigo || 0,
+                codigo: imovel.id || 0,
                 nome_propriedade: imovel.nome_propriedade,
                 tipo_transacao: imovel.tipo_transacao,
                 valor_venda: imovel.valor_venda || 0,
