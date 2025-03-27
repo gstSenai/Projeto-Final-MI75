@@ -6,8 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import weg.projetofinal.Imobiliaria.model.dto.UsuarioGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.UsuarioPostRequestDTO;
+import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.EnderecoUsuario;
 import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 import weg.projetofinal.Imobiliaria.model.mapper.UsuarioMapper;
@@ -49,6 +48,7 @@ public class UsuarioService {
     }
 
     public Usuario findById(Integer id) {
+
         return repository.findById(id).get();
     }
 
@@ -91,4 +91,7 @@ public class UsuarioService {
         return repository.findAll(usuarioSpecification);
     }
 
+    public byte[] downloadImagem(String nomeArquivo) {
+        return s3Service.downloadFile(nomeArquivo);
+    }
 }

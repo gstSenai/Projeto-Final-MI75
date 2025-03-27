@@ -92,6 +92,45 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
     const [showModal, setShowModal] = useState(false)
     const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [images, setImages] = useState<File[]>([])
+
+    const handleImagesChange = (files: File[]) => {
+        setImages(files);
+    };
+
+    const uploadImages = async (imovelId: number) => {
+        try {   
+            console.log(`Iniciando upload de ${images.length} imagens para o imóvel ${imovelId}`);
+            
+            const formData = new FormData();
+            images.forEach((imagem, index) => {
+                formData.append('arquivos', imagem);
+                console.log(`Adicionando imagem ${index + 1}: ${imagem.name}`);
+            });
+
+            const response = await fetch(`http://localhost:9090/imagens/imovel/${imovelId}`, {
+                method: "POST",
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Erro na resposta do upload:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    errorText
+                });
+                throw new Error(`Falha no upload das imagens: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log('Upload realizado com sucesso:', data);
+            return data;
+        } catch (error) {
+            console.error("Erro detalhado ao fazer upload das imagens:", error);
+            throw error;
+        }
+    };
 
     const addEndereco = async (data: EnderecoImovelProps) => {
         try {
@@ -150,28 +189,21 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         }
     }
 
-
-
-    const onSubmitImovel = async (data: { imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas; endereco: EnderecoImovelProps }) => {
+    const onSubmitImovel = async (data: { imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas; 
+        endereco: EnderecoImovelProps }) => {
         if (isSubmitting) return;
 
         try {
             setIsSubmitting(true);
 
-            console.log("Dados recebidos para validação:", data);
-
-            const { imovel, endereco, imovelCaracteristicas } = data;
-
-            console.log("Dados do Endereço:", endereco);
-            console.log("Dados do Imóvel:", imovel);
-            console.log("Dados do Imóvel:", imovelCaracteristicas);
+            const { imovel, endereco, imovelCaracteristicas} = data;
 
             const responseCaracImovel = await addCaracteristicasImovel(imovelCaracteristicas)
             const responseEndereco = await addEndereco(endereco);
 
             const immobileData = {
                 id: imovel.id,
-                codigo: imovel.valor_venda,
+                codigo: imovel.id || 0,
                 nome_propriedade: imovel.nome_propriedade,
                 tipo_transacao: imovel.tipo_transacao,
                 valor_venda: imovel.valor_venda || 0,
@@ -189,22 +221,25 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
                 id_caracteristicaImovel: responseCaracImovel,
             };
 
-            console.log("Dados do imóvel a serem enviados:", immobileData);
             const response = await addImovel(immobileData);
 
             if (response && response.id) {
+                if (images.length > 0) {
+                    await uploadImages(response.id);
+                } else {
+                    console.log("Nenhuma imagem selecionada para upload");
+                }
+
                 console.log("Imóvel criado com sucesso:", response);
             } else {
                 throw new Error("Erro ao criar imóvel, id não retornado.");
             }
-            console.log("Resposta do servidor:", response);
-
 
             if (onComplete) onComplete();
 
         } catch (error) {
-            console.error("Erro ao salvar Endereço:", error);
-            alert(`Erro ao salvar endereço: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+            console.error("Erro ao salvar:", error);
+            alert(`Erro ao salvar: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
         } finally {
             setIsSubmitting(false);
         }
@@ -225,6 +260,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
 
     useEffect(() => {
         console.log("Errors", errors)
+        console.log("Images", images)
     }, [errors])
     return (
         <>
@@ -232,7 +268,11 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
                 <>
                     <EnderecoSection register={register} errors={errors} setValue={setValue} />
 
-                    <DadosImovelSection register={register} errors={errors} />
+                    <DadosImovelSection 
+                        register={register} 
+                        errors={errors} 
+                        onImagesChange={handleImagesChange}
+                    />
 
                     <div className="flex items-center gap-16 mt-10">
                         <div className="flex max-sm:gap-12 max-lg:gap-36 gap-[40rem] w-full">

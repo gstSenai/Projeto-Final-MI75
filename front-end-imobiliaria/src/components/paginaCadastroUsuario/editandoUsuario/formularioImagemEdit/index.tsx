@@ -11,11 +11,10 @@ const montserrat = Montserrat({
 });
 
 interface FormularioImagemEditProps {
-    usuarioId: number;
     handleImageUpload: (file: File) => void; // Espera uma função que recebe um File
 }
 
-export function FormularioImagemEdit({ usuarioId, handleImageUpload }: FormularioImagemEditProps) {
+export function FormularioImagemEdit({ handleImageUpload }: FormularioImagemEditProps) {
     const [imagePreview, setImagePreview] = useState<string | null>(null); // Estado para a pré-visualização da imagem
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +34,7 @@ export function FormularioImagemEdit({ usuarioId, handleImageUpload }: Formulari
     };
 
     return (
-        <div className="flex flex-col font-montserrat items-center gap-2 mb-10">
+        <div className={`flex ${montserrat.className} flex-col items-center gap-2 mb-10`}>
             <label className="text-xl font-medium text-black">Foto de perfil</label>
             <div className="relative cursor-pointer bg-gray-300 hover:bg-gray-400 h-56 w-56 rounded-full flex items-center justify-center overflow-hidden transition border border-gray-500 shadow-lg">
                 {imagePreview ? (

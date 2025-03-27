@@ -3,8 +3,8 @@ package weg.projetofinal.Imobiliaria.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import weg.projetofinal.Imobiliaria.model.dto.FavoritoGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.FavoritoPostRequestDTO;
+import weg.projetofinal.Imobiliaria.model.dto.favorito.FavoritoGetResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.favorito.FavoritoPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Favorito;
 import weg.projetofinal.Imobiliaria.model.mapper.FavoritoMapper;
 import weg.projetofinal.Imobiliaria.service.FavoritoService;
@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/favorito")
+@CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
 public class FavoritoController {
 
