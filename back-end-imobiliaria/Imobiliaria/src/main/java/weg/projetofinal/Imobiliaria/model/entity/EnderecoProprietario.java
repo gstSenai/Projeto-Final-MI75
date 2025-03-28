@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EnderecoUsuario {
+public class EnderecoProprietario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +25,6 @@ public class EnderecoUsuario {
     private String cidade;
     private String uf;
 
-    @OneToOne(mappedBy = "enderecoUsuario")
-    private Usuario usuario;
+    @OneToOne(mappedBy = "enderecoProprietario")
+    private Proprietario proprietario;
 }
