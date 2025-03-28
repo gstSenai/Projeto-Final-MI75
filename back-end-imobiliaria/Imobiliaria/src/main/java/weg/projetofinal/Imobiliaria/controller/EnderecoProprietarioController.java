@@ -13,10 +13,10 @@ import weg.projetofinal.Imobiliaria.model.mapper.EnderecoProprietarioMapper;
 import weg.projetofinal.Imobiliaria.service.EnderecoProprietarioService;
 
 @RestController
-@RequestMapping("/enderecoUsuario")
+@RequestMapping("/enderecoProprietario")
 @CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
-public class EnderecoUsuarioController {
+public class EnderecoProprietarioController {
 
     private final EnderecoProprietarioService service;
     private final EnderecoProprietarioMapper mapper = EnderecoProprietarioMapper.INSTANCE;

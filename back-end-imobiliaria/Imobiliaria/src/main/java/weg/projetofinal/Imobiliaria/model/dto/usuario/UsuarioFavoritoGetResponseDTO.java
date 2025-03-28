@@ -7,6 +7,7 @@ public record UsuarioFavoritoGetResponseDTO(
         String tipo_conta,
         String email,
         String senha,
+        boolean ativo,
         String imagem_usuario
 ) {
 }

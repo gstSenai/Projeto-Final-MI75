@@ -35,6 +35,9 @@ public class Usuario {
 
     private String imagem_usuario;
 
+    @Column(nullable = false)
+    private boolean ativo = true;
+
     @OneToMany(mappedBy = "usuario")
     private List<Agendamento> agendamentos;
 

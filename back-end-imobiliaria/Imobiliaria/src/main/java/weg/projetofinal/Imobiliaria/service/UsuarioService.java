@@ -45,8 +45,11 @@ public class UsuarioService {
     }
 
     public void deleteById(Integer id) {
-        repository.deleteById(id);
+        Usuario usuario = findById(id);
+        usuario.setAtivo(false);
+        repository.save(usuario);
     }
+
 
     public Usuario updateUser(Usuario usuario, Integer id, MultipartFile imagem) {
         Usuario usuarioExistente = findById(id);
