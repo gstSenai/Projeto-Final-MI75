@@ -1,62 +1,60 @@
 package weg.projetofinal.Imobiliaria.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import weg.projetofinal.Imobiliaria.model.dto.enderecoUser.EnderecoUsuarioGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.enderecoUser.EnderecoUsuarioPostRequestDTO;
-import weg.projetofinal.Imobiliaria.model.entity.EnderecoUsuario;
-import weg.projetofinal.Imobiliaria.model.mapper.EnderecoUsuarioMapper;
-import weg.projetofinal.Imobiliaria.service.EnderecoUsuarioService;
+import weg.projetofinal.Imobiliaria.model.dto.enderecoProprietario.EnderecoProprietarioGetResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.enderecoProprietario.EnderecoProprietarioPostRequestDTO;
+import weg.projetofinal.Imobiliaria.model.entity.EnderecoProprietario;
+import weg.projetofinal.Imobiliaria.model.mapper.EnderecoProprietarioMapper;
+import weg.projetofinal.Imobiliaria.service.EnderecoProprietarioService;
 
 @RestController
 @RequestMapping("/enderecoUsuario")
 @CrossOrigin(origins = "http://localhost:3000")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EnderecoUsuarioController {
 
-    private EnderecoUsuarioService service;
+    private final EnderecoProprietarioService service;
+    private final EnderecoProprietarioMapper mapper = EnderecoProprietarioMapper.INSTANCE;
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public EnderecoUsuarioGetResponseDTO createEnderecoUsuario(@RequestBody EnderecoUsuarioPostRequestDTO enderecoUsuarioPostRequestDTO) {
-        EnderecoUsuario enderecoUsuario = EnderecoUsuarioMapper.INSTANCE.enderecoUsuarioPostRequestDTOToEnderecoUsuario(enderecoUsuarioPostRequestDTO);
-        EnderecoUsuario enderecoUsuarioUpdated = service.createEnderecoUsuario(enderecoUsuario);
-        return EnderecoUsuarioMapper.INSTANCE.enderecoToEnderecoUsuarioGetResponseDTO(enderecoUsuarioUpdated);
+    public EnderecoProprietarioGetResponseDTO create(@RequestBody EnderecoProprietarioPostRequestDTO dto) {
+        EnderecoProprietario endereco = mapper.enderecoProprietarioPostRequestDTOToEnderecoProprietario(dto);
+        endereco = service.createEnderecoProprietario(endereco);
+        return mapper.enderecoProprietarioToEnderecoProprietarioGetResponseDTO(endereco);
     }
 
     @GetMapping("/getById/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EnderecoUsuarioGetResponseDTO getById(@PathVariable Integer id) {
-        EnderecoUsuario enderecoUsuario = service.findById(id);
-        return EnderecoUsuarioMapper.INSTANCE.enderecoToEnderecoUsuarioGetResponseDTO(enderecoUsuario);
+    public EnderecoProprietarioGetResponseDTO getById(@PathVariable Integer id) {
+        EnderecoProprietario endereco = service.findById(id);
+        return mapper.enderecoProprietarioToEnderecoProprietarioGetResponseDTO(endereco);
     }
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public Page<EnderecoUsuarioGetResponseDTO> getAll(@PageableDefault Pageable pageable) {
-        return service.getAll(pageable).
-                map(EnderecoUsuarioMapper.INSTANCE::enderecoToEnderecoUsuarioGetResponseDTO);
+    public Page<EnderecoProprietarioGetResponseDTO> getAll(@PageableDefault Pageable pageable) {
+        return service.getAll(pageable)
+                .map(mapper::enderecoProprietarioToEnderecoProprietarioGetResponseDTO);
     }
 
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteEnderecoUsuario(@PathVariable Integer id) {
+    public void delete(@PathVariable Integer id) {
         service.delete(id);
     }
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EnderecoUsuarioGetResponseDTO updateEnderecoUsuario(@RequestBody EnderecoUsuarioPostRequestDTO enderecoUsuarioDTO, @PathVariable Integer id) {
-        EnderecoUsuario enderecoUsuario = EnderecoUsuarioMapper.INSTANCE.enderecoUsuarioPostRequestDTOToEnderecoUsuario(enderecoUsuarioDTO);
-
-        enderecoUsuario.setId(id);
-
-        EnderecoUsuario enderecoUsuarioUpdated = service.updateEnderecoUsuario(enderecoUsuario, id);
-
-        return EnderecoUsuarioMapper.INSTANCE.enderecoToEnderecoUsuarioGetResponseDTO(enderecoUsuarioUpdated);
+    public EnderecoProprietarioGetResponseDTO update(@RequestBody EnderecoProprietarioPostRequestDTO dto, @PathVariable Integer id) {
+        EnderecoProprietario endereco = mapper.enderecoProprietarioPostRequestDTOToEnderecoProprietario(dto);
+        endereco.setId(id);
+        endereco = service.updateEnderecoUsuario(endereco, id);
+        return mapper.enderecoProprietarioToEnderecoProprietarioGetResponseDTO(endereco);
     }
 }

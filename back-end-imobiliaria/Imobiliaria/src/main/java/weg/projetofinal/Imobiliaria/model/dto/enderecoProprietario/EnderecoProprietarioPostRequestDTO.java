@@ -1,7 +1,6 @@
-package weg.projetofinal.Imobiliaria.model.dto.usuario;
+package weg.projetofinal.Imobiliaria.model.dto.enderecoProprietario;
 
-public record UsuarioEnderecoReponseDTO (
-        Integer id,
+public record EnderecoProprietarioPostRequestDTO(
         String cep,
         String rua,
         String tipo_residencia,
@@ -10,5 +9,5 @@ public record UsuarioEnderecoReponseDTO (
         String bairro,
         String cidade,
         String uf
-){
+) {
 }

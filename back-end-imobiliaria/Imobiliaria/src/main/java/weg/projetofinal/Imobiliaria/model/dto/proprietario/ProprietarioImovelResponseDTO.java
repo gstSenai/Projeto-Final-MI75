@@ -1,17 +1,16 @@
-package weg.projetofinal.Imobiliaria.model.dto.usuario;
+package weg.projetofinal.Imobiliaria.model.dto.proprietario;
 
 import java.util.Date;
 
-public record UsuarioEnderecoGetResponseDTO (
+public record ProprietarioImovelResponseDTO(
         Integer id,
         String nome,
         String sobrenome,
         String cpf,
-        String tipo_conta,
         String telefone,
+        String celular,
         Date data_nascimento,
         String email,
-        String senha,
-        String imagem_usuario
-){
+        String imagem_proprietario
+) {
 }

@@ -1,10 +1,7 @@
 package weg.projetofinal.Imobiliaria.model.dto.imovel;
 
-import weg.projetofinal.Imobiliaria.model.entity.CaracteristicaImovel;
-import weg.projetofinal.Imobiliaria.model.entity.Endereco;
-import weg.projetofinal.Imobiliaria.model.entity.Proprietario;
-
-public record ImovelPostRequestDTO(
+public record ImovelProprietarioResponseDTO(
+        Integer id,
         Integer codigo,
         String nome_propriedade,
         String tipo_transacao,
@@ -18,9 +15,6 @@ public record ImovelPostRequestDTO(
         Double condominio,
         Double area_construida,
         Double area_terreno,
-        String descricao,
-        Endereco idEndereco,
-        CaracteristicaImovel id_caracteristicaImovel,
-        Proprietario id_proprietario
+        String descricao
 ) {
 }
