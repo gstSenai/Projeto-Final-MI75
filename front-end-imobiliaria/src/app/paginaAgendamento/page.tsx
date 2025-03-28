@@ -1,4 +1,6 @@
 "use client"
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:9090";
+const response = await request("GET", `${BASE_URL}/usuario/corretores`);
 
 import Image from "next/image"
 import { Header } from "@/components/header"
@@ -8,9 +10,10 @@ import Calendario from "@/components/Calendario"
 import { FormularioInput } from "@/components/Calendario/selecaoData"
 import { useForm } from "react-hook-form"
 import { useEffect, useState } from "react"
-import request from "@/routes/request"
-import { Botao } from "@/components/botao"
 
+import { Botao } from "@/components/botao"
+import request from "@/routes/request"
+const response = await request("GET", "http://localhost:9090/usuario/corretores")
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -118,6 +121,15 @@ export default function PaginaAgendamento() {
                 </h2>
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center gap-8 mt-6 mx-8 lg:mx-10 xl:mx-16 2xl:mx-32">
 
+                  <FormularioInput
+                    placeholder="Corretores:"
+                    name="Corretores.disponivel"
+                    interName="Corretor"
+                    register={register}
+                    customizacaoClass="w-full p-2 border border-gray-500 rounded"
+                    required
+                    options={usuarios?.map(({ nome, sobrenome }) => `${nome} ${sobrenome}`) || []}
+                  />
 
                   <FormularioInput
                     placeholder="Horários:"
@@ -129,19 +141,9 @@ export default function PaginaAgendamento() {
                     options={["8:00", "10:00", "12:00", "14:00", "16:00", "18:00"]}
                   />
 
-                  <FormularioInput
-                    placeholder="Corretores:"
-                    name="Corretores.disponivel"
-                    interName="Corretor"
-                    register={register}
-                    customizacaoClass="w-full p-2 border border-gray-500 rounded"
-                    required
-                    options={usuarios?.map(({ nome, sobrenome }) => `${nome} ${sobrenome}`) || []}
-                  />
 
-
-
-                  <Botao className=" xl:w-[60%] 2xl:w-[50%]" texto="Agendar visita"/>
+                  <Botao className=" xl:w-[60%] 2xl:w-[50%]" texto="Agendar visita">
+                  </Botao>
                 </form>
               </div>
             </div>
@@ -155,3 +157,21 @@ export default function PaginaAgendamento() {
   )
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//import request from "@/routes/request"
+//const response = await request("GET", "http://localhost:9090/usuario/corretores")

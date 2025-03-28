@@ -18,6 +18,9 @@ public class AgendamentoService {
         return agendamentoRepository.findAll();
     }
 
+
+
+
     public Agendamento procurarPorId(int id) {
         return agendamentoRepository.findById(id)
                 .orElseThrow(() ->
