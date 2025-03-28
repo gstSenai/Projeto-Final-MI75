@@ -25,6 +25,9 @@ public class Usuario {
     private String nome;
 
     @Column(nullable = false)
+    private String sobrenome;
+
+    @Column(nullable = false)
     private String tipo_conta;
 
     @Column(nullable = false, unique = true)
