@@ -8,6 +8,7 @@ public record UsuarioAgendamento2GetResponseDTO(
         String tipo_conta,
         String email,
         String senha,
+        boolean ativo,
         String imagem_usuario
 ) {
 }
