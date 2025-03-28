@@ -63,18 +63,29 @@ public class UsuarioService {
         return repository.save(usuarioExistente);
     }
 
-    public List<Usuario> buscarUsuario(String nome, String sobrenome, String cpf, String tipoConta) {
-        Specification<Usuario> usuarioSpecification;
-        if ((nome != null && !nome.isEmpty()) || (sobrenome != null && !sobrenome.isEmpty())) {
-            usuarioSpecification = Specification.where(UsuarioSpecification.hasNome(nome))
-                    .and(UsuarioSpecification.hasSobrenome(sobrenome));
-        } else if((cpf != null && !cpf.isEmpty())) {
-            usuarioSpecification = UsuarioSpecification.hasCpf(cpf);
-        }else {
-            usuarioSpecification = UsuarioSpecification.hasTipo_conta(tipoConta);
+    public List<Usuario> buscarUsuario(String nome, String sobrenome, String email, Boolean ativo, String tipoConta) {
+        Specification<Usuario> usuarioSpecification = Specification.where(null);
+
+        if (nome != null && !nome.isEmpty()) {
+            usuarioSpecification = usuarioSpecification.and(UsuarioSpecification.hasNome(nome));
         }
+        if (sobrenome != null && !sobrenome.isEmpty()) {
+            usuarioSpecification = usuarioSpecification.and(UsuarioSpecification.hasSobrenome(sobrenome));
+        }
+        if (email != null && !email.isEmpty()) {
+            usuarioSpecification = usuarioSpecification.and(UsuarioSpecification.hasEmail(email));
+        }
+        if (ativo != null) {
+            usuarioSpecification = usuarioSpecification.and(UsuarioSpecification.hasAtivo(ativo));
+        }
+        if (tipoConta != null && !tipoConta.isEmpty()) {
+            usuarioSpecification = usuarioSpecification.and(UsuarioSpecification.hasTipo_conta(tipoConta));
+        }
+
         return repository.findAll(usuarioSpecification);
     }
+
+
 
     public List<Usuario> listarCorretores() {
         Specification<Usuario> usuarioSpecification =

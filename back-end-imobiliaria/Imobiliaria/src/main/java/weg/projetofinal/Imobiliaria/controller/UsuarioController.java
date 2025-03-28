@@ -66,11 +66,14 @@ public class UsuarioController {
     public List<UsuarioGetResponseDTO> buscarUsuario(
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) String sobrenome,
-            @RequestParam(required = false) String cpf,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) Boolean ativo,
             @RequestParam(required = false) String tipoConta) {
-        List<Usuario> usuarios = service.buscarUsuario(nome, sobrenome, cpf, tipoConta);
+
+        List<Usuario> usuarios = service.buscarUsuario(nome, sobrenome, email, ativo, tipoConta);
         return usuarios.stream().map(UsuarioMapper.INSTANCE::usuarioToUsuarioGetResponseDTO).toList();
     }
+
 
 
     @DeleteMapping("/delete/{id}")

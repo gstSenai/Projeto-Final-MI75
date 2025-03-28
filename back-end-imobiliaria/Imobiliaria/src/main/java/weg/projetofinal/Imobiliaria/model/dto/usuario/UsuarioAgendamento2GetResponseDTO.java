@@ -5,6 +5,7 @@ import java.util.Date;
 public record UsuarioAgendamento2GetResponseDTO(
         Integer id,
         String nome,
+        String sobrenome,
         String tipo_conta,
         String email,
         String senha,
