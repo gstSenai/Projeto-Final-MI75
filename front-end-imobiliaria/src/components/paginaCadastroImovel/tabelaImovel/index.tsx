@@ -2,12 +2,16 @@
 
 import { useEffect, useState } from "react"
 import { Montserrat } from 'next/font/google'
-import request from "@/routes/request"
 import { Formulario } from "../formulario"
 import { RemoveImovel } from "../removerImovel"
 import { EditarImovel } from "../editarImovel"
 import Image from "next/image"
-// Carregando a fonte Montserrat
+import { Botao } from "@/components/botao"
+import { FormularioInput } from "@/components/paginaCadastroUsuario/adicionandoUsuario/formulario/formularioInput"
+import { useForm } from "react-hook-form"
+import { FiltroImovel } from "@/components/filtroImovel"
+
+
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "800"],
@@ -57,7 +61,18 @@ interface ResponseProps {
   content: ImovelProps[]
 }
 
+interface FormValues {
+  "imovel.nome_propriedade": string;
+  "imovel.venda_valor": number;
+}
+
 export default function TabelaImovel() {
+  const { register, watch, reset } = useForm<FormValues>({
+    defaultValues: {
+      "imovel.nome_propriedade": "",
+      "imovel.venda_valor": 0,
+    }
+  });
   const [selectedImoveis, setSelectedImoveis] = useState<ImovelProps[]>([])
   const [imoveis, setImoveis] = useState<ResponseProps | null>(null)
   const [adicionar, setAdicionar] = useState(false)
@@ -65,6 +80,9 @@ export default function TabelaImovel() {
   const [editar, setEditar] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
+  const [showSidebar, setShowSidebar] = useState(false)
+  const [valorMin, setValorMin] = useState(0);
+  const [valorMax, setValorMax] = useState(1000000);
 
   const handleAddImovel = () => {
     setAdicionar(!adicionar)
@@ -106,15 +124,32 @@ export default function TabelaImovel() {
     }
   }
 
-  const getImoveis = async () => {
+  const getImoveis = async (searchNome?: string, searchValorMin?: number, searchValorMax?: number) => {
     if (isLoading) return
 
     setIsLoading(true)
     try {
-      const imoveisGet = await request("GET", "http://localhost:9090/imovel/getAll")
-      setImoveis(imoveisGet)
+      const response = await fetch("http://localhost:9090/imovel/getAll");
+      const data = await response.json();
+
+      const imoveisFiltrados = {
+        content: data.content.filter((imovel: ImovelProps) => {
+          const matchNome = !searchNome || imovel.nome_propriedade.toLowerCase().includes(searchNome.toLowerCase())
+          
+          // Lógica de filtro por preço
+          const valorImovel = imovel.valor_venda;
+          const valorMin = searchValorMin || 0;
+          const valorMax = searchValorMax || Infinity;
+          const matchValor = valorImovel >= valorMin && valorImovel <= valorMax;
+
+          return matchNome && matchValor;
+        })
+      }
+
+      setImoveis(imoveisFiltrados)
     } catch (error) {
       console.error("Error fetching Imoveis:", error)
+      setImoveis({ content: [] })
     } finally {
       setIsLoading(false)
     }
@@ -147,6 +182,14 @@ export default function TabelaImovel() {
   return (
     <>
       <div className={`flex flex-col gap-10 sm:flex-col md:flex-col lg:flex-row ${montserrat.className}`}>
+        <button
+          onClick={() => setShowSidebar(!showSidebar)}
+          className="h-[50px] transition-transform duration-300 hover:scale-105  text-white rounded-[20px] text-center inline-block align-middle"
+        >
+          <div className="pl-5 flex items-center gap-3 justify-start">
+            <Image src="/iconsForms/filtro.png" alt="filtro" width={20} height={20} className="w-4" />
+          </div>
+        </button>
         <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6 w-full">
           <div className="overflow-x-auto max-h-[500px]">
             <table className="w-full border-separate border-spacing-0">
@@ -247,6 +290,77 @@ export default function TabelaImovel() {
               <p className="text-lg font-medium">Editar</p>
             </div>
           </button>
+        </div>
+
+        <div className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 z-[10] ${showSidebar ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+          <div className={`fixed top-0 left-0 h-full w-96 bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[20] ${showSidebar ? 'translate-x-0' : '-translate-x-full'}`}>
+            <div className="p-6 h-full flex flex-col">
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-2xl font-bold text-vermelho">Filtros de Busca</h2>
+                </div>
+                <button
+                  onClick={() => setShowSidebar(false)}
+                  className="text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto">
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <FormularioInput
+                      placeholder="Nome:"
+                      name="imovel.nome_propriedade"
+                      interName='Ex: Casa'
+                      register={register}
+                      required
+                      customizacaoClass="w-full"
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <label className="block text-sm font-medium text-gray-700">Faixa de Preço</label>
+                    <FiltroImovel
+                      min={0}
+                      max={1000000}
+                      name="imovel.valor_venda"
+                      register={register}
+                      onChange={(min, max) => {
+                        setValorMin(min);
+                        setValorMax(max);
+                      }}
+                      className="mt-2"
+                    />
+                  </div>
+
+                </div>
+                <div className="flex gap-10 mt-10">
+                  <Botao
+                    texto="Pesquisar"
+                    onClick={() => {
+                      const currentNome = watch("imovel.nome_propriedade");
+                      getImoveis(currentNome, valorMin, valorMax);
+                      setTimeout(() => {
+                        setShowSidebar(false);
+                      }, 100);
+                    }}
+                  />
+                  <Botao
+                    texto="Limpar"
+                    onClick={() => {
+                      reset();
+                      getImoveis();
+                    }}
+                    className="bg-green bg-opacity-40 hover:bg-opacity-100 transition-all duration-300 ease-in-out shrink-0 text-center rounded-[20px] h-[45px] w-full"
+                  />
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
 

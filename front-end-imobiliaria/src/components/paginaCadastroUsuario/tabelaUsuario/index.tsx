@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react"
 import { Montserrat } from 'next/font/google'
-import request from "@/routes/request"
 import { Formulario } from "../adicionandoUsuario/formulario"
 import { RemoveUsuario } from "../removerUsuario"
 import { EditarUsuario } from "../editandoUsuario"
 import { z } from "zod"
 import Image from "next/image"
+import { FormularioInput } from "../adicionandoUsuario/formulario/formularioInput"
+import { useForm } from "react-hook-form"
+import { Botao } from "@/components/botao"
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
@@ -31,35 +33,27 @@ const UsuarioProps = z.object({
   idEnderecoUsuario: z.number().optional(),
 })
 
-
-const EnderecoProps = z.object({
-  id: z.number().optional(),
-  cep: z.string().min(1, { message: "CEP é obrigatório" }),
-  rua: z.string().min(1, { message: "Rua é obrigatória" }),
-  tipo_residencia: z.string().min(1, { message: "Tipo de residência é obrigatório" }),
-  numero_imovel: z.coerce.number().min(1, { message: "Número do imóvel é obrigatório" }),
-  numero_apartamento: z.coerce.number().optional(),
-  bairro: z.string().min(1, { message: "Bairro é obrigatório" }),
-  cidade: z.string().min(1, { message: "Cidade é obrigatória" }),
-  uf: z.string().min(1, { message: "UF é obrigatório" }),
-})
-
-
 type UsuarioProps = z.infer<typeof UsuarioProps>
-type EnderecoProps = z.infer<typeof EnderecoProps>
 
 interface ResponseProps {
   content: UsuarioProps[]
 }
 
 export default function TabelaUsuario() {
+  const { register, watch, reset } = useForm({
+    defaultValues: {
+      "usuario.nome": "",
+      "usuario.email": "",
+      "usuario.tipo_conta": "",
+    }
+  });
   const [selectedUsuarios, setSelectedUsuarios] = useState<UsuarioProps[]>([])
-  const [usuarios, setUsuarios] = useState<ResponseProps | null>(null)
+  const [usuariosFiltros, setUsuariosFiltros] = useState<ResponseProps | null>(null)
   const [adicionar, setAdicionar] = useState(false)
   const [remover, setRemover] = useState(false)
   const [editar, setEditar] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [refreshTrigger, setRefreshTrigger] = useState(0)
+  const [showSidebar, setShowSidebar] = useState(false)
 
   const handleAddUsuario = () => {
     setAdicionar(!adicionar)
@@ -72,7 +66,7 @@ export default function TabelaUsuario() {
 
   const handleRemoveUsuario = () => {
     if (selectedUsuarios.length === 0) {
-      alert("Selecione pelo menos um imóvel para remover")
+      alert("Selecione pelo menos um usuário para remover")
       return
     }
 
@@ -86,10 +80,10 @@ export default function TabelaUsuario() {
 
   const handleEditusuario = () => {
     if (selectedUsuarios.length === 0) {
-      alert("Selecione um imóvel para editar")
+      alert("Selecione um usuário para editar")
       return
     } else if (selectedUsuarios.length > 1) {
-      alert("Pode editar um imóvel por vez")
+      alert("Pode editar um usuário por vez")
       return
     }
 
@@ -101,23 +95,34 @@ export default function TabelaUsuario() {
     }
   }
 
-  const getUsuario = async () => {
-    if (isLoading) return
-
+  const getUsuario = async (searchNome?: string, searchEmail?: string, searchTipoConta?: string) => {
     setIsLoading(true)
     try {
-      const usuariosGet = await request("GET", "http://localhost:9090/usuario/getAll")
-      setUsuarios(usuariosGet)
+      const response = await fetch("http://localhost:9090/usuario/getAll");
+      const data = await response.json();
+
+      const usuariosFiltrados = {
+        content: data.content.filter((usuario: UsuarioProps) => {
+          const matchNome = !searchNome || usuario.nome.toLowerCase().includes(searchNome.toLowerCase());
+          const matchEmail = !searchEmail || usuario.email.toLowerCase().includes(searchEmail.toLowerCase());
+          const matchTipoConta = !searchTipoConta || usuario.tipo_conta.toLowerCase().includes(searchTipoConta.toLowerCase());
+
+          return matchNome && matchEmail && matchTipoConta;
+        })
+      };
+
+      setUsuariosFiltros(usuariosFiltrados);
     } catch (error) {
       console.error("Error fetching usuarios:", error)
+      setUsuariosFiltros({ content: [] })
     } finally {
       setIsLoading(false)
     }
   }
 
   const refreshData = () => {
-    setRefreshTrigger((atualizar) => atualizar + 1)
     setSelectedUsuarios([])
+    getUsuario()
   }
 
   const toggleUsuarioselection = (usuario: UsuarioProps) => {
@@ -133,20 +138,25 @@ export default function TabelaUsuario() {
   }
 
   useEffect(() => {
-    getUsuario()
-    setAdicionar(false)
-    setEditar(false)
-    setRemover(false)
-  }, [refreshTrigger])
+    getUsuario();
+  }, []);
 
   return (
     <>
       <div className={`flex flex-col gap-10 sm:flex-col lg:flex-row ${montserrat.className}`}>
-        <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6 w-full">
+        <button
+          onClick={() => setShowSidebar(!showSidebar)}
+          className="h-[50px] transition-transform duration-300 hover:scale-105  text-white rounded-[20px] text-center inline-block align-middle"
+        >
+          <div className="pl-5 flex items-center gap-3 justify-start">
+            <Image src="/iconsForms/filtro.png" alt="filtro" width={20} height={20} className="w-4" />
+          </div>
+        </button>
+        <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden w-full lg:w-5/6">
           <div className="overflow-x-auto max-h-[500px]">
             <table className="w-full border-separate border-spacing-0">
               <thead>
-                <tr className="bg-vermelho text-white sticky top-0 z-10">
+                <tr className="bg-vermelho text-white sticky top-0 z-[5]">
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Nome</p>
                   </th>
@@ -172,7 +182,7 @@ export default function TabelaUsuario() {
                     </td>
                   </tr>
                 ) : (
-                  usuarios?.content?.map((usuario) => {
+                  usuariosFiltros?.content?.map((usuario) => {
                     const isSelected = selectedUsuarios.some(u => u.id === usuario.id)
                     return (
                       <tr
@@ -209,13 +219,15 @@ export default function TabelaUsuario() {
             </div>
           )}
         </div>
-        <div className="flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full ">
+
+        <div className="flex flex-col gap-4 w-1/2 lg:w-1/6">
+
           <button
             onClick={handleAddUsuario}
-            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-full h-[50px] transition-transform duration-300 hover:scale-105 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
-            <div className="pl-5 flex items-center gap-3 justify-start ">
+            <div className="pl-5 flex items-center gap-3 justify-start">
               <Image src="/iconsForms/sinalAdd.png" alt="sinal de adição" width={20} height={20} className="w-4" />
               <p className="text-lg font-medium">Adicionar</p>
             </div>
@@ -223,7 +235,7 @@ export default function TabelaUsuario() {
 
           <button
             onClick={handleRemoveUsuario}
-            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-full h-[50px] transition-transform duration-300 hover:scale-105 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
@@ -234,7 +246,7 @@ export default function TabelaUsuario() {
 
           <button
             onClick={handleEditusuario}
-            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-full h-[50px] transition-transform duration-300 hover:scale-105 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading || selectedUsuarios.length !== 1}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
@@ -242,6 +254,86 @@ export default function TabelaUsuario() {
               <p className="text-lg font-medium">Editar</p>
             </div>
           </button>
+        </div>
+      </div>
+
+      <div className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 z-[10] ${showSidebar ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        <div className={`fixed top-0 left-0 h-full w-96 bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[20] ${showSidebar ? 'translate-x-0' : '-translate-x-full'}`}>
+          <div className="p-6 h-full flex flex-col">
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex items-center gap-3">
+                <h2 className="text-2xl font-bold text-vermelho">Filtros de Busca</h2>
+              </div>
+              <button
+                onClick={() => setShowSidebar(false)}
+                className="text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto">
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <FormularioInput
+                    placeholder="Nome:"
+                    name="usuario.nome"
+                    interName='Ex: Caio'
+                    register={register}
+                    required
+                    customizacaoClass="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <FormularioInput
+                    placeholder="E-mail:"
+                    name="usuario.email"
+                    interName='Ex: caio@gmail.com'
+                    register={register}
+                    required
+                    customizacaoClass="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <FormularioInput
+                    placeholder="Tipo de Conta:"
+                    name="usuario.tipo_conta"
+                    interName=''
+                    register={register}
+                    required
+                    customizacaoClass="w-full"
+                    options={['Usuario', 'Administrador', 'Corretor', 'Editor']}
+                  />
+                </div>
+              </div>
+              <div className="flex gap-10 mt-10">
+                <Botao
+                  texto="Pesquisar"
+                  onClick={() => {
+                    const currentNome = watch("usuario.nome");
+                    const currentEmail = watch("usuario.email");
+                    const currentTipoConta = watch("usuario.tipo_conta");
+                    getUsuario(currentNome, currentEmail, currentTipoConta);
+                    setTimeout(() => {
+                      setShowSidebar(false);
+                    }, 100);
+                  }}
+                />
+                <Botao
+                  texto="Limpar"
+                  onClick={() => {
+                    reset();
+                    getUsuario();
+                  }}
+                  className="bg-green bg-opacity-40 hover:bg-opacity-100 transition-all duration-300 ease-in-out shrink-0 text-center rounded-[20px] h-[45px] w-full"
+                />
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
 
