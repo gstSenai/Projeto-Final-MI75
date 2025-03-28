@@ -11,69 +11,104 @@ interface FiltroImovelProps {
 }
 
 export function FiltroImovel({ min, max, onChange, className = "", name, register }: FiltroImovelProps) {
-    const [minVal, setMinVal] = useState(min);
+    const [minVal, setMinVal] = useState<number | null>(null);
     const [maxVal, setMaxVal] = useState(max);
     const range = useRef<HTMLDivElement>(null);
+    const priceGap = 2000;
 
-    const getPercent = (value: number) => {
-        const percent = ((value - min) / (max - min)) * 100;
-        return Math.max(0, Math.min(100, percent));
+    // Função para validar os valores de entrada
+    const validateValues = (newMin: number | null, newMax: number) => {
+        if (newMin === null) return { newMin: null, newMax };
+        if (newMin < 0) newMin = 0;
+        if (newMax > max) newMax = max;
+        if (newMax - newMin < priceGap && newMin !== 0) {
+            if (newMin === min) {
+                newMax = newMin + priceGap;
+            } else {
+                newMin = newMax - priceGap;
+            }
+        }
+        return { newMin, newMax };
     };
 
     useEffect(() => {
-        const minPercent = getPercent(minVal);
-        const maxPercent = getPercent(maxVal);
-
         if (range.current) {
+            const minPercent = minVal === null ? 0 : ((minVal - min) / (max - min)) * 100;
+            const maxPercent = ((maxVal - min) / (max - min)) * 100;
+            
             range.current.style.left = `${minPercent}%`;
             range.current.style.width = `${maxPercent - minPercent}%`;
-            range.current.style.transition = 'all 0.1s ease-in-out';
         }
-    }, [minVal, maxVal]);
+    }, [minVal, maxVal, min, max]);
 
     return (
-        <div className={`relative w-full h-5 ${className}`}>
-            <div className="absolute w-full h-1 bg-gray-200 rounded-lg">
-                <div
-                    ref={range}
-                    className="absolute h-full bg-vermelho rounded-lg"
-                />
-            </div>
-            <div className="absolute w-full flex">
-                <div className="w-full relative">
+        <div className={`w-full rounded-lg ${className}`}>
+            <div className="mb-6">
+                <div className="flex justify-between gap-4 mb-6">
+                    <div className="flex-1">
+                        <span className="text-sm text-gray-600">Valor Mínimo</span>
+                        <input
+                            type="number"
+                            value={minVal === null ? '' : minVal}
+                            onChange={(e) => {
+                                const value = e.target.value === '' ? null : Number(e.target.value);
+                                const { newMin, newMax } = validateValues(value, maxVal);
+                                setMinVal(newMin);
+                                onChange(newMin || 0, newMax);
+                            }}
+                            className="w-full px-3 py-2 bg-gray-100 rounded-lg"
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <span className="text-sm text-gray-600">Valor Máximo</span>
+                        <input
+                            type="number"
+                            value={maxVal}
+                            onChange={(e) => {
+                                const value = Number(e.target.value);
+                                const { newMin, newMax } = validateValues(minVal, value);
+                                setMaxVal(newMax);
+                                onChange(newMin || 0, newMax);
+                            }}
+                            className="w-full px-3 py-2 bg-gray-100 rounded-lg"
+                        />
+                    </div>
+                </div>
+
+                <div className="relative h-1">
+                    <div className="absolute w-full h-1 bg-gray-200 rounded-lg">
+                        <div
+                            ref={range}
+                            className="absolute h-full bg-vermelho rounded-lg"
+                        />
+                    </div>
                     <input
                         type="range"
                         min={min}
                         max={max}
-                        {...register(name)}
-                        value={minVal}
+                        value={minVal === null ? min : minVal}
                         onChange={(e) => {
                             const value = Number(e.target.value);
-                            setMinVal(value);
-                            onChange(value, maxVal);
+                            const { newMin, newMax } = validateValues(value, maxVal);
+                            setMinVal(newMin);
+                            onChange(newMin || 0, newMax);
                         }}
-                        className="absolute h-5 bg-transparent pointer-events-auto appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-vermelho [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:shadow-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-vermelho [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-none"
+                        className="absolute w-full h-5 bg-transparent appearance-none pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-vermelho [&::-webkit-slider-thumb]:cursor-pointer z-10"
                     />
-                </div>
-                <div className="w-full relative">
                     <input
                         type="range"
                         min={min}
                         max={max}
-                        {...register(name)}
                         value={maxVal}
                         onChange={(e) => {
                             const value = Number(e.target.value);
-                            setMaxVal(value);
-                            onChange(minVal, value);
+                            const { newMin, newMax } = validateValues(minVal, value);
+                            setMaxVal(newMax);
+                            onChange(newMin || 0, newMax);
                         }}
-                        className="absolute h-5 bg-transparent pointer-events-auto appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-vermelho [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:shadow-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-vermelho [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-none"
+                        className="absolute w-full h-5 bg-transparent appearance-none pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-vermelho [&::-webkit-slider-thumb]:cursor-pointer z-10"
                     />
                 </div>
-            </div>
-            <div className="absolute w-full flex justify-between mt-4">
-                <span className="text-sm text-gray-600">R$ {minVal.toLocaleString('pt-BR')}</span>
-                <span className="text-sm text-gray-600">R$ {maxVal.toLocaleString('pt-BR')}</span>
             </div>
         </div>
     );

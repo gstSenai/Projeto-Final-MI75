@@ -61,8 +61,8 @@ public class ImovelService {
             imovelExistente.setId_endereco(imovel.getId_endereco());
         }
 
-        if (imovel.getCaracteristicaImovel() != null) {
-            imovelExistente.setCaracteristicaImovel(imovel.getCaracteristicaImovel());
+        if (imovel.getId_caracteristicasImovel() != null) {
+            imovelExistente.setId_caracteristicasImovel(imovel.getId_caracteristicasImovel());
         }
 
         return repository.save(imovelExistente);

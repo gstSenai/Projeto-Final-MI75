@@ -144,14 +144,6 @@ export default function TabelaUsuario() {
   return (
     <>
       <div className={`flex flex-col gap-10 sm:flex-col lg:flex-row ${montserrat.className}`}>
-        <button
-          onClick={() => setShowSidebar(!showSidebar)}
-          className="h-[50px] transition-transform duration-300 hover:scale-105  text-white rounded-[20px] text-center inline-block align-middle"
-        >
-          <div className="pl-5 flex items-center gap-3 justify-start">
-            <Image src="/iconsForms/filtro.png" alt="filtro" width={20} height={20} className="w-4" />
-          </div>
-        </button>
         <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden w-full lg:w-5/6">
           <div className="overflow-x-auto max-h-[500px]">
             <table className="w-full border-separate border-spacing-0">
@@ -220,96 +212,118 @@ export default function TabelaUsuario() {
           )}
         </div>
 
-        <div className="flex flex-col gap-4 w-1/2 lg:w-1/6">
-
+        <div className="flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full ">
           <button
             onClick={handleAddUsuario}
-            className="w-full h-[50px] transition-transform duration-300 hover:scale-105 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <Image src="/iconsForms/sinalAdd.png" alt="sinal de adição" width={20} height={20} className="w-4" />
-              <p className="text-lg font-medium">Adicionar</p>
+              <Image src="/iconsForms/sinalAdd.png" alt="sinal de adição" width={10} height={10} />
+              <span className="text-base font-medium">Adicionar</span>
             </div>
           </button>
 
           <button
             onClick={handleRemoveUsuario}
-            className="w-full h-[50px] transition-transform duration-300 hover:scale-105 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <Image src="/iconsForms/sinalRemove.png" alt="sinal de remoção" width={20} height={20} className="w-4" />
-              <p className="text-lg font-medium">Remover</p>
+              <Image src="/iconsForms/sinalRemove.png" alt="sinal de remoção" width={10} height={10} />
+              <span className="text-base font-medium">Remover</span>
             </div>
           </button>
 
           <button
             onClick={handleEditusuario}
-            className="w-full h-[50px] transition-transform duration-300 hover:scale-105 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading || selectedUsuarios.length !== 1}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <Image src="/iconsForms/canetaEditarBranco.png" alt="sinal de edição" width={20} height={20} className="w-4" />
-              <p className="text-lg font-medium">Editar</p>
+              <Image src="/iconsForms/canetaEditarBranco.png" alt="sinal de edição" width={15} height={15} />
+              <span className="text-base font-medium">Editar</span>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setShowSidebar(!showSidebar)}
+            className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
+          >
+            <div className="pl-5 flex items-center gap-3 justify-start">
+              <Image src="/iconFiltro/filtro.png" alt="filtro" width={15} height={15} />
+              <span className="text-base font-medium">Filtro</span>
             </div>
           </button>
         </div>
-      </div>
 
-      <div className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 z-[10] ${showSidebar ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-        <div className={`fixed top-0 left-0 h-full w-96 bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[20] ${showSidebar ? 'translate-x-0' : '-translate-x-full'}`}>
-          <div className="p-6 h-full flex flex-col">
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex items-center gap-3">
-                <h2 className="text-2xl font-bold text-vermelho">Filtros de Busca</h2>
+        <div className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 z-[10] ${showSidebar ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+          <div className={`fixed top-0 left-0 h-full w-96 bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[20] ${showSidebar ? 'translate-x-0' : '-translate-x-full'}`}>
+            <div className="p-6 h-full flex flex-col">
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-2xl font-bold text-vermelho">Filtros de Busca</h2>
+                </div>
+                <button
+                  onClick={() => setShowSidebar(false)}
+                  className="text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
-              <button
-                onClick={() => setShowSidebar(false)}
-                className="text-gray-500 hover:text-gray-700 transition-colors"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <FormularioInput
-                    placeholder="Nome:"
-                    name="usuario.nome"
-                    interName='Ex: Caio'
-                    register={register}
-                    required
-                    customizacaoClass="w-full"
-                  />
-                </div>
 
-                <div className="space-y-2">
-                  <FormularioInput
-                    placeholder="E-mail:"
-                    name="usuario.email"
-                    interName='Ex: caio@gmail.com'
-                    register={register}
-                    required
-                    customizacaoClass="w-full"
-                  />
-                </div>
+              <div>
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <FormularioInput
+                      placeholder="Nome:"
+                      name="usuario.nome"
+                      interName='Ex: Caio'
+                      register={register}
+                      required
+                      customizacaoClass="w-full"
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <FormularioInput
-                    placeholder="Tipo de Conta:"
-                    name="usuario.tipo_conta"
-                    interName=''
-                    register={register}
-                    required
-                    customizacaoClass="w-full"
-                    options={['Usuario', 'Administrador', 'Corretor', 'Editor']}
-                  />
+                  <div className="space-y-2">
+                    <FormularioInput
+                      placeholder="E-mail:"
+                      name="usuario.email"
+                      interName='Ex: caio@gmail.com'
+                      register={register}
+                      required
+                      customizacaoClass="w-full"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <FormularioInput
+                      placeholder="Tipo de Conta:"
+                      name="usuario.tipo_conta"
+                      interName=''
+                      register={register}
+                      required
+                      customizacaoClass="w-full"
+                      options={['Usuario', 'Administrador', 'Corretor', 'Editor']}
+                    />
+                  </div>
                 </div>
               </div>
-              <div className="flex gap-10 mt-10">
+
+              <div className="flex gap-10 mt-10 h-10">
+                <Botao
+                  texto="Limpar"
+                  onClick={() => {
+                    reset();
+                    getUsuario();
+                    setTimeout(() => {
+                      setShowSidebar(false);
+                    }, 100);
+                  }}
+                  className="text-base bg-vermelho"
+                />
                 <Botao
                   texto="Pesquisar"
                   onClick={() => {
@@ -321,22 +335,13 @@ export default function TabelaUsuario() {
                       setShowSidebar(false);
                     }, 100);
                   }}
-                />
-                <Botao
-                  texto="Limpar"
-                  onClick={() => {
-                    reset();
-                    getUsuario();
-                  }}
-                  className="bg-green bg-opacity-40 hover:bg-opacity-100 transition-all duration-300 ease-in-out shrink-0 text-center rounded-[20px] h-[45px] w-full"
+                  className="text-base bg-vermelho"
                 />
               </div>
             </div>
-
           </div>
         </div>
       </div>
-
       {adicionar && <Formulario onComplete={refreshData} />}
       {remover && <RemoveUsuario selectedUsers={selectedUsuarios} onComplete={refreshData} />}
       {editar && <EditarUsuario selectedUsuarios={selectedUsuarios} onComplete={refreshData} />}

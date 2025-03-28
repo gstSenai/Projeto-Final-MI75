@@ -7,6 +7,7 @@ import request from "@/routes/request"
 import { Botao } from "@/components/botao"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { motion, AnimatePresence } from "framer-motion"
 
 const ImovelProps = z.object({
     id: z.number().optional(),
@@ -203,7 +204,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
 
             const immobileData = {
                 id: imovel.id,
-                codigo: imovel.id || 0,
+                codigo: imovel.valor_venda || 0,
                 nome_propriedade: imovel.nome_propriedade,
                 tipo_transacao: imovel.tipo_transacao,
                 valor_venda: imovel.valor_venda || 0,
@@ -274,27 +275,33 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
                         onImagesChange={handleImagesChange}
                     />
 
-                    <div className="flex items-center gap-16 mt-10">
+                    <div className="flex items-center gap-16 mt-10 mb-20">
                         <div className="flex max-sm:gap-12 max-lg:gap-36 gap-[40rem] w-full">
-                            <Botao className="max-lg:text-base" onClick={() => console.log()} texto="Cancelar" />
-                            <Botao className="max-lg:text-base" onClick={handleSubmit(onSubmitImovel)} texto="Salvar cadastro" />
+                            <Botao className="max-lg:text-base bg-vermelho h-10" onClick={() => console.log()} texto="Cancelar" />
+                            <Botao className="max-lg:text-base bg-vermelho h-10" onClick={handleSubmit(onSubmitImovel)} texto="Salvar cadastro" />
                         </div>
                     </div>
                 </>
             )}
 
-            {showModal && lastAddedImovel && (
-                <div className="w-full bottom-16 pl-10 items-center relative">
-                    <div className='bg-vermelho w-72 flex gap-1 p-3 rounded-[20px] text-white'>
-                        <p>Adicionado com Sucesso!</p>
-                        <button
-                            onClick={onSubmitDelete}
-                            className='underline'>
-                            Desfazer
-                        </button>
-                    </div>
-                </div>
-            )}
+            <AnimatePresence>
+                {showModal && lastAddedImovel && (
+                    <motion.div
+                        initial={{ opacity: 0, x: -100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -100 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="fixed bottom-10 left-0 z-50"
+                    >
+                        <div className="bg-vermelho w-72 flex gap-1 p-3 rounded-tr-lg rounded-br-lg text-white shadow-lg">
+                            <p className="text-center">Adicionado com Sucesso!</p>
+                            <button onClick={onSubmitDelete} className="underline hover:text-gray-200">
+                                Desfazer
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </>
     )
 }

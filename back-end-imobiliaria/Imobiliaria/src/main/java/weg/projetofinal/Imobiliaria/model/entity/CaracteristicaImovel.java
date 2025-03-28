@@ -17,7 +17,7 @@ public class CaracteristicaImovel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(mappedBy = "caracteristicaImovel", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "id_caracteristicasImovel", cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_imovel")
     private Imovel imovel;
     private Integer numero_quartos;

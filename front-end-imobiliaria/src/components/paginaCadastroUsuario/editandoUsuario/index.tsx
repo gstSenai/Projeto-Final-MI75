@@ -556,10 +556,11 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                     </div>
                                     <div className="flex justify-end pt-6">
                                         <div className="flex justify-around items-center gap-10 w-[50%]">
-                                            <Botao onClick={handleCancel} texto="Cancelar" />
+                                            <Botao onClick={handleCancel} texto="Cancelar" className="bg-vermelho h-10" />
                                             <Botao
                                                 onClick={handleClick}
                                                 texto={isEditar ? "Editando..." : "Editar"}
+                                                className="bg-vermelho h-10"
                                             />
                                         </div>
                                     </div>
@@ -703,10 +704,11 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                             </div>
                                                             <div className="flex justify-end pt-6">
                                                                 <div className="flex justify-around items-center gap-10 w-[50%]">
-                                                                    <Botao onClick={handleCancel} texto="Cancelar" />
+                                                                    <Botao onClick={handleCancel} texto="Cancelar" className="bg-vermelho h-10" />
                                                                     <Botao
                                                                         type="submit"
                                                                         texto={isEditar ? "Editando..." : "Editar"}
+                                                                        className="bg-vermelho h-10"
                                                                     />
                                                                 </div>
                                                             </div>

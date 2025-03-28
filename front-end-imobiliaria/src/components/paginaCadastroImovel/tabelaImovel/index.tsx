@@ -46,7 +46,7 @@ interface ImovelProps {
     uf: string
     complemento?: string
   }
-  id_caracteristicaImovel: {
+  id_caracteristicasImovel: {
     id: number
     numero_quartos: number
     numero_banheiros: number
@@ -135,8 +135,7 @@ export default function TabelaImovel() {
       const imoveisFiltrados = {
         content: data.content.filter((imovel: ImovelProps) => {
           const matchNome = !searchNome || imovel.nome_propriedade.toLowerCase().includes(searchNome.toLowerCase())
-          
-          // Lógica de filtro por preço
+
           const valorImovel = imovel.valor_venda;
           const valorMin = searchValorMin || 0;
           const valorMax = searchValorMax || Infinity;
@@ -182,14 +181,7 @@ export default function TabelaImovel() {
   return (
     <>
       <div className={`flex flex-col gap-10 sm:flex-col md:flex-col lg:flex-row ${montserrat.className}`}>
-        <button
-          onClick={() => setShowSidebar(!showSidebar)}
-          className="h-[50px] transition-transform duration-300 hover:scale-105  text-white rounded-[20px] text-center inline-block align-middle"
-        >
-          <div className="pl-5 flex items-center gap-3 justify-start">
-            <Image src="/iconsForms/filtro.png" alt="filtro" width={20} height={20} className="w-4" />
-          </div>
-        </button>
+
         <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6 w-full">
           <div className="overflow-x-auto max-h-[500px]">
             <table className="w-full border-separate border-spacing-0">
@@ -251,43 +243,55 @@ export default function TabelaImovel() {
               </tbody>
             </table>
           </div>
+
           {selectedImoveis.length > 0 && (
             <div className="p-3 bg-[#FAF6ED] border-t border-[#E0D6CE]">
               <p className="text-vermelho font-medium">{selectedImoveis.length} imóvel(s) selecionado(s)</p>
             </div>
           )}
         </div>
+
         <div className="flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full ">
           <button
             onClick={handleAddImovel}
-            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start ">
-              <Image src="/iconsForms/sinalAdd.png" alt="sinal de adição" width={20} height={20} className="lg:w-4" />
-              <p className="text-lg font-medium">Adicionar</p>
+              <Image src="/iconsForms/sinalAdd.png" alt="sinal de adição" width={10} height={10} />
+              <p className="text-base font-medium">Adicionar</p>
             </div>
           </button>
 
           <button
             onClick={handleRemoveImovel}
-            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <Image src="/iconsForms/sinalRemove.png" alt="sinal de remoção" width={20} height={20} className="lg:w-4" />
-              <p className="text-lg font-medium">Remover</p>
+              <Image src="/iconsForms/sinalRemove.png" alt="sinal de remoção" width={10} height={10} />
+              <p className="text-base font-medium">Remover</p>
             </div>
           </button>
 
           <button
             onClick={handleEditImovel}
-            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading || selectedImoveis.length !== 1}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <Image src="/iconsForms/canetaEditarBranco.png" alt="sinal de edição" width={20} height={20} className="lg:w-4" />
-              <p className="text-lg font-medium">Editar</p>
+              <Image src="/iconsForms/canetaEditarBranco.png" alt="sinal de edição" width={15} height={15} />
+              <p className="text-base font-medium">Editar</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setShowSidebar(!showSidebar)}
+            className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
+          >
+            <div className="pl-5 flex items-center gap-3 justify-start">
+              <Image src="/iconFiltro/filtro.png" alt="filtro" width={15} height={15} />
+              <p className="text-base font-medium">Filtro</p>
             </div>
           </button>
         </div>
@@ -303,9 +307,19 @@ export default function TabelaImovel() {
                   onClick={() => setShowSidebar(false)}
                   className="text-gray-500 hover:text-gray-700 transition-colors"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  <div className="flex justify-start w-1/12">
+                    <div
+                      className="bg-[#DFDAD0] px-3 py-1 rounded-full text-vermelho lg:text-base transition-transform duration-300 hover:scale-110
+                             hover:bg-vermelho hover:text-[#DFDAD0] cursor-pointer"
+                      onClick={() => {
+                        setTimeout(() => {
+                          setShowSidebar(false);
+                        }, 100);
+                      }}
+                    >
+                      X
+                    </div>
+                  </div>
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto">
@@ -322,7 +336,6 @@ export default function TabelaImovel() {
                   </div>
 
                   <div className="space-y-4">
-                    <label className="block text-sm font-medium text-gray-700">Faixa de Preço</label>
                     <FiltroImovel
                       min={0}
                       max={1000000}
@@ -337,7 +350,18 @@ export default function TabelaImovel() {
                   </div>
 
                 </div>
-                <div className="flex gap-10 mt-10">
+                <div className="flex gap-10 mt-10 h-10">
+                  <Botao
+                    texto="Limpar"
+                    onClick={() => {
+                      reset();
+                      getImoveis();
+                      setTimeout(() => {
+                        setShowSidebar(false);
+                      }, 100);
+                    }}
+                    className="text-base bg-vermelho"
+                  />
                   <Botao
                     texto="Pesquisar"
                     onClick={() => {
@@ -347,22 +371,15 @@ export default function TabelaImovel() {
                         setShowSidebar(false);
                       }, 100);
                     }}
-                  />
-                  <Botao
-                    texto="Limpar"
-                    onClick={() => {
-                      reset();
-                      getImoveis();
-                    }}
-                    className="bg-green bg-opacity-40 hover:bg-opacity-100 transition-all duration-300 ease-in-out shrink-0 text-center rounded-[20px] h-[45px] w-full"
+                    className="text-base bg-vermelho"
                   />
                 </div>
               </div>
 
             </div>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
 
       {adicionar && <Formulario onComplete={refreshData} />}
       {remover && <RemoveImovel selectedImoveis={selectedImoveis} onComplete={refreshData} />}
