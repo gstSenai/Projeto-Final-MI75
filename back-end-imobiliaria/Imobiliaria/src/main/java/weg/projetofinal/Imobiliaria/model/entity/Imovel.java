@@ -60,4 +60,7 @@ public class Imovel {
     @OneToMany(mappedBy = "imovel")
     private List<Agendamento> agendamentos;
 
+    @ManyToOne
+    private Proprietario proprietario;
+
 }

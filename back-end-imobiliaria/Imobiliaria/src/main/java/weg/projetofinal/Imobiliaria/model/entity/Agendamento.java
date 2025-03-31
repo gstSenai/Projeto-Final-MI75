@@ -29,6 +29,9 @@ public class Agendamento {
     private Usuario usuario;
 
     @ManyToOne
+    private Usuario corretor;
+
+    @ManyToOne
     private Imovel imovel;
 
 }

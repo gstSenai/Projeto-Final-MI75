@@ -27,17 +27,8 @@ public class Usuario {
     @Column(nullable = false)
     private String sobrenome;
 
-    @Column(nullable = false, unique = true, length = 11)
-    private String cpf;
-
     @Column(nullable = false)
     private String tipo_conta;
-
-    @Column(nullable = false)
-    private String telefone;
-
-    @Column(nullable = false)
-    private Date data_nascimento;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -47,11 +38,13 @@ public class Usuario {
 
     private String imagem_usuario;
 
-    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JoinColumn(name = "id_endereco_usuario")
-    private EnderecoUsuario enderecoUsuario;
+    @Column(nullable = false)
+    private boolean ativo = true;
 
     @OneToMany(mappedBy = "usuario")
     private List<Agendamento> agendamentos;
+
+    @OneToMany(mappedBy = "corretor")
+    private List<Agendamento> agendamentos_corretores;
 
 }

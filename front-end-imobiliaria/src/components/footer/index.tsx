@@ -64,7 +64,7 @@ export function Footer() {
                         <div className="flex flex-col gap-3">
                             <p className="text-xl xl:text-2xl font-extrabold">Links Rápidos</p>
                             <div className="font-light text-sm md:text-base flex flex-col gap-2">
-                                <p><a href="/PaginaInicial">Página Inicial</a></p>
+                                <p><a href="/paginaInicial">Página Inicial</a></p>
                                 <p><a href="/sobreNos">Sobre Nós</a></p>
                                 <p><a href="#">Comprar</a></p>
                                 <p><a href="#">Vender</a></p>
@@ -87,7 +87,7 @@ export function Footer() {
             <section className="relative bg-[#2B2A28] text-white py-4 px-4 flex justify-center items-center z-20"> {/* Adicionado z-20 aqui */}
                 <p className="text-center text-xs">
                     <span className="hidden lg:inline">
-                        © 2024 HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. Termos de Uso | Política de Privacidade | Política de Cookies.
+                        © 2024 HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. <a href="">Termos de Uso</a> | <a href="">Política de Privacidade</a> | <a href="">Política de Cookies.</a>
                     </span>
                     <span className="lg:hidden">
                         © 2024 HAV Imobiliária. Todos os direitos reservados.

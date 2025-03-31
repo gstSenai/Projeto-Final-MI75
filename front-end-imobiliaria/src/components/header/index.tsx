@@ -26,10 +26,10 @@ export function Header() {
                         <div>
                             <nav>
                                 <ul className="flex flex-row max-lg:text-base text-xl whitespace-nowrap md:gap-4 lg:gap-6 text-[#303030] max-md:hidden">
-                                    <li><a href="#">Início</a></li>
+                                    <li><a href="/paginaInicial">Início</a></li>
                                     <li><a href="#">Propriedades</a></li>
                                     <li><a href="#">Corretores</a></li>
-                                    <li><a href="#">Sobre nós</a></li>
+                                    <li><a href="/sobreNos">Sobre nós</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -67,35 +67,36 @@ export function Header() {
                 <div className="fixed inset-0 bg-black bg-opacity-50 z-50 ">
                     <div className="fixed inset-0 bg-[#DFDAD0] z-50">
                         <div className="flex flex-col h-full px-10 py-10">
-                            <div className="flex flex-row justify-between w-full">
-                                <div className="w-full h-full">
-                                    <div className='bg-slate-500 w-[7rem] h-[250%]' />
-                                </div>
-                                <div className="flex justify-end mb-8">
-                                    <Image
-                                        onClick={() => setHambuguerMobile(false)}
-                                        src="/imagensHeader/HAMBURGUER.png"
-                                        alt="Fechar menu"
-                                        width={50}
-                                        height={50}
-                                        className="cursor-pointer"
-                                    />
-                                </div>
+                            <div className="flex justify-end mb-8">
+                                <Image
+                                    onClick={() => setHambuguerMobile(false)}
+                                    src="/imagensHeader/HAMBURGUER.png"
+                                    alt="Fechar menu"
+                                    width={50}
+                                    height={50}
+                                    className="cursor-pointer"
+                                />
                             </div>
-                            <ul className="space-y-8 text-center mt-20">
-                                <li>
-                                    <a href="#" className="text-3xl text-[#303030] hover:text-vermelho transition-colors">Início</a>
+                            <div className='bg-black p-[0.2px] w-full'></div>
+                            <ul className="space-y-8 text-start my-8">
+                                <li className='flex gap-4 items-center'>
+                                    <Image src="/imagensHeader/logoMinuscula.png" alt="simbolo HAV" width={24}  height={24} className=' h-full'/>
+                                    <a  href="/paginaInicial" className="text-3xl text-[#303030] hover:text-vermelho transition-colors">Início</a>
                                 </li>
-                                <li>
+                                <li className='flex gap-4 items-center'>
+                                    <Image src="/imagensHeader/casa.png" alt="simbolo casas"width={24}  height={24} className=' h-full'/>
                                     <a href="#" className="text-3xl text-[#303030] hover:text-vermelho transition-colors">Propriedades</a>
                                 </li>
-                                <li>
+                                <li className='flex gap-4 items-center'>
+                                    <Image src="/imagensHeader/corretores.png" alt="simbolo corretores" width={24}  height={24} className=' h-full'/>
                                     <a href="#" className="text-3xl text-[#303030] hover:text-vermelho transition-colors">Corretores</a>
                                 </li>
-                                <li>
-                                    <a href="#" className="text-3xl text-[#303030] hover:text-vermelho transition-colors">Sobre nós</a>
+                                <li className='flex gap-4 items-center'>
+                                    <Image src="/imagensHeader/informacao.png" alt="simbolo Sobre nos"width={24}  height={24} className=' h-full'/>
+                                    <a href="/sobreNos" className="text-3xl text-[#303030] hover:text-vermelho transition-colors">Sobre nós</a>
                                 </li>
                             </ul>
+                            <div className='bg-black p-[0.2px] w-full'></div>
                         </div>
                     </div>
                 </div>

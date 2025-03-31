@@ -10,6 +10,7 @@ interface BotaoProps {
     texto: string;
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
     className?: string;
+    disabled?: boolean; 
     type?: "button" | "submit" | "reset";
 }
 

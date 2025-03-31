@@ -4,8 +4,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
-import weg.projetofinal.Imobiliaria.model.dto.FavoritoGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.FavoritoPostRequestDTO;
+
+import weg.projetofinal.Imobiliaria.model.dto.favorito.FavoritoGetResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.favorito.FavoritoPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Favorito;
 import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.model.entity.Usuario;
