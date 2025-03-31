@@ -36,7 +36,7 @@ interface ImovelProps {
   area_construida: number
   area_terreno: number
   descricao?: string
-  idEndereco: {
+  id_endereco: {
     id: number
     cep: string
     rua: string

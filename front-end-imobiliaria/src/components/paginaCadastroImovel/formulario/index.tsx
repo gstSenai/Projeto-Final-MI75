@@ -94,6 +94,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
     const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [images, setImages] = useState<File[]>([])
+    const codigosGerados = new Set<number>();
 
     const handleImagesChange = (files: File[]) => {
         setImages(files);
@@ -190,6 +191,16 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         }
     }
 
+    const gerarCodigoAleatorio = () => {
+        let codigo: number;
+        do {
+            codigo = Math.floor(Math.random() * 50000) + 1;
+        } while (codigosGerados.has(codigo));
+        
+        codigosGerados.add(codigo);
+        return codigo;
+    }
+
     const onSubmitImovel = async (data: { imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas; 
         endereco: EnderecoImovelProps }) => {
         if (isSubmitting) return;
@@ -204,7 +215,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
 
             const immobileData = {
                 id: imovel.id,
-                codigo: imovel.valor_venda || 0,
+                codigo: gerarCodigoAleatorio(),
                 nome_propriedade: imovel.nome_propriedade,
                 tipo_transacao: imovel.tipo_transacao,
                 valor_venda: imovel.valor_venda || 0,
@@ -218,8 +229,8 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
                 area_construida: imovel.area_construida || 0,
                 area_terreno: imovel.area_terreno || 0,
                 descricao: imovel.descricao || "",
-                idEndereco: responseEndereco,
-                id_caracteristicaImovel: responseCaracImovel,
+                id_endereco: responseEndereco,
+                id_caracteristicasImovel: responseCaracImovel,
             };
 
             const response = await addImovel(immobileData);

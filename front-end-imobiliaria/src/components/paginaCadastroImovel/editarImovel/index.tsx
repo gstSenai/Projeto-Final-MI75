@@ -136,27 +136,9 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                     numero_salas: 0
                 }
             },
-            imovelCaracteristicas: {
-                id: 0,
-                numero_quartos: 0,
-                numero_banheiros: 0,
-                numero_suites: 0,
-                numero_vagas: 0,
-                test_piscina: "Não",
-                piscina: false,
-                numero_salas: 0
-            },
-            endereco: {
-                cep: "",
-                rua: "",
-                numero: "",
-                bairro: "",
-                cidade: "",
-                uf: "",
-                complemento: ""
-            }
         },
     })
+    
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [showEditTrue, setShowEditTrue] = useState(false)
     const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
