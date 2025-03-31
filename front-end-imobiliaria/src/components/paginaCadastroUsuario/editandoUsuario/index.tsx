@@ -36,6 +36,7 @@ const UsuarioProps = z.object({
     senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
     idEnderecoUsuario: z.number().optional(),
     endereco: EnderecoProps.optional(),
+    imagem_usuario: z.string().optional(),
 })
 
 const FormSchema = z.object({
@@ -88,7 +89,6 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
         register: registerEndereco,
         handleSubmit: handleSubmitEndereco,
         formState: { errors: errorsEndereco },
-        setValue,
     } = useForm<EnderecoImovelProps>({
         resolver: zodResolver(EnderecoProps),
         defaultValues: selectedUsuarios?.[0]?.endereco ? {
@@ -156,6 +156,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                 method: "PUT",
                 body: formData,
             })
+            
 
             if (!response.ok) {
                 throw new Error(`Erro na requisição: ${response.status}`)
@@ -240,7 +241,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                 data_nascimento: usuario.data_nascimento,
                 email: usuario.email,
                 senha: usuario.senha,
-                imagem_usuario: "psdad.jpg",
+                imagem_usuario: selectedUsuarios[0].imagem_usuario,
                 idEnderecoUsuario: usuarioSelecionadoEndereco,
             }
 
@@ -414,6 +415,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                             <React.Fragment key={usuario.id}>
                                                                 <FormularioImagemEdit
                                                                     handleImageUpload={setImagem}
+                                                                    imagemAtual={usuario.imagem_usuario}
                                                                 />
                                                                 <div className="space-y-4 pt-10">
                                                                     <div className="flex flex-col gap-4">
@@ -554,10 +556,11 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                     </div>
                                     <div className="flex justify-end pt-6">
                                         <div className="flex justify-around items-center gap-10 w-[50%]">
-                                            <Botao onClick={handleCancel} texto="Cancelar" />
+                                            <Botao onClick={handleCancel} texto="Cancelar" className="bg-vermelho h-10" />
                                             <Botao
                                                 onClick={handleClick}
                                                 texto={isEditar ? "Editando..." : "Editar"}
+                                                className="bg-vermelho h-10"
                                             />
                                         </div>
                                     </div>
@@ -701,10 +704,11 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                             </div>
                                                             <div className="flex justify-end pt-6">
                                                                 <div className="flex justify-around items-center gap-10 w-[50%]">
-                                                                    <Botao onClick={handleCancel} texto="Cancelar" />
+                                                                    <Botao onClick={handleCancel} texto="Cancelar" className="bg-vermelho h-10" />
                                                                     <Botao
                                                                         type="submit"
                                                                         texto={isEditar ? "Editando..." : "Editar"}
+                                                                        className="bg-vermelho h-10"
                                                                     />
                                                                 </div>
                                                             </div>
