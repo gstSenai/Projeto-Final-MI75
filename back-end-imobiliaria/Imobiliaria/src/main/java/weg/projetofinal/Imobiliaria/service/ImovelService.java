@@ -55,7 +55,7 @@ public class ImovelService {
                 .orElseThrow(() -> new RuntimeException("Imóvel não encontrado com ID: " + id));
 
         BeanUtils.copyProperties(imovel, imovelExistente, "id", "id_endereco",
-                "caracteristicasImovel");
+                "id_caracteristicasImovel");
 
         if (imovel.getId_endereco() != null) {
             imovelExistente.setId_endereco(imovel.getId_endereco());
