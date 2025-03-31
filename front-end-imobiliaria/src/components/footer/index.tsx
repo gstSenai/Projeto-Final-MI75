@@ -87,7 +87,7 @@ export function Footer() {
             <section className="relative bg-[#2B2A28] text-white py-4 px-4 flex justify-center items-center z-20"> {/* Adicionado z-20 aqui */}
                 <p className="text-center text-xs">
                     <span className="hidden lg:inline">
-                        © 2024 HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. Termos de Uso | Política de Privacidade | Política de Cookies.
+                        © 2024 HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. <a href="">Termos de Uso</a> | <a href="">Política de Privacidade</a> | <a href="">Política de Cookies.</a>
                     </span>
                     <span className="lg:hidden">
                         © 2024 HAV Imobiliária. Todos os direitos reservados.

@@ -27,6 +27,8 @@ public class AgendamentoService {
                 new EntityNotFoundException("Agendamento não encontrado com ID: " + id));
     }
 
+
+
     public Agendamento save(Agendamento agendamento) {
         if (agendamento.getUsuario().getId().equals(agendamento.getCorretor().getId())) {
             throw new IllegalArgumentException("O usuário não pode ser o próprio corretor.");
@@ -76,5 +78,7 @@ public class AgendamentoService {
     public void remover(int id) {
         agendamentoRepository.deleteById(id);
     }
+
+
 
 }
