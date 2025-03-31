@@ -69,7 +69,6 @@ export default function PaginaAdministrador() {
                         </p>
                         <Botao className="w-2/3 md:w-56 h-8" texto="Gerenciar" />
                     </div>
-                    
                 </div>
             </section>
             <Footer />
