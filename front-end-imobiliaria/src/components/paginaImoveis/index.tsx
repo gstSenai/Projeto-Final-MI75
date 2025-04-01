@@ -1,9 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Header } from "../header";
 import { Card } from "../cardImovel";
-import { Footer } from "../footer";
+import { Montserrat } from "next/font/google";
+import { FiltroImoveis } from "./botaoFiltro";
+
+const montserrat = Montserrat({
+    subsets: ["latin"],
+    weight: ["400", "800"],
+    display: "swap",
+})
+
 
 interface Imovel {
     id: number;
@@ -15,14 +22,16 @@ interface Imovel {
     preco: number;
     codigo: number;
     imagemNome?: string;
+    tipo_transacao: string;
 }
 
 export function ListaImoveis() {
     const [imoveis, setImoveis] = useState<Imovel[]>([]);
-
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [ultimoId, setUltimoId] = useState<number | null>(null);
+    const [tipoTransacao, setTipoTransacao] = useState<string>("Todos");
+    const [mostrarFiltros, setMostrarFiltros] = useState<boolean>(false);
 
     const fetchImoveis = async () => {
         try {
@@ -60,7 +69,8 @@ export function ListaImoveis() {
                 qtdSuite: imovel.id_caracteristicasImovel?.numero_suites || 0,
                 qtdBanheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
                 preco: imovel.valor_venda || 0,
-                codigo: imovel.codigo || 0
+                codigo: imovel.codigo || 0,
+                tipo_transacao: imovel.tipo_transacao || "Indefinido",
             }));
 
             setImoveis(imoveisFormatados);
@@ -81,12 +91,16 @@ export function ListaImoveis() {
 
     useEffect(() => {
         refreshData()
+
     }, []);
+
+    const imoveisFiltrados = tipoTransacao === "Todos"
+        ? imoveis
+        : imoveis.filter(imovel => imovel.tipo_transacao === tipoTransacao);
 
     return (
         <>
-            <Header/>
-            <div>
+            <div className={`${montserrat.className}`}>
 
                 <div className="flex justify-center mt-[8rem]">
                     <h1 className="font-bold text-[40px]">Propriedades</h1>
@@ -94,6 +108,33 @@ export function ListaImoveis() {
                 <div className="flex justify-center">
                     <div className="w-[15.75rem] h-[3px] bg-vermelho"></div>
                 </div>
+
+                <div className="flex justify-center gap-10 mt-[29.5px]">
+                    <button onClick={() => setTipoTransacao("Todos")}>
+                        <p className={` ${tipoTransacao === "Todos" ? "text-vermelho font-bold" : ""}`}>Todos</p>
+                    </button>
+                    <button onClick={() => setTipoTransacao("Venda")}>
+                        <p className={`${tipoTransacao === "Venda" ? "text-vermelho font-bold" : ""}`}>Comprar</p>
+                    </button>
+                    <button onClick={() => setTipoTransacao("Locação")}>
+                        <p className={` ${tipoTransacao === "Locação" ? "text-vermelho font-bold" : ""}`}>Alugar</p>
+                    </button>
+                </div>
+
+                <div className="flex justify-center mt-[30px]">
+                    <button
+                        className="bg-vermelho text-white px-6 py-2 rounded-lg transition duration-300 hover:opacity-"
+                        onClick={() => setMostrarFiltros(!mostrarFiltros)}
+                    >
+                        {mostrarFiltros ? "Ocultar Filtros" : "Filtrar"}
+                    </button>
+                </div>
+
+                {mostrarFiltros && (
+                    <div className="flex justify-center mt-6">
+                        <FiltroImoveis />
+                    </div>
+                )}
 
                 {error && (
                     <div className="flex justify-center mt-4">
@@ -107,8 +148,8 @@ export function ListaImoveis() {
                     </div>
                 ) : (
                     <div className="flex flex-wrap justify-center gap-6 mt-6">
-                        {imoveis.length > 0 ? (
-                            imoveis.map((imovel) => (
+                        {imoveisFiltrados.length > 0 ? (
+                            imoveisFiltrados.map((imovel) => (
                                 <Card
                                     key={imovel.id}
                                     titulo={imovel.titulo}
@@ -127,7 +168,6 @@ export function ListaImoveis() {
                 )}
 
             </div>
-            <Footer />
         </>
     );
 }

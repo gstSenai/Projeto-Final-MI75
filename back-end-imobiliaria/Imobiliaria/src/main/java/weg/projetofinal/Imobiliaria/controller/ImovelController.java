@@ -77,4 +77,20 @@ public class ImovelController {
         List<Imovel> imovel = service.filtroImovel(tipo_imovel, valor_min, valor_max);
         return imovel.stream().map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO).toList();
     }
+
+    @GetMapping("/filtroImovel2")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ImovelGetResponseDTO> filtroImovel2(
+            @RequestParam(required = false) String tipo_imovel,
+            @RequestParam(required = false) Double valor_min,
+            @RequestParam(required = false) Double valor_max,
+            @RequestParam(required = false) Integer numero_quartos,
+            @RequestParam(required = false) Integer numero_banheiros,
+            @RequestParam(required = false) Integer numero_vagas) {
+
+        List<Imovel> imoveis = service.filtroImovel2(tipo_imovel, valor_min, valor_max, numero_quartos, numero_banheiros, numero_vagas);
+        return imoveis.stream()
+                .map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO)
+                .toList();
+    }
 }

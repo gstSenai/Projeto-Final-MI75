@@ -1,5 +1,6 @@
 package weg.projetofinal.Imobiliaria.service;
 
+import jakarta.persistence.criteria.JoinType;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -42,11 +43,48 @@ public class ImovelService {
     }
 
     public List<Imovel> filtroImovel(String tipo_imovel, Double valor_min, Double valor_max){
-        Specification<Imovel> imovelSpecification = Specification.where(ImovelSpecification.hasTipo(tipo_imovel))
-                                                                        .and(ImovelSpecification.hasPrecoMinimo(valor_min))
-                                                                        .and(ImovelSpecification.hasPrecoMaximo(valor_max));
+        Specification<Imovel> imovelSpecification =
+                Specification.where(ImovelSpecification.hasTipo(tipo_imovel))
+                        .and(ImovelSpecification.hasPrecoMinimo(valor_min))
+                        .and(ImovelSpecification.hasPrecoMaximo(valor_max));
         return repository.findAll(imovelSpecification);
 
+    }
+
+    public List<Imovel> filtroImovel2(String tipo_imovel, Double valor_min, Double valor_max,
+                                     Integer numero_quartos, Integer numero_banheiros, Integer numero_vagas) {
+        Specification<Imovel> imovelSpecification = Specification.where(ImovelSpecification.hasTipo(tipo_imovel))
+                .and(ImovelSpecification.hasPrecoMinimo(valor_min))
+                .and(ImovelSpecification.hasPrecoMaximo(valor_max));
+
+        imovelSpecification = imovelSpecification.and((root, query, criteriaBuilder) -> {
+            root.join("caracteristicas", JoinType.LEFT);
+
+            if (numero_quartos != null) {
+                return criteriaBuilder.equal(root.get("caracteristicas").get("numero_quartos"), numero_quartos);
+            }
+            return criteriaBuilder.conjunction();
+        });
+
+        imovelSpecification = imovelSpecification.and((root, query, criteriaBuilder) -> {
+            root.join("caracteristicas", JoinType.LEFT);
+
+            if (numero_banheiros != null) {
+                return criteriaBuilder.equal(root.get("caracteristicas").get("numero_banheiros"), numero_banheiros);
+            }
+            return criteriaBuilder.conjunction();
+        });
+
+        imovelSpecification = imovelSpecification.and((root, query, criteriaBuilder) -> {
+            root.join("caracteristicas", JoinType.LEFT);
+
+            if (numero_vagas != null) {
+                return criteriaBuilder.equal(root.get("caracteristicas").get("numero_vagas"), numero_vagas);
+            }
+            return criteriaBuilder.conjunction();
+        });
+
+        return repository.findAll(imovelSpecification);
     }
 
 
