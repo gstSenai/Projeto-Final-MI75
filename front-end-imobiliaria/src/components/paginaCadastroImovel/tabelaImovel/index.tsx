@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { Montserrat } from 'next/font/google'
-import { Formulario } from "../formulario"
 import { RemoveImovel } from "../removerImovel"
 import { EditarImovel } from "../editarImovel"
 import Image from "next/image"
@@ -10,7 +9,7 @@ import { Botao } from "@/components/botao"
 import { FormularioInput } from "@/components/paginaCadastroUsuario/adicionandoUsuario/formulario/formularioInput"
 import { useForm } from "react-hook-form"
 import { FiltroImovel } from "@/components/filtroImovel"
-
+import { FormularioImovelModal } from "@/components/modal/FormularioImovelModal"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -75,7 +74,7 @@ export default function TabelaImovel() {
   });
   const [selectedImoveis, setSelectedImoveis] = useState<ImovelProps[]>([])
   const [imoveis, setImoveis] = useState<ResponseProps | null>(null)
-  const [adicionar, setAdicionar] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [remover, setRemover] = useState(false)
   const [editar, setEditar] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -85,12 +84,7 @@ export default function TabelaImovel() {
   const [valorMax, setValorMax] = useState(1000000);
 
   const handleAddImovel = () => {
-    setAdicionar(!adicionar)
-    setEditar(false)
-    setRemover(false)
-    if (adicionar) {
-      refreshData()
-    }
+    setIsModalOpen(true)
   }
 
   const handleRemoveImovel = () => {
@@ -99,8 +93,6 @@ export default function TabelaImovel() {
       return
     }
 
-    setAdicionar(false)
-    setEditar(false)
     setRemover(!remover)
     if (remover) {
       refreshData()
@@ -116,8 +108,6 @@ export default function TabelaImovel() {
       return
     }
 
-    setAdicionar(false)
-    setRemover(false)
     setEditar(!editar)
     if (editar) {
       refreshData()
@@ -173,15 +163,13 @@ export default function TabelaImovel() {
 
   useEffect(() => {
     getImoveis()
-    setAdicionar(false)
-    setEditar(false)
     setRemover(false)
+    setEditar(false)
   }, [refreshTrigger])
 
   return (
     <>
       <div className={`flex flex-col gap-10 sm:flex-col md:flex-col lg:flex-row ${montserrat.className}`}>
-
         <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6 w-full">
           <div className="overflow-x-auto max-h-[500px]">
             <table className="w-full border-separate border-spacing-0">
@@ -296,94 +284,95 @@ export default function TabelaImovel() {
           </button>
         </div>
 
-        <div className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 z-[10] ${showSidebar ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-          <div className={`fixed top-0 left-0 h-full w-96 bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[20] ${showSidebar ? 'translate-x-0' : '-translate-x-full'}`}>
-            <div className="p-6 h-full flex flex-col">
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center gap-3">
-                  <h2 className="text-2xl font-bold text-vermelho">Filtros de Busca</h2>
-                </div>
-                <button
-                  onClick={() => setShowSidebar(false)}
-                  className="text-gray-500 hover:text-gray-700 transition-colors"
-                >
-                  <div className="flex justify-start w-1/12">
-                    <div
-                      className="bg-[#DFDAD0] px-3 py-1 rounded-full text-vermelho lg:text-base transition-transform duration-300 hover:scale-110
-                             hover:bg-vermelho hover:text-[#DFDAD0] cursor-pointer"
-                      onClick={() => {
-                        setTimeout(() => {
-                          setShowSidebar(false);
-                        }, 100);
-                      }}
-                    >
-                      X
-                    </div>
-                  </div>
-                </button>
+        <div className={`fixed top-0 left-0 h-full w-96 bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[20] ${showSidebar ? 'translate-x-0' : '-translate-x-full'}`}>
+          <div className="p-6 h-full flex flex-col">
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex items-center gap-3">
+                <h2 className="text-2xl font-bold text-vermelho">Filtros de Busca</h2>
               </div>
-              <div className="flex-1 overflow-y-auto">
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <FormularioInput
-                      placeholder="Nome:"
-                      name="imovel.nome_propriedade"
-                      interName='Ex: Casa'
-                      register={register}
-                      required
-                      customizacaoClass="w-full"
-                    />
-                  </div>
-
-                  <div className="space-y-4">
-                    <FiltroImovel
-                      min={0}
-                      max={1000000}
-                      name="imovel.valor_venda"
-                      register={register}
-                      onChange={(min, max) => {
-                        setValorMin(min);
-                        setValorMax(max);
-                      }}
-                      className="mt-2"
-                    />
-                  </div>
-
-                </div>
-                <div className="flex gap-10 mt-10 h-10">
-                  <Botao
-                    texto="Limpar"
+              <button
+                onClick={() => setShowSidebar(false)}
+                className="text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <div className="flex justify-start w-1/12">
+                  <div
+                    className="bg-[#DFDAD0] px-3 py-1 rounded-full text-vermelho lg:text-base transition-transform duration-300 hover:scale-110
+                           hover:bg-vermelho hover:text-[#DFDAD0] cursor-pointer"
                     onClick={() => {
-                      reset();
-                      getImoveis();
                       setTimeout(() => {
                         setShowSidebar(false);
                       }, 100);
                     }}
-                    className="text-base bg-vermelho"
+                  >
+                    X
+                  </div>
+                </div>
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto">
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <FormularioInput
+                    placeholder="Nome:"
+                    name="imovel.nome_propriedade"
+                    interName='Ex: Casa'
+                    register={register}
+                    required
+                    customizacaoClass="w-full"
                   />
-                  <Botao
-                    texto="Pesquisar"
-                    onClick={() => {
-                      const currentNome = watch("imovel.nome_propriedade");
-                      getImoveis(currentNome, valorMin, valorMax);
-                      setTimeout(() => {
-                        setShowSidebar(false);
-                      }, 100);
+                </div>
+
+                <div className="space-y-4">
+                  <FiltroImovel
+                    min={0}
+                    max={1000000}
+                    name="imovel.valor_venda"
+                    register={register}
+                    onChange={(min, max) => {
+                      setValorMin(min);
+                      setValorMax(max);
                     }}
-                    className="text-base bg-vermelho"
+                    className="mt-2"
                   />
                 </div>
               </div>
-
+              <div className="flex gap-10 mt-10 h-10">
+                <Botao
+                  texto="Limpar"
+                  onClick={() => {
+                    reset();
+                    getImoveis();
+                    setTimeout(() => {
+                      setShowSidebar(false);
+                    }, 100);
+                  }}
+                  className="text-base bg-vermelho"
+                />
+                <Botao
+                  texto="Pesquisar"
+                  onClick={() => {
+                    const currentNome = watch("imovel.nome_propriedade");
+                    getImoveis(currentNome, valorMin, valorMax);
+                    setTimeout(() => {
+                      setShowSidebar(false);
+                    }, 100);
+                  }}
+                  className="text-base bg-vermelho"
+                />
+              </div>
             </div>
           </div>
-        </div >
-      </div >
+        </div>
+      </div>
 
-      {adicionar && <Formulario onComplete={refreshData} />}
       {remover && <RemoveImovel selectedImoveis={selectedImoveis} onComplete={refreshData} />}
       {editar && <EditarImovel selectedImoveis={selectedImoveis} onComplete={refreshData} />}
+      <FormularioImovelModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onComplete={refreshData}
+      />
     </>
   )
 }

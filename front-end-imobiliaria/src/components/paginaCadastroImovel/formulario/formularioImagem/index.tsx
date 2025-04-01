@@ -110,43 +110,37 @@ export function FormularioImagem({ onImagesChange }: FormularioImagemProps) {
   }
 
   return (
-    <div className="flex flex-col font-montserrat h-full gap-2">
-      <div className=" rounded-2xl w-full h-full flex-row justi flex p-4">
-        <div className="flex flex-col">
-          <label className="text-xl font-medium text-black mb-5">Foto do imóvel</label>
+    <div className="flex flex-col font-montserrat w-full">
+      <div className="rounded-2xl w-full flex flex-col p-2 sm:p-4">
+        <div className="flex flex-col items-start mb-4 sm:mb-5">
+          <label className="text-lg sm:text-xl font-medium text-black">Fotos do imóvel</label>
+          <p className="text-gray-600 text-xs sm:text-sm mt-1">
+            Adicione até 7 fotos do imóvel. A primeira foto será a principal e será exibida em destaque.
+            As demais fotos serão exibidas em tamanho menor abaixo.
+          </p>
+        </div>
 
+        <div className="w-full flex flex-col items-center gap-2 sm:gap-4">
           <ImageUpload
             imagePreview={selectedImageIndex !== null ? imagePreviews[selectedImageIndex] : imagePreviews[0]}
             handleFileChange={handleFileChange}
-            className="h-48 w-[35rem]"
+            className="h-48 sm:h-64 w-full max-w-2xl"
             onClick={() => handleImageClick(0)}
             index={0}
           />
 
-          <div className="flex mt-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-4 w-full max-w-2xl">
             {[...Array(6)].map((_, index) => (
               <ImageUpload
                 key={index}
                 imagePreview={imagePreviews[index + 1]}
                 handleFileChange={handleFileChange}
-                className="h-20 w-20"
+                className="h-20 sm:h-24 w-full"
                 onClick={() => handleImageClick(index + 1)}
                 index={index + 1}
               />
             ))}
           </div>
-        </div>
-        <div className="flex flex-col mt-12 ml-4 gap-4">
-          {[...Array(2)].map((_, index) => (
-            <ImageUpload
-              key={index}
-              imagePreview={imagePreviews[index + 7]}
-              handleFileChange={handleFileChange}
-              className="h-20 w-20"
-              onClick={() => handleImageClick(index + 7)}
-              index={index + 7}
-            />
-          ))}
         </div>
       </div>
     </div>
