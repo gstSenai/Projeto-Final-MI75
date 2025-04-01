@@ -3,11 +3,11 @@ import { useState, useEffect } from "react"
 import React from "react"
 
 import { Botao } from "@/components/botao"
-import { FormularioEditarInput } from "../editandoUsuario/formularioEditarInput"
-import { FormularioImagemEdit } from "../editandoUsuario/formularioImagemEdit"
+import { FormularioEditarInput } from "./formularioEditarInput"
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FormularioImagemEditProprietario } from "./formularioImagemEditProprietario"
 
 const ProprietarioProps = z.object({
     id: z.number().optional(),
@@ -25,15 +25,18 @@ const ProprietarioProps = z.object({
         .min(11, { message: "Celular inválido" })
         .regex(/^\(\d{2}\)\s\d{5}-\d{4}$/, { message: "Formato de celular inválido" })
         .transform((cel) => cel.replace(/\D/g, '')),
-    data_nascimento: z.string()
-        .min(10, { message: "Data deve estar no formato DD/MM/AAAA" })
-        .regex(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/, {
-            message: "Data deve estar no formato DD/MM/AAAA"
-        })
-        .transform((data) => {
-            const [dia, mes, ano] = data.split('/').map(Number);
-            return new Date(ano, mes - 1, dia);
-        }),
+    data_nascimento: z.union([
+        z.string()
+            .min(10, { message: "Data deve estar no formato DD/MM/AAAA" })
+            .regex(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/, {
+                message: "Data deve estar no formato DD/MM/AAAA"
+            })
+            .transform((data) => {
+                const [dia, mes, ano] = data.split('/').map(Number);
+                return new Date(ano, mes - 1, dia);
+            }),
+        z.date()
+    ]),
     email: z.string().email({ message: "E-mail inválido" }),
     imagem_proprietario: z.string().optional(),
     enderecoProprietario: z.object({
@@ -70,15 +73,15 @@ const FormSchema = z.object({
     proprietario: ProprietarioProps,
 })
 
-type ProprietarioData = z.infer<typeof ProprietarioProps>
+type ProprietarioProps = z.infer<typeof ProprietarioProps>
 export type FormData = z.infer<typeof FormSchema>
 
-interface EditarProprietarioData {
-    selectedProprietarios: ProprietarioData[]
+interface EditarProprietarioProps {
+    selectedProprietarios: ProprietarioProps[]
     onComplete?: () => void
 }
 
-export function EditarProprietario({ selectedProprietarios, onComplete }: EditarProprietarioData) {
+export function EditarProprietario({ selectedProprietarios, onComplete }: EditarProprietarioProps) {
     const {
         register,
         handleSubmit,
@@ -106,13 +109,20 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
     const [showModal, setShowModal] = useState(true)
 
 
-    const editarProprietarios = async (data: Partial<ProprietarioData>, imagem: File | null) => {
+    const editarProprietarios = async (data: Partial<ProprietarioProps>, imagem: File | null) => {
         try {
             console.log("📤 Enviando dados para atualização:", data)
 
             const formData = new FormData()
 
-            formData.append("proprietario", JSON.stringify(data))
+            const proprietarioData = {
+                ...data,
+                imagem_proprietario: selectedProprietarios[0].imagem_proprietario
+            }
+
+            console.log("Dados do proprietário com imagem:", proprietarioData)
+
+            formData.append("proprietario", JSON.stringify(proprietarioData))
 
             if (imagem) {
                 formData.append("imagem", imagem)
@@ -122,7 +132,6 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
                 method: "PUT",
                 body: formData,
             })
-
 
             if (!response.ok) {
                 throw new Error(`Erro na requisição: ${response.status}`)
@@ -138,33 +147,39 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
         }
     }
 
-    const onSubmitEditProprietarios: SubmitHandler<{ proprietario: ProprietarioData }> = async (data) => {
+    const onSubmitEditProprietarios: SubmitHandler<{ proprietario: ProprietarioProps }> = async (data) => {
         if (isSubmitting) return
 
         try {
             setIsSubmitting(true)
 
-            console.log("Dados recebidos para validação:", data)
-
             const { proprietario } = data
 
             const proprietarioSelecionadoId = selectedProprietarios[0].id
+
+            const dataNascimento = proprietario.data_nascimento instanceof Date
+                ? proprietario.data_nascimento
+                : new Date(proprietario.data_nascimento)
+
+            const cpfFormatado = proprietario.cpf.replace(/\D/g, '')
+
+            const telefoneFormatado = proprietario.telefone.replace(/\D/g, '')
+            const celularFormatado = proprietario.celular.replace(/\D/g, '')
 
             const proprietarioAtualizado = {
                 ...proprietario,
                 id: proprietarioSelecionadoId,
                 nome: proprietario.nome,
                 sobrenome: proprietario.sobrenome,
-                cpf: proprietario.cpf,
-                telefone: proprietario.telefone,
-                celular: proprietario.celular,
-                data_nascimento: proprietario.data_nascimento,
+                cpf: cpfFormatado,
+                telefone: telefoneFormatado,
+                celular: celularFormatado,
+                data_nascimento: dataNascimento,
                 email: proprietario.email,
-                enderecoProprietario: proprietario.enderecoProprietario,
-                ImovelProprietarioResponseDTO: proprietario.ImovelProprietarioResponseDTO,
+                imagem_proprietario: selectedProprietarios[0].imagem_proprietario,
+                enderecoProprietario: proprietario.enderecoProprietario || selectedProprietarios[0].enderecoProprietario,
+                ImovelProprietarioResponseDTO: proprietario.ImovelProprietarioResponseDTO || selectedProprietarios[0].ImovelProprietarioResponseDTO,
             }
-
-            console.log("Dados do proprietário a serem enviados:", proprietarioAtualizado)
 
             const response = await editarProprietarios(proprietarioAtualizado, imagem || null)
             console.log("Resposta do servidor:", response)
@@ -192,7 +207,6 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
     }
 
     const handleClick = () => {
-        console.log("Botão clicado!");
         handleSubmit(onSubmitEditProprietarios)();
     };
 
@@ -230,16 +244,13 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
                                             <div>
                                                 {selectedProprietarios.map((proprietario) => (
                                                     <React.Fragment key={proprietario.id}>
-                                                        <FormularioImagemEdit
+                                                        <FormularioImagemEditProprietario
                                                             handleImageUpload={setImagem}
                                                             imagemAtual={proprietario.imagem_proprietario}
                                                         />
                                                         <div className="space-y-4 pt-10">
                                                             <div className="flex flex-col gap-4">
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`nome_${proprietario.id}`} className="block text-lg">
-                                                                        Nome:
-                                                                    </label>
                                                                     <FormularioEditarInput
                                                                         placeholder="Ex: Caio"
                                                                         name="proprietario.nome"
@@ -248,13 +259,11 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
                                                                         required
                                                                         custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                         errors={errors?.proprietario?.nome}
+                                                                        label="Nome:"
                                                                     />
                                                                 </div>
 
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`sobrenome_${proprietario.id}`} className="block text-lg">
-                                                                        Sobrenome:
-                                                                    </label>
                                                                     <FormularioEditarInput
                                                                         placeholder="Ex: Souza"
                                                                         name="proprietario.sobrenome"
@@ -263,14 +272,11 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
                                                                         required
                                                                         custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                         errors={errors?.proprietario?.sobrenome}
+                                                                        label="Sobrenome:"
                                                                     />
                                                                 </div>
 
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`cpf_${proprietario.id}`} className="block text-lg">
-                                                                        CPF:
-                                                                    </label>
-
                                                                     <FormularioEditarInput
                                                                         placeholder=""
                                                                         name="proprietario.cpf"
@@ -279,14 +285,11 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
                                                                         required
                                                                         custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                         errors={errors?.proprietario?.cpf}
+                                                                        label="CPF:"
                                                                     />
                                                                 </div>
 
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`email_${proprietario.id}`} className="block text-lg">
-                                                                        E-mail:
-                                                                    </label>
-
                                                                     <FormularioEditarInput
                                                                         placeholder="Ex: caio@gmail.com"
                                                                         name="proprietario.email"
@@ -295,14 +298,11 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
                                                                         required
                                                                         custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                         errors={errors?.proprietario?.email}
+                                                                        label="E-mail:"
                                                                     />
                                                                 </div>
 
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`telefone_${proprietario.id}`} className="block text-lg">
-                                                                        Telefone:
-                                                                    </label>
-
                                                                     <FormularioEditarInput
                                                                         placeholder=""
                                                                         name="proprietario.telefone"
@@ -311,30 +311,24 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
                                                                         required
                                                                         custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                         errors={errors?.proprietario?.telefone}
+                                                                        label="Telefone:"
                                                                     />
                                                                 </div>
 
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`celular_${proprietario.id}`} className="block text-lg">
-                                                                        Celular:
-                                                                    </label>
-
                                                                     <FormularioEditarInput
                                                                         placeholder=""
-                                                                        name="proprietario.telefone"
+                                                                        name="proprietario.celular"
                                                                         value={proprietario.celular}
                                                                         register={register}
                                                                         required
                                                                         custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                         errors={errors?.proprietario?.celular}
+                                                                        label="Celular:"
                                                                     />
                                                                 </div>
 
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`data_nascimento_${proprietario.id}`} className="block text-lg">
-                                                                        Data de Nascimento:
-                                                                    </label>
-
                                                                     <FormularioEditarInput
                                                                         placeholder=""
                                                                         name="proprietario.data_nascimento"
@@ -343,6 +337,7 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
                                                                         required
                                                                         custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                         errors={errors?.proprietario?.data_nascimento}
+                                                                        label="Data de Nascimento:"
                                                                     />
                                                                 </div>
                                                             </div>

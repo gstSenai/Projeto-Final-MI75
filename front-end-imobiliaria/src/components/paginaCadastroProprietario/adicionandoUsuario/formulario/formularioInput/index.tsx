@@ -2,6 +2,7 @@
 
 import type React from "react"
 import type { UseFormRegister, FieldError } from "react-hook-form"
+import Image from "next/image"
 
 interface FormularioInputProps {
   placeholder?: string
@@ -20,10 +21,10 @@ interface FormularioInputProps {
     type: "areaCT" | "sala" | "banheiro" | "dormitorio" | "suite" | "garagem" | "praia"
   }
   iconCaneta?: boolean
+  label?: string
 }
 
 export function FormularioInput({
-  placeholder,
   interName,
   name,
   value,
@@ -37,6 +38,7 @@ export function FormularioInput({
   icon,
   onChange,
   iconCaneta,
+  label,
 }: FormularioInputProps) {
   const getIconPath = () => {
     switch (icon?.type) {
@@ -63,14 +65,14 @@ export function FormularioInput({
 
   return (
     <div className="w-full">
-      {placeholder && <label className="block text-lg">{placeholder}</label>}
+      {label && <label className="block text-lg mb-2">{label}</label>}
       <div
         className={`relative ${customizacaoClass} p-2 flex items-center w-full rounded-lg bg-white border ${
           errors ? "border-red-500" : "border-gray-500"
         }`}
       >
-        {iconCaneta && <img src="/iconsForms/canetaEditar.png" alt="Editar" className="h-6 ml-4" />}
-        {iconPath && <img src={iconPath} alt={`Ícone ${icon?.type}`} className="h-6 lg:h-9" />}
+        {iconCaneta && <Image src="/iconsForms/canetaEditar.png" alt="Editar" className="h-6 ml-4" />}
+        {iconPath && <Image src={iconPath} alt={`Ícone ${icon?.type}`} className="h-6 lg:h-9" />}
 
         {options ? (
           <select
@@ -101,7 +103,7 @@ export function FormularioInput({
           />
         )}
 
-        {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-6" />}
+        {showOptions && <Image src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-6" />}
       </div>
 
       {errors && <span className="text-red-500 text-sm">{errors.message}</span>}

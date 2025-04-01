@@ -53,9 +53,10 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                 <FormularioInput
                     placeholder="CEP:"
                     name="endereco.cep"
-                    interName='00000-000'
+                    label="CEP:"
                     register={register}
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
+                    interName=""
                     required
                     errors={errors?.cep?.message}
                     onChange={(e) => {
@@ -67,9 +68,10 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                 <FormularioInput
                     placeholder="UF:"
                     name="endereco.uf"
-                    interName="Ex: SC"
+                    label="UF:"
                     register={register}
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
+                    interName=""
                     required
                     errors={errors?.uf}
                     disabled={isLoading}
@@ -77,9 +79,10 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                 <FormularioInput
                     placeholder="Cidade:"
                     name="endereco.cidade"
-                    interName="Ex: Joinville"
+                    label="Cidade:"
                     register={register}
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
+                    interName=""
                     required
                     errors={errors?.cidade}
                     disabled={isLoading}
@@ -87,9 +90,10 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                 <FormularioInput
                     placeholder="Rua:"
                     name="endereco.rua"
-                    interName="Ex: Rua das Flores"
+                    label="Rua:"
                     register={register}
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
+                    interName=""
                     required
                     errors={errors?.rua}
                     disabled={isLoading}
@@ -99,9 +103,10 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                 <FormularioInput
                     placeholder="Bairro:"
                     name="endereco.bairro"
-                    interName="Ex: Centro"
+                    label="Bairro:"
                     register={register}
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
+                    interName=""
                     required
                     errors={errors?.bairro}
                     disabled={isLoading}
@@ -109,10 +114,11 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                 <FormularioInput
                     placeholder="Tipo de Residência:"
                     name="endereco.tipo_residencia"
-                    interName="Ex: Casa"
+                    label="Tipo de Residência:"
                     register={register}
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
                     options={["Casa", "Apartamento"]}
+                    interName="*"
                     required
                     errors={errors?.tipo_residencia}
                 />
@@ -120,8 +126,9 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                     placeholder="Número do Imóvel:"
                     name="endereco.numero_imovel"
                     register={register}
-                    interName="Ex: 100"
+                    label="Número do Imóvel:"
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
+                    interName=""
                     required
                     errors={errors?.numero_imovel}
                 />
@@ -132,7 +139,8 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                     name="endereco.numero_apartamento"
                     register={register}
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
-                    interName="Ex: 100"
+                    interName=""
+                    label="Número Apartamento (Caso tenha):"
                     errors={errors?.numero_apartamento}
                 />
             </div>

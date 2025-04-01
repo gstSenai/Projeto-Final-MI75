@@ -9,12 +9,12 @@ const montserrat = Montserrat({
     display: "swap",
 });
 
-interface FormularioImagemEditProps {
+interface FormularioImagemEditProprietarioProps {
     handleImageUpload: (file: File) => void;
     imagemAtual?: string;
 }
 
-export function FormularioImagemEdit({ handleImageUpload, imagemAtual }: FormularioImagemEditProps) {
+export function FormularioImagemEditProprietario({ handleImageUpload, imagemAtual }: FormularioImagemEditProprietarioProps) {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [scale, setScale] = useState(1);
@@ -26,7 +26,7 @@ export function FormularioImagemEdit({ handleImageUpload, imagemAtual }: Formula
         if (imagemAtual) {
             const fetchImage = async () => {
                 try {
-                    const response = await fetch(`http://localhost:9090/usuario/imagem/${imagemAtual}`);
+                    const response = await fetch(`http://localhost:9090/proprietario/imagem/${imagemAtual}`);
                     if (response.ok) {
                         const blob = await response.blob();
                         const imageUrl = URL.createObjectURL(blob);

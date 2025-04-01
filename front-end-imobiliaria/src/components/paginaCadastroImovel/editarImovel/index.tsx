@@ -185,38 +185,6 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
         }
     }
 
-    const editarCaracImovel = async (data: ImovelCaracteristicas) => {
-        try {
-            for (const imovel of selectedImoveis) {
-                if (!imovel.id_caracteristicasImovel) {
-                    console.warn("⚠️ Imóvel sem características cadastradas:", imovel)
-                    continue
-                }
-
-                const imovelCaracteristicasAtualizado = {
-                    id: imovel.id_caracteristicasImovel.id,
-                    numero_quartos: imovel.id_caracteristicasImovel.numero_quartos,
-                    numero_banheiros: imovel.id_caracteristicasImovel.numero_banheiros,
-                    numero_suites: imovel.id_caracteristicasImovel.numero_suites,
-                    numero_vagas: imovel.id_caracteristicasImovel.numero_vagas,
-                    piscina: imovel.id_caracteristicasImovel.piscina,
-                    numero_salas: imovel.id_caracteristicasImovel.numero_salas,
-                }
-
-                const response = await request(
-                    "PUT",
-                    `http://localhost:9090/imovel/update/${imovel.id_caracteristicasImovel.id}`,
-                    imovelCaracteristicasAtualizado,
-                )
-                console.log("✅ Caracteristicas do imóvel atualizado com sucesso:", response)
-                return response
-            }
-        } catch (error) {
-            console.error("Erro ao editar imóvel:", error)
-            throw error
-        }
-    }
-
     const editarEndereco = async (data: EnderecoImovelProps) => {
         try {
             console.log("📤 Enviando endereço do usuário:", data)

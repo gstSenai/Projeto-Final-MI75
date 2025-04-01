@@ -56,12 +56,11 @@ public class ProprietarioService {
         repository.deleteById(id);
     }
 
-    @Transactional
     public Proprietario updateProprietario(ProprietarioPutRequestDTO proprietarioDTO, Integer id, MultipartFile imagem) {
         Proprietario proprietarioExistente = findById(id);
         Proprietario proprietarioAtualizado = ProprietarioMapper.INSTANCE.proprietarioPutRequestDTOToProprietario(proprietarioDTO);
 
-        BeanUtils.copyProperties(proprietarioAtualizado, proprietarioExistente, "id", "enderecoProprietario", "imagem_usuario");
+        BeanUtils.copyProperties(proprietarioAtualizado, proprietarioExistente, "id", "enderecoProprietario", "imagem_proprietario");
 
         if (imagem != null && !imagem.isEmpty()) {
             proprietarioExistente.setImagem_proprietario(s3Service.uploadFile(imagem));

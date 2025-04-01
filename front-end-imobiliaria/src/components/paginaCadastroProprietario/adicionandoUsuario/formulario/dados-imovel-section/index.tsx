@@ -44,7 +44,8 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                     <FormularioInput
                         placeholder="Nome:"
                         name="proprietario.nome"
-                        interName='Ex: Caio'
+                        label="Nome:"
+                        interName=""
                         register={register}
                         required
                         customizacaoClass="w-full p-2 border border-gray-500 rounded"
@@ -53,7 +54,8 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                     <FormularioInput
                         placeholder="Sobrenome:"
                         name="proprietario.sobrenome"
-                        interName='Ex: Souza'
+                        label="Sobrenome:"
+                        interName=""
                         register={register}
                         required
                         customizacaoClass="w-full p-2 border border-gray-500 rounded"
@@ -62,10 +64,11 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                     <FormularioInput
                         placeholder="CPF:"
                         name="proprietario.cpf"
-                        interName="Ex: 000.000.000-00"
+                        label="CPF:"
+                        interName=""
                         register={register}
-                        customizacaoClass="w-full p-2 border border-gray-500 rounded"
                         required
+                        customizacaoClass="w-full p-2 border border-gray-500 rounded"
                         maxLength={14}
                         onChange={(e) => {
                             e.target.value = formatarCPF(e.target.value);
@@ -78,7 +81,8 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                     <FormularioInput
                         placeholder="Telefone"
                         name="proprietario.telefone"
-                        interName="Ex: (00) 0000-0000"
+                        label="Telefone:"
+                        interName=""
                         register={register}
                         required
                         customizacaoClass="w-full p-2 border border-gray-500 rounded"
@@ -91,7 +95,8 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                     <FormularioInput
                         placeholder="Celular"
                         name="proprietario.celular"
-                        interName="Ex: (00) 0000-0000"
+                        label="Celular:"
+                        interName=""
                         register={register}
                         required
                         customizacaoClass="w-full p-2 border border-gray-500 rounded"
@@ -104,7 +109,8 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                     <FormularioInput
                         placeholder="Data de nascimento:"
                         name="proprietario.data_nascimento"
-                        interName="Ex: 01/01/2000"
+                        label="Data de nascimento:"
+                        interName=""
                         register={register}
                         required
                         customizacaoClass="w-full p-2 border border-gray-500 rounded"
@@ -117,7 +123,8 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                     <FormularioInput
                         placeholder="E-mail:"
                         name="proprietario.email"
-                        interName="Ex: jaja@gmail.com"
+                        label="E-mail:"
+                        interName=""
                         register={register}
                         required
                         customizacaoClass="w-full p-2 border border-gray-500 rounded"

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { Montserrat } from 'next/font/google'
 import { Formulario } from "../adicionandoUsuario/formulario"
 import { RemoveProprietario } from "../removerUsuario"
-import { EditarProprietario } from "../editandoUsuario"
+import { EditarProprietario } from "../editandoProprietario"
 import { z } from "zod"
 import Image from "next/image"
 import { FormularioInput } from "../adicionandoUsuario/formulario/formularioInput"
@@ -22,18 +22,36 @@ const ProprietarioProps = z.object({
   id: z.number().optional(),
   nome: z.string().min(1, { message: "O nome é obrigatório" }),
   sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
-  cpf: z.coerce.number().min(11, { message: "CPF inválido" }),
-  telefone: z.coerce.number().min(10, { message: "Telefone inválido" }),
-  celular: z.coerce.number().min(11, { message: "Celular inválido" }),
-  data_nascimento: z.coerce.number().min(1, { message: "Data de nascimento inválida" }),
+  cpf: z.string()
+    .min(14, { message: "CPF inválido" })
+    .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, { message: "Formato de CPF inválido" })
+    .transform((cpf) => cpf.replace(/\D/g, '')),
+  telefone: z.string()
+    .min(11, { message: "Telefone inválido" })
+    .regex(/^\(\d{2}\)\s\d{5}-\d{4}$/, { message: "Formato de telefone inválido" })
+    .transform((tel) => tel.replace(/\D/g, '')),
+  celular: z.string()
+    .min(11, { message: "Celular inválido" })
+    .regex(/^\(\d{2}\)\s\d{5}-\d{4}$/, { message: "Formato de celular inválido" })
+    .transform((cel) => cel.replace(/\D/g, '')),
+  data_nascimento: z.string()
+    .min(10, { message: "Data deve estar no formato DD/MM/AAAA" })
+    .regex(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/, {
+      message: "Data deve estar no formato DD/MM/AAAA"
+    })
+    .transform((data) => {
+      const [dia, mes, ano] = data.split('/').map(Number);
+      return new Date(ano, mes - 1, dia);
+    }),
   email: z.string().email({ message: "E-mail inválido" }),
+  imagem_proprietario: z.string().optional(),
   enderecoProprietario: z.object({
     id: z.number().optional(),
     cep: z.string().min(8, { message: "CEP inválido" }),
     rua: z.string().min(1, { message: "Rua inválida" }),
     tipo_residencia: z.string().min(1, { message: "Tipo de residência inválido" }),
     numero_imovel: z.coerce.number().min(1, { message: "Número do imóvel inválido" }),
-    numero_apartamento: z.coerce.number().min(1, { message: "Número do apartamento inválido" }).optional(),
+    numero_apartamento: z.coerce.number().min(1, { message: "Número do apartamento inválido" }),
     bairro: z.string().min(1, { message: "Bairro inválido" }),
     cidade: z.string().min(1, { message: "Cidade inválida" }),
     uf: z.string().min(2, { message: "UF inválida" }),
@@ -77,6 +95,16 @@ export default function TabelaProprietario() {
   const [editar, setEditar] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [showSidebar, setShowSidebar] = useState(false)
+
+  const formatarCPF = (cpf: string) => {
+    const cpfLimpo = cpf.replace(/\D/g, '');
+    return cpfLimpo.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+  };
+
+  const formatarTelefone = (telefone: string) => {
+    const telefoneLimpo = telefone.replace(/\D/g, '');
+    return telefoneLimpo.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+  };
 
   const handleAddUsuario = () => {
     setAdicionar(!adicionar)
@@ -218,10 +246,10 @@ export default function TabelaProprietario() {
                           {proprietario.email}
                         </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
-                          {proprietario.cpf}
+                          {formatarCPF(proprietario.cpf)}
                         </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
-                          {proprietario.telefone}
+                          {formatarTelefone(proprietario.telefone)}
                         </td>
                       </tr>
                     )
@@ -304,34 +332,57 @@ export default function TabelaProprietario() {
                   <div className="space-y-2">
                     <FormularioInput
                       placeholder="Nome:"
-                      name="usuario.nome"
-                      interName='Ex: Caio'
+                      name="proprietario.nome"
+                      label="Nome:"
                       register={register}
                       required
-                      customizacaoClass="w-full"
+                      customizacaoClass="w-full p-2"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <FormularioInput
+                      placeholder="Sobrenome:"
+                      name="proprietario.sobrenome"
+                      label="Sobrenome:"
+                      register={register}
+                      required
+                      customizacaoClass="w-full p-2"
                     />
                   </div>
 
                   <div className="space-y-2">
                     <FormularioInput
                       placeholder="E-mail:"
-                      name="usuario.email"
-                      interName='Ex: caio@gmail.com'
+                      name="proprietario.email"
+                      label="E-mail:"
                       register={register}
                       required
-                      customizacaoClass="w-full"
+                      customizacaoClass="w-full p-2"
                     />
                   </div>
 
+
                   <div className="space-y-2">
                     <FormularioInput
-                      placeholder="Tipo de Conta:"
-                      name="usuario.tipo_conta"
-                      interName=''
+                      placeholder="CPF:"
+                      name="proprietario.cpf"
+                      label="CPF:"
                       register={register}
                       required
-                      customizacaoClass="w-full"
-                      options={['Usuario', 'Administrador', 'Corretor', 'Editor']}
+                      customizacaoClass="w-full p-2"
+                    />
+                  </div>
+
+
+                  <div className="space-y-2">
+                    <FormularioInput
+                      placeholder="Telefone:"
+                      name="proprietario.telefone"
+                      label="Telefone:"
+                      register={register}
+                      required
+                      customizacaoClass="w-full p-2"
                     />
                   </div>
                 </div>
@@ -365,7 +416,7 @@ export default function TabelaProprietario() {
             </div>
           </div>
         </div>
-      </div>
+      </div >
       {adicionar && <Formulario onComplete={refreshData} />}
       {remover && <RemoveProprietario selectedProprietarios={selectedProprietarios} onComplete={refreshData} />}
       {editar && <EditarProprietario selectedProprietarios={selectedProprietarios} onComplete={refreshData} />}

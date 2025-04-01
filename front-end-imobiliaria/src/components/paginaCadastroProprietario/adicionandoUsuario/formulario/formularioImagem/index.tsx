@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Montserrat } from "next/font/google";
-
+import Image from "next/image";
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "800"],
@@ -48,10 +48,12 @@ export function FormularioImagem({ handleImageChange }: FormularioImagemProps) {
           <div
             className="w-full h-full relative"
           >
-            <img
+            <Image
               src={imagePreview}
               alt="Pré-visualização"
               className="w-full h-full object-cover transition-transform duration-200"
+              width={200}
+              height={200}
             />
           </div>
         ) : (
