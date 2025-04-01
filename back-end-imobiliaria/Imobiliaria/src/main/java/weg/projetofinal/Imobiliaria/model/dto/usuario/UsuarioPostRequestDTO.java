@@ -14,5 +14,5 @@ public record UsuarioPostRequestDTO(
         @NotBlank String tipo_conta,
         @Email @NotBlank String email,
         @NotBlank @Size(min = 6) String senha,
-        String imagem_usuario,
+        String imagem_usuario
 ) {}
