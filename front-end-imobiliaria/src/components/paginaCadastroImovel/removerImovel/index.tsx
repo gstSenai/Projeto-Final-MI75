@@ -2,6 +2,7 @@
 import { useState } from "react"
 import { Botao } from "@/components/botao"
 import request from "@/routes/request"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface ImovelProps {
     id: number;
@@ -30,7 +31,7 @@ interface RemoveImovelProps {
 
 export function RemoveImovel({ selectedImoveis, onComplete }: RemoveImovelProps) {
     const [showModal, setShowModal] = useState(true)
-    const [showModalRemovido, setShowModalRemovido] = useState(false)
+    const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
 
     const deleteImovel = async (): Promise<void> => {
@@ -41,15 +42,13 @@ export function RemoveImovel({ selectedImoveis, onComplete }: RemoveImovelProps)
             }
 
             setShowModal(false)
-            setShowModalRemovido(true)
+            setShowSuccessModal(true)
             if (onComplete) {
                 onComplete()
             }
-
             setTimeout(() => {
-                setShowModalRemovido(false)
+                setShowSuccessModal(false)
             }, 5000)
-            setShowModalRemovido(false)
         } catch (error) {
             console.error("Erro ao deletar imóveis:", error)
             throw error;
@@ -93,23 +92,33 @@ export function RemoveImovel({ selectedImoveis, onComplete }: RemoveImovelProps)
                                 <Botao
                                     onClick={handleCancel}
                                     texto="Cancelar"
+                                    className="bg-vermelho h-10"
                                 />
                                 <Botao
                                     onClick={deleteImovel}
                                     texto={isDeleting ? "Removendo..." : "Remover"}
+                                    className="bg-vermelho h-10"
                                 />
                             </div>
                         </div>
                     </div>
                 </div>
             )}
-            {showModalRemovido && isDeleting && (
-                <div className="w-full bottom-16 pl-10 items-center relative">
-                    <div className='bg-vermelho/80 w-72 flex gap-1 p-3 rounded-[20px] text-white'>
-                        <p>Removido com Sucesso!</p>
-                    </div>
-                </div>
-            )}
+            <AnimatePresence>
+                {showSuccessModal && (
+                    <motion.div
+                        initial={{ opacity: 0, x: -100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -100 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="fixed bottom-10 left-0 z-50"
+                    >
+                        <div className="bg-vermelho w-72 flex gap-1 p-3 rounded-tr-lg rounded-br-lg text-white shadow-lg">
+                            <p className="text-center">Removido com Sucesso!</p>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </>
     )
 }

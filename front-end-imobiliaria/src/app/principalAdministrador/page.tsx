@@ -17,7 +17,7 @@ export default function PaginaAdministrador() {
         <>
             <Header />
 
-            <div className="font-montserrat pt-3 pb-24 lg:pt-14 lg:pb-52">
+            <div className={`${montserrat.className} pt-3 pb-24 lg:pt-14 lg:pb-52`}>
                 <main className="relative flex h-[811px] w-full max-w-[1810px] mx-auto overflow-hidden ">
 
                     <Image src="/montanhaPaginaAdministrador.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100} />
@@ -44,7 +44,7 @@ export default function PaginaAdministrador() {
                             
                             <p className='text-2xl lg:text-3xl font-medium opacity-75 text-center leading-tight max-lg:py-10 py-10 w-80'>Gerenciamento de Imóveis</p>
                             
-                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2' texto="Gerenciar" />
+                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2 bg-vermelho h-10' texto="Gerenciar" />
                         </div>
                         <div className='flex flex-col items-center max-lg:py-4 py-10 md:py-10 2xl:py-0 w-full 2xl:w-96'>
                             
@@ -52,7 +52,7 @@ export default function PaginaAdministrador() {
                             
                             <p className='text-2xl lg:text-3xl font-medium opacity-75 text-center leading-tight max-lg:py-10 py-10 w-80'>Gerenciamento de Proprietários</p>
                             
-                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2' texto="Gerenciar" />
+                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2 bg-vermelho h-10' texto="Gerenciar" />
                         </div>
                         <div className='flex flex-col items-center max-lg:py-4 py-10 md:py-10 2xl:py-0 w-full 2xl:w-96'>
                             
@@ -60,7 +60,7 @@ export default function PaginaAdministrador() {
                            
                             <p className='text-2xl lg:text-3xl font-medium opacity-75 text-center leading-tight max-lg:py-10 py-14 w-80'>Cadastrar Imóveis</p>
                             
-                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2' texto="Gerenciar" />
+                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2 bg-vermelho h-10' texto="Gerenciar" />
                         </div>
                     </div> 
                 </section>
@@ -73,7 +73,7 @@ export default function PaginaAdministrador() {
                             
                             <p className='text-2xl lg:text-3xl font-medium opacity-75 text-center leading-tight max-lg:py-10 py-14 w-80'>Relatórios e Análises</p>
                             
-                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2' texto="Gerenciar" />
+                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2 bg-vermelho h-10' texto="Gerenciar" />
                         </div>
                         <div className='flex flex-col items-center max-lg:py-4 py-10 md:py-10 2xl:py-0 w-full 2xl:w-96'>
                             
@@ -81,7 +81,7 @@ export default function PaginaAdministrador() {
                             
                             <p className='text-2xl lg:text-3xl font-medium opacity-75 text-center leading-tight max-lg:py-10 py-10 w-80'>Gerenciamento de Usúarios</p>
                             
-                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2' texto="Gerenciar" />
+                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2 bg-vermelho h-10' texto="Gerenciar" />
                         </div>
                     </div>
                 </section>

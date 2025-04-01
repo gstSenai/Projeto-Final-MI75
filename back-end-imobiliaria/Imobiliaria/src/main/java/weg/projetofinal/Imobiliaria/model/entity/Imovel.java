@@ -55,7 +55,7 @@ public class Imovel {
     private List<Imagem> imagem;
 
     @OneToOne(cascade = CascadeType.REMOVE)
-    private CaracteristicaImovel caracteristicaImovel;
+    private CaracteristicaImovel id_caracteristicasImovel;
 
     @OneToMany(mappedBy = "imovel")
     private List<Agendamento> agendamentos;
