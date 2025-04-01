@@ -76,7 +76,7 @@ export default function PaginaInicial() {
                                 <p className='flex justify-center text-center text-xl lg:text-3xl xl:text-2xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
                             </div>
                         </div>
-                        <div className='flex flex-col lg:flex-row justify-evenly pt-36 xl:pt-24 pb-12'>
+                        <div className='flex flex-col lg:flex-row justify-center pt-36 xl:pt-16 pb-12'>
                             <Carousel type='ajusteTriplo'>
                                 <Card titulo="Casa com 3 quartos" cidade="Jaraguá Do Sul" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={6545644} codigo={455445} />
                                 <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={3443423} codigo={2331212} />
