@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Header } from "../header";
 import { Card } from "../cardImovel";
+import { Footer } from "../footer";
 
 interface Imovel {
     id: number;
@@ -76,53 +77,58 @@ export function ListaImoveis() {
     const refreshData = () => {
         setImoveis([])
         fetchImoveis();
-      }
+    }
 
-      useEffect(() => {
+    useEffect(() => {
         refreshData()
-      }, []);
+    }, []);
 
     return (
-        <div>
-            <Header />
-            <div className="flex justify-center mt-[8rem]">
-                <h1 className="font-bold text-[40px]">Propriedades</h1>
-            </div>
-            <div className="flex justify-center">
-                <div className="w-[15.75rem] h-[3px] bg-vermelho"></div>
-            </div>
+        <>
+            <Header/>
+            <div>
 
-            {error && (
-                <div className="flex justify-center mt-4">
-                    <p className="text-red-500">{error}</p>
+                <div className="flex justify-center mt-[8rem]">
+                    <h1 className="font-bold text-[40px]">Propriedades</h1>
                 </div>
-            )}
+                <div className="flex justify-center">
+                    <div className="w-[15.75rem] h-[3px] bg-vermelho"></div>
+                </div>
 
-            {loading ? (
-                <div className="flex justify-center mt-10">
-                    <p className="text-xl font-semibold">Carregando imóveis...</p>
-                </div>
-            ) : (
-                <div className="flex flex-wrap justify-center gap-6 mt-6">
-                    {imoveis.length > 0 ? (
-                        imoveis.map((imovel) => (
-                            <Card
-                                key={imovel.id}
-                                titulo={imovel.titulo}
-                                cidade={imovel.cidade}
-                                qtdDormitorios={imovel.qtdDormitorios}
-                                qtdSuite={imovel.qtdSuite}
-                                qtdBanheiros={imovel.qtdBanheiros}
-                                preco={imovel.preco}
-                                codigo={imovel.codigo}
-                            />
-                        ))
-                    ) : (
-                        <p className="text-xl font-semibold text-center">Nenhum imóvel encontrado.</p>
-                    )}
-                </div>
-            )}
-        </div>
+                {error && (
+                    <div className="flex justify-center mt-4">
+                        <p className="text-red-500">{error}</p>
+                    </div>
+                )}
+
+                {loading ? (
+                    <div className="flex justify-center mt-10">
+                        <p className="text-xl font-semibold">Carregando imóveis...</p>
+                    </div>
+                ) : (
+                    <div className="flex flex-wrap justify-center gap-6 mt-6">
+                        {imoveis.length > 0 ? (
+                            imoveis.map((imovel) => (
+                                <Card
+                                    key={imovel.id}
+                                    titulo={imovel.titulo}
+                                    cidade={imovel.cidade}
+                                    qtdDormitorios={imovel.qtdDormitorios}
+                                    qtdSuite={imovel.qtdSuite}
+                                    qtdBanheiros={imovel.qtdBanheiros}
+                                    preco={imovel.preco}
+                                    codigo={imovel.codigo}
+                                />
+                            ))
+                        ) : (
+                            <p className="text-xl font-semibold text-center">Nenhum imóvel encontrado.</p>
+                        )}
+                    </div>
+                )}
+
+            </div>
+            <Footer />
+        </>
     );
 }
 
