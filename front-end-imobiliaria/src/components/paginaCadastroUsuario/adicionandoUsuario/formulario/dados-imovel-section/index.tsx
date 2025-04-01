@@ -16,7 +16,7 @@ interface DadosUsuarioSectionProps {
 
 export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionProps) {
     return (
-        <div className="flex flex-col font-montserrat">
+        <div className={`flex flex-col ${montserrat.className}`}>
             <div className="flex flex-col gap-6">
                 <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput
@@ -38,17 +38,6 @@ export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionPro
                         errors={errors?.sobrenome}
                     />
                     <FormularioInput
-                        placeholder="CPF:"
-                        name="usuario.cpf"
-                        interName='Ex: 123.456.789-00'
-                        register={register}
-                        required
-                        customizacaoClass="w-full"
-                        errors={errors?.cpf}
-                    />
-                </div>
-                <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
-                    <FormularioInput
                         placeholder="Tipo da Conta:"
                         name="usuario.tipo_conta"
                         required
@@ -57,6 +46,9 @@ export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionPro
                         options={['Usuario', 'Corretor', 'Administrador', 'Editor']}
                         errors={errors?.tipo_conta}
                     />
+                </div>
+
+                <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput
                         placeholder="Telefone"
                         name="usuario.telefone"
@@ -66,18 +58,6 @@ export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionPro
                         customizacaoClass="w-full"
                         errors={errors?.telefone}
                     />
-                    <FormularioInput
-                        placeholder="Data de Nascimento:"
-                        name="usuario.data_nascimento"
-                        interName="Ex: 22/02/2005"
-                        register={register}
-                        required
-                        customizacaoClass="w-full"
-                        errors={errors?.data_nascimento}
-                    />
-                </div>
-
-                <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput
                         placeholder="E-mail:"
                         name="usuario.email"

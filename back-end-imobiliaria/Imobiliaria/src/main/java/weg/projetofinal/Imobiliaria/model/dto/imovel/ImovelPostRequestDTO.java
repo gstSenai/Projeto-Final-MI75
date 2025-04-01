@@ -20,5 +20,6 @@ public record ImovelPostRequestDTO(
         Double area_terreno,
         String descricao,
         Endereco id_endereco,
-        CaracteristicaImovel id_caracteristicasImovel) {
+        CaracteristicaImovel id_caracteristicasImovel,
+        Proprietario id_proprietario) {
 }

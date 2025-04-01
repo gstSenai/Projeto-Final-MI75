@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react"
 import { Montserrat } from 'next/font/google'
 import { Formulario } from "../adicionandoUsuario/formulario"
-import { RemoveUsuario } from "../removerUsuario"
-import { EditarUsuario } from "../editandoUsuario"
+import { RemoveProprietario } from "../removerUsuario"
+import { EditarProprietario } from "../editandoUsuario"
 import { z } from "zod"
 import Image from "next/image"
 import { FormularioInput } from "../adicionandoUsuario/formulario/formularioInput"
@@ -18,34 +18,60 @@ const montserrat = Montserrat({
   display: "swap",
 })
 
-const UsuarioProps = z.object({
+const ProprietarioProps = z.object({
   id: z.number().optional(),
   nome: z.string().min(1, { message: "O nome é obrigatório" }),
   sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
-  tipo_conta: z.string().min(1, {
-    message: "Selecione um tipo de conta válido",
-  }),
+  cpf: z.coerce.number().min(11, { message: "CPF inválido" }),
+  telefone: z.coerce.number().min(10, { message: "Telefone inválido" }),
+  celular: z.coerce.number().min(11, { message: "Celular inválido" }),
+  data_nascimento: z.coerce.number().min(1, { message: "Data de nascimento inválida" }),
   email: z.string().email({ message: "E-mail inválido" }),
-  senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
-  ativo: z.boolean().optional(),
+  enderecoProprietario: z.object({
+    id: z.number().optional(),
+    cep: z.string().min(8, { message: "CEP inválido" }),
+    rua: z.string().min(1, { message: "Rua inválida" }),
+    tipo_residencia: z.string().min(1, { message: "Tipo de residência inválido" }),
+    numero_imovel: z.coerce.number().min(1, { message: "Número do imóvel inválido" }),
+    numero_apartamento: z.coerce.number().min(1, { message: "Número do apartamento inválido" }).optional(),
+    bairro: z.string().min(1, { message: "Bairro inválido" }),
+    cidade: z.string().min(1, { message: "Cidade inválida" }),
+    uf: z.string().min(2, { message: "UF inválida" }),
+  }).optional(),
+  ImovelProprietarioResponseDTO: z.array(z.object({
+    id: z.number().optional(),
+    codigo: z.number().optional(),
+    nome_propriedade: z.string().min(1, { message: "Nome da propriedade inválido" }),
+    tipo_transacao: z.string().min(1, { message: "Tipo de transação inválido" }),
+    valor_venda: z.number().min(1, { message: "Valor de venda inválido" }),
+    tipo_imovel: z.string().min(1, { message: "Tipo de imóvel inválido" }),
+    status_imovel: z.string().min(1, { message: "Status do imóvel inválido" }),
+    valor_promocional: z.number().min(1, { message: "Valor promocional inválido" }),
+    destaque: z.boolean().optional(),
+    visibilidade: z.boolean().optional(),
+    valor_iptu: z.number().min(1, { message: "Valor doIPTU inválido" }),
+    condominio: z.number().min(1, { message: "Condomínio inválido" }),
+    area_construida: z.number().min(1, { message: "Área construída inválida" }),
+    area_terreno: z.number().min(1, { message: "Área do terreno inválida" }),
+    descricao: z.string().min(1, { message: "Descrição inválida" }),
+  })).optional(),
 })
 
-type UsuarioProps = z.infer<typeof UsuarioProps>
+type ProprietarioProps = z.infer<typeof ProprietarioProps>
 
 interface ResponseProps {
-  content: UsuarioProps[]
+  content: ProprietarioProps[]
 }
 
-export default function TabelaUsuario() {
+export default function TabelaProprietario() {
   const { register, watch, reset } = useForm({
     defaultValues: {
-      "usuario.nome": "",
-      "usuario.email": "",
-      "usuario.tipo_conta": "",
+      "proprietario.nome": "",
+      "proprietario.email": "",
     }
   });
-  const [selectedUsuarios, setSelectedUsuarios] = useState<UsuarioProps[]>([])
-  const [usuariosFiltros, setUsuariosFiltros] = useState<ResponseProps | null>(null)
+  const [selectedProprietarios, setSelectedProprietarios] = useState<ProprietarioProps[]>([])
+  const [proprietariosFiltros, setProprietariosFiltros] = useState<ResponseProps | null>(null)
   const [adicionar, setAdicionar] = useState(false)
   const [remover, setRemover] = useState(false)
   const [editar, setEditar] = useState(false)
@@ -62,8 +88,8 @@ export default function TabelaUsuario() {
   }
 
   const handleRemoveUsuario = () => {
-    if (selectedUsuarios.length === 0) {
-      alert("Selecione pelo menos um usuário para remover")
+    if (selectedProprietarios.length === 0) {
+      alert("Selecione pelo menos um proprietário para remover")
       return
     }
 
@@ -76,11 +102,11 @@ export default function TabelaUsuario() {
   }
 
   const handleEditusuario = () => {
-    if (selectedUsuarios.length === 0) {
-      alert("Selecione um usuário para editar")
+    if (selectedProprietarios.length === 0) {
+      alert("Selecione um proprietário para editar")
       return
-    } else if (selectedUsuarios.length > 1) {
-      alert("Pode editar um usuário por vez")
+    } else if (selectedProprietarios.length > 1) {
+      alert("Pode editar um proprietário por vez")
       return
     }
 
@@ -92,26 +118,25 @@ export default function TabelaUsuario() {
     }
   }
 
-  const getUsuario = async (searchNome?: string, searchEmail?: string, searchTipoConta?: string) => {
+  const getUsuario = async (searchNome?: string, searchEmail?: string) => {
     setIsLoading(true)
     try {
-      const response = await fetch("http://localhost:9090/usuario/getAll");
+      const response = await fetch("http://localhost:9090/proprietario/getAll");
       const data = await response.json();
 
-      const usuariosFiltrados = {
-        content: data.content.filter((usuario: UsuarioProps) => {
-          const matchNome = !searchNome || usuario.nome.toLowerCase().includes(searchNome.toLowerCase());
-          const matchEmail = !searchEmail || usuario.email.toLowerCase().includes(searchEmail.toLowerCase());
-          const matchTipoConta = !searchTipoConta || usuario.tipo_conta.toLowerCase().includes(searchTipoConta.toLowerCase());
+      const proprietariosFiltrados = {
+        content: data.content.filter((proprietario: ProprietarioProps) => {
+          const matchNome = !searchNome || proprietario.nome.toLowerCase().includes(searchNome.toLowerCase());
+          const matchEmail = !searchEmail || proprietario.email.toLowerCase().includes(searchEmail.toLowerCase());
 
-          return matchNome && matchEmail && matchTipoConta;
+          return matchNome && matchEmail;
         })
       };
 
-      setUsuariosFiltros(usuariosFiltrados);
+      setProprietariosFiltros(proprietariosFiltrados);
     } catch (error) {
-      console.error("Error fetching usuarios:", error)
-      setUsuariosFiltros({ content: [] })
+      console.error("Error fetching proprietarios:", error)
+      setProprietariosFiltros({ content: [] })
     } finally {
       setIsLoading(false)
     }
@@ -121,18 +146,18 @@ export default function TabelaUsuario() {
     setAdicionar(false)
     setRemover(false)
     setEditar(false)
-    setSelectedUsuarios([])
+    setSelectedProprietarios([])
     getUsuario()
   }
 
-  const toggleUsuarioselection = (usuario: UsuarioProps) => {
-    setSelectedUsuarios(prevSelected => {
-      const isSelected = prevSelected.some(u => u.id === usuario.id)
+  const toggleProprietarioselection = (proprietario: ProprietarioProps) => {
+    setSelectedProprietarios(prevSelected => {
+      const isSelected = prevSelected.some(u => u.id === proprietario.id)
 
       if (isSelected) {
-        return prevSelected.filter(u => u.id !== usuario.id)
+        return prevSelected.filter(u => u.id !== proprietario.id)
       } else {
-        return [...prevSelected, usuario]
+        return [...prevSelected, proprietario]
       }
     })
   }
@@ -153,16 +178,16 @@ export default function TabelaUsuario() {
                     <p>Nome</p>
                   </th>
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
+                    <p>Sobrenome</p>
+                  </th>
+                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>E-mail</p>
                   </th>
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
-                    <p>Tipo Conta</p>
+                    <p>CPF</p>
                   </th>
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Telefone</p>
-                  </th>
-                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
-                    <p>Ativo</p>
                   </th>
                 </tr>
               </thead>
@@ -174,29 +199,29 @@ export default function TabelaUsuario() {
                     </td>
                   </tr>
                 ) : (
-                  usuariosFiltros?.content?.map((usuario) => {
-                    const isSelected = selectedUsuarios.some(u => u.id === usuario.id)
+                  proprietariosFiltros?.content?.map((proprietario) => {
+                    const isSelected = selectedProprietarios.some(u => u.id === proprietario.id)
                     return (
                       <tr
-                        key={usuario.id}
+                        key={proprietario.id}
                         className={`cursor-pointer border-b border-[#E0D6CE] ${isSelected ? "bg-vermelho text-white" : "bg-[#FAF6ED] hover:bg-vermelho hover:bg-opacity-30"
                           }`}
-                        onClick={() => toggleUsuarioselection(usuario)}
+                        onClick={() => toggleProprietarioselection(proprietario)}
                       >
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
-                          {usuario.nome}
+                          {proprietario.nome}
                         </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
-                          {usuario.sobrenome}
+                          {proprietario.sobrenome}
                         </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 max-w-[20rem] truncate whitespace-nowrap overflow-hidden">
-                          {usuario.email}
+                          {proprietario.email}
                         </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
-                          {usuario.tipo_conta}
+                          {proprietario.cpf}
                         </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
-                          {usuario.ativo ? "Ativo" : "Inativo"}
+                          {proprietario.telefone}
                         </td>
                       </tr>
                     )
@@ -205,9 +230,9 @@ export default function TabelaUsuario() {
               </tbody>
             </table>
           </div>
-          {selectedUsuarios.length > 0 && (
+          {selectedProprietarios.length > 0 && (
             <div className="p-3 bg-[#FAF6ED] border-t border-[#E0D6CE]">
-              <p className="text-vermelho font-medium">{selectedUsuarios.length} Usuário(s) selecionado(s)</p>
+              <p className="text-vermelho font-medium">{selectedProprietarios.length} Proprietário(s) selecionado(s)</p>
             </div>
           )}
         </div>
@@ -238,7 +263,7 @@ export default function TabelaUsuario() {
           <button
             onClick={handleEditusuario}
             className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
-            disabled={isLoading || selectedUsuarios.length !== 1}
+            disabled={isLoading || selectedProprietarios.length !== 1}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
               <Image src="/iconsForms/canetaEditarBranco.png" alt="sinal de edição" width={15} height={15} />
@@ -327,10 +352,9 @@ export default function TabelaUsuario() {
                 <Botao
                   texto="Pesquisar"
                   onClick={() => {
-                    const currentNome = watch("usuario.nome");
-                    const currentEmail = watch("usuario.email");
-                    const currentTipoConta = watch("usuario.tipo_conta");
-                    getUsuario(currentNome, currentEmail, currentTipoConta);
+                    const currentNome = watch("proprietario.nome");
+                    const currentEmail = watch("proprietario.email");
+                    getUsuario(currentNome, currentEmail);
                     setTimeout(() => {
                       setShowSidebar(false);
                     }, 100);
@@ -343,8 +367,8 @@ export default function TabelaUsuario() {
         </div>
       </div>
       {adicionar && <Formulario onComplete={refreshData} />}
-      {remover && <RemoveUsuario selectedUsers={selectedUsuarios} onComplete={refreshData} />}
-      {editar && <EditarUsuario selectedUsuarios={selectedUsuarios} onComplete={refreshData} />}
+      {remover && <RemoveProprietario selectedProprietarios={selectedProprietarios} onComplete={refreshData} />}
+      {editar && <EditarProprietario selectedProprietarios={selectedProprietarios} onComplete={refreshData} />}
     </>
   )
 }
