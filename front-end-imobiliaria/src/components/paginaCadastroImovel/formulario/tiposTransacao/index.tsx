@@ -13,13 +13,7 @@ interface tipo_transacaoProps {
 export function tipo_transacao({ register, errors, onImagesChange }: tipo_transacaoProps) {
     return (
         <div className="flex flex-col">
-            <div className="font-inter flex max-lg:justify-center">
-                <div className="flex flex-row items-center max-lg:justify-center">
-                    <p className="text-2xl xl:text-3xl font-semibold my-10 max-lg:hidden">Tipo de Transação:</p>
-                </div>
-            </div>
-
-            <hr className="mb-10 w-full h-2 rounded-2xl bg-vermelho"></hr>
+           
 
             <div className="flex flex-col lg:gap-6">
                 <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
@@ -64,7 +58,7 @@ export function tipo_transacao({ register, errors, onImagesChange }: tipo_transa
                         errors={errors?.imovel?.valor_venda}
                     />
                     <FormularioInput
-                        placeholder="Valor do Preço Promocional (R$):"
+                        placeholder="Preço Promocional (R$):"
                         name="imovel.valor_promocional"
                         interName="Ex: R$100000,00"
                         register={register}
@@ -126,14 +120,6 @@ export function tipo_transacao({ register, errors, onImagesChange }: tipo_transa
                 </div>
             </div>
 
-           
-            <div className="flex items-center max-sm:gap-2 gap-10 w-full mt-10">
-                <Descricao
-                    placeholder="Descrição"
-                    name="imovel.descricao"
-                    register={register}
-                    className="w-full h-40" />
-            </div>
         </div>
     )
 }
