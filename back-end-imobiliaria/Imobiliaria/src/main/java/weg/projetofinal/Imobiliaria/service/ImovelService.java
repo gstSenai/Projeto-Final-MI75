@@ -17,6 +17,7 @@ import java.util.NoSuchElementException;
 @AllArgsConstructor
 public class ImovelService {
 
+    private final S3Service s3Service;
     private ImovelRepository repository;
 
     public Imovel createImovel(Imovel imovel) {
@@ -67,4 +68,6 @@ public class ImovelService {
 
         return repository.save(imovelExistente);
     }
+
+
 }

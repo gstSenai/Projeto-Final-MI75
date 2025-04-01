@@ -1,7 +1,6 @@
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
 
-// Carregando a fonte Inter
 const inter = Inter({
     subsets: ['latin'],
     weight: ['400', '600'],
@@ -60,3 +59,5 @@ export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, p
         </>
     );
 }
+
+export default Card;
