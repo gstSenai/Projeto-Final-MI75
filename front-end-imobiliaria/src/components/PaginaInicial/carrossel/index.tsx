@@ -10,16 +10,13 @@ interface CarouselProps {
 export default function Carousel({ type, children }: CarouselProps) {
   if (type === "ajusteTriplo") {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [isMobile, setIsMobile] = useState(false);
-    const [transitionDirection, setTransitionDirection] = useState<"left" | "right">("right");
     const [isAnimating, setIsAnimating] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
     const childrenArray = Children.toArray(children);
     const totalSlides = childrenArray.length;
-    const carouselRef = useRef<HTMLDivElement>(null);
-
-    // Touch handling variables
-    const startXRef = useRef(0);
-    const isDraggingRef = useRef(false);
+    const carouselRef = useRef(null);
+    let startX = 0;
+    let isDragging = false;
 
     useEffect(() => {
       const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -30,110 +27,91 @@ export default function Carousel({ type, children }: CarouselProps) {
 
     useEffect(() => {
       const interval = setInterval(() => {
-        if (!isAnimating) {
-          handleSlideChange("right", (prev) => (prev >= totalSlides - 1 ? 0 : prev + 1));
-        }
+        handleSlideChange(1); // Avança para o próximo slide
       }, 10000);
       return () => clearInterval(interval);
-    }, [currentIndex, totalSlides, isAnimating]);
+    }, [currentIndex, totalSlides]);
 
-    const handleSlideChange = (direction: "left" | "right", indexUpdater: (prev: number) => number) => {
+    const handleSlideChange = (direction: number) => {
       if (isAnimating) return;
-
+      
       setIsAnimating(true);
-      setTransitionDirection(direction);
-      setCurrentIndex(indexUpdater);
+      setCurrentIndex((prev) => {
+        const newIndex = prev + direction;
+        if (newIndex < 0) return totalSlides - 1;
+        if (newIndex >= totalSlides) return 0;
+        return newIndex;
+      });
 
+      // Reseta a animação após a transição
       setTimeout(() => {
         setIsAnimating(false);
       }, 500);
     };
 
-    const prevSlide = () => {
-      handleSlideChange("left", (prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
+    const prevSlide = () => handleSlideChange(-1);
+    const nextSlide = () => handleSlideChange(1);
+
+    const handleTouchStart = (e) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
     };
 
-    const nextSlide = () => {
-      handleSlideChange("right", (prev) => (prev >= totalSlides - 1 ? 0 : prev + 1));
-    };
-
-    const handleTouchStart = (e: React.TouchEvent) => {
-      startXRef.current = e.touches[0].clientX;
-      isDraggingRef.current = true;
-    };
-
-    const handleTouchMove = (e: React.TouchEvent) => {
-      if (!isDraggingRef.current || isAnimating) return;
-
-      const deltaX = e.touches[0].clientX - startXRef.current;
+    const handleTouchMove = (e) => {
+      if (!isDragging || isAnimating) return;
+      const deltaX = e.touches[0].clientX - startX;
       if (deltaX > 50) {
         prevSlide();
-        isDraggingRef.current = false;
+        isDragging = false;
       } else if (deltaX < -50) {
         nextSlide();
-        isDraggingRef.current = false;
+        isDragging = false;
       }
     };
 
     const handleTouchEnd = () => {
-      isDraggingRef.current = false;
+      isDragging = false;
     };
 
     const getVisibleSlides = () => {
-      const prevIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-      const nextIndex = (currentIndex + 1) % totalSlides;
-    
-      return (
-        <div className="relative w-full flex justify-center items-center h-[500px] overflow-visible">
-          <div className="relative flex justify-center items-center w-full max-w-6xl mx-auto h-full">
-            
-            {/* Slide anterior - posicionado à esquerda */}
-            <div
-              key={`prev-${prevIndex}`}
-              className={`absolute w-[40%] px-3 opacity-50 scale-90 transition-all duration-500 ease-in-out z-10 ${
-                isAnimating
-                  ? transitionDirection === "right"
-                    ? "animate-fade-in-left"
-                    : "animate-fade-out-right"
-                  : ""
-              }`}
-              style={{ left: '5%', transform: 'translateX(-50%) scale(0.95)' }}
-            >
-              {childrenArray[prevIndex]}
-            </div>
-    
-            {/* Slide atual - centralizado */}
-            <div
-              key={`current-${currentIndex}`}
-              className={`relative w-[40%] mx-auto px-3 z-20 transition-all duration-500 ease-in-out ${
-                isAnimating
-                  ? transitionDirection === "right"
-                    ? "animate-slide-left"
-                    : "animate-slide-right"
-                  : ""
-              }`}
-              style={{ transform: 'scale(1)' }}
-            >
-              {childrenArray[currentIndex]}
-            </div>
-    
-            {/* Próximo slide - posicionado à direita */}
-            <div
-              key={`next-${nextIndex}`}
-              className={`absolute w-[30%] px-3 opacity-50 scale-90 transition-all duration-500 ease-in-out z-10 ${
-                isAnimating
-                  ? transitionDirection === "right"
-                    ? "animate-fade-out-right"
-                    : "animate-fade-in-left"
-                  : ""
-              }`}
-              style={{ right: '5%', transform: 'translateX(50%) scale(0.95)' }}
-            >
-              {childrenArray[nextIndex]}
-            </div>
-          </div>
+      const slides = [];
+      const prev = (currentIndex - 1 + totalSlides) % totalSlides;
+      const next = (currentIndex + 1) % totalSlides;
+
+      slides.push(
+        <div 
+          key="prev" 
+          className={`w-full md:w-1/3 flex-shrink-0 px-3 transition-all duration-500 ease-in-out ${
+            isAnimating ? 'opacity-30 scale-90' : 'opacity-50 scale-90'
+          }`}
+        >
+          {childrenArray[prev]}
         </div>
       );
+      
+      slides.push(
+        <div 
+          key="current" 
+          className={`w-full md:w-1/3 flex-shrink-0 px-3 z-10 transition-all duration-500 ease-in-out ${
+            isAnimating ? 'opacity-70 scale-95' : 'opacity-100 scale-100'
+          }`}
+        >
+          {childrenArray[currentIndex]}
+        </div>
+      );
+      
+      slides.push(
+        <div 
+          key="next" 
+          className={`w-full md:w-1/3 flex-shrink-0 px-3 transition-all duration-500 ease-in-out ${
+            isAnimating ? 'opacity-30 scale-90' : 'opacity-50 scale-90'
+          }`}
+        >
+          {childrenArray[next]}
+        </div>
+      );
+
+      return slides;
     };
 
     return (
@@ -147,7 +125,13 @@ export default function Carousel({ type, children }: CarouselProps) {
         >
           <div className="flex justify-center items-center">
             {isMobile ? (
-              <div className="w-full px-4 animate-fade-in">{childrenArray[currentIndex]}</div>
+              <div 
+                className={`w-full px-4 transition-opacity duration-500 ${
+                  isAnimating ? 'opacity-70' : 'opacity-100'
+                }`}
+              >
+                {childrenArray[currentIndex]}
+              </div>
             ) : (
               getVisibleSlides()
             )}
@@ -156,7 +140,7 @@ export default function Carousel({ type, children }: CarouselProps) {
           <button
             onClick={prevSlide}
             disabled={isAnimating}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg text-sm invisible md:visible hover:scale-110 transition-transform disabled:opacity-50"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg text-sm invisible md:visible hover:scale-110 transition-transform"
             aria-label="Previous slide"
           >
             <ChevronLeft size={24} />
@@ -164,7 +148,7 @@ export default function Carousel({ type, children }: CarouselProps) {
           <button
             onClick={nextSlide}
             disabled={isAnimating}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg text-sm invisible md:visible hover:scale-110 transition-transform disabled:opacity-50"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg text-sm invisible md:visible hover:scale-110 transition-transform"
             aria-label="Next slide"
           >
             <ChevronRight size={24} />
@@ -176,83 +160,21 @@ export default function Carousel({ type, children }: CarouselProps) {
             <button
               key={index}
               onClick={() => {
-                if (!isAnimating) {
-                  handleSlideChange(index > currentIndex ? "right" : "left", () => index);
+                if (!isAnimating && index !== currentIndex) {
+                  handleSlideChange(index - currentIndex);
                 }
               }}
-              disabled={isAnimating}
-              className={`h-1 rounded-full transition-all duration-300 ${index === currentIndex ? "w-12 md:w-12 lg:w-24 bg-vermelho" : "w-12 md:w-12 lg:w-24 bg-white"
-                }`}
+              className={`h-1 rounded-full transition-all duration-300 ${
+                index === currentIndex 
+                  ? "w-12 md:w-12 lg:w-24 bg-vermelho" 
+                  : "w-12 md:w-12 lg:w-24 bg-white hover:bg-gray-300"
+              }`}
             />
           ))}
         </div>
-
-        <style jsx global>{`
-@keyframes fadeInLeft {
-  from { opacity: 0; transform: translateX(-70%) scale(0.95); }
-  to { opacity: 0.5; transform: translateX(-50%) scale(0.95); }
-}
-@keyframes fadeOutLeft {
-  from { opacity: 0.5; transform: translateX(-50%) scale(0.95); }
-  to { opacity: 0; transform: translateX(-70%) scale(0.9); }
-}
-@keyframes fadeInRight {
-  from { opacity: 0; transform: translateX(70%) scale(0.95); }
-  to { opacity: 0.5; transform: translateX(50%) scale(0.95); }
-}
-@keyframes fadeOutRight {
-  from { opacity: 0.5; transform: translateX(50%) scale(0.95); }
-  to { opacity: 0; transform: translateX(70%) scale(0.9); }
-}
-@keyframes slideLeft {
-  from { transform: translateX(30px) scale(1); }
-  to { transform: translateX(0) scale(1); }
-}
-@keyframes slideRight {
-  from { transform: translateX(-30px) scale(1); }
-  to { transform: translateX(0) scale(1); }
-}
-          @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-          }
-          .animate-fade-in-left {
-            animation: fadeInLeft 0.5s ease-in-out forwards;
-          }
-          .animate-fade-out-left {
-            animation: fadeOutLeft 0.5s ease-in-out forwards;
-          }
-          .animate-fade-in-right {
-            animation: fadeInRight 0.5s ease-in-out forwards;
-          }
-          .animate-fade-out-right {
-            animation: fadeOutRight 0.5s ease-in-out forwards;
-          }
-          .animate-slide-left {
-            animation: slideLeft 0.5s ease-in-out forwards;
-          }
-          .animate-slide-right {
-            animation: slideRight 0.5s ease-in-out forwards;
-          }
-          .animate-fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-          }
-          .carousel-slide {
-            opacity: 0.5;
-            transform: scale(0.9);
-            transition: all 0.5s ease-in-out;
-          }
-          .carousel-slide.current {
-            opacity: 1;
-            transform: scale(1);
-          }
-        `}</style>
       </div>
     );
   }
-
-
-
 
 
 
