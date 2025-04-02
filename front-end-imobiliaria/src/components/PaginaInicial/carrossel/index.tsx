@@ -15,6 +15,7 @@ export default function Carousel({ type, children }: CarouselProps) {
     const childrenArray = Children.toArray(children);
     const totalSlides = childrenArray.length;
     const carouselRef = useRef(null);
+    const intervalRef = useRef<NodeJS.Timeout>();
     let startX = 0;
     let isDragging = false;
 
@@ -26,11 +27,25 @@ export default function Carousel({ type, children }: CarouselProps) {
     }, []);
 
     useEffect(() => {
-      const interval = setInterval(() => {
-        handleSlideChange(1); // Avança para o próximo slide
-      }, 10000);
-      return () => clearInterval(interval);
-    }, [currentIndex, totalSlides]);
+      // Limpa o intervalo anterior se existir
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+      
+      // Configura um novo intervalo
+      intervalRef.current = setInterval(() => {
+        if (!isAnimating && !isDragging) {
+          handleSlideChange(1); // Avança para o próximo slide
+        }
+      }, 5000); // 5 segundos
+      
+      // Limpa o intervalo ao desmontar
+      return () => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+      };
+    }, [currentIndex, totalSlides, isAnimating, isDragging]);
 
     const handleSlideChange = (direction: number) => {
       if (isAnimating) return;
@@ -55,6 +70,10 @@ export default function Carousel({ type, children }: CarouselProps) {
     const handleTouchStart = (e) => {
       startX = e.touches[0].clientX;
       isDragging = true;
+      // Pausa o intervalo durante o arrasto
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
     };
 
     const handleTouchMove = (e) => {
@@ -71,6 +90,12 @@ export default function Carousel({ type, children }: CarouselProps) {
 
     const handleTouchEnd = () => {
       isDragging = false;
+      // Reinicia o intervalo após o arrasto
+      intervalRef.current = setInterval(() => {
+        if (!isAnimating) {
+          handleSlideChange(1);
+        }
+      }, 5000);
     };
 
     const getVisibleSlides = () => {
@@ -174,10 +199,6 @@ export default function Carousel({ type, children }: CarouselProps) {
         </div>
       </div>
     );
-  }
-
-
-
 
 
 
