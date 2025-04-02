@@ -29,7 +29,7 @@ export default function AtualizarComponents() {
                     {/* Campo de E-mail e Botão */}
                     <div className="flex flex-row items-center gap-3 mt-4 md:mt-0 w-full md:w-auto border border-gray-300 rounded-full">
                         <input
-                            className="rounded-full p-2 sm:p-3 w-full md:w-48 xl:w-[280px] bg-white text-black outline-none focus:ring-2 focus:ring-gray-400 text-[10px] sm:text-[12px] md:text-[14px] lg:text-lg font-light"
+                            className="rounded-full p-2 sm:p-3 w-full md:w-48 xl:w-[280px] bg-white text-black  text-[10px] sm:text-[12px] md:text-[14px] lg:text-lg font-light outline-none "
                             type="email"
                             placeholder="Escreva seu E-mail"
                         />

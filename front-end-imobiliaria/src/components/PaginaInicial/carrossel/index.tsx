@@ -8,8 +8,8 @@ interface CarouselProps {
 }
 
 export default function Carousel({ type, children }: CarouselProps) {
-  
-  
+
+
   if (type === "ajusteTriplo") {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -33,14 +33,14 @@ export default function Carousel({ type, children }: CarouselProps) {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
-      
+
       // Configura um novo intervalo
       intervalRef.current = setInterval(() => {
         if (!isAnimating && !isDragging) {
           handleSlideChange(1); // Avança para o próximo slide
         }
       }, 5000); // 5 segundos
-      
+
       // Limpa o intervalo ao desmontar
       return () => {
         if (intervalRef.current) {
@@ -51,7 +51,7 @@ export default function Carousel({ type, children }: CarouselProps) {
 
     const handleSlideChange = (direction: number) => {
       if (isAnimating) return;
-      
+
       setIsAnimating(true);
       setCurrentIndex((prev) => {
         const newIndex = prev + direction;
@@ -106,33 +106,30 @@ export default function Carousel({ type, children }: CarouselProps) {
       const next = (currentIndex + 1) % totalSlides;
 
       slides.push(
-        <div 
-          key="prev" 
-          className={`w-full md:w-1/3 flex-shrink-0 px-3 transition-all duration-500 ease-in-out ${
-            isAnimating ? 'opacity-30 scale-90' : 'opacity-50 scale-90'
-          }`}
+        <div
+          key="prev"
+          className={`w-full md:w-1/3 flex-shrink-0 px-3 transition-all duration-500 ease-in-out ${isAnimating ? 'opacity-30 scale-90' : 'opacity-50 scale-90'
+            }`}
         >
           {childrenArray[prev]}
         </div>
       );
-      
+
       slides.push(
-        <div 
-          key="current" 
-          className={`w-full md:w-1/3 flex-shrink-0 px-3 z-10 transition-all duration-500 ease-in-out ${
-            isAnimating ? 'opacity-70 scale-95' : 'opacity-100 scale-100'
-          }`}
+        <div
+          key="current"
+          className={`w-full md:w-1/3 flex-shrink-0 px-3 z-10 transition-all duration-500 ease-in-out ${isAnimating ? 'opacity-70 scale-95' : 'opacity-100 scale-100'
+            }`}
         >
           {childrenArray[currentIndex]}
         </div>
       );
-      
+
       slides.push(
-        <div 
-          key="next" 
-          className={`w-full md:w-1/3 flex-shrink-0 px-3 transition-all duration-500 ease-in-out ${
-            isAnimating ? 'opacity-30 scale-90' : 'opacity-50 scale-90'
-          }`}
+        <div
+          key="next"
+          className={`w-full md:w-1/3 flex-shrink-0 px-3 transition-all duration-500 ease-in-out ${isAnimating ? 'opacity-30 scale-90' : 'opacity-50 scale-90'
+            }`}
         >
           {childrenArray[next]}
         </div>
@@ -152,10 +149,9 @@ export default function Carousel({ type, children }: CarouselProps) {
         >
           <div className="flex justify-center items-center">
             {isMobile ? (
-              <div 
-                className={`w-full px-4 transition-opacity duration-500 ${
-                  isAnimating ? 'opacity-70' : 'opacity-100'
-                }`}
+              <div
+                className={`w-full px-4 transition-opacity duration-500 ${isAnimating ? 'opacity-70' : 'opacity-100'
+                  }`}
               >
                 {childrenArray[currentIndex]}
               </div>
@@ -167,7 +163,7 @@ export default function Carousel({ type, children }: CarouselProps) {
           <button
             onClick={prevSlide}
             disabled={isAnimating}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg text-sm invisible lg:visible hover:scale-110 transition-transform"
+            className="absolute left-2 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg text-sm invisible lg:visible hover:scale-110 transition-transform"
             aria-label="Previous slide"
           >
             <ChevronLeft size={24} />
@@ -175,7 +171,7 @@ export default function Carousel({ type, children }: CarouselProps) {
           <button
             onClick={nextSlide}
             disabled={isAnimating}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg text-sm invisible lg:visible hover:scale-110 transition-transform"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg text-sm invisible lg:visible hover:scale-110 transition-transform"
             aria-label="Next slide"
           >
             <ChevronRight size={24} />
@@ -191,17 +187,16 @@ export default function Carousel({ type, children }: CarouselProps) {
                   handleSlideChange(index - currentIndex);
                 }
               }}
-              className={`h-1 rounded-full transition-all duration-300 ${
-                index === currentIndex 
-                  ? "w-12 md:w-12 lg:w-24 bg-vermelho" 
+              className={`h-1 rounded-full transition-all duration-300 ${index === currentIndex
+                  ? "w-12 md:w-12 lg:w-24 bg-vermelho"
                   : "w-12 md:w-12 lg:w-24 bg-white hover:bg-gray-300"
-              }`}
+                }`}
             />
           ))}
         </div>
       </div>
     );
-    }
+  }
 
 
   if (type = "ajusteNormal") {
@@ -302,4 +297,4 @@ export default function Carousel({ type, children }: CarouselProps) {
 
     );
   }
-  }
+}
