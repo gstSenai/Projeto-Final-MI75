@@ -9,7 +9,7 @@ import { Botao } from "@/components/botao"
 import { FormularioInput } from "@/components/paginaCadastroUsuario/adicionandoUsuario/formulario/formularioInput"
 import { useForm } from "react-hook-form"
 import { FiltroImovel } from "@/components/filtroImovel"
-import { FormularioImovelModal } from "@/components/modal/FormularioImovelModal"
+import { Formulario } from "../formulario"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -365,14 +365,11 @@ export default function TabelaImovel() {
           </div>
         </div>
       </div>
-
+      
+     <Formulario isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onComplete={refreshData} />
       {remover && <RemoveImovel selectedImoveis={selectedImoveis} onComplete={refreshData} />}
       {editar && <EditarImovel selectedImoveis={selectedImoveis} onComplete={refreshData} />}
-      <FormularioImovelModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onComplete={refreshData}
-      />
+
     </>
   )
 }
