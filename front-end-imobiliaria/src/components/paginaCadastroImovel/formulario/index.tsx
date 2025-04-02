@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { EnderecoSection } from "../formulario/endereco-section"
 import { DadosImovelSection } from "./dados-imovel-section"
@@ -8,6 +8,7 @@ import { Botao } from "@/components/botao"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { motion, AnimatePresence } from "framer-motion"
+import { TipoImovelTransacao } from "./tiposTransacao"
 
 const ImovelProps = z.object({
     id: z.number().optional(),
@@ -64,9 +65,11 @@ type FormData = z.infer<typeof FormSchema>
 
 interface InputDadosImovelProps {
     onComplete?: () => void;
+    onClose: () => void;
+    isOpen: boolean;
 }
 
-export function Formulario({ onComplete }: InputDadosImovelProps) {
+export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProps) {
     const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormData>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -89,7 +92,7 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
             }
         },
     })
-    const [showForm] = useState(true)
+    const [currentStep, setCurrentStep] = useState(1);
     const [showModal, setShowModal] = useState(false)
     const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -101,9 +104,9 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
     };
 
     const uploadImages = async (imovelId: number) => {
-        try {   
+        try {
             console.log(`Iniciando upload de ${images.length} imagens para o imóvel ${imovelId}`);
-            
+
             const formData = new FormData();
             images.forEach((imagem, index) => {
                 formData.append('arquivos', imagem);
@@ -196,19 +199,21 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         do {
             codigo = Math.floor(Math.random() * 50000) + 1;
         } while (codigosGerados.has(codigo));
-        
+
         codigosGerados.add(codigo);
         return codigo;
     }
 
-    const onSubmitImovel = async (data: { imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas; 
-        endereco: EnderecoImovelProps }) => {
+    const onSubmitImovel = async (data: {
+        imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas;
+        endereco: EnderecoImovelProps
+    }) => {
         if (isSubmitting) return;
 
         try {
             setIsSubmitting(true);
 
-            const { imovel, endereco, imovelCaracteristicas} = data;
+            const { imovel, endereco, imovelCaracteristicas } = data;
 
             const responseCaracImovel = await addCaracteristicasImovel(imovelCaracteristicas)
             const responseEndereco = await addEndereco(endereco);
@@ -270,30 +275,133 @@ export function Formulario({ onComplete }: InputDadosImovelProps) {
         }
     }
 
-    useEffect(() => {
-        console.log("Errors", errors)
-        console.log("Images", images)
-    }, [errors])
+    const handleNext = () => {
+        if (currentStep < 3) {
+            setCurrentStep(currentStep + 1);
+        }
+    };
+
+    const handleBack = () => {
+        if (currentStep > 1) {
+            setCurrentStep(currentStep - 1);
+        }
+    };
+
+    const handleCancel = () => {
+        setCurrentStep(1);
+        onClose();
+    };
+
+    if (!isOpen) return null;
+
     return (
         <>
-            {showForm && (
-                <>
-                    <EnderecoSection register={register} errors={errors} setValue={setValue} />
-
-                    <DadosImovelSection 
-                        register={register} 
-                        errors={errors} 
-                        onImagesChange={handleImagesChange}
-                    />
-
-                    <div className="flex items-center gap-16 mt-10 mb-20">
-                        <div className="flex max-sm:gap-12 max-lg:gap-36 gap-[40rem] w-full">
-                            <Botao className="max-lg:text-base bg-vermelho h-10" onClick={() => console.log()} texto="Cancelar" />
-                            <Botao className="max-lg:text-base bg-vermelho h-10" onClick={handleSubmit(onSubmitImovel)} texto="Salvar cadastro" />
-                        </div>
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-semibold text-vermelho">
+                            {currentStep === 1 ? "Endereço do Imóvel" :
+                                currentStep === 2 ? "Tipo de Transação" :
+                                    "Dados do Imóvel"}
+                        </h2>
+                        <button
+                            className="bg-[#DFDAD0] px-3 py-1 rounded-full text-vermelho hover:bg-vermelho hover:text-[#DFDAD0] transition-colors"
+                            onClick={handleCancel}
+                        >
+                            X
+                        </button>
                     </div>
-                </>
-            )}
+
+                    <form onSubmit={handleSubmit(onSubmitImovel)}>
+                        <AnimatePresence mode="wait">
+                            {currentStep === 1 && (
+                                <motion.div
+                                    key="endereco"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 20 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="space-y-4"
+                                >
+
+                                    <EnderecoSection register={register} errors={errors} setValue={setValue} />
+
+                                    <div className="flex justify-end gap-4 mt-4">
+                                        <Botao
+                                            className="bg-vermelho h-10"
+                                            texto="Cancelar"
+                                            onClick={handleCancel}
+                                        />
+                                        <Botao
+                                            className="bg-vermelho h-10"
+                                            texto="Próximo"
+                                            onClick={handleNext}
+                                        />
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {currentStep === 2 && (
+                                <motion.div
+                                    key="transacao"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 20 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="space-y-4"
+                                >
+                                    <TipoImovelTransacao
+                                        register={register}
+                                        errors={errors}
+                                    />
+                                    <div className="flex justify-end gap-4 mt-4">
+                                        <Botao
+                                            className="bg-vermelho h-10"
+                                            texto="Voltar"
+                                            onClick={handleBack}
+                                        />
+                                        <Botao
+                                            className="bg-vermelho h-10"
+                                            texto="Próximo"
+                                            onClick={handleNext}
+                                        />
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {currentStep === 3 && (
+                                <motion.div
+                                    key="dados"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 20 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="space-y-4"
+                                >
+                                    <DadosImovelSection
+                                        register={register}
+                                        errors={errors}
+                                        onImagesChange={handleImagesChange}
+                                    />
+                                    <div className="flex justify-end gap-4 mt-4">
+                                        <Botao
+                                            className="bg-vermelho h-10"
+                                            texto="Voltar"
+                                            onClick={handleBack}
+                                        />
+                                        <Botao
+                                            className="bg-vermelho h-10"
+                                            texto="Salvar"
+                                            type="submit"
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </form>
+                </div>
+            </div>
 
             <AnimatePresence>
                 {showModal && lastAddedImovel && (

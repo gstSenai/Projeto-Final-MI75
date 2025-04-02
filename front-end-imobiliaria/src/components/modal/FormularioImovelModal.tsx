@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Botao } from "@/components/botao"
 import { EnderecoSection } from "@/components/paginaCadastroImovel/formulario/endereco-section"
 import { DadosImovelSection } from "@/components/paginaCadastroImovel/formulario/dados-imovel-section"
-import { tipo_transacao } from "@/components/paginaCadastroImovel/formulario/tiposTransacao"
+import { TipoImovelTransacao } from "@/components/paginaCadastroImovel/formulario/tiposTransacao"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -59,6 +59,9 @@ const FormSchema = z.object({
     endereco: EnderecoImovelProps
 })
 
+type ImovelProps = z.infer<typeof ImovelProps>
+type ImovelCaracteristicas = z.infer<typeof ImovelCaracteristicas>
+type EnderecoImovelProps = z.infer<typeof EnderecoImovelProps>
 type FormData = z.infer<typeof FormSchema>
 
 interface FormularioImovelModalProps {
@@ -69,7 +72,6 @@ interface FormularioImovelModalProps {
 
 export function FormularioImovelModal({ isOpen, onClose, onComplete }: FormularioImovelModalProps) {
     const [currentStep, setCurrentStep] = useState(1);
-    const [formData, setFormData] = useState<Partial<FormData>>({});
     const [images, setImages] = useState<File[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const codigosGerados = new Set<number>();
@@ -111,7 +113,6 @@ export function FormularioImovelModal({ isOpen, onClose, onComplete }: Formulari
 
     const handleCancel = () => {
         setCurrentStep(1);
-        setFormData({});
         onClose();
     };
 
@@ -124,111 +125,104 @@ export function FormularioImovelModal({ isOpen, onClose, onComplete }: Formulari
         do {
             codigo = Math.floor(Math.random() * 50000) + 1;
         } while (codigosGerados.has(codigo));
-        
+
         codigosGerados.add(codigo);
         return codigo;
     }
 
-    const addEndereco = async (data: typeof EnderecoImovelProps._type) => {
+    const addEndereco = async (data: EnderecoImovelProps) => {
         try {
+            console.log("Sending address data:", data);
+
             if (!data.cep || !data.rua || !data.numero || !data.bairro || !data.cidade || !data.uf) {
                 throw new Error('Todos os campos obrigatórios devem ser preenchidos');
             }
 
-            console.log("Enviando dados do endereço:", data);
             const response = await request("POST", "http://localhost:9090/endereco/create", data);
 
-            if (!response) {
-                throw new Error("Resposta vazia do servidor");
-            }
-
             if (response && response.id) {
-                console.log("Endereço criado com sucesso:", response);
                 return response;
             }
 
+            console.error("Resposta do servidor:", response);
             throw new Error(`Falha ao criar o endereço: ${response.status}`);
         } catch (error) {
-            console.error("Erro detalhado ao adicionar endereço:", error);
+            console.error("Erro ao adicionar endereço:", error);
             throw error;
         }
     };
 
-    const addImovel = async (data: typeof ImovelProps._type) => {
+    const addImovel = async (data: ImovelProps) => {
         try {
-            console.log("Enviando dados do imóvel:", data);
-            const response = await request("POST", "http://localhost:9090/imovel/create", data);
-            
-            if (!response) {
-                throw new Error("Resposta vazia do servidor");
-            }
 
-            console.log("Resposta do servidor:", response);
-            return response;
+            console.log("Sending address data:", data);
+
+            const response = await request("POST", "http://localhost:9090/imovel/create", data)
+            return response
         } catch (error) {
-            console.error("Erro detalhado ao adicionar imóvel:", error);
-            throw error;
+            console.error("Erro ao adicionar imóvel:", error)
+            throw error
         }
     }
 
-    const addCaracteristicasImovel = async (data: typeof ImovelCaracteristicas._type) => {
+    const addCaracteristicasImovel = async (data: ImovelCaracteristicas) => {
         try {
-            console.log("Enviando características do imóvel:", data);
-            const response = await request("POST", "http://localhost:9090/caracteristicaImovel/create", data);
-            
-            if (!response) {
-                throw new Error("Resposta vazia do servidor");
-            }
+            console.log("Carac Imovel", data)
 
-            console.log("Resposta do servidor:", response);
-            return response;
+            const response = await request("POST", "http://localhost:9090/caracteristicaImovel/create", data)
+
+            return response
         } catch (error) {
-            console.error("Erro detalhado ao adicionar características do imóvel:", error);
-            throw error;
+            console.error("Erro ao adicionar imóvel:", error)
+            throw error
         }
     }
 
     const uploadImages = async (imovelId: number) => {
-        if (images.length === 0) return;
-
-        const formData = new FormData();
-        images.forEach((image, index) => {
-            formData.append(`images`, image);
-        });
-
         try {
-            console.log("Enviando imagens para o imóvel:", imovelId);
-            const response = await request("POST", `http://localhost:9090/imovel/upload/${imovelId}`, formData, {
-                'Content-Type': 'multipart/form-data'
+            console.log(`Iniciando upload de ${images.length} imagens para o imóvel ${imovelId}`);
+
+            const formData = new FormData();
+            images.forEach((imagem, index) => {
+                formData.append('arquivos', imagem);
+                console.log(`Adicionando imagem ${index + 1}: ${imagem.name}`);
             });
-            
-            if (!response) {
-                throw new Error("Resposta vazia do servidor");
+
+            const response = await fetch(`http://localhost:9090/imagens/imovel/${imovelId}`, {
+                method: "POST",
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Erro na resposta do upload:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    errorText
+                });
+                throw new Error(`Falha no upload das imagens: ${response.status} ${response.statusText}`);
             }
 
-            console.log("Upload de imagens concluído:", response);
+            const data = await response.json();
+            console.log('Upload realizado com sucesso:', data);
+            return data;
         } catch (error) {
             console.error("Erro detalhado ao fazer upload das imagens:", error);
             throw error;
         }
     };
 
-    const onSubmit = async (data: FormData) => {
+    const onSubmitImovel = async (data: { imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas; 
+        endereco: EnderecoImovelProps }) => {
         if (isSubmitting) return;
 
         try {
             setIsSubmitting(true);
-            console.log("Iniciando processo de salvamento...");
 
             const { imovel, endereco, imovelCaracteristicas } = data;
 
-            console.log("Dados do formulário:", { imovel, endereco, imovelCaracteristicas });
-
-            const responseCaracImovel = await addCaracteristicasImovel(imovelCaracteristicas);
-            console.log("Características do imóvel salvas:", responseCaracImovel);
-
+            const responseCaracImovel = await addCaracteristicasImovel(imovelCaracteristicas)
             const responseEndereco = await addEndereco(endereco);
-            console.log("Endereço salvo:", responseEndereco);
 
             const immobileData = {
                 id: imovel.id,
@@ -250,23 +244,24 @@ export function FormularioImovelModal({ isOpen, onClose, onComplete }: Formulari
                 id_caracteristicasImovel: responseCaracImovel,
             };
 
-            console.log("Dados do imóvel a serem enviados:", immobileData);
             const response = await addImovel(immobileData);
 
             if (response && response.id) {
                 if (images.length > 0) {
                     await uploadImages(response.id);
+                } else {
+                    console.log("Nenhuma imagem selecionada para upload");
                 }
 
                 console.log("Imóvel criado com sucesso:", response);
-                onComplete();
-                onClose();
             } else {
                 throw new Error("Erro ao criar imóvel, id não retornado.");
             }
 
+            if (onComplete) onComplete();
+
         } catch (error) {
-            console.error("Erro detalhado ao salvar:", error);
+            console.error("Erro ao salvar:", error);
             alert(`Erro ao salvar: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
         } finally {
             setIsSubmitting(false);
@@ -280,9 +275,9 @@ export function FormularioImovelModal({ isOpen, onClose, onComplete }: Formulari
             <div className="bg-white rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-semibold text-vermelho">
-                        {currentStep === 1 ? "Endereço do Imóvel" : 
-                         currentStep === 2 ? "Tipo de Transação" : 
-                         "Dados do Imóvel"}
+                        {currentStep === 1 ? "Endereço do Imóvel" :
+                            currentStep === 2 ? "Tipo de Transação" :
+                                "Dados do Imóvel"}
                     </h2>
                     <button
                         className="bg-[#DFDAD0] px-3 py-1 rounded-full text-vermelho hover:bg-vermelho hover:text-[#DFDAD0] transition-colors"
@@ -292,7 +287,7 @@ export function FormularioImovelModal({ isOpen, onClose, onComplete }: Formulari
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmitImovel)}>
                     <AnimatePresence mode="wait">
                         {currentStep === 1 && (
                             <motion.div
@@ -303,7 +298,9 @@ export function FormularioImovelModal({ isOpen, onClose, onComplete }: Formulari
                                 transition={{ duration: 0.2 }}
                                 className="space-y-4"
                             >
+
                                 <EnderecoSection register={register} errors={errors} setValue={setValue} />
+
                                 <div className="flex justify-end gap-4 mt-4">
                                     <Botao
                                         className="bg-vermelho h-10"
@@ -328,7 +325,10 @@ export function FormularioImovelModal({ isOpen, onClose, onComplete }: Formulari
                                 transition={{ duration: 0.2 }}
                                 className="space-y-4"
                             >
-                                {tipo_transacao({ register, errors })}
+                                <TipoImovelTransacao 
+                                register={register} 
+                                errors={errors} 
+                                />
                                 <div className="flex justify-end gap-4 mt-4">
                                     <Botao
                                         className="bg-vermelho h-10"

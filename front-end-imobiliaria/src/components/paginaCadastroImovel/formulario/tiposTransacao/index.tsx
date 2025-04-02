@@ -1,19 +1,15 @@
 "use client"
 import { UseFormRegister } from "react-hook-form"
 import { FormularioInput } from "../formularioInput"
-import { Descricao } from "../descricao"
-import { FormularioImagem } from "../formularioImagem"
 
-interface tipo_transacaoProps {
+interface TipoImovelTransacaoProps {
     register: UseFormRegister<any>
     errors: any
-    onImagesChange?: (files: File[]) => void;
 }
 
-export function tipo_transacao({ register, errors, onImagesChange }: tipo_transacaoProps) {
+export function TipoImovelTransacao({ register, errors }: TipoImovelTransacaoProps) {
     return (
-        <div className="flex flex-col">
-           
+        <div className="flex flex-col">           
 
             <div className="flex flex-col lg:gap-6">
                 <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
