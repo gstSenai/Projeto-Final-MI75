@@ -40,7 +40,7 @@ export default function PaginaInicial() {
                         </div>
                     </div>
                 </main>
-                <div className="relative flex justify-center xl:-ml-[700px] mt-[5rem] lg:-mt-[15rem] z-10">
+                <div className="relative flex justify-center xl:-ml-[700px] mt-[5rem] lg:-mt-[10rem] z-10">
                     <PesquisaPaginaInicial />
                 </div>
                 <section className='px-4 sm:px-8 md:px-10 lg:px-14 xl:px-16'>
