@@ -14,6 +14,22 @@ const inter = Inter({
 export function Header() {
     const [hamburguerMobile, setHambuguerMobile] = useState(false)
     const [showProfileModal, setShowProfileModal] = useState(false)
+    const [showLanguageModal, setShowLanguageModal] = useState(false)
+    const [currentLanguage, setCurrentLanguage] = useState('Português')
+    const [currentImageBrasil, setCurrentImageBrasil] = useState('/imagensHeader/Brasil.png')
+    const [currentImageEUA, setCurrentImageEUA] = useState('/imagensHeader/eua.png')
+    const [currentImageEspanhol, setCurrentImageEspanhol] = useState('/imagensHeader/Espanha.png')
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+    const handleLogin = () => {
+        setIsLoggedIn(true)
+        setShowProfileModal(false)
+    }
+
+    const handleLogout = () => {
+        setIsLoggedIn(false)
+        setShowProfileModal(false)
+    }
 
     return (
         <>
@@ -27,9 +43,9 @@ export function Header() {
                         <div>
                             <nav>
                                 <ul className="flex flex-row max-lg:text-base text-xl whitespace-nowrap md:gap-4 lg:gap-6 text-[#303030] max-md:hidden">
-                                    <li><a href="/paginaInicial">Início</a></li>
-                                    <li><a href="#">Propriedades</a></li>
-                                    <li><a href="#">Corretores</a></li>
+                                    <li><a href="/PaginaInicial">Início</a></li>
+                                    <li><a href="/">Propriedades</a></li>
+                                    <li><a href="/paginaCorretores">Corretores</a></li>
                                     <li><a href="/sobreNos">Sobre nós</a></li>
                                 </ul>
                             </nav>
@@ -42,10 +58,63 @@ export function Header() {
                                 <Image src="/imagensHeader/Botão tema site.png" alt="Tema" width={24} height={24} />
                             </div>
                         </div>
-                        <div className="flex flex-row items-center md:gap-1 lg:gap-2 md:px-4 lg:px-8 max-md:hidden">
-                            <Image src="/imagensHeader/Brasil.png" alt="Idioma" width={24} height={24} />
-                            <p className="text-xl max-lg:text-base">Português</p>
-                            <Image src="/imagensHeader/seta-para-baixo 2.png" alt="Abrir opções" width={24} height={24} />
+                        <div className="flex flex-row items-center md:gap-1 lg:gap-2 md:px-4 lg:px-8 max-md:hidden relative">
+                            <Image 
+                                src={currentLanguage === 'Português' ? currentImageBrasil : 
+                                     currentLanguage === 'English' ? currentImageEUA : 
+                                     currentImageEspanhol} 
+                                alt="Idioma" 
+                                width={24} 
+                                height={24} 
+                            />
+                            <p className="text-xl max-lg:text-base">{currentLanguage}</p>
+                            <Image 
+                                onClick={() => setShowLanguageModal(!showLanguageModal)}
+                                src="/imagensHeader/seta-para-baixo 2.png" 
+                                alt="Abrir opções" 
+                                width={24} 
+                                height={24}
+                                className="cursor-pointer"
+                            />
+                            {showLanguageModal && (
+                                <div className="absolute top-[calc(100%+0.5rem)] w-40 bg-[#702632] rounded-lg shadow-lg py-1 z-50">
+                                    <div 
+                                        onClick={() => {
+                                            setCurrentLanguage('Português');
+                                            setCurrentImageBrasil('/imagensHeader/Brasil.png');
+                                            setShowLanguageModal(false);
+                                        }}
+                                        className="flex items-center gap-2 px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center cursor-pointer"
+                                    >
+                                        <Image src="/imagensHeader/Brasil.png" alt="Português" width={20} height={20} />
+                                        <span>Português</span>
+                                    </div>
+                                    <div className="w-full h-[1px] bg-white opacity-50"></div>
+                                    <div 
+                                        onClick={() => {
+                                            setCurrentLanguage('English');
+                                            setCurrentImageEUA('/imagensHeader/eua.png');
+                                            setShowLanguageModal(false);
+                                        }}
+                                        className="flex items-center gap-2 px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center cursor-pointer"
+                                    >
+                                        <Image src="/imagensHeader/eua.png" alt="English" width={20} height={20} />
+                                        <span>English</span>
+                                    </div>
+                                    <div className="w-full h-[1px] bg-white opacity-50"></div>
+                                    <div 
+                                        onClick={() => {
+                                            setCurrentLanguage('Español');
+                                            setCurrentImageEspanhol('/imagensHeader/Espanha.png');
+                                            setShowLanguageModal(false);
+                                        }}
+                                        className="flex items-center gap-2 px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center cursor-pointer"
+                                    >
+                                        <Image src="/imagensHeader/Espanha.png" alt="Español" width={20} height={20} />
+                                        <span>Español</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                         <div className="flex flex-row items-center max-md:hidden relative">
                             <Image 
@@ -57,19 +126,40 @@ export function Header() {
                                 className="w-12 md:w-[40px] lg:w-[50px] cursor-pointer" 
                             />
                             {showProfileModal && (
-                                <div className="absolute top-[calc(100%+0.5rem)] right-0 w-48 bg-[#702632] rounded-lg shadow-lg py-2 z-50">
-                                    <a 
-                                        href="/login" 
-                                        className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors"
-                                    >
-                                        Fazer login
-                                    </a>
-                                    <a 
-                                        href="/cadastro" 
-                                        className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors"
-                                    >
-                                        Cadastrar-se
-                                    </a>
+                                <div className="absolute top-[calc(100%+0.5rem)] right-0 w-40 bg-[#702632] rounded-lg shadow-lg py-1 z-50">
+                                    {!isLoggedIn ? (
+                                        <>
+                                            <a 
+                                                href="/login" 
+                                                className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
+                                            >
+                                                Fazer login
+                                            </a>
+                                            <div className="w-full h-[1px] bg-white opacity-50"></div>
+                                            <a 
+                                                href="/cadastro" 
+                                                className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
+                                            >
+                                                Cadastrar-se
+                                            </a>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <a 
+                                                href="/perfil" 
+                                                className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
+                                            >
+                                                Perfil
+                                            </a>
+                                            <div className="w-full h-[1px] bg-white opacity-50"></div>
+                                            <button 
+                                                onClick={handleLogout}
+                                                className="w-full px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
+                                            >
+                                                Sair
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
                             )}
                         </div>

@@ -1,10 +1,10 @@
 import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
 import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
-import { PesquisaPaginaInicial } from '@/components/PaginaInicial/PesquisaPaginaInicial';
+import { PesquisaPaginaInicial } from '@/components/paginaInicial/PesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
-import Carousel from '@/components/PaginaInicial/carrossel';
-import BotaoImageTexto from '@/components/PaginaInicial/BotaoImageTexto';
+import Carousel from '@/components/paginaInicial/carrossel';
+import BotaoImageTexto from '@/components/paginaInicial/BotaoImageTexto';
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
@@ -16,7 +16,7 @@ const montserrat = Montserrat({
 });
 
 import Image from 'next/image';
-import { Card } from '@/components/cardImovel';
+import { Card } from '@/components/CardImovel';
 
 
 export default function PaginaInicial() {
