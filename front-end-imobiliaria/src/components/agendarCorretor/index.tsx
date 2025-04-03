@@ -37,7 +37,7 @@ export default function AgendarCorretor({ id }: { id: number }) {
 
 
     return (
-        <div className="flex flex-col gap-4 py-4">
+        <div className="flex flex-col gap-4 py-4 w-80">
             <div>
                 {isLoading ? (
                     <p>Carregando...</p>

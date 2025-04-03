@@ -39,7 +39,7 @@ export default function PaginaImovel() {
 
 
 
-                    <div>
+                    <div className="flex justify-center lg:justify-start">
                         <AgendarCorretor id={3} />
                     </div>
 
