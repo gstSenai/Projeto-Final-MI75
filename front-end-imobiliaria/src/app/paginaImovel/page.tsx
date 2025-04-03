@@ -3,6 +3,8 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { BarraStatusImovel } from '@/components/barraStatusImovel';
 import Image from 'next/image';
+import Card from '@/components/cardImovel';
+import AgendarCorretor from '@/components/agendarCorretor';
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -15,10 +17,10 @@ export default function PaginaImovel() {
         <>
             <Header />
 
-            <div className='pt-24 px-8 max-lg:px-8 lg:px-12 xl:px-14'>
+            <div className='pt-24 px-8 max-lg:px-8 lg:px-8 xl:px-10'>
 
                 <main>
-                    <a className='text-[#A1A1A1] text-xl' href="/paginaImoveis">Imóveis  &gt;</a>
+                    <a className='opacity-40 text-xl' href="/paginaImoveis">Imóveis  &gt;</a>
 
 
                     <div>
@@ -29,16 +31,31 @@ export default function PaginaImovel() {
 
 
                 </main>
+                <section>
+
+
+                    <BarraStatusImovel quantQuartos={3} quantBanheiro={2} quantGaragem={1} quantSuite={1} quantpiscina={1} />
 
 
 
-                <BarraStatusImovel quantQuartos={3} quantBanheiro={2} quantGaragem={1} quantSuite={1} quantpiscina={1} />
 
-
-                <footer>
                     <div>
-                        <h2 className=''>Imóveis semelhantes</h2>
-                        <div className='bg-vermelho w-[220px] h-[3px]'></div>
+                        <AgendarCorretor id={3} />
+                    </div>
+
+
+
+
+                </section>
+                <footer>
+                    <div className='pl-20'>
+                        <h2 className='font-bold text-xl'>Imóveis semelhantes</h2>
+                        <div className='bg-vermelho w-[110px] h-[3px]'></div>
+                    </div>
+                    <div className='flex flex-col lg:flex-row justify-evenly pt-12 xl:pt-12 pb-36'>
+                        <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo={12131} />
+                        <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo={12131} />
+                        <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo={12131} />
                     </div>
                 </footer>
             </div>
