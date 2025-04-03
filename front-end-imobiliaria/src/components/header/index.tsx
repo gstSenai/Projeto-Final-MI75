@@ -168,9 +168,9 @@ export function Header() {
                                 onClick={() => setHambuguerMobile(!hamburguerMobile)}
                                 src={hamburguerMobile ? "/imagensHeader/HAMBURGUER.png" : "/imagensHeader/HAMBURGUER.png"}
                                 alt={hamburguerMobile ? "Fechar menu" : "Abrir menu"}
-                                width={50}
-                                height={50}
-                                className="w-12 md:w-[40px] lg:w-[50px] cursor-pointer"
+                                width={30}
+                                height={30}
+                                className="w-8 md:w-[40px] lg:w-[50px] cursor-pointer"
                             />
                         </div>
                     </div>
@@ -178,39 +178,63 @@ export function Header() {
             </header>
 
             {hamburguerMobile && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 ">
-                    <div className="fixed inset-0 bg-[#DFDAD0] z-50">
-                        <div className="flex flex-col h-full px-10 py-10">
-                            <div className="flex justify-end mb-8">
+                <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50">
+                    <div className="fixed top-0 left-0 right-0 bottom-0 bg-[#DFDAD0] z-50 overflow-y-auto">
+                        <div className="flex flex-col min-h-full px-6 py-4">
+                            <div className="flex justify-between items-center mb-4">
+                                <div className="flex items-center gap-3">
+                                    <Image 
+                                        src="/imagensHeader/PERFIL SEM LOGIN.png" 
+                                        alt="Perfil" 
+                                        width={40} 
+                                        height={40} 
+                                        className="rounded-full cursor-pointer"
+                                    />
+                                    <a href="/perfil" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Nome do Usuário</a>
+                                </div>
                                 <Image
                                     onClick={() => setHambuguerMobile(false)}
                                     src="/imagensHeader/HAMBURGUER.png"
                                     alt="Fechar menu"
-                                    width={50}
-                                    height={50}
+                                    width={30}
+                                    height={30}
                                     className="cursor-pointer"
                                 />
                             </div>
                             <div className='bg-black p-[0.2px] w-full'></div>
-                            <ul className="space-y-8 text-start my-8">
-                                <li className='flex gap-4 items-center'>
-                                    <Image src="/imagensHeader/logoMinuscula.png" alt="simbolo HAV" width={24}  height={24} className=' h-full'/>
-                                    <a  href="/paginaInicial" className="text-3xl text-[#303030] hover:text-vermelho transition-colors">Início</a>
+                            <ul className="space-y-3 text-start my-3">
+                                <li className='flex gap-3 items-center'>
+                                    <Image src="/imagensHeader/logoMinuscula.png" alt="simbolo HAV" width={20}  height={20} className='h-full'/>
+                                    <a  href="/paginaInicial" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Início</a>
                                 </li>
-                                <li className='flex gap-4 items-center'>
-                                    <Image src="/imagensHeader/casa.png" alt="simbolo casas"width={24}  height={24} className=' h-full'/>
-                                    <a href="#" className="text-3xl text-[#303030] hover:text-vermelho transition-colors">Propriedades</a>
+                                <li className='flex gap-3 items-center'>
+                                    <Image src="/imagensHeader/casa.png" alt="simbolo casas" width={20}  height={20} className='h-full'/>
+                                    <a href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Propriedades</a>
                                 </li>
-                                <li className='flex gap-4 items-center'>
-                                    <Image src="/imagensHeader/corretores.png" alt="simbolo corretores" width={24}  height={24} className=' h-full'/>
-                                    <a href="#" className="text-3xl text-[#303030] hover:text-vermelho transition-colors">Corretores</a>
+                                <li className='flex gap-3 items-center'>
+                                    <Image src="/imagensHeader/corretores.png" alt="simbolo corretores" width={20}  height={20} className='h-full'/>
+                                    <a href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Corretores</a>
                                 </li>
-                                <li className='flex gap-4 items-center'>
-                                    <Image src="/imagensHeader/informacao.png" alt="simbolo Sobre nos"width={24}  height={24} className=' h-full'/>
-                                    <a href="/sobreNos" className="text-3xl text-[#303030] hover:text-vermelho transition-colors">Sobre nós</a>
+                                <li className='flex gap-3 items-center'>
+                                    <Image src="/imagensHeader/informacao.png" alt="simbolo Sobre nos" width={20}  height={20} className='h-full'/>
+                                    <a href="/sobreNos" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Sobre nós</a>
                                 </li>
                             </ul>
                             <div className='bg-black p-[0.2px] w-full'></div>
+                            <ul className="space-y-3 text-start mt-3">
+                                <li className='flex gap-3 items-center'>
+                                    <Image src="/imagensHeader/sino.png" alt="chat corretores" width={20}  height={20} className='h-full'/>
+                                    <a href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Chat corretores</a>
+                                </li>
+                                <li className='flex gap-3 items-center'>
+                                    <Image src="/imagensHeader/configuracoes.png" alt="configurações" width={20}  height={20} className='h-full'/>
+                                    <a href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Configurações</a>
+                                </li>
+                                <li className='flex gap-3 items-center'>
+                                    <Image src="/imagensHeader/logout.png" alt="logout" width={20}  height={20} className='h-full'/>
+                                    <button onClick={handleLogout} className="text-xl text-[#303030] hover:text-vermelho transition-colors">Logout</button>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
