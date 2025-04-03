@@ -5,7 +5,7 @@ import { PesquisaPaginaInicial } from '@/components/PaginaInicial/PesquisaPagina
 import { Montserrat } from 'next/font/google';
 import Carousel from '@/components/PaginaInicial/carrossel';
 import BotaoImageTexto from '@/components/PaginaInicial/BotaoImageTexto';
-import AtualizarComponents from '@/components/atualizarComponents';
+import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 
@@ -17,6 +17,7 @@ const montserrat = Montserrat({
 
 import Image from 'next/image';
 import { Card } from '@/components/cardImovel';
+
 
 export default function PaginaInicial() {
     return (
@@ -40,7 +41,7 @@ export default function PaginaInicial() {
                         </div>
                     </div>
                 </main>
-                <div className="relative flex justify-center xl:-ml-[700px] mt-[5rem] lg:-mt-[15rem] z-10">
+                <div className="relative flex justify-center xl:-ml-[700px] mt-[5rem] lg:-mt-[10rem] z-10">
                     <PesquisaPaginaInicial />
                 </div>
                 <section className='px-4 sm:px-8 md:px-10 lg:px-14 xl:px-16'>
@@ -135,7 +136,10 @@ export default function PaginaInicial() {
                         <Image src="/paginaInicial/fotosDamainEfotter/PreFotterInicial.png" alt="Fundo Vermelho" layout="fill" objectFit="cover" quality={100} className="absolute top-[-50px] lg:top-[-30px]" />
                         <div className="relative inset-0 flex flex-col lg:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around self-center 2xl:items-start text-white p-8 mx-auto gap-20 lg:gap-20 xl:gap-32">
                             <div className='flex text-center items-center gap-7'>
-                                <Image src="/paginaInicial/inconeImoveisACV/imoveisCadastros.png" alt="imoveis Cadastrados" objectFit="cover" width={106} height={108} quality={100} />
+                                <Image
+                                 src="/paginaInicial/inconeImoveisACV/imoveisCadastros.png" 
+                                 alt="imoveis Cadastrados" objectFit="cover"
+                                 width={90} height={94} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisDisponiveis />
                                     <p>Imoveis Cadastrados</p>
@@ -143,7 +147,9 @@ export default function PaginaInicial() {
                             </div>
 
                             <div className='flex text-center items-center gap-7'>
-                                <Image src="/paginaInicial/inconeImoveisACV/imoveisVendidos.png" alt="Imoveis Vendidos" objectFit="cover" width={106} height={108} quality={100} />
+                                <Image src="/paginaInicial/inconeImoveisACV/imoveisVendidos.png" 
+                                alt="Imoveis Vendidos" objectFit="cover" 
+                                width={90} height={94} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisVendidos />
                                     <p>Imoveis Vendidos</p>
@@ -151,7 +157,9 @@ export default function PaginaInicial() {
                             </div>
 
                             <div className='flex text-center items-center gap-7'>
-                                <Image src="/paginaInicial/inconeImoveisACV/imoveisAlugados.png" alt="Imoveis Alugados" objectFit="cover" width={106} height={108} quality={100} />
+                                <Image src="/paginaInicial/inconeImoveisACV/imoveisAlugados.png" 
+                                alt="Imoveis Alugados" objectFit="cover" 
+                                width={90} height={94} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisAlugados />
                                     <p>Imoveis Alugados</p>

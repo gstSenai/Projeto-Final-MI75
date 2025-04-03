@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 
-// Carregando a fonte Montserrat
 const montserrat = Montserrat({
     subsets: ['latin'],
     weight: ['400', '800'],

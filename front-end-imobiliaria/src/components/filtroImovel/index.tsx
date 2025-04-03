@@ -16,7 +16,6 @@ export function FiltroImovel({ min, max, onChange, className = "", name, registe
     const range = useRef<HTMLDivElement>(null);
     const priceGap = 2000;
 
-    // Função para validar os valores de entrada
     const validateValues = (newMin: number | null, newMax: number) => {
         if (newMin === null) return { newMin: null, newMax };
         if (newMin < 0) newMin = 0;

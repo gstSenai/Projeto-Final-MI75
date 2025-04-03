@@ -13,6 +13,7 @@ const inter = Inter({
 
 export function Header() {
     const [hamburguerMobile, setHambuguerMobile] = useState(false)
+    const [showProfileModal, setShowProfileModal] = useState(false)
 
     return (
         <>
@@ -46,8 +47,31 @@ export function Header() {
                             <p className="text-xl max-lg:text-base">Português</p>
                             <Image src="/imagensHeader/seta-para-baixo 2.png" alt="Abrir opções" width={24} height={24} />
                         </div>
-                        <div className="flex flex-row items-center max-md:hidden">
-                            <Image src="/imagensHeader/PERFIL SEM LOGIN.png" alt="Perfil sem login" width={50} height={50} className="w-12 md:w-[40px] lg:w-[50px]" />
+                        <div className="flex flex-row items-center max-md:hidden relative">
+                            <Image 
+                                onClick={() => setShowProfileModal(!showProfileModal)}
+                                src="/imagensHeader/PERFIL SEM LOGIN.png" 
+                                alt="Perfil sem login" 
+                                width={50} 
+                                height={50} 
+                                className="w-12 md:w-[40px] lg:w-[50px] cursor-pointer" 
+                            />
+                            {showProfileModal && (
+                                <div className="absolute top-[calc(100%+0.5rem)] right-0 w-48 bg-[#702632] rounded-lg shadow-lg py-2 z-50">
+                                    <a 
+                                        href="/login" 
+                                        className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors"
+                                    >
+                                        Fazer login
+                                    </a>
+                                    <a 
+                                        href="/cadastro" 
+                                        className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors"
+                                    >
+                                        Cadastrar-se
+                                    </a>
+                                </div>
+                            )}
                         </div>
                         <div className="flex flex-row items-center md:hidden">
                             <Image
