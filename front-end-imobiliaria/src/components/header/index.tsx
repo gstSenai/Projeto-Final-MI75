@@ -33,16 +33,16 @@ export function Header() {
 
     return (
         <>
-            <header className={`${inter.className} bg-[#DFDAD0] px-10 pt-6 max-lg:px-10 lg:px-30 xl:px-20 font-medium`}>
-                <section className="flex flex-row justify-between ">
-                    <div className="flex flex-row items-center md:gap-10 lg:gap-16 xl:gap-26">
-                        <div className="flex items-center md:gap-4 gap-6">
-                            <Image src="/imagensHeader/Logo HAV.png" alt="Logo HAV" width={60} height={60} className="max-h-full lg:w-[60px] w-[40px] mt-[-0.5rem]" />
-                            <p className="md:text-xl text-2xl xl:text-3xl font-bold text-vermelho">HAV</p>
+            <header className={`${inter.className} bg-[#DFDAD0] px-6 pt-4 max-lg:px-6 lg:px-20 xl:px-16 font-medium`}>
+                <section className="flex flex-row justify-between">
+                    <div className="flex flex-row items-center md:gap-8 lg:gap-12 xl:gap-20">
+                        <div className="flex items-center md:gap-3 gap-4">
+                            <Image src="/imagensHeader/Logo HAV.png" alt="Logo HAV" width={45} height={45} className="max-h-full lg:w-[45px] w-[35px] mt-[-0.3rem]" />
+                            <p className="md:text-lg text-xl xl:text-2xl font-bold text-vermelho">HAV</p>
                         </div>
                         <div>
                             <nav>
-                                <ul className="flex flex-row max-lg:text-base text-xl whitespace-nowrap md:gap-4 lg:gap-6 text-[#303030] max-md:hidden">
+                                <ul className="flex flex-row max-lg:text-base text-lg whitespace-nowrap md:gap-3 lg:gap-4 text-[#303030] max-md:hidden">
                                     <li><a href="/PaginaInicial">Início</a></li>
                                     <li><a href="/">Propriedades</a></li>
                                     <li><a href="/paginaCorretores">Corretores</a></li>
@@ -52,28 +52,28 @@ export function Header() {
                         </div>
                     </div>
 
-                    <div className="flex flex-row items-center font-medium ">
-                        <div className="flex flex-row items-center gap-6 max-md:hidden">
-                            <div className="flex flex-row items-center md:pl-4 lg:pl-16">
-                                <Image src="/imagensHeader/Botão tema site.png" alt="Tema" width={24} height={24} />
+                    <div className="flex flex-row items-center font-medium">
+                        <div className="flex flex-row items-center gap-4 max-md:hidden">
+                            <div className="flex flex-row items-center md:pl-2 lg:pl-12">
+                                <Image src="/imagensHeader/Botão tema site.png" alt="Tema" width={20} height={20} />
                             </div>
                         </div>
-                        <div className="flex flex-row items-center md:gap-1 lg:gap-2 md:px-4 lg:px-8 max-md:hidden relative">
+                        <div className="flex flex-row items-center md:gap-1 lg:gap-2 md:px-3 lg:px-6 max-md:hidden relative">
                             <Image 
                                 src={currentLanguage === 'Português' ? currentImageBrasil : 
                                      currentLanguage === 'English' ? currentImageEUA : 
                                      currentImageEspanhol} 
                                 alt="Idioma" 
-                                width={24} 
-                                height={24} 
+                                width={20} 
+                                height={20} 
                             />
-                            <p className="text-xl max-lg:text-base">{currentLanguage}</p>
+                            <p className="text-lg max-lg:text-base">{currentLanguage}</p>
                             <Image 
                                 onClick={() => setShowLanguageModal(!showLanguageModal)}
                                 src="/imagensHeader/seta-para-baixo 2.png" 
                                 alt="Abrir opções" 
-                                width={24} 
-                                height={24}
+                                width={20} 
+                                height={20}
                                 className="cursor-pointer"
                             />
                             {showLanguageModal && (
