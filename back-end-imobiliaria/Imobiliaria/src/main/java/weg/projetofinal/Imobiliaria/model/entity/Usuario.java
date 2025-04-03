@@ -47,4 +47,7 @@ public class Usuario {
     @OneToMany(mappedBy = "corretor")
     private List<Agendamento> agendamentos_corretores;
 
+    @OneToMany(mappedBy = "id_usuario")
+    private List<Imovel> imovel;
+
 }

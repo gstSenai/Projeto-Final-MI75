@@ -61,6 +61,9 @@ public class Imovel {
     private List<Agendamento> agendamentos;
 
     @ManyToOne
-    private Proprietario proprietario;
+    private Proprietario id_proprietario;
+
+    @ManyToOne
+    private Usuario id_usuario;
 
 }
