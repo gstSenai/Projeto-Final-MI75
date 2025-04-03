@@ -7,16 +7,33 @@ interface TipoImovelTransacaoProps {
     errors: any
 }
 
+const formatarValor = (value: string) => {
+    const numbers = value.replace(/\D/g, '');
+
+    const limitedNumbers = numbers.slice(0, 9);
+    
+    const formatted = limitedNumbers.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return `${formatted}`;
+};
+
+const formatarArea = (value: string) => {
+    const numbers = value.replace(/\D/g, '');
+
+    const limitedNumbers = numbers.slice(0, 7);
+    
+    const formatted = limitedNumbers.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return `${formatted}`;
+};
+
 export function TipoImovelTransacao({ register, errors }: TipoImovelTransacaoProps) {
     return (
         <div className="flex flex-col">           
-
             <div className="flex flex-col lg:gap-6">
                 <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput
                         placeholder="Nome da Propriedade:"
                         name="imovel.nome_propriedade"
-                        interName='Ex: Casa Alto Padrão'
+                        interName=''
                         register={register}
                         required
                         customizacaoClass="w-full"
@@ -47,20 +64,26 @@ export function TipoImovelTransacao({ register, errors }: TipoImovelTransacaoPro
                     <FormularioInput
                         placeholder="Valor de Venda (R$):"
                         name="imovel.valor_venda"
-                        interName="Ex: R$100000,00"
+                        interName="R$ "
                         required
                         register={register}
                         customizacaoClass="w-full"
                         errors={errors?.imovel?.valor_venda}
+                        onChange={(e) => {
+                            e.target.value = formatarValor(e.target.value);
+                        }}
                     />
                     <FormularioInput
                         placeholder="Preço Promocional (R$):"
                         name="imovel.valor_promocional"
-                        interName="Ex: R$100000,00"
+                        interName="R$ "
                         register={register}
                         required
                         customizacaoClass="w-full"
                         errors={errors?.imovel?.valor_promocional}
+                        onChange={(e) => {
+                            e.target.value = formatarValor(e.target.value);
+                        }}
                     />
                     <FormularioInput
                         placeholder="Permitir destaque:"
@@ -77,20 +100,26 @@ export function TipoImovelTransacao({ register, errors }: TipoImovelTransacaoPro
                     <FormularioInput
                         placeholder="Valor do IPTU (R$):"
                         name="imovel.valor_iptu"
-                        interName="Ex: R$100000,00"
+                        interName="R$ "
                         register={register}
                         required
                         customizacaoClass="w-full"
                         errors={errors?.imovel?.valor_iptu}
+                        onChange={(e) => {
+                            e.target.value = formatarValor(e.target.value);
+                        }}
                     />
                     <FormularioInput
                         placeholder="Taxa de Condomínio (R$):"
                         name="imovel.condominio"
-                        interName="Ex: R$100000,00"
+                        interName="R$ "
                         register={register}
                         required
                         customizacaoClass="lg:w-full"
                         errors={errors?.imovel?.condominio}
+                        onChange={(e) => {
+                            e.target.value = formatarValor(e.target.value);
+                        }}
                     />
                     <FormularioInput
                         placeholder="Status do imóvel:"
@@ -113,9 +142,34 @@ export function TipoImovelTransacao({ register, errors }: TipoImovelTransacaoPro
                         options={["Público", "Privado"]}
                         errors={errors?.imovel?.test_visibilidade}
                     />
+                    <FormularioInput
+                        placeholder="Área construída:"
+                        name="imovel.area_construida"
+                        icon={{ type: "areaCT" }}
+                        interName="Ex: 120"
+                        register={register}
+                        required
+                        customizacaoClass="w-full"
+                        errors={errors?.imovel?.area_construida}
+                        onChange={(e) => {
+                            e.target.value = formatarArea(e.target.value);
+                        }}
+                    />
+                    <FormularioInput
+                        placeholder="Área do terreno:"
+                        name="imovel.area_terreno"
+                        icon={{ type: "areaCT" }}
+                        interName="Ex: 90"
+                        register={register}
+                        required
+                        customizacaoClass="w-full"
+                        errors={errors?.imovel?.area_terreno}
+                        onChange={(e) => {
+                            e.target.value = formatarArea(e.target.value);
+                        }}
+                    />
                 </div>
             </div>
-
         </div>
     )
 }

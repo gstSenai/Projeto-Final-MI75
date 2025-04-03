@@ -171,7 +171,7 @@ export default function TabelaImovel() {
     <>
       <div className={`flex flex-col gap-10 sm:flex-col md:flex-col lg:flex-row ${montserrat.className}`}>
         <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6 w-full">
-          <div className="overflow-x-auto max-h-[500px]">
+          <div className="overflow-x-auto max-h-[350px]">
             <table className="w-full border-separate border-spacing-0">
               <thead>
                 <tr className="bg-vermelho text-white sticky top-0 z-10">
@@ -366,7 +366,7 @@ export default function TabelaImovel() {
         </div>
       </div>
       
-     <Formulario isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onComplete={refreshData} />
+      {isModalOpen && <Formulario isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onComplete={refreshData} />}
       {remover && <RemoveImovel selectedImoveis={selectedImoveis} onComplete={refreshData} />}
       {editar && <EditarImovel selectedImoveis={selectedImoveis} onComplete={refreshData} />}
 

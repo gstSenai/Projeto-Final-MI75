@@ -18,15 +18,13 @@ export function Descricao({ className = "", register, name, placeholder, require
                     <label className="text-lg sm:text-xl font-medium text-black">Descrição do Imóvel</label>
                 </div>
                 <div className={`bg-white rounded-[20px] border border-black px-3 sm:px-5 py-4 sm:py-8 ${className}`}>
-                    <form action="text" className="flex h-full gap-3 sm:gap-5">
-                        <div className="w-full flex flex-col">
-                            <textarea
-                                {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
-                                className="text-sm sm:text-base md:text-lg h-full text-black outline-none w-full resize-none overflow-auto font-montserrat"
-                                placeholder="Digite aqui a descrição detalhada do imóvel..."
-                            />
-                        </div>
-                    </form>
+                    <div className="w-full h-full flex flex-col">
+                        <textarea
+                            {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
+                            className="text-sm sm:text-base md:text-lg h-full text-black outline-none w-full resize-none overflow-auto font-montserrat"
+                            placeholder="Digite aqui a descrição detalhada do imóvel..."
+                        />
+                    </div>
                 </div>
             </div>
         </div>

@@ -94,6 +94,7 @@ public class UsuarioService {
     }
 
     public byte[] downloadImagem(String nomeArquivo) {
+
         return s3Service.downloadFile(nomeArquivo);
     }
 }

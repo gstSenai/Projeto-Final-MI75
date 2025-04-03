@@ -1,11 +1,12 @@
 "use client"
 import { useState, useEffect } from "react"
 import React from "react"
+import { AnimatePresence, motion } from "framer-motion"
 
 import { Botao } from "@/components/botao"
 import { FormularioEditarInput } from "./formularioEditarInput"
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
+import { isValid, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormularioImagemEditProprietario } from "./formularioImagemEditProprietario"
 
@@ -86,6 +87,7 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
         register,
         handleSubmit,
         formState: { errors },
+        trigger
     } = useForm<FormData>({
         resolver: zodResolver(FormSchema),
         defaultValues: selectedProprietarios?.[0] ? {
@@ -103,11 +105,33 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
         } : undefined
     })
 
-
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [imagem, setImagem] = useState<File | null>(null)
     const [showModal, setShowModal] = useState(true)
+    const [editadoComSucesso, setEditadoComSucesso] = useState(false)
+    const [lastEditedProprietario, setLastEditedProprietario] = useState<ProprietarioProps | null>(null)
 
+    const deleteProprietario = async (proprietarioId: number): Promise<void> => {
+        try {
+            await fetch(`http://localhost:9090/proprietario/delete/${proprietarioId}`, {
+                method: 'DELETE'
+            });
+            setShowModal(false);
+            setLastEditedProprietario(null);
+            if (onComplete) {
+                onComplete();
+            }
+        } catch (error) {
+            console.error("Erro ao deletar proprietário:", error);
+            throw error;
+        }
+    }
+
+    const onSubmitDelete = async () => {
+        if (lastEditedProprietario?.id) {
+            await deleteProprietario(lastEditedProprietario.id);
+        }
+    }
 
     const editarProprietarios = async (data: Partial<ProprietarioProps>, imagem: File | null) => {
         try {
@@ -162,7 +186,6 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
                 : new Date(proprietario.data_nascimento)
 
             const cpfFormatado = proprietario.cpf.replace(/\D/g, '')
-
             const telefoneFormatado = proprietario.telefone.replace(/\D/g, '')
             const celularFormatado = proprietario.celular.replace(/\D/g, '')
 
@@ -183,13 +206,19 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
 
             const response = await editarProprietarios(proprietarioAtualizado, imagem || null)
             console.log("Resposta do servidor:", response)
-            if (response) {
-                setShowModal(false)
-            } else {
-                console.error("Erro: Resposta inválida ao adicionar proprietário.")
-            }
 
-            if (onComplete) onComplete()
+            if (response) {
+                setLastEditedProprietario(response);
+                setShowModal(false);
+
+                setTimeout(() => {
+                    setEditadoComSucesso(true);
+
+                }, 5000);
+            } else {
+                console.error("Erro: Resposta inválida ao editar proprietário.")
+            }
+            if (onComplete) onComplete();
 
         } catch (error) {
             console.error("Erro ao editar proprietário:", error)
@@ -206,8 +235,14 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
         }
     }
 
-    const handleClick = () => {
-        handleSubmit(onSubmitEditProprietarios)();
+    const handleClick = async () => {
+        const isValid = await trigger('proprietario', 'proprietario.nome', 'proprietario.sobrenome', 'proprietario.cpf', 'proprietario.email', 'proprietario.telefone', 'proprietario.celular', 'proprietario.data_nascimento')
+        if (!isValid) {
+            console.log("Erro de validação")
+            return
+        } else {
+            handleSubmit(onSubmitEditProprietarios)();
+        }
     };
 
     useEffect(() => {
@@ -216,7 +251,6 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
             console.log(errors)
         }
     }, [selectedProprietarios, errors])
-
 
     return (
         <>
@@ -363,6 +397,28 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
                     </div>
                 </div>
             )}
+
+            <AnimatePresence>
+                {editadoComSucesso && lastEditedProprietario && (
+                    <motion.div
+                        initial={{ opacity: 0, x: -100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -100 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="fixed bottom-10 left-0 z-50"
+                    >
+                        <div className="bg-vermelho w-72 flex justify-between items-center p-3 rounded-tr-lg rounded-br-lg text-white shadow-lg">
+                            <p className="text-center flex-1">Editado com Sucesso!</p>
+                            <button
+                                onClick={onSubmitDelete}
+                                className="underline hover:text-gray-200 transition-colors"
+                            >
+                                Desfazer
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </>
     )
 }
