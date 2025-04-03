@@ -69,7 +69,7 @@ export function FormularioInput({
           }`}
       >
         {iconCaneta && <img src="/iconsForms/canetaEditar.png" alt="Editar" className="h-6 ml-4" />}
-        {iconPath && <img src={iconPath} alt={`Ícone ${icon?.type}`} className="h-6 lg:h-9" />}
+        {iconPath && <img src={iconPath} alt={`Ícone ${icon?.type}`} className="h-6 lg:h-6" />}
 
         {options ? (
           <select

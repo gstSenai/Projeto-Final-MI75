@@ -15,35 +15,56 @@ const ImovelProps = z.object({
     codigo: z.coerce.number().optional(),
     nome_propriedade: z.string().min(1, { message: "Nome da propriedade é obrigatório" }),
     tipo_transacao: z.string().min(1, { message: "Tipo de transação é obrigatório" }),
-    valor_venda: z.coerce.number().min(1, { message: "Valor de venda é obrigatório" }),
+    valor_venda: z.string()
+        .min(1, { message: "Valor de venda é obrigatório" })
+        .regex(/^\d{1,3}(\.\d{3})*,\d{2}$/, { message: "Formato de valor inválido" })
+        .transform((valor) => parseFloat(valor.replace(/\./g, '').replace(',', '.'))),
     tipo_imovel: z.string().min(1, { message: "Tipo de imóvel é obrigatório" }),
     status_imovel: z.string().min(1, { message: "Status do imóvel é obrigatório" }),
-    valor_promocional: z.coerce.number().min(1, { message: "Valor promocional é obrigatório" }),
-    test_destaque: z.string().optional(),
-    test_visibilidade: z.string().optional(),
+    valor_promocional: z.string()
+        .min(1, { message: "Valor promocional é obrigatório" })
+        .regex(/^\d{1,3}(\.\d{3})*,\d{2}$/, { message: "Formato de valor inválido" })
+        .transform((valor) => parseFloat(valor.replace(/\./g, '').replace(',', '.'))),
+    test_destaque: z.string().min(1, { message: "Destaque é obrigatório" }).optional(),
+    test_visibilidade: z.string().min(1, { message: "Visibilidade é obrigatória" }).optional(),
     destaque: z.boolean().default(false),
     visibilidade: z.boolean().default(false),
-    valor_iptu: z.coerce.number().min(1, { message: "Valor do IPTU é obrigatório" }),
-    condominio: z.coerce.number().min(1, { message: "Valor do condomínio é obrigatório" }),
-    area_construida: z.coerce.number().min(1, { message: "Área construída é obrigatória" }),
-    area_terreno: z.coerce.number().min(1, { message: "Área do terreno é obrigatória" }),
+    valor_iptu: z.string()
+        .min(1, { message: "Valor do IPTU é obrigatório" })
+        .regex(/^\d{1,3}(\.\d{3})*,\d{2}$/, { message: "Formato de valor inválido" })
+        .transform((valor) => parseFloat(valor.replace(/\./g, '').replace(',', '.'))),
+    condominio: z.string()
+        .min(1, { message: "Valor do condomínio é obrigatório" })
+        .regex(/^\d{1,3}(\.\d{3})*,\d{2}$/, { message: "Formato de valor inválido" })
+        .transform((valor) => parseFloat(valor.replace(/\./g, '').replace(',', '.'))),
+    area_construida: z.string()
+        .min(1, { message: "Área construída é obrigatória" })
+        .regex(/^\d{1,3}(\.\d{3})*,\d{2}$/, { message: "Formato de área inválido" })
+        .transform((valor) => parseFloat(valor.replace(/\./g, '').replace(',', '.'))),
+    area_terreno: z.string()
+        .min(1, { message: "Área do terreno é obrigatória" })
+        .regex(/^\d{1,3}(\.\d{3})*,\d{2}$/, { message: "Formato de área inválido" })
+        .transform((valor) => parseFloat(valor.replace(/\./g, '').replace(',', '.'))),
     descricao: z.string().optional(),
 })
 
 const ImovelCaracteristicas = z.object({
     id: z.number().optional(),
-    numero_quartos: z.coerce.number().min(1, { message: "Número de quartos é obrigatório" }),
-    numero_banheiros: z.coerce.number().min(1, { message: "Número de banheiros é obrigatório" }),
-    numero_suites: z.coerce.number().min(1, { message: "Número de suítes é obrigatório" }),
-    numero_vagas: z.coerce.number().min(1, { message: "Número de vagas é obrigatório" }),
+    numero_quartos: z.coerce.number().min(0, { message: "Número de quartos é obrigatório" }),
+    numero_banheiros: z.coerce.number().min(0, { message: "Número de banheiros é obrigatório" }),
+    numero_suites: z.coerce.number().min(0, { message: "Número de suítes é obrigatório" }),
+    numero_vagas: z.coerce.number().min(0, { message: "Número de vagas é obrigatório" }),
     test_piscina: z.string().optional(),
     piscina: z.boolean().default(false),
-    numero_salas: z.coerce.number().min(1, { message: "Número de salas é obrigatório" }),
+    numero_salas: z.coerce.number().min(0, { message: "Número de salas é obrigatório" }),
 })
 
 const EnderecoImovelProps = z.object({
     id: z.number().optional(),
-    cep: z.string().min(1, { message: "CEP é obrigatório" }),
+    cep: z.string()
+        .min(9, { message: "CEP inválido" })
+        .regex(/^\d{5}-\d{3}$/, { message: "Formato de CEP inválido. Use o formato XXXXX-XXX" })
+        .transform((cep) => cep.replace(/\D/g, '')),
     rua: z.string().min(1, { message: "Rua é obrigatória" }),
     numero: z.string().min(1, { message: "Número é obrigatório" }),
     bairro: z.string().min(1, { message: "Bairro é obrigatório" }),
@@ -63,6 +84,8 @@ type ImovelCaracteristicas = z.infer<typeof ImovelCaracteristicas>
 type EnderecoImovelProps = z.infer<typeof EnderecoImovelProps>
 type FormData = z.infer<typeof FormSchema>
 
+export type { FormData }
+
 interface InputDadosImovelProps {
     onComplete?: () => void;
     onClose: () => void;
@@ -70,22 +93,28 @@ interface InputDadosImovelProps {
 }
 
 export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProps) {
-    const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors }, setValue, reset, trigger, getValues } = useForm<FormData>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
             imovel: {
+                nome_propriedade: "",
                 tipo_imovel: "",
                 codigo: 0,
                 tipo_transacao: "",
                 test_destaque: "",
                 status_imovel: "",
                 test_visibilidade: "",
-                destaque: false,
-                visibilidade: false
+                destaque: undefined,
+                visibilidade: undefined,
             },
             imovelCaracteristicas: {
                 test_piscina: "",
-                piscina: false
+                piscina: false,
+                numero_salas: 0,
+                numero_quartos: 0,
+                numero_banheiros: 0,
+                numero_suites: 0,
+                numero_vagas: 0,
             },
             endereco: {
                 uf: ""
@@ -93,10 +122,13 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
         },
     })
     const [currentStep, setCurrentStep] = useState(1);
-    const [showModal, setShowModal] = useState(false)
+    const [showErrorModal, setShowErrorModal] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
     const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [images, setImages] = useState<File[]>([])
+    const [adicionadoComSucesso, setAdicionadoComSucesso] = useState(false)
+    const [adicionarAberto, setAdicionarAberto] = useState(true)
     const codigosGerados = new Set<number>();
 
     const handleImagesChange = (files: File[]) => {
@@ -204,6 +236,82 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
         return codigo;
     }
 
+    const handleNext = async () => {
+        if (currentStep < 3) {
+            let isValid = false;
+
+            if (currentStep === 1) {
+                isValid = await trigger('endereco');
+                if (!isValid) {
+                    setErrorMessage("Por favor, preencha todos os campos do endereço corretamente");
+                    setShowErrorModal(true);
+                    return;
+                }
+            }
+
+            if (currentStep === 2) {
+                const values = getValues();
+                if (values.imovel) {
+                    const campos = ['valor_venda', 'valor_promocional', 'valor_iptu', 'condominio', 'area_construida', 'area_terreno'] as const;
+                    campos.forEach(campo => {
+                        const valor = values.imovel[campo];
+                        if (valor && !String(valor).includes(',')) {
+                            setValue(`imovel.${campo}`, `${valor},00`);
+                        }
+                    });
+                }
+
+                isValid = await trigger(['imovel', 'imovel.tipo_transacao', 'imovel.tipo_imovel',
+                    'imovel.test_visibilidade', 'imovel.test_destaque', 'imovel.area_construida', 'imovel.area_terreno']);
+                if (!isValid) {
+                    setErrorMessage("Por favor, preencha todos os campos de tipo de transação corretamente");
+                    setShowErrorModal(true);
+                    return;
+                }
+            }
+
+            if (currentStep === 3) {
+                isValid = await trigger(['imovel', 'imovelCaracteristicas']);
+                if (!isValid) {
+                    setErrorMessage("Por favor, preencha todos os campos obrigatórios");
+                    setShowErrorModal(true);
+                    setErrorMessage("Por favor, selecione o tipo de transação e o tipo de imóvel");
+                    const formData = getValues();
+                    const camposFaltantes = [];
+
+                    if (!formData.imovel.tipo_transacao) camposFaltantes.push("tipo de transação");
+                    if (!formData.imovel.tipo_imovel) camposFaltantes.push("tipo de imóvel");
+                    if (!formData.imovel.test_destaque) camposFaltantes.push("destaque");
+                    if (!formData.imovel.test_visibilidade) camposFaltantes.push("visibilidade");
+
+                    if (camposFaltantes.length > 0) {
+                        setErrorMessage(`Por favor, preencha os seguintes campos: ${camposFaltantes.join(", ")}`);
+                        setShowErrorModal(true);
+                        return;
+                    }
+                }
+            }
+
+            setCurrentStep(currentStep + 1);
+        }
+    };
+
+    const handleBack = () => {
+        if (currentStep > 1) {
+            setCurrentStep(currentStep - 1);
+        }
+    };
+
+    const handleCancel = () => {
+        setCurrentStep(1);
+        reset();
+        setImages([]);
+        setShowErrorModal(false);
+        setLastAddedImovel(null);
+        onClose();
+    };
+
+
     const onSubmitImovel = async (data: {
         imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas;
         endereco: EnderecoImovelProps
@@ -211,6 +319,27 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
         if (isSubmitting) return;
 
         try {
+            if (Object.keys(errors).length > 0) {
+                if (errors.endereco) {
+                    setErrorMessage("Por favor, preencha todos os campos do endereço corretamente");
+                    setShowErrorModal(true);
+                    setCurrentStep(1);
+                    return;
+                }
+                if (errors.imovel?.tipo_transacao || errors.imovel?.tipo_imovel) {
+                    setErrorMessage("Por favor, selecione o tipo de transação e o tipo de imóvel");
+                    setShowErrorModal(true);
+                    setCurrentStep(2);
+                    return;
+                }
+                if (errors.imovel || errors.imovelCaracteristicas) {
+                    setErrorMessage("Por favor, preencha todos os campos obrigatórios");
+                    setShowErrorModal(true);
+                    setCurrentStep(3);
+                    return;
+                }
+            }
+
             setIsSubmitting(true);
 
             const { imovel, endereco, imovelCaracteristicas } = data;
@@ -248,7 +377,19 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                 }
 
                 console.log("Imóvel criado com sucesso:", response);
+                setLastAddedImovel(response);
+                setAdicionadoComSucesso(true);
+                setAdicionarAberto(false);
+
+                setTimeout(() => {
+                    reset();
+                    setCurrentStep(1);
+                    setImages([]);
+                    onClose();
+                }, 5000);
+
             } else {
+                setAdicionadoComSucesso(false);
                 throw new Error("Erro ao criar imóvel, id não retornado.");
             }
 
@@ -266,7 +407,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
         if (lastAddedImovel) {
             if (lastAddedImovel.id) {
                 await deleteImovel(lastAddedImovel.id)
-                setShowModal(false)
+                setShowErrorModal(false)
                 setLastAddedImovel(null)
             }
             if (onComplete) {
@@ -275,27 +416,11 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
         }
     }
 
-    const handleNext = () => {
-        if (currentStep < 3) {
-            setCurrentStep(currentStep + 1);
-        }
-    };
-
-    const handleBack = () => {
-        if (currentStep > 1) {
-            setCurrentStep(currentStep - 1);
-        }
-    };
-
-    const handleCancel = () => {
-        setCurrentStep(1);
-        onClose();
-    };
-
     if (!isOpen) return null;
 
     return (
-        <>
+        <>                   
+         {adicionarAberto && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                     <div className="flex justify-between items-center mb-4">
@@ -311,7 +436,6 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                             X
                         </button>
                     </div>
-
                     <form onSubmit={handleSubmit(onSubmitImovel)}>
                         <AnimatePresence mode="wait">
                             {currentStep === 1 && (
@@ -323,17 +447,16 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                                     transition={{ duration: 0.2 }}
                                     className="space-y-4"
                                 >
-
                                     <EnderecoSection register={register} errors={errors} setValue={setValue} />
 
-                                    <div className="flex justify-end gap-4 mt-4">
+                                    <div className="flex gap-10 mt-4">
                                         <Botao
-                                            className="bg-vermelho h-10"
+                                            className="bg-vermelho h-10 lg:w-[70%]"
                                             texto="Cancelar"
                                             onClick={handleCancel}
                                         />
                                         <Botao
-                                            className="bg-vermelho h-10"
+                                            className="bg-vermelho h-10 lg:w-[70%]"
                                             texto="Próximo"
                                             onClick={handleNext}
                                         />
@@ -356,12 +479,12 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                                     />
                                     <div className="flex justify-end gap-4 mt-4">
                                         <Botao
-                                            className="bg-vermelho h-10"
+                                            className="bg-vermelho lg:w-[70%]"
                                             texto="Voltar"
                                             onClick={handleBack}
                                         />
                                         <Botao
-                                            className="bg-vermelho h-10"
+                                            className="bg-vermelho h-10 lg:w-[70%]"
                                             texto="Próximo"
                                             onClick={handleNext}
                                         />
@@ -385,26 +508,27 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                                     />
                                     <div className="flex justify-end gap-4 mt-4">
                                         <Botao
-                                            className="bg-vermelho h-10"
+                                            className="bg-vermelho h-10 lg:w-[70%]"
                                             texto="Voltar"
                                             onClick={handleBack}
                                         />
                                         <Botao
-                                            className="bg-vermelho h-10"
+                                            className="bg-vermelho h-10 lg:w-[70%]"
                                             texto="Salvar"
                                             type="submit"
-                                            disabled={isSubmitting}
                                         />
                                     </div>
                                 </motion.div>
                             )}
                         </AnimatePresence>
                     </form>
+
                 </div>
             </div>
+        )}
 
             <AnimatePresence>
-                {showModal && lastAddedImovel && (
+                {adicionadoComSucesso && lastAddedImovel && (
                     <motion.div
                         initial={{ opacity: 0, x: -100 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -417,6 +541,35 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                             <button onClick={onSubmitDelete} className="underline hover:text-gray-200">
                                 Desfazer
                             </button>
+                        </div>
+                    </motion.div>
+                )}
+
+                {showErrorModal && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]"
+                    >
+                        <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-2xl font-semibold text-vermelho">Campos Inválidos</h2>
+                                <button
+                                    className="bg-[#DFDAD0] px-3 py-1 rounded-full text-vermelho hover:bg-vermelho hover:text-[#DFDAD0] transition-colors"
+                                    onClick={() => setShowErrorModal(false)}
+                                >
+                                    X
+                                </button>
+                            </div>
+                            <p className="text-gray-700 text-lg mb-4">{errorMessage}</p>
+                            <div className="flex justify-end">
+                                <Botao
+                                    className="bg-vermelho lg:w-1/3 h-10"
+                                    texto="OK"
+                                    onClick={() => setShowErrorModal(false)}
+                                />
+                            </div>
                         </div>
                     </motion.div>
                 )}
