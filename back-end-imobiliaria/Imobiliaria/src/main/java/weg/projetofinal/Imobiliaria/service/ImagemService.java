@@ -66,4 +66,7 @@ public class ImagemService {
         return repository.save(imagemExistente);
     }
 
+    public byte[] downloadImagem(String nomeArquivo) {
+        return s3Service.downloadFile(nomeArquivo);
+    }
 }
