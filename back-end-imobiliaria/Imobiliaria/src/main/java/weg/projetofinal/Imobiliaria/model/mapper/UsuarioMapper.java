@@ -13,6 +13,7 @@ import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 public interface UsuarioMapper {
     UsuarioMapper INSTANCE = Mappers.getMapper(UsuarioMapper.class);
 
+    @Mapping(source = "imovel", target = "imovel")
     UsuarioGetResponseDTO usuarioToUsuarioGetResponseDTO(Usuario usuario);
 
     Usuario usuarioPostRequestDTOToUsuario(UsuarioPostRequestDTO usuarioPostRequestDTO);
