@@ -1,6 +1,6 @@
 "use client"
 
-import type { UseFormRegister } from "react-hook-form"
+import type { UseFormRegister, UseFormSetValue } from "react-hook-form"
 import { useEffect, useState } from "react"
 
 type ProprietarioType = {
@@ -25,10 +25,70 @@ type ProprietarioType = {
 }
 
 type FormData = {
-    corretores: ProprietarioType[]
     imovel: {
+        nome_propriedade: string
+        tipo_transacao: string
+        valor_venda: number
+        tipo_imovel: string
+        status_imovel: string
+        valor_promocional: number
+        destaque: boolean
+        visibilidade: boolean
+        valor_iptu: number
+        condominio: number
+        area_construida: number
+        area_terreno: number
+        descricao?: string
         proprietarios: ProprietarioType[]
     }
+    imovelCaracteristicas: {
+        numero_quartos: number
+        numero_banheiros: number
+        numero_suites: number
+        numero_vagas: number
+        piscina: boolean
+        numero_salas: number
+    }
+    endereco: {
+        cep: string
+        rua: string
+        numero: string
+        bairro: string
+        cidade: string
+        uf: string
+        complemento?: string
+    }
+    proprietarios: {
+        id?: number
+        nome: string
+        sobrenome: string
+        telefone: string
+        celular: string
+        data_nascimento: string
+        email: string
+        enderecoProprietario: {
+            id: number
+            cep: string
+            rua: string
+            tipo_residencia: string
+            numero_imovel: number
+            numero_apartamento: number
+            bairro: string
+            cidade: string
+            uf: string
+        }
+    }
+    usuario: {
+        id?: number
+        nome: string
+        email: string
+        senha: string
+    }
+}
+
+type FormErrors = {
+    message?: string
+    type?: string
 }
 
 interface RelacaoProprietarioImovelProps {
@@ -36,10 +96,13 @@ interface RelacaoProprietarioImovelProps {
     name: "imovel.proprietarios"
     className?: string
     register: UseFormRegister<FormData>
+    setValue: UseFormSetValue<FormData>
     required?: boolean
+    errors?: FormErrors
+    onProprietarioAdicionado: () => void
 }
 
-export function RelacaoProprietarioImovel({ className = "", register, name, placeholder, required }: RelacaoProprietarioImovelProps) {
+export function RelacaoProprietarioImovel({ className = "", register, name, placeholder, required, errors, onProprietarioAdicionado, setValue }: RelacaoProprietarioImovelProps) {
     const [proprietarios, setProprietarios] = useState<ProprietarioType[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -123,6 +186,10 @@ export function RelacaoProprietarioImovel({ className = "", register, name, plac
                                     <div
                                         key={proprietario.id}
                                         className="flex items-center gap-3 p-3 sm:p-4 border-2 border-gray-200 rounded-xl hover:border-vermelho hover:bg-vermelho hover:text-white transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                                        onClick={() => {
+                                            onProprietarioAdicionado();
+                                            setValue("proprietarios", proprietario);
+                                        }}
                                     >
                                         <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 group-hover:bg-white/20">
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -138,6 +205,7 @@ export function RelacaoProprietarioImovel({ className = "", register, name, plac
                                             id={`proprietario-${proprietario.id}`}
                                             value={proprietario.id}
                                             {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
+                                            onChange={() => onProprietarioAdicionado()}
                                             className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 text-vermelho border-gray-300 rounded-full focus:ring-vermelho group-hover:border-white group-hover:ring-white"
                                         />
                                     </div>
@@ -147,6 +215,7 @@ export function RelacaoProprietarioImovel({ className = "", register, name, plac
                         )}
                     </div>
                 </div>
+                {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
             </div>
         </div>
     )
