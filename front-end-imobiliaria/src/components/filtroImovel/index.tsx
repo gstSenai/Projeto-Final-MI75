@@ -1,44 +1,56 @@
-import { UseFormRegister } from 'react-hook-form';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 interface FiltroImovelProps {
-    min: number;
-    max: number;
     onChange: (min: number, max: number) => void;
     className?: string;
-    name: string;
-    register: UseFormRegister<any>;
 }
 
-export function FiltroImovel({ min, max, onChange, className = "", name, register }: FiltroImovelProps) {
-    const [minVal, setMinVal] = useState<number | null>(null);
-    const [maxVal, setMaxVal] = useState(max);
-    const range = useRef<HTMLDivElement>(null);
-    const priceGap = 2000;
+export function FiltroImovel({ onChange, className = "" }: FiltroImovelProps) {
+    const [minValue, setMinValue] = useState<number | null>(0);
+    const [maxValue, setMaxValue] = useState<number | null>(2000000);
+    const [activeSlider, setActiveSlider] = useState<"min" | "max" | null>(null);
 
-    const validateValues = (newMin: number | null, newMax: number) => {
-        if (newMin === null) return { newMin: null, newMax };
-        if (newMin < 0) newMin = 0;
-        if (newMax > max) newMax = max;
-        if (newMax - newMin < priceGap && newMin !== 0) {
-            if (newMin === min) {
-                newMax = newMin + priceGap;
-            } else {
-                newMin = newMax - priceGap;
-            }
+    const minRange = 0;
+    const maxRange = 2000000;
+    const step = 10000;
+
+    const snapToStep = (value: number) => Math.round(value / step) * step;
+
+    const handleMouseMove = useCallback((e: MouseEvent) => {
+        if (!activeSlider) return;
+
+        const slider = document.getElementById('range-slider');
+        if (!slider) return;
+
+        const rect = slider.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percentage = Math.max(0, Math.min(1, x / rect.width));
+        const value = snapToStep(minRange + percentage * (maxRange - minRange));
+
+        if (activeSlider === "min" && value < (maxValue || maxRange)) {
+            setMinValue(value);
+            onChange(value, maxValue || maxRange);
+        } else if (activeSlider === "max" && value > (minValue || minRange)) {
+            setMaxValue(value);
+            onChange(minValue || minRange, value);
         }
-        return { newMin, newMax };
-    };
+    }, [activeSlider, maxValue, minValue, onChange]);
+
+    const handleMouseUp = useCallback(() => {
+        setActiveSlider(null);
+    }, []);
 
     useEffect(() => {
-        if (range.current) {
-            const minPercent = minVal === null ? 0 : ((minVal - min) / (max - min)) * 100;
-            const maxPercent = ((maxVal - min) / (max - min)) * 100;
-            
-            range.current.style.left = `${minPercent}%`;
-            range.current.style.width = `${maxPercent - minPercent}%`;
+        if (activeSlider) {
+            window.addEventListener('mousemove', handleMouseMove);
+            window.addEventListener('mouseup', handleMouseUp);
         }
-    }, [minVal, maxVal, min, max]);
+
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [activeSlider, handleMouseMove, handleMouseUp]);
 
     return (
         <div className={`w-full rounded-lg ${className}`}>
@@ -48,12 +60,11 @@ export function FiltroImovel({ min, max, onChange, className = "", name, registe
                         <span className="text-sm text-gray-600">Valor Mínimo</span>
                         <input
                             type="number"
-                            value={minVal === null ? '' : minVal}
+                            value={minValue === null ? '' : minValue}
                             onChange={(e) => {
                                 const value = e.target.value === '' ? null : Number(e.target.value);
-                                const { newMin, newMax } = validateValues(value, maxVal);
-                                setMinVal(newMin);
-                                onChange(newMin || 0, newMax);
+                                setMinValue(value);
+                                onChange(value || 0, maxValue || maxRange);
                             }}
                             className="w-full px-3 py-2 bg-gray-100 rounded-lg"
                         />
@@ -62,51 +73,48 @@ export function FiltroImovel({ min, max, onChange, className = "", name, registe
                         <span className="text-sm text-gray-600">Valor Máximo</span>
                         <input
                             type="number"
-                            value={maxVal}
+                            value={maxValue === null ? '' : maxValue}
                             onChange={(e) => {
-                                const value = Number(e.target.value);
-                                const { newMin, newMax } = validateValues(minVal, value);
-                                setMaxVal(newMax);
-                                onChange(newMin || 0, newMax);
+                                const value = e.target.value === '' ? null : Number(e.target.value);
+                                setMaxValue(value);
+                                onChange(minValue || minRange, value || maxRange);
                             }}
                             className="w-full px-3 py-2 bg-gray-100 rounded-lg"
                         />
                     </div>
                 </div>
 
-                <div className="relative h-1">
-                    <div className="absolute w-full h-1 bg-gray-200 rounded-lg">
-                        <div
-                            ref={range}
-                            className="absolute h-full bg-vermelho rounded-lg"
-                        />
+                <div className="relative px-3">
+                    <div id="range-slider" className="relative w-full h-1 bg-gray-200 rounded-full">
+                        <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-200 rounded-full"></div>
+
+                        {minValue !== null && (
+                            <div
+                                className="absolute left-6 top-1/2 w-6 h-6 bg-vermelho rounded-full z-30 cursor-grab active:cursor-grabbing"
+                                style={{
+                                    left: `${((minValue - minRange) / (maxRange - minRange)) * 100}%`,
+                                    transform: "translate(-50%, -50%)",
+                                }}
+                                onMouseDown={() => setActiveSlider("min")}
+                            ></div>
+                        )}
+
+                        {maxValue !== null && (
+                            <div
+                                className="absolute top-1/2 w-6 h-6 bg-vermelho rounded-full z-30 cursor-grab active:cursor-grabbing"
+                                style={{
+                                    left: `${((maxValue - minRange) / (maxRange - minRange)) * 100}%`,
+                                    transform: "translate(-50%, -50%)",
+                                }}
+                                onMouseDown={() => setActiveSlider("max")}
+                            ></div>
+                        )}
                     </div>
-                    <input
-                        type="range"
-                        min={min}
-                        max={max}
-                        value={minVal === null ? min : minVal}
-                        onChange={(e) => {
-                            const value = Number(e.target.value);
-                            const { newMin, newMax } = validateValues(value, maxVal);
-                            setMinVal(newMin);
-                            onChange(newMin || 0, newMax);
-                        }}
-                        className="absolute w-full h-5 bg-transparent appearance-none pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-vermelho [&::-webkit-slider-thumb]:cursor-pointer z-10"
-                    />
-                    <input
-                        type="range"
-                        min={min}
-                        max={max}
-                        value={maxVal}
-                        onChange={(e) => {
-                            const value = Number(e.target.value);
-                            const { newMin, newMax } = validateValues(minVal, value);
-                            setMaxVal(newMax);
-                            onChange(newMin || 0, newMax);
-                        }}
-                        className="absolute w-full h-5 bg-transparent appearance-none pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-vermelho [&::-webkit-slider-thumb]:cursor-pointer z-10"
-                    />
+
+                    <div className="flex justify-between mt-3">
+                        <span>R$ {minValue?.toLocaleString()}</span>
+                        <span>R$ {maxValue?.toLocaleString()}</span>
+                    </div>
                 </div>
             </div>
         </div>

@@ -73,15 +73,57 @@ const EnderecoImovelProps = z.object({
     complemento: z.string().optional(),
 })
 
+const ProprietarioProps = z.object({
+    id: z.number().optional(),
+    nome: z.string().min(1, { message: "O nome é obrigatório" }),
+    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+    cpf: z.string()
+        .min(14, { message: "CPF inválido" })
+        .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, { message: "Formato de CPF inválido" })
+        .transform((cpf) => cpf.replace(/\D/g, '')),
+    telefone: z.string()
+        .min(11, { message: "Telefone inválido" })
+        .regex(/^\(\d{2}\)\s\d{5}-\d{4}$/, { message: "Formato de telefone inválido" })
+        .transform((tel) => tel.replace(/\D/g, '')),
+    celular: z.string()
+        .min(11, { message: "Celular inválido" })
+        .regex(/^\(\d{2}\)\s\d{5}-\d{4}$/, { message: "Formato de celular inválido" })
+        .transform((cel) => cel.replace(/\D/g, '')),
+    data_nascimento: z.string()
+        .min(10, { message: "Data deve estar no formato DD/MM/AAAA" })
+        .regex(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/, {
+            message: "Data deve estar no formato DD/MM/AAAA"
+        })
+        .transform((data) => {
+            const [dia, mes, ano] = data.split('/').map(Number);
+            return new Date(ano, mes - 1, dia);
+        }),
+    email: z.string().email({ message: "E-mail inválido" }),
+    enderecoProprietario: z.object({
+        id: z.number().optional(),
+        cep: z.string().min(8, { message: "CEP inválido" }),
+        rua: z.string().min(1, { message: "Rua inválida" }),
+        tipo_residencia: z.string().min(1, { message: "Tipo de residência inválido" }),
+        numero_imovel: z.coerce.number().min(1, { message: "Número do imóvel inválido" }),
+        numero_apartamento: z.coerce.number().min(1, { message: "Número do apartamento inválido" }).optional(),
+        bairro: z.string().min(1, { message: "Bairro inválido" }),
+        cidade: z.string().min(1, { message: "Cidade inválida" }),
+        uf: z.string().min(2, { message: "UF inválida" }),
+    }).optional(),
+})
+
+
 const FormSchema = z.object({
     imovel: ImovelProps,
     imovelCaracteristicas: ImovelCaracteristicas,
-    endereco: EnderecoImovelProps
+    endereco: EnderecoImovelProps,
+    proprietarios: ProprietarioProps
 })
 
 type ImovelProps = z.infer<typeof ImovelProps>
 type ImovelCaracteristicas = z.infer<typeof ImovelCaracteristicas>
 type EnderecoImovelProps = z.infer<typeof EnderecoImovelProps>
+type ProprietarioProps = z.infer<typeof ProprietarioProps>
 type FormData = z.infer<typeof FormSchema>
 
 export type { FormData }
@@ -314,7 +356,8 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
 
     const onSubmitImovel = async (data: {
         imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas;
-        endereco: EnderecoImovelProps
+        endereco: EnderecoImovelProps;
+        proprietarios: ProprietarioProps
     }) => {
         if (isSubmitting) return;
 
@@ -342,7 +385,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
 
             setIsSubmitting(true);
 
-            const { imovel, endereco, imovelCaracteristicas } = data;
+            const { imovel, endereco, imovelCaracteristicas, proprietarios } = data;
 
             const responseCaracImovel = await addCaracteristicasImovel(imovelCaracteristicas)
             const responseEndereco = await addEndereco(endereco);
@@ -365,6 +408,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                 descricao: imovel.descricao || "",
                 id_endereco: responseEndereco,
                 id_caracteristicasImovel: responseCaracImovel,
+                id_proprietario: proprietarios
             };
 
             const response = await addImovel(immobileData);

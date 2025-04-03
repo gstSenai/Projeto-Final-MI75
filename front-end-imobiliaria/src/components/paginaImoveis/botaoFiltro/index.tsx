@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import { Montserrat } from "next/font/google";
 import PlaceFilter from "@/components/paginaImoveis/botaoSelecaoFiltro";
 import { Botao } from "@/components/botao";
-import Image from "next/image";
 
 const montserrat = Montserrat({
     subsets: ["latin"],

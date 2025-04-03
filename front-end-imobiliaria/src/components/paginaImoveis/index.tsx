@@ -75,7 +75,7 @@ export function ListaImoveis() {
         totalPages: data.totalPages || 1,
         totalElements: data.totalElements || 0,
         currentPage: data.number || 0,
-        size: data.size || 10,
+        size: data.size || 12,
       })
 
       const maiorId = Math.max(...imoveisArray.map((imovel: any) => imovel.id))
@@ -105,18 +105,68 @@ export function ListaImoveis() {
     }
   }
 
-  const refreshData = () => {
-    setImoveis([]);
-    setMostrarFiltros(false);
-    setPaginationInfo({
-      totalPages: 0,
-      totalElements: 0, 
-      currentPage: 0,
-      size: 10,
-    });
-    fetchImoveis(0);
-};
+  const refreshData = async () => {
+    try {
+      setLoading(true);
+      setImoveis([]);
+      setTipoTransacao("Todos");
+      setMostrarFiltros(false);
+      setUltimoId(null);
+      setPaginationInfo({
+        totalPages: 0,
+        totalElements: 0,
+        currentPage: 0,
+        size: 12,
+      });
+      
+      const response = await fetch(`http://localhost:9090/imovel/getAll?page=0&size=10`, {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache",
+          "Pragma": "no-cache",
+          "Expires": "0",
+        },
+      });
 
+      if (!response.ok) {
+        throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const imoveisArray = data.content || [];
+      
+      if (imoveisArray.length === 0) {
+        setImoveis([]);
+        return;
+      }
+
+      setPaginationInfo({
+        totalPages: data.totalPages || 1,
+        totalElements: data.totalElements || 0,
+        currentPage: data.number || 0,
+        size: data.size || 12,
+      });
+
+      const imoveisFormatados = imoveisArray.map((imovel: any) => ({
+        id: imovel.id || 0,
+        titulo: imovel.nome_propriedade || "Sem título",
+        cidade: imovel.id_endereco?.cidade || "Cidade não informada",
+        qtdDormitorios: imovel.id_caracteristicasImovel?.numero_quartos || 0,
+        qtdSuite: imovel.id_caracteristicasImovel?.numero_suites || 0,
+        qtdBanheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
+        preco: imovel.valor_venda || 0,
+        codigo: imovel.codigo || 0,
+        tipo_transacao: imovel.tipo_transacao || "Indefinido",
+      }));
+
+      setImoveis(imoveisFormatados);
+    } catch (error) {
+      console.error("Erro ao buscar imóveis:", error);
+      setError("Erro ao carregar imóveis. Por favor, tente novamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     refreshData()

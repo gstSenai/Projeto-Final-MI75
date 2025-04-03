@@ -3,6 +3,7 @@ package weg.projetofinal.Imobiliaria.model.dto.imovel;
 import weg.projetofinal.Imobiliaria.model.dto.caracteriticas.CaracteristicaImovelGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.endereco.EnderecoImovelGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.proprietario.ProprietarioImovelResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioImovelGetResponseDTO;
 
 public record ImovelGetResponseDTO(
         Integer id,
@@ -22,7 +23,8 @@ public record ImovelGetResponseDTO(
         String descricao,
         EnderecoImovelGetResponseDTO id_endereco,
         CaracteristicaImovelGetResponseDTO id_caracteristicasImovel,
-        ProprietarioImovelResponseDTO proprietarioImovelResponseDTO
+        ProprietarioImovelResponseDTO id_proprietario,
+        UsuarioImovelGetResponseDTO id_usuario
 ) {
 
 

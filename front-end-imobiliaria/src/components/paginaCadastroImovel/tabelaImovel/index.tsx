@@ -63,6 +63,8 @@ interface ResponseProps {
 interface FormValues {
   "imovel.nome_propriedade": string;
   "imovel.venda_valor": number;
+  "imovel.numero_quartos": number;
+  "imovel.numero_banheiros": number;
 }
 
 export default function TabelaImovel() {
@@ -70,6 +72,8 @@ export default function TabelaImovel() {
     defaultValues: {
       "imovel.nome_propriedade": "",
       "imovel.venda_valor": 0,
+      "imovel.numero_quartos": 0,
+      "imovel.numero_banheiros": 0,
     }
   });
   const [selectedImoveis, setSelectedImoveis] = useState<ImovelProps[]>([])
@@ -114,7 +118,7 @@ export default function TabelaImovel() {
     }
   }
 
-  const getImoveis = async (searchNome?: string, searchValorMin?: number, searchValorMax?: number) => {
+  const getImoveis = async (searchNome?: string, searchValorMin?: number, searchValorMax?: number, searchQuartos?: number, searchBanheiros?: number) => {
     if (isLoading) return
 
     setIsLoading(true)
@@ -131,7 +135,13 @@ export default function TabelaImovel() {
           const valorMax = searchValorMax || Infinity;
           const matchValor = valorImovel >= valorMin && valorImovel <= valorMax;
 
-          return matchNome && matchValor;
+          const quartosImovel = imovel.id_caracteristicasImovel?.numero_quartos || 0;
+          const matchQuartos = !searchQuartos || quartosImovel === searchQuartos;
+
+          const banheirosImovel = imovel.id_caracteristicasImovel?.numero_banheiros || 0;
+          const matchBanheiros = !searchBanheiros || banheirosImovel === searchBanheiros;
+
+          return matchNome && matchValor && matchQuartos && matchBanheiros;
         })
       }
 
@@ -325,15 +335,31 @@ export default function TabelaImovel() {
 
                 <div className="space-y-4">
                   <FiltroImovel
-                    min={0}
-                    max={1000000}
-                    name="imovel.valor_venda"
-                    register={register}
                     onChange={(min, max) => {
                       setValorMin(min);
                       setValorMax(max);
                     }}
                     className="mt-2"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <FormularioInput
+                    placeholder="Quantidade de Quartos:"
+                    name="imovel.numero_quartos"
+                    interName='Ex: 3'
+                    register={register}
+                    customizacaoClass="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <FormularioInput
+                    placeholder="Quantidade de Banheiros:"
+                    name="imovel.numero_banheiros"
+                    interName='Ex: 2'
+                    register={register}
+                    customizacaoClass="w-full"
                   />
                 </div>
               </div>
@@ -353,7 +379,9 @@ export default function TabelaImovel() {
                   texto="Pesquisar"
                   onClick={() => {
                     const currentNome = watch("imovel.nome_propriedade");
-                    getImoveis(currentNome, valorMin, valorMax);
+                    const currentQuartos = watch("imovel.numero_quartos");
+                    const currentBanheiros = watch("imovel.numero_banheiros");
+                    getImoveis(currentNome, valorMin, valorMax, currentQuartos, currentBanheiros);
                     setTimeout(() => {
                       setShowSidebar(false);
                     }, 100);
