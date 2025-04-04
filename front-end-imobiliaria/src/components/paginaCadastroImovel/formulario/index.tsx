@@ -51,13 +51,13 @@ const ImovelProps = z.object({
 
 const ImovelCaracteristicas = z.object({
     id: z.number().optional(),
-    numero_quartos: z.coerce.number().min(0, { message: "Número de quartos é obrigatório" }),
-    numero_banheiros: z.coerce.number().min(0, { message: "Número de banheiros é obrigatório" }),
-    numero_suites: z.coerce.number().min(0, { message: "Número de suítes é obrigatório" }),
-    numero_vagas: z.coerce.number().min(0, { message: "Número de vagas é obrigatório" }),
-    test_piscina: z.string().optional(),
+    numero_quartos: z.coerce.number().min(1, { message: "Número de quartos é obrigatório" }),
+    numero_banheiros: z.coerce.number().min(1, { message: "Número de banheiros é obrigatório" }),
+    numero_suites: z.coerce.number().min(1, { message: "Número de suítes é obrigatório" }),
+    numero_vagas: z.coerce.number().min(1, { message: "Número de vagas é obrigatório" }),
+    test_piscina:  z.string().min(1, { message: "Piscina é obrigatório" }).optional(),
     piscina: z.boolean().default(false),
-    numero_salas: z.coerce.number().min(0, { message: "Número de salas é obrigatório" }),
+    numero_salas: z.coerce.number().min(1, { message: "Número de salas é obrigatório" }),
 })
 
 const EnderecoImovelProps = z.object({
@@ -157,12 +157,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
             },
             imovelCaracteristicas: {
                 test_piscina: "",
-                piscina: false,
-                numero_salas: 0,
-                numero_quartos: 0,
-                numero_banheiros: 0,
-                numero_suites: 0,
-                numero_vagas: 0,
+                piscina: undefined
             },
             endereco: {
                 uf: ""
@@ -321,37 +316,15 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
             }
 
             if (currentStep === 3) {
-                isValid = await trigger(['imovel', 'imovelCaracteristicas']);
+                isValid = await trigger('imovelCaracteristicas');
                 if (!isValid) {
                     setErrorMessage("Por favor, preencha todos os campos obrigatórios");
                     setShowErrorModal(true);
-                    setErrorMessage("Por favor, selecione o tipo de transação e o tipo de imóvel");
-                    const formData = getValues();
-                    const camposFaltantes = [];
-
-                    if (!formData.imovel.tipo_transacao) camposFaltantes.push("tipo de transação");
-                    if (!formData.imovel.tipo_imovel) camposFaltantes.push("tipo de imóvel");
-                    if (!formData.imovel.test_destaque) camposFaltantes.push("destaque");
-                    if (!formData.imovel.test_visibilidade) camposFaltantes.push("visibilidade");;
-
-                    if (camposFaltantes.length > 0) {
-                        setErrorMessage(`Por favor, preencha os seguintes campos: ${camposFaltantes.join(", ")}`);
-                        setShowErrorModal(true);
-                        return;
-                    }
+                    return;
                 }
             }
 
             if (currentStep === 4) {
-                if (!proprietarioAdicionado || !usuarioAdicionado) {
-                    const camposFaltantes = [];
-                    if (!proprietarioAdicionado) camposFaltantes.push("proprietário");
-                    if (!usuarioAdicionado) camposFaltantes.push("usuário");
-                    
-                    setErrorMessage(`Por favor, adicione um ${camposFaltantes.join(" e um ")} antes de salvar`);
-                    setShowErrorModal(true);
-                    return;
-                }
             }
 
             setCurrentStep(currentStep + 1);
@@ -383,16 +356,6 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
         if (isSubmitting) return;
 
         try {
-            if (!proprietarioAdicionado || !usuarioAdicionado) {
-                const camposFaltantes = [];
-                if (!proprietarioAdicionado) camposFaltantes.push("proprietário");
-                if (!usuarioAdicionado) camposFaltantes.push("usuário");
-                
-                setErrorMessage(`Por favor, adicione um ${camposFaltantes.join(" e um ")} antes de salvar`);
-                setShowErrorModal(true);
-                return;
-            }
-
             if (Object.keys(errors).length > 0) {
                 if (errors.endereco) {
                     setErrorMessage("Por favor, preencha todos os campos do endereço corretamente");
@@ -406,16 +369,10 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                     setCurrentStep(2);
                     return;
                 }
-                if (errors.imovel || errors.imovelCaracteristicas) {
+                if (errors.imovelCaracteristicas) {
                     setErrorMessage("Por favor, preencha todos os campos obrigatórios");
                     setShowErrorModal(true);
                     setCurrentStep(3);
-                    return;
-                }
-                if (errors.proprietarios || errors.usuario) {
-                    setErrorMessage("Por favor, preencha todos os campos obrigatórios");
-                    setShowErrorModal(true);
-                    setCurrentStep(4);
                     return;
                 }
             }
