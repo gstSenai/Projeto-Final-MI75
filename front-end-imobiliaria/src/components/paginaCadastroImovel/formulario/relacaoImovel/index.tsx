@@ -22,6 +22,7 @@ export function RelacaoImovel({ register, errors, setValue, onProprietarioAdicio
                                 placeholder="Corretores"
                                 name="imovel.usuario"
                                 register={register}
+                                setValue={setValue}
                                 className="w-full h-40"
                                 errors={errors?.imovel?.usuario} 
                                 onUsuarioAdicionado={onUsuarioAdicionado}

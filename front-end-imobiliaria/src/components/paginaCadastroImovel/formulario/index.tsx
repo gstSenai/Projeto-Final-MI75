@@ -1,5 +1,5 @@
-"use client"
-import { useEffect, useState } from "react"
+'use client'
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { EnderecoSection } from "../formulario/endereco-section"
 import { DadosImovelSection } from "./dados-imovel-section"
@@ -181,15 +181,6 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
     const [usuarioAdicionado, setUsuarioAdicionado] = useState(false)
     const codigosGerados = new Set<number>();
 
-    useEffect(() => {
-        console.log("Proprietário:", proprietarioAdicionado)
-        console.log("Usuário:", usuarioAdicionado)
-        if (proprietarioAdicionado || usuarioAdicionado) {
-            console.log("Dados do formulário:", getValues())
-        }
-        console.log(errors)
-    }, [proprietarioAdicionado, usuarioAdicionado, errors])
-
     const handleImagesChange = (files: File[]) => {
         setImages(files);
     };
@@ -360,26 +351,6 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                     setErrorMessage(`Por favor, adicione um ${camposFaltantes.join(" e um ")} antes de salvar`);
                     setShowErrorModal(true);
                     return;
-                }
-
-                isValid = await trigger(['proprietarios', 'usuario']);
-                if (!isValid) {
-                    const formData = getValues();
-                    const camposFaltantes = [];
-
-                    if (!formData.proprietarios?.nome) camposFaltantes.push("nome do proprietário");
-                    if (!formData.proprietarios?.sobrenome) camposFaltantes.push("sobrenome do proprietário");
-                    if (!formData.proprietarios?.cpf) camposFaltantes.push("CPF do proprietário");
-                    if (!formData.proprietarios?.email) camposFaltantes.push("email do proprietário");
-                    if (!formData.usuario?.nome) camposFaltantes.push("nome do usuário");
-                    if (!formData.usuario?.email) camposFaltantes.push("email do usuário");
-                    if (!formData.usuario?.senha) camposFaltantes.push("senha do usuário");
-
-                    if (camposFaltantes.length > 0) {
-                        setErrorMessage(`Por favor, preencha os seguintes campos: ${camposFaltantes.join(", ")}`);
-                        setShowErrorModal(true);
-                        return;
-                    }
                 }
             }
 
