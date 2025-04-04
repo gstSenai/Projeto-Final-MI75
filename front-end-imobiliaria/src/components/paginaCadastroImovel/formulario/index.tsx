@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { EnderecoSection } from "../formulario/endereco-section"
 import { DadosImovelSection } from "./dados-imovel-section"
@@ -9,6 +9,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { motion, AnimatePresence } from "framer-motion"
 import { TipoImovelTransacao } from "./tiposTransacao"
+import { RelacaoImovel } from "./relacaoImovel"
 
 const ImovelProps = z.object({
     id: z.number().optional(),
@@ -78,22 +79,16 @@ const ProprietarioProps = z.object({
     nome: z.string().min(1, { message: "O nome é obrigatório" }),
     sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
     cpf: z.string()
-        .min(14, { message: "CPF inválido" })
-        .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, { message: "Formato de CPF inválido" })
+        .min(1, { message: "CPF é obrigatório" })
         .transform((cpf) => cpf.replace(/\D/g, '')),
     telefone: z.string()
-        .min(11, { message: "Telefone inválido" })
-        .regex(/^\(\d{2}\)\s\d{5}-\d{4}$/, { message: "Formato de telefone inválido" })
+        .min(1, { message: "Telefone é obrigatório" })
         .transform((tel) => tel.replace(/\D/g, '')),
     celular: z.string()
-        .min(11, { message: "Celular inválido" })
-        .regex(/^\(\d{2}\)\s\d{5}-\d{4}$/, { message: "Formato de celular inválido" })
+        .min(1, { message: "Celular é obrigatório" })
         .transform((cel) => cel.replace(/\D/g, '')),
     data_nascimento: z.string()
-        .min(10, { message: "Data deve estar no formato DD/MM/AAAA" })
-        .regex(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/, {
-            message: "Data deve estar no formato DD/MM/AAAA"
-        })
+        .min(1, { message: "Data de nascimento é obrigatória" })
         .transform((data) => {
             const [dia, mes, ano] = data.split('/').map(Number);
             return new Date(ano, mes - 1, dia);
@@ -112,18 +107,29 @@ const ProprietarioProps = z.object({
     }).optional(),
 })
 
+const UsuarioProps = z.object({
+    id: z.number().optional(),
+    nome: z.string().min(1, { message: "O nome é obrigatório" }),
+    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+    tipo_conta: z.string().min(1, { message: "Selecione um tipo de conta válido" }),
+    email: z.string().email({ message: "E-mail inválido" }),
+    senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+    ativo: z.boolean().optional(),
+})
 
 const FormSchema = z.object({
     imovel: ImovelProps,
     imovelCaracteristicas: ImovelCaracteristicas,
     endereco: EnderecoImovelProps,
-    proprietarios: ProprietarioProps
+    proprietarios: ProprietarioProps,
+    usuario: UsuarioProps
 })
 
 type ImovelProps = z.infer<typeof ImovelProps>
 type ImovelCaracteristicas = z.infer<typeof ImovelCaracteristicas>
 type EnderecoImovelProps = z.infer<typeof EnderecoImovelProps>
 type ProprietarioProps = z.infer<typeof ProprietarioProps>
+type UsuarioProps = z.infer<typeof UsuarioProps>
 type FormData = z.infer<typeof FormSchema>
 
 export type { FormData }
@@ -171,7 +177,18 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
     const [images, setImages] = useState<File[]>([])
     const [adicionadoComSucesso, setAdicionadoComSucesso] = useState(false)
     const [adicionarAberto, setAdicionarAberto] = useState(true)
+    const [proprietarioAdicionado, setProprietarioAdicionado] = useState(false)
+    const [usuarioAdicionado, setUsuarioAdicionado] = useState(false)
     const codigosGerados = new Set<number>();
+
+    useEffect(() => {
+        console.log("Proprietário:", proprietarioAdicionado)
+        console.log("Usuário:", usuarioAdicionado)
+        if (proprietarioAdicionado || usuarioAdicionado) {
+            console.log("Dados do formulário:", getValues())
+        }
+        console.log(errors)
+    }, [proprietarioAdicionado, usuarioAdicionado, errors])
 
     const handleImagesChange = (files: File[]) => {
         setImages(files);
@@ -279,7 +296,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
     }
 
     const handleNext = async () => {
-        if (currentStep < 3) {
+        if (currentStep < 4) {
             let isValid = false;
 
             if (currentStep === 1) {
@@ -324,7 +341,39 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                     if (!formData.imovel.tipo_transacao) camposFaltantes.push("tipo de transação");
                     if (!formData.imovel.tipo_imovel) camposFaltantes.push("tipo de imóvel");
                     if (!formData.imovel.test_destaque) camposFaltantes.push("destaque");
-                    if (!formData.imovel.test_visibilidade) camposFaltantes.push("visibilidade");
+                    if (!formData.imovel.test_visibilidade) camposFaltantes.push("visibilidade");;
+
+                    if (camposFaltantes.length > 0) {
+                        setErrorMessage(`Por favor, preencha os seguintes campos: ${camposFaltantes.join(", ")}`);
+                        setShowErrorModal(true);
+                        return;
+                    }
+                }
+            }
+
+            if (currentStep === 4) {
+                if (!proprietarioAdicionado || !usuarioAdicionado) {
+                    const camposFaltantes = [];
+                    if (!proprietarioAdicionado) camposFaltantes.push("proprietário");
+                    if (!usuarioAdicionado) camposFaltantes.push("usuário");
+                    
+                    setErrorMessage(`Por favor, adicione um ${camposFaltantes.join(" e um ")} antes de salvar`);
+                    setShowErrorModal(true);
+                    return;
+                }
+
+                isValid = await trigger(['proprietarios', 'usuario']);
+                if (!isValid) {
+                    const formData = getValues();
+                    const camposFaltantes = [];
+
+                    if (!formData.proprietarios?.nome) camposFaltantes.push("nome do proprietário");
+                    if (!formData.proprietarios?.sobrenome) camposFaltantes.push("sobrenome do proprietário");
+                    if (!formData.proprietarios?.cpf) camposFaltantes.push("CPF do proprietário");
+                    if (!formData.proprietarios?.email) camposFaltantes.push("email do proprietário");
+                    if (!formData.usuario?.nome) camposFaltantes.push("nome do usuário");
+                    if (!formData.usuario?.email) camposFaltantes.push("email do usuário");
+                    if (!formData.usuario?.senha) camposFaltantes.push("senha do usuário");
 
                     if (camposFaltantes.length > 0) {
                         setErrorMessage(`Por favor, preencha os seguintes campos: ${camposFaltantes.join(", ")}`);
@@ -358,10 +407,21 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
         imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas;
         endereco: EnderecoImovelProps;
         proprietarios: ProprietarioProps
+        usuario: UsuarioProps
     }) => {
         if (isSubmitting) return;
 
         try {
+            if (!proprietarioAdicionado || !usuarioAdicionado) {
+                const camposFaltantes = [];
+                if (!proprietarioAdicionado) camposFaltantes.push("proprietário");
+                if (!usuarioAdicionado) camposFaltantes.push("usuário");
+                
+                setErrorMessage(`Por favor, adicione um ${camposFaltantes.join(" e um ")} antes de salvar`);
+                setShowErrorModal(true);
+                return;
+            }
+
             if (Object.keys(errors).length > 0) {
                 if (errors.endereco) {
                     setErrorMessage("Por favor, preencha todos os campos do endereço corretamente");
@@ -381,11 +441,17 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                     setCurrentStep(3);
                     return;
                 }
+                if (errors.proprietarios || errors.usuario) {
+                    setErrorMessage("Por favor, preencha todos os campos obrigatórios");
+                    setShowErrorModal(true);
+                    setCurrentStep(4);
+                    return;
+                }
             }
 
             setIsSubmitting(true);
 
-            const { imovel, endereco, imovelCaracteristicas, proprietarios } = data;
+            const { imovel, endereco, imovelCaracteristicas, proprietarios, usuario } = data;
 
             const responseCaracImovel = await addCaracteristicasImovel(imovelCaracteristicas)
             const responseEndereco = await addEndereco(endereco);
@@ -408,7 +474,8 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                 descricao: imovel.descricao || "",
                 id_endereco: responseEndereco,
                 id_caracteristicasImovel: responseCaracImovel,
-                id_proprietario: proprietarios
+                id_proprietario: proprietarios,
+                id_usuario: usuario
             };
 
             const response = await addImovel(immobileData);
@@ -552,6 +619,37 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                                     />
                                     <div className="flex justify-end gap-4 mt-4">
                                         <Botao
+                                            className="bg-vermelho lg:w-[70%]"
+                                            texto="Voltar"
+                                            onClick={handleBack}
+                                        />
+                                        <Botao
+                                            className="bg-vermelho h-10 lg:w-[70%]"
+                                            texto="Próximo"
+                                            onClick={handleNext}
+                                        />
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {currentStep === 4 && (
+                                <motion.div
+                                    key="dados"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 20 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="space-y-4"
+                                >
+                                    <RelacaoImovel
+                                        register={register}
+                                        errors={errors}
+                                        setValue={setValue}
+                                        onProprietarioAdicionado={() => setProprietarioAdicionado(true)}
+                                        onUsuarioAdicionado={() => setUsuarioAdicionado(true)}
+                                    />
+                                    <div className="flex justify-end gap-4 mt-4">
+                                        <Botao
                                             className="bg-vermelho h-10 lg:w-[70%]"
                                             texto="Voltar"
                                             onClick={handleBack}
@@ -621,3 +719,4 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
         </>
     )
 }
+

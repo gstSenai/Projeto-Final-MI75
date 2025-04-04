@@ -3,8 +3,6 @@ import { UseFormRegister } from "react-hook-form"
 import { FormularioInput } from "../formularioInput"
 import { Descricao } from "../descricao"
 import { FormularioImagem } from "../formularioImagem"
-import { RelacaoCorretorImovel } from "../relacaoCorretorImovel"
-import { RelacaoProprietarioImovel } from "../relacaoProprietarioImovel"
 
 interface DadosImovelSectionProps {
     register: UseFormRegister<any>
@@ -115,18 +113,6 @@ export function DadosImovelSection({ register, errors, onImagesChange }: DadosIm
                 <Descricao
                     placeholder="Descrição"
                     name="imovel.descricao"
-                    register={register}
-                    className="w-full h-40" />
-            </div>
-            <div className="mt-8">
-                <RelacaoCorretorImovel
-                    placeholder="Corretores"
-                    name="imovel.corretores"
-                    register={register}
-                    className="w-full h-40" />
-                <RelacaoProprietarioImovel
-                    placeholder="Proprietários"
-                    name="imovel.proprietarios"
                     register={register}
                     className="w-full h-40" />
             </div>
