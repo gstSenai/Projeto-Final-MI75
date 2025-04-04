@@ -14,6 +14,17 @@ interface DadosUsuarioSectionProps {
     errors: any
 }
 
+const formatarTelefone = (value: string) => {
+    const numeros = value.replace(/\D/g, '').slice(0, 11);
+    if (numeros.length <= 11) {
+        if (numeros.length <= 10) {
+            return numeros.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+        }
+        return numeros.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    }
+    return value;
+};
+
 export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionProps) {
     return (
         <div className={`flex flex-col ${montserrat.className}`}>
@@ -57,6 +68,9 @@ export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionPro
                         required
                         customizacaoClass="w-full"
                         errors={errors?.telefone}
+                        onChange={(e) => {
+                            e.target.value = formatarTelefone(e.target.value);
+                        }}
                     />
                     <FormularioInput
                         placeholder="E-mail:"
