@@ -3,8 +3,9 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { BarraStatusImovel } from '@/components/barraStatusImovel';
 import Image from 'next/image';
-import Card from '@/components/cardImovel';
+import { Card } from '@/components/cardImovel/index';
 import AgendarCorretor from '@/components/agendarCorretor';
+
 
 const montserrat = Montserrat({
     subsets: ['latin'],

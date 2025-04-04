@@ -1,6 +1,14 @@
-"use client"
+"use client";
 
-import { Botao } from "../botao"
+import { Montserrat } from 'next/font/google';
+
+const montserrat = Montserrat({
+    subsets: ['latin'],
+    weight: ['400', '800'],
+    display: 'swap',
+});
+
+import { Botao } from "../botao/index";
 import { useEffect, useState } from "react"
 import request from "@/routes/request"
 

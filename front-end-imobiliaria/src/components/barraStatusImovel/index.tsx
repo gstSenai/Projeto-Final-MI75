@@ -1,15 +1,17 @@
-"use client"
+"use client";
 
 import { Montserrat } from 'next/font/google';
-import Image from 'next/image';
-import { useEffect, useState } from "react"
-import request from "@/routes/request"
 
 const montserrat = Montserrat({
     subsets: ['latin'],
     weight: ['400', '800'],
     display: 'swap',
 });
+
+import Image from 'next/image';
+import { useEffect, useState } from "react"
+import request from "@/routes/request"
+
 
 interface BarraStatusProps {
     id: number; 
