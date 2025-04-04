@@ -1,7 +1,6 @@
 "use client"
 
 import { Formulario } from "@/components/paginaCadastroUsuario/adicionandoUsuario/formulario"
-import { motion, AnimatePresence } from "framer-motion"
 import { Montserrat } from 'next/font/google'
 
 const montserrat = Montserrat({
@@ -20,8 +19,8 @@ export function FormularioUsuarioModal({ isOpen, onClose, onComplete }: Formular
     if (!isOpen) return null;
 
     return (
-        <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ${montserrat.className}`}>
-            <div className="bg-white rounded-2xl p-8 w-[95%] max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div className={`fixed inset-0 bg-black bg-opacity-50 px-6 flex items-center justify-center z-50 ${montserrat.className}`}>
+            <div className="bg-white rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-semibold text-vermelho">Cadastro de Usuário</h2>
                     <button
