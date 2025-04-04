@@ -79,6 +79,20 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
 
                 <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput
+                        placeholder="Data de nascimento:"
+                        name="proprietario.data_nascimento"
+                        label="Data de nascimento:"
+                        interName=""
+                        register={register}
+                        required
+                        customizacaoClass="w-full p-2 border border-gray-500 rounded"
+                        maxLength={10}
+                        onChange={(e) => {
+                            e.target.value = formatarData(e.target.value);
+                        }}
+                        errors={errors?.data_nascimento}
+                    />
+                    <FormularioInput
                         placeholder="Telefone"
                         name="proprietario.telefone"
                         label="Telefone:"
@@ -106,20 +120,9 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                         }}
                         errors={errors?.celular}
                     />
-                    <FormularioInput
-                        placeholder="Data de nascimento:"
-                        name="proprietario.data_nascimento"
-                        label="Data de nascimento:"
-                        interName=""
-                        register={register}
-                        required
-                        customizacaoClass="w-full p-2 border border-gray-500 rounded"
-                        maxLength={10}
-                        onChange={(e) => {
-                            e.target.value = formatarData(e.target.value);
-                        }}
-                        errors={errors?.data_nascimento}
-                    />
+                </div>
+
+                <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput
                         placeholder="E-mail:"
                         name="proprietario.email"

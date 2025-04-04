@@ -20,7 +20,7 @@ const FAQ = ({ title, faqs }: { title: string, faqs: { question: string, answer:
   return (
     <>
       <Header />
-      <div className={`p-8 ${montserrat.className} md:bg-[url('/iconsFaq/imgFundo.png')] bg-cover bg-center`}>
+      <div className={`p-8 ${montserrat.className} md:bg-[url('/iconsFaq/imgFundo.png')] bg-cover bg-center bg-fixed`}>
         <div className="flex flex-col items-start pt-11 pb-5 md:pl-8">
           <h2 className="text-[18px] md:text-2xl font-bold text-gray-800 mb-10 border-b-2 border-[#702632] pb-2 md:w-72 text-left lg:ml-20">
             {title}
