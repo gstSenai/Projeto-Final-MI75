@@ -34,7 +34,7 @@ export default function PaginaImovel() {
                 <section>
 
 
-                    <BarraStatusImovel quantQuartos={3} quantBanheiro={2} quantGaragem={1} quantSuite={1} quantpiscina={1} />
+                    <BarraStatusImovel id={1}/>
 
 
 

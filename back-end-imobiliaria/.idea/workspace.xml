@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6a19b67c-7436-4fa1-8d76-d7f35d209a8e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Imobiliaria/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Imobiliaria/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/paginaImovel/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/paginaImovel/page.tsx" afterDir="false" />
     </list>

@@ -37,7 +37,7 @@ export default function AgendarCorretor({ id }: { id: number }) {
 
 
     return (
-        <div className="flex flex-col gap-4 py-4 w-80">
+        <div className="flex flex-col gap-4 py-4 w-72">
             <div>
                 {isLoading ? (
                     <p>Carregando...</p>
@@ -60,7 +60,7 @@ export default function AgendarCorretor({ id }: { id: number }) {
                 )}
             </div>
 
-            <div className="flex flex-col items-center gap-8">
+            <div className="flex flex-col items-center gap-12">
                 <Botao type="button" className='bg-vermelho h-10' texto="Falar com corretor" />
                 <Botao type="button" className='bg-vermelho h-10' texto="Agendar sua visita" />
             </div>
