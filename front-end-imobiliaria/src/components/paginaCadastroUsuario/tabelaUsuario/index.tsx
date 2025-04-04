@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { Montserrat } from 'next/font/google'
-import { Formulario } from "../adicionandoUsuario/formulario"
 import { RemoveUsuario } from "../removerUsuario"
 import { EditarUsuario } from "../editandoUsuario"
 import { z } from "zod"
@@ -128,13 +127,15 @@ export default function TabelaUsuario() {
 
   useEffect(() => {
     getUsuario();
-  }, []);
+    setRemover(false)
+    setEditar(false)
+  }, [refreshTrigger]);
 
   return (
     <>
       <div className={`flex flex-col gap-10 sm:flex-col lg:flex-row ${montserrat.className}`}>
         <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden w-full lg:w-5/6">
-          <div className="overflow-x-auto max-h-[500px]">
+          <div className="overflow-x-auto max-h-[350px]">
             <table className="w-full border-separate border-spacing-0">
               <thead>
                 <tr className="bg-vermelho text-white sticky top-0 z-[5]">
