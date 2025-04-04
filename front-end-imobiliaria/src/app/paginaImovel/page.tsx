@@ -34,9 +34,9 @@ export default function PaginaImovel() {
                 </main>
                 <section>
 
-
-                    <BarraStatusImovel id={1}/>
-
+                    <div className="flex justify-center lg:justify-start">
+                        <BarraStatusImovel id={1} />
+                    </div>
 
 
 
@@ -49,7 +49,7 @@ export default function PaginaImovel() {
 
                 </section>
                 <footer>
-                    <div className='pl-20'>
+                    <div className='pl-0 md:pl-0 lg:pl-20 text-center md:text-center lg:text-start flex flex-col items-center md:items-center lg:items-start'>
                         <h2 className='font-bold text-xl'>Imóveis semelhantes</h2>
                         <div className='bg-vermelho w-[110px] h-[3px]'></div>
                     </div>

@@ -27,7 +27,7 @@ export function Header() {
                         <div>
                             <nav>
                                 <ul className="flex flex-row max-lg:text-base text-xl whitespace-nowrap md:gap-4 lg:gap-6 text-[#303030] max-md:hidden">
-                                    <li><a href="/paginaInicial">Início</a></li>
+                                    <li><a href="/">Início</a></li>
                                     <li><a href="#">Propriedades</a></li>
                                     <li><a href="#">Corretores</a></li>
                                     <li><a href="/sobreNos">Sobre nós</a></li>

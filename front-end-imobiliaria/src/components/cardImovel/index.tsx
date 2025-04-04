@@ -21,8 +21,8 @@ export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, p
     return (
         <>
             <button>
-                <div className={`${inter.className} flex justify-center`}>
-                    <div className="flex flex-col lg:w-full lg:max-w-[350px] 2xl:max-w-[450px]">
+                <div className={`${inter.className} flex justify-center pt-12 lg:pt-0`}>
+                    <div className="flex flex-col lg:w-full lg:max-w-[320px] 2xl:max-w-[400px]">
                         <div className="w-full">
                             <Image src="/imagensImovel/fotoImovel.png" alt="Imagem Imovel" className="w-full max-md:max-w-[350px]  max-w-[400px] lg:max-w-[350px] 2xl:max-w-[400px]" width={500} height={324} />
                         </div>
