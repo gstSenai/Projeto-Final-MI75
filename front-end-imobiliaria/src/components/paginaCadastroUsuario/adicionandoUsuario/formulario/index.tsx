@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react"
 import type React from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { Montserrat } from 'next/font/google'
 
 import { DadosUsuarioSection } from "./dados-imovel-section"
 import { Botao } from "@/components/botao"
@@ -10,6 +11,13 @@ import { FormularioImagem } from "./formularioImagem"
 import { useForm } from 'react-hook-form';
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { SubmitHandler } from 'react-hook-form';
+
+const montserrat = Montserrat({
+    subsets: ['latin'],
+    weight: ['400', '800'],
+    display: 'swap',
+});
 
 const UsuarioProps = z.object({
     id: z.number().optional(),
@@ -36,7 +44,7 @@ interface InputDadosUsuarioProps {
 }
 
 export function Formulario({ onComplete }: InputDadosUsuarioProps) {
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
             usuario: {
@@ -94,7 +102,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
         }
     }
 
-    const onSubmitUsuario = async (data: FormData) => {
+    const onSubmitUsuario: SubmitHandler<FormData> = async (data) => {
         if (isSubmitting) return
         try {
             setIsSubmitting(true)
@@ -104,15 +112,13 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                 ...usuario,
             }
 
-            console.log(usuarioData)
             const response = await addUsuario(usuarioData, imagem)
             console.log(response)
 
             if (response) {
-                setShowForm(false)
-                setShowModal(true)
+                reset()
+                setImagem(null)
                 if (onComplete) onComplete()
-                setTimeout(() => setShowModal(false), 5000)
             }
         } catch (error) {
             console.error("Erro ao salvar usuário:", error)
@@ -133,51 +139,34 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
 
     useEffect(() => {
         console.log(errors)
-        console.log(register)
-    }, [errors, register])
+    }, [errors])
 
     return (
-        <>
-            {showForm && (
-                <>
-                    <div className="font-inter flex mt-20">
-                        <div className="flex flex-row items-center">
-                            <p className="text-2xl xl:text-3xl font-semibold mt-10 mb-5">Dados do Usuário:</p>
-                        </div>
-                    </div>
+        <div className="space-y-4">
+            <div className="flex flex-col items-center gap-4">
+                <FormularioImagem handleImageChange={handleImageChange} />
+            </div>
 
-                    <hr className="mb-10 w-full h-2 rounded-2xl bg-vermelho"></hr>
+            <div className="space-y-4">
+                <DadosUsuarioSection register={register} errors={errors.usuario} />
+            </div>
 
-                    <FormularioImagem handleImageChange={handleImageChange} />
-
-                    <DadosUsuarioSection register={register} errors={errors.usuario} />
-
-                    <div className="flex items-center gap-16 mt-10 mb-20">
-                        <div className="flex max-sm:gap-12 max-lg:gap-36 gap-[40rem] w-full">
-                            <Botao className="max-lg:text-base bg-vermelho h-10" onClick={() => console.log()} texto="Cancelar" />
-                            <Botao className="max-lg:text-base bg-vermelho h-10" onClick={handleSubmit(onSubmitUsuario)} texto="Salvar cadastro" />
-                        </div>
-                    </div>
-                </>
-            )}
-            <AnimatePresence>
-                {showModal && lastAddedUsuario && (
-                    <motion.div
-                        initial={{ opacity: 0, x: -100 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -100 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="fixed bottom-10 left-0 z-50"
-                    >
-                        <div className="bg-vermelho w-72 flex gap-1 p-3 rounded-tr-lg rounded-br-lg text-white shadow-lg">
-                            <p className="text-center">Adicionado com Sucesso!</p>
-                            <button onClick={onSubmitDelete} className="underline hover:text-gray-200">
-                                Desfazer
-                            </button>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </>
+            <div className="flex justify-end gap-4 mt-4">
+                <Botao 
+                    className="bg-vermelho h-10" 
+                    onClick={() => {
+                        reset()
+                        setImagem(null)
+                        if (onComplete) onComplete()
+                    }} 
+                    texto="Cancelar" 
+                />
+                <Botao 
+                    className="bg-vermelho h-10" 
+                    onClick={handleSubmit(onSubmitUsuario)} 
+                    texto="Salvar" 
+                />
+            </div>
+        </div>
     )
 }
