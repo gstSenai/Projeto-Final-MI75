@@ -8,8 +8,7 @@ import BotaoImageTexto from '@/components/PaginaInicial/BotaoImageTexto';
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { Card } from '@/components/cardImovel/index';
-
+import {Card} from '@/components/cardImovel/index';
 const montserrat = Montserrat({
     subsets: ['latin'],
     weight: ['300', '800'],
@@ -17,7 +16,6 @@ const montserrat = Montserrat({
 });
 
 import Image from 'next/image';
-
 
 
 export default function PaginaInicial() {

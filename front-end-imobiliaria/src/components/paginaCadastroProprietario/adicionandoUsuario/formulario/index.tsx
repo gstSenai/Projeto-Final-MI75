@@ -90,6 +90,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
     const [lastAddedProprietario, setLastAddedProprietario] = useState<ProprietarioData | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [imagem, setImagem] = useState<File | null>(null)
+    const [currentSection, setCurrentSection] = useState<'dados' | 'endereco'>('dados')
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -212,37 +213,65 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
     return (
         <>
             {showForm && (
-                <>
-                    <div className="font-inter flex mt-20">
-                        <div className="flex flex-row items-center">
-                            <p className="text-2xl xl:text-3xl font-semibold mt-10 mb-5">Dados do Proprietário:</p>
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-4 z-50">
+                    <div className="bg-white rounded-2xl p-4 max-w-4xl w-full max-h-[90vh] flex flex-col">
+                        <div className="flex justify-between items-center mb-3">
+                            <h2 className="text-2xl font-semibold text-vermelho">Cadastrar Proprietário</h2>
+                            <button
+                                className="bg-[#DFDAD0] py-1.5 px-3 rounded-full text-vermelho lg:text-xl transition-transform duration-300 hover:scale-110
+                             hover:bg-vermelho hover:text-[#DFDAD0]"
+                                onClick={() => setShowForm(false)}
+                            >
+                                X
+                            </button>
+                        </div>
+
+                        <div className="overflow-y-auto flex-1 pr-2">
+                            <div className="space-y-4">
+                                {currentSection === 'dados' && (
+                                    <div>
+                                        <div className="space-y-4">
+                                            <FormularioImagem handleImageChange={handleImageChange} />
+                                            <DadosProprietarioSection register={register} errors={errors.proprietario} />
+                                        </div>
+                                        <div className="flex justify-between mt-4">
+                                            <Botao 
+                                                className="max-lg:text-sm bg-vermelho h-9" 
+                                                onClick={() => setShowForm(false)} 
+                                                texto="Cancelar" 
+                                            />
+                                            <Botao 
+                                                className="max-lg:text-sm bg-vermelho h-9" 
+                                                onClick={() => setCurrentSection('endereco')} 
+                                                texto="Próximo" 
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {currentSection === 'endereco' && (
+                                    <div>
+                                        <EnderecoProprietarioSection setValue={setValue} register={register} errors={errors.proprietario} />
+                                        <div className="flex justify-between mt-4">
+                                            <Botao 
+                                                className="max-lg:text-sm bg-vermelho h-9" 
+                                                onClick={() => setCurrentSection('dados')} 
+                                                texto="Voltar" 
+                                            />
+                                            <Botao 
+                                                className="max-lg:text-sm bg-vermelho h-9" 
+                                                onClick={handleSubmit(onSubmitUsuario)} 
+                                                texto="Salvar cadastro" 
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
-
-                    <hr className="mb-10 w-full h-2 rounded-2xl bg-vermelho"></hr>
-
-                    <FormularioImagem handleImageChange={handleImageChange} />
-
-                    <DadosProprietarioSection register={register} errors={errors.proprietario} />
-
-                    <div className="font-inter flex mt-4">
-                        <div className="flex flex-row items-center">
-                            <p className="text-2xl xl:text-3xl font-semibold mt-10 mb-5">Endereço do Proprietário:</p>
-                        </div>
-                    </div>
-
-                    <hr className="mb-10 w-full h-2 rounded-2xl bg-vermelho"></hr>
-
-                    <EnderecoProprietarioSection setValue={setValue} register={register} errors={errors.proprietario} />
-
-                    <div className="flex items-center gap-16 mt-10 mb-20">
-                        <div className="flex max-sm:gap-12 max-lg:gap-36 gap-[40rem] w-full">
-                            <Botao className="max-lg:text-base bg-vermelho h-10" onClick={() => console.log()} texto="Cancelar" />
-                            <Botao className="max-lg:text-base bg-vermelho h-10" onClick={handleSubmit(onSubmitUsuario)} texto="Salvar cadastro" />
-                        </div>
-                    </div>
-                </>
+                </div>
             )}
+            
             <AnimatePresence>
                 {showModal && lastAddedProprietario && (
                     <motion.div

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { Montserrat } from 'next/font/google'
-import { Formulario } from "../adicionandoUsuario/formulario"
 import { RemoveUsuario } from "../removerUsuario"
 import { EditarUsuario } from "../editandoUsuario"
 import { z } from "zod"
@@ -10,6 +9,7 @@ import Image from "next/image"
 import { FormularioInput } from "../adicionandoUsuario/formulario/formularioInput"
 import { useForm } from "react-hook-form"
 import { Botao } from "@/components/botao"
+import { FormularioUsuarioModal } from "@/components/modal/FormularioUsuarioModal"
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
@@ -46,19 +46,15 @@ export default function TabelaUsuario() {
   });
   const [selectedUsuarios, setSelectedUsuarios] = useState<UsuarioProps[]>([])
   const [usuariosFiltros, setUsuariosFiltros] = useState<ResponseProps | null>(null)
-  const [adicionar, setAdicionar] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [remover, setRemover] = useState(false)
   const [editar, setEditar] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [showSidebar, setShowSidebar] = useState(false)
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   const handleAddUsuario = () => {
-    setAdicionar(!adicionar)
-    setEditar(false)
-    setRemover(false)
-    if (adicionar) {
-      refreshData()
-    }
+    setIsModalOpen(true)
   }
 
   const handleRemoveUsuario = () => {
@@ -67,15 +63,13 @@ export default function TabelaUsuario() {
       return
     }
 
-    setAdicionar(false)
-    setEditar(false)
     setRemover(!remover)
     if (remover) {
       refreshData()
     }
   }
 
-  const handleEditusuario = () => {
+  const handleEditUsuario = () => {
     if (selectedUsuarios.length === 0) {
       alert("Selecione um usuário para editar")
       return
@@ -84,8 +78,6 @@ export default function TabelaUsuario() {
       return
     }
 
-    setAdicionar(false)
-    setRemover(false)
     setEditar(!editar)
     if (editar) {
       refreshData()
@@ -118,11 +110,7 @@ export default function TabelaUsuario() {
   }
 
   const refreshData = () => {
-    setAdicionar(false)
-    setRemover(false)
-    setEditar(false)
-    setSelectedUsuarios([])
-    getUsuario()
+    setRefreshTrigger(prev => prev + 1)
   }
 
   const toggleUsuarioselection = (usuario: UsuarioProps) => {
@@ -139,13 +127,15 @@ export default function TabelaUsuario() {
 
   useEffect(() => {
     getUsuario();
-  }, []);
+    setRemover(false)
+    setEditar(false)
+  }, [refreshTrigger]);
 
   return (
     <>
       <div className={`flex flex-col gap-10 sm:flex-col lg:flex-row ${montserrat.className}`}>
         <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden w-full lg:w-5/6">
-          <div className="overflow-x-auto max-h-[500px]">
+          <div className="overflow-x-auto max-h-[350px]">
             <table className="w-full border-separate border-spacing-0">
               <thead>
                 <tr className="bg-vermelho text-white sticky top-0 z-[5]">
@@ -236,7 +226,7 @@ export default function TabelaUsuario() {
           </button>
 
           <button
-            onClick={handleEditusuario}
+            onClick={handleEditUsuario}
             className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading || selectedUsuarios.length !== 1}
           >
@@ -320,7 +310,7 @@ export default function TabelaUsuario() {
                     getUsuario();
                     setTimeout(() => {
                       setShowSidebar(false);
-                    }, 100);
+                  }, 100);
                   }}
                   className="text-base bg-vermelho"
                 />
@@ -342,9 +332,13 @@ export default function TabelaUsuario() {
           </div>
         </div>
       </div>
-      {adicionar && <Formulario onComplete={refreshData} />}
       {remover && <RemoveUsuario selectedUsers={selectedUsuarios} onComplete={refreshData} />}
       {editar && <EditarUsuario selectedUsuarios={selectedUsuarios} onComplete={refreshData} />}
+      <FormularioUsuarioModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onComplete={refreshData}
+      />
     </>
   )
 }

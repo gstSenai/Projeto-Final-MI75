@@ -55,6 +55,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [imagem, setImagem] = useState<File | null>(null)
     const [showModal, setShowModal] = useState(true)
+    const [editadoComSucesso, setEditadoComSucesso] = useState(false)
 
 
     const editarUsers = async (data: Partial<UsuarioData>, imagem: File | null) => {
@@ -118,11 +119,15 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
             console.log("Resposta do servidor:", response)
             if (response) {
                 setShowModal(false)
+                setEditadoComSucesso(true)
+
+                setTimeout(() => {
+                    setEditadoComSucesso(false)
+                    if (onComplete) onComplete()
+                }, 5000)
             } else {
                 console.error("Erro: Resposta inválida ao adicionar usuário.")
             }
-
-            if (onComplete) onComplete()
 
         } catch (error) {
             console.error("Erro ao editar usuário:", error)
@@ -159,7 +164,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                     <div className="bg-white rounded-2xl p-8 max-w-3xl w-full">
                         <div className="flex justify-start w-1/12">
                             <button
-                                className="bg-[#DFDAD0] py-2 px-4 rounded-full text-vermelho lg:text-2xl transition-transform duration-300 hover:scale-110
+                                className="bg-[#DFDAD0] px-3 py-1 rounded-full text-vermelho lg:text-base transition-transform duration-300 hover:scale-110
                              hover:bg-vermelho hover:text-[#DFDAD0]"
                                 onClick={handleCancel}
                             >
@@ -194,7 +199,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                         value={usuario.nome}
                                                                         register={register}
                                                                         required
-                                                                        custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                                                                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                         errors={errors?.usuario?.nome}
                                                                     />
                                                                 </div>
@@ -209,7 +214,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                         value={usuario.sobrenome}
                                                                         register={register}
                                                                         required
-                                                                        custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                                                                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                         errors={errors?.usuario?.sobrenome}
                                                                     />
                                                                 </div>
@@ -218,14 +223,13 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                     <label htmlFor={`tipo_conta_${usuario.id}`} className="block text-lg">
                                                                         Tipo da Conta:
                                                                     </label>
-
                                                                     <FormularioEditarInput
                                                                         placeholder=""
                                                                         name="usuario.tipo_conta"
                                                                         value={usuario.tipo_conta}
                                                                         register={register}
                                                                         required
-                                                                        custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                                                                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                         options={["Usuario", "Corretor", "Administrador", "Editor"]}
                                                                         errors={errors?.usuario?.tipo_conta}
                                                                     />
@@ -235,14 +239,13 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                     <label htmlFor={`email_${usuario.id}`} className="block text-lg">
                                                                         E-mail:
                                                                     </label>
-
                                                                     <FormularioEditarInput
                                                                         placeholder="Ex: caio@gmail.com"
                                                                         name="usuario.email"
                                                                         value={usuario.email}
                                                                         register={register}
                                                                         required
-                                                                        custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                                                                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                         errors={errors?.usuario?.email}
                                                                     />
                                                                 </div>
@@ -251,14 +254,13 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                     <label htmlFor={`senha_${usuario.id}`} className="block text-lg">
                                                                         Senha:
                                                                     </label>
-
                                                                     <FormularioEditarInput
                                                                         placeholder=""
                                                                         name="usuario.senha"
                                                                         value={usuario.senha}
                                                                         register={register}
                                                                         required
-                                                                        custumizacaoClass="w-full p-2  border border-gray-500 rounded"
+                                                                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                         errors={errors?.usuario?.senha}
                                                                     />
                                                                 </div>
@@ -273,15 +275,30 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                             </div>
                             <div className="flex justify-end pt-6">
                                 <div className="flex justify-around items-center gap-10 w-[50%]">
-                                    <Botao onClick={handleCancel} texto="Cancelar" className="bg-vermelho h-10" />
-                                    <Botao
+                                    <Botao 
+                                        type="button"
+                                        onClick={handleCancel} 
+                                        texto="Cancelar" 
+                                        className="bg-vermelho h-10" 
+                                    />
+                                    <Botao 
+                                        type="submit"
                                         onClick={handleClick}
-                                        texto="Editar"
+                                        texto={isSubmitting ? "Editando..." : "Editar"} 
                                         className="bg-vermelho h-10"
+                                        disabled={isSubmitting}
                                     />
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {editadoComSucesso && (
+                <div className="fixed bottom-10 left-0 z-50">
+                    <div className="bg-vermelho w-52 flex gap-1 p-3 rounded-tr-lg rounded-br-lg text-white shadow-lg">
+                        <p className="text-center">Editado com Sucesso!</p>
                     </div>
                 </div>
             )}

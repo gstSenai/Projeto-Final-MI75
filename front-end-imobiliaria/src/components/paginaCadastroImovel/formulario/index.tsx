@@ -1,5 +1,5 @@
-"use client"
-import { useEffect, useState } from "react"
+'use client'
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { EnderecoSection } from "../formulario/endereco-section"
 import { DadosImovelSection } from "./dados-imovel-section"
@@ -181,15 +181,6 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
     const [usuarioAdicionado, setUsuarioAdicionado] = useState(false)
     const codigosGerados = new Set<number>();
 
-    useEffect(() => {
-        console.log("Proprietário:", proprietarioAdicionado)
-        console.log("Usuário:", usuarioAdicionado)
-        if (proprietarioAdicionado || usuarioAdicionado) {
-            console.log("Dados do formulário:", getValues())
-        }
-        console.log(errors)
-    }, [proprietarioAdicionado, usuarioAdicionado, errors])
-
     const handleImagesChange = (files: File[]) => {
         setImages(files);
     };
@@ -361,26 +352,6 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                     setShowErrorModal(true);
                     return;
                 }
-
-                isValid = await trigger(['proprietarios', 'usuario']);
-                if (!isValid) {
-                    const formData = getValues();
-                    const camposFaltantes = [];
-
-                    if (!formData.proprietarios?.nome) camposFaltantes.push("nome do proprietário");
-                    if (!formData.proprietarios?.sobrenome) camposFaltantes.push("sobrenome do proprietário");
-                    if (!formData.proprietarios?.cpf) camposFaltantes.push("CPF do proprietário");
-                    if (!formData.proprietarios?.email) camposFaltantes.push("email do proprietário");
-                    if (!formData.usuario?.nome) camposFaltantes.push("nome do usuário");
-                    if (!formData.usuario?.email) camposFaltantes.push("email do usuário");
-                    if (!formData.usuario?.senha) camposFaltantes.push("senha do usuário");
-
-                    if (camposFaltantes.length > 0) {
-                        setErrorMessage(`Por favor, preencha os seguintes campos: ${camposFaltantes.join(", ")}`);
-                        setShowErrorModal(true);
-                        return;
-                    }
-                }
             }
 
             setCurrentStep(currentStep + 1);
@@ -532,7 +503,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
     return (
         <>                   
          {adicionarAberto && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50`}>
                 <div className="bg-white rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-semibold text-vermelho">
@@ -562,12 +533,12 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
 
                                     <div className="flex gap-10 mt-4">
                                         <Botao
-                                            className="bg-vermelho h-10 lg:w-[70%]"
+                                            className="bg-vermelho h-10 max-sm:w-[80%] max-md:w-[60%] w-[49%] lg:w-[50%]"
                                             texto="Cancelar"
                                             onClick={handleCancel}
                                         />
                                         <Botao
-                                            className="bg-vermelho h-10 lg:w-[70%]"
+                                            className="bg-vermelho h-10 max-sm:w-[80%] max-md:w-[60%] w-[49%] lg:w-[50%]"
                                             texto="Próximo"
                                             onClick={handleNext}
                                         />
@@ -590,12 +561,12 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                                     />
                                     <div className="flex justify-end gap-4 mt-4">
                                         <Botao
-                                            className="bg-vermelho lg:w-[70%]"
+                                            className="bg-vermelho max-sm:w-[80%] max-md:w-[60%] w-[49%] lg:w-[50%]"
                                             texto="Voltar"
                                             onClick={handleBack}
                                         />
                                         <Botao
-                                            className="bg-vermelho h-10 lg:w-[70%]"
+                                            className="bg-vermelho h-10 max-sm:w-[80%] max-md:w-[60%] w-[49%] lg:w-[50%]"
                                             texto="Próximo"
                                             onClick={handleNext}
                                         />
@@ -619,12 +590,12 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                                     />
                                     <div className="flex justify-end gap-4 mt-4">
                                         <Botao
-                                            className="bg-vermelho lg:w-[70%]"
+                                            className="bg-vermelho max-sm:w-[80%] max-md:w-[60%] w-[49%] lg:w-[50%]"
                                             texto="Voltar"
                                             onClick={handleBack}
                                         />
                                         <Botao
-                                            className="bg-vermelho h-10 lg:w-[70%]"
+                                            className="bg-vermelho h-10 max-sm:w-[80%] max-md:w-[60%] w-[49%] lg:w-[50%]"
                                             texto="Próximo"
                                             onClick={handleNext}
                                         />
@@ -650,12 +621,12 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                                     />
                                     <div className="flex justify-end gap-4 mt-4">
                                         <Botao
-                                            className="bg-vermelho h-10 lg:w-[70%]"
+                                            className="bg-vermelho h-10 max-sm:w-[80%] max-md:w-[60%] w-[49%] lg:w-[50%]"
                                             texto="Voltar"
                                             onClick={handleBack}
                                         />
                                         <Botao
-                                            className="bg-vermelho h-10 lg:w-[70%]"
+                                            className="bg-vermelho h-10 max-sm:w-[80%] max-md:w-[60%] w-[49%] lg:w-[50%]"
                                             texto="Salvar"
                                             type="submit"
                                         />

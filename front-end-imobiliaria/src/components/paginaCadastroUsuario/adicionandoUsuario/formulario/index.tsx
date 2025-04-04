@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 import type React from "react"
+import { Montserrat } from 'next/font/google'
 import { motion, AnimatePresence } from "framer-motion"
 
 import { DadosUsuarioSection } from "./dados-imovel-section"
@@ -10,6 +11,13 @@ import { FormularioImagem } from "./formularioImagem"
 import { useForm } from 'react-hook-form';
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { SubmitHandler } from 'react-hook-form';
+
+const montserrat = Montserrat({
+    subsets: ['latin'],
+    weight: ['400', '800'],
+    display: 'swap',
+});
 
 const UsuarioProps = z.object({
     id: z.number().optional(),
@@ -18,11 +26,10 @@ const UsuarioProps = z.object({
     tipo_conta: z.string().min(1, {
         message: "Selecione um tipo de conta válido",
     }),
+    telefone: z.string().min(1, { message: "O telefone é obrigatório" }),
     email: z.string().email({ message: "E-mail inválido" }),
     senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
 })
-
-
 
 const FormSchema = z.object({
     usuario: UsuarioProps,
@@ -36,7 +43,7 @@ interface InputDadosUsuarioProps {
 }
 
 export function Formulario({ onComplete }: InputDadosUsuarioProps) {
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
             usuario: {
@@ -46,10 +53,10 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
     })
 
     const [showForm, setShowForm] = useState(true)
-    const [showModal, setShowModal] = useState(false)
     const [lastAddedUsuario, setLastAddedUsuario] = useState<UsuarioData | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [imagem, setImagem] = useState<File | null>(null)
+    const [adicionadoComSucesso, setAdicionadoComSucesso] = useState(false)
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -62,10 +69,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
             const formData = new FormData()
 
             formData.append("usuario", JSON.stringify(usuario))
-
-            if (imagem) {
-                formData.append("imagem", imagem)
-            }
+            formData.append("imagem", imagem || new Blob())
 
             const response = await fetch("http://localhost:9090/usuario/create", {
                 method: "POST",
@@ -94,7 +98,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
         }
     }
 
-    const onSubmitUsuario = async (data: FormData) => {
+    const onSubmitUsuario: SubmitHandler<FormData> = async (data) => {
         if (isSubmitting) return
         try {
             setIsSubmitting(true)
@@ -104,15 +108,24 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                 ...usuario,
             }
 
-            console.log(usuarioData)
             const response = await addUsuario(usuarioData, imagem)
-            console.log(response)
+            console.log("Resposta do servidor:", response)
 
-            if (response) {
+            if (response && response.id) {
+
+                setLastAddedUsuario(response)
+                setAdicionadoComSucesso(true)
                 setShowForm(false)
-                setShowModal(true)
+                setImagem(null)
+
+                setTimeout(() => {
+                    reset();
+                    setAdicionadoComSucesso(false)
+                }, 5000);
+
                 if (onComplete) onComplete()
-                setTimeout(() => setShowModal(false), 5000)
+            } else {
+                throw new Error("Resposta inválida do servidor")
             }
         } catch (error) {
             console.error("Erro ao salvar usuário:", error)
@@ -124,44 +137,56 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
 
     const onSubmitDelete = async () => {
         if (lastAddedUsuario && lastAddedUsuario.id) {
-            await deleteUsuario(lastAddedUsuario.id)
-            setShowModal(false)
-            setLastAddedUsuario(null)
-            if (onComplete) onComplete()
+            try {
+                await deleteUsuario(lastAddedUsuario.id)
+                setLastAddedUsuario(null)
+                setAdicionadoComSucesso(false)
+                setShowForm(true)
+                if (onComplete) onComplete()
+            } catch (error) {
+                console.error("Erro ao desfazer adição:", error)
+                alert("Erro ao desfazer a adição do usuário")
+            }
         }
     }
 
     useEffect(() => {
         console.log(errors)
-        console.log(register)
-    }, [errors, register])
+    }, [errors])
 
     return (
-        <>
+        <div className={`${montserrat.className}`}>
             {showForm && (
-                <>
-                    <div className="font-inter flex mt-20">
-                        <div className="flex flex-row items-center">
-                            <p className="text-2xl xl:text-3xl font-semibold mt-10 mb-5">Dados do Usuário:</p>
-                        </div>
+                <div className="space-y-4">
+                    <div className="flex flex-col items-center gap-4">
+                        <FormularioImagem handleImageChange={handleImageChange} />
                     </div>
 
-                    <hr className="mb-10 w-full h-2 rounded-2xl bg-vermelho"></hr>
-
-                    <FormularioImagem handleImageChange={handleImageChange} />
-
-                    <DadosUsuarioSection register={register} errors={errors.usuario} />
-
-                    <div className="flex items-center gap-16 mt-10 mb-20">
-                        <div className="flex max-sm:gap-12 max-lg:gap-36 gap-[40rem] w-full">
-                            <Botao className="max-lg:text-base bg-vermelho h-10" onClick={() => console.log()} texto="Cancelar" />
-                            <Botao className="max-lg:text-base bg-vermelho h-10" onClick={handleSubmit(onSubmitUsuario)} texto="Salvar cadastro" />
-                        </div>
+                    <div className="space-y-4 mb-4">
+                        <DadosUsuarioSection register={register} errors={errors.usuario} />
                     </div>
-                </>
+
+                    <div className="flex justify-end gap-4 mt-4">
+                        <Botao 
+                            className="bg-vermelho h-10 max-sm:w-[80%] max-md:w-[60%] w-[49%] lg:w-[50%]" 
+                            onClick={() => {
+                                reset()
+                                setImagem(null)
+                                if (onComplete) onComplete()
+                            }} 
+                            texto="Cancelar" 
+                        />
+                        <Botao 
+                            className="bg-vermelho h-10 max-sm:w-[80%] max-md:w-[60%] w-[49%] lg:w-[50%]" 
+                            onClick={handleSubmit(onSubmitUsuario)} 
+                            texto="Salvar" 
+                        />
+                    </div>
+                </div>
             )}
+
             <AnimatePresence>
-                {showModal && lastAddedUsuario && (
+                {adicionadoComSucesso && lastAddedUsuario && (
                     <motion.div
                         initial={{ opacity: 0, x: -100 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -178,6 +203,6 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </>
+        </div>
     )
 }

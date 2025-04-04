@@ -108,7 +108,7 @@ export function RelacaoProprietarioImovel({ className = "", register, name, plac
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        const fetchCorretores = async () => {
+        const fetchProprietarios = async () => {
             try {
                 const response = await fetch("http://localhost:9090/proprietario/getAll")
                 if (!response.ok) {
@@ -137,7 +137,7 @@ export function RelacaoProprietarioImovel({ className = "", register, name, plac
             }
         }
 
-        fetchCorretores()
+        fetchProprietarios()
     }, [])
 
     if (loading) {

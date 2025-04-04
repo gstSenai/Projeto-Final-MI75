@@ -90,7 +90,6 @@ export function FormularioImagemEdit({ handleImageUpload, imagemAtual }: Formula
 
     return (
         <div className={`flex ${montserrat.className} flex-col items-center gap-4 mb-10`}>
-            <label className="text-xl font-medium text-black">Foto de perfil</label>
             <div className="relative bg-gray-300 hover:bg-gray-400 h-56 w-56 rounded-full flex items-center justify-center overflow-hidden transition border border-gray-500 shadow-lg">
                 {isLoading ? (
                     <div className="flex items-center justify-center">

@@ -1,6 +1,6 @@
 "use client"
 
-import type { UseFormRegister } from "react-hook-form"
+import type { UseFormRegister, UseFormSetValue } from "react-hook-form"
 import { useEffect, useState } from "react"
 
 type UsuarioType = {
@@ -10,6 +10,8 @@ type UsuarioType = {
     tipo_conta: string
     email: string
     senha: string
+    ativo: boolean
+    imagem_usuario: string
 }
 
 type FormData = {
@@ -27,7 +29,7 @@ type FormData = {
         area_construida: number
         area_terreno: number
         descricao?: string
-        corretores: UsuarioType[]
+        usuario: UsuarioType[]
     }
     imovelCaracteristicas: {
         numero_quartos: number
@@ -84,12 +86,13 @@ interface RelacaoCorretorImovelProps {
     name: "imovel.usuario"
     className?: string
     register: UseFormRegister<FormData>
+    setValue: UseFormSetValue<FormData>
     required?: boolean
     errors?: FormErrors
     onUsuarioAdicionado: () => void
 }
 
-export function RelacaoCorretorImovel({ className = "", register, name, placeholder, required, errors, onUsuarioAdicionado }: RelacaoCorretorImovelProps) {
+export function RelacaoCorretorImovel({ className = "", register, name, placeholder, required, errors, onUsuarioAdicionado, setValue }: RelacaoCorretorImovelProps) {
     const [usuarios, setUsuarios] = useState<UsuarioType[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -166,6 +169,10 @@ export function RelacaoCorretorImovel({ className = "", register, name, placehol
                                         <div 
                                             key={usuario.id} 
                                             className="flex items-center gap-3 p-3 sm:p-4 border-2 border-gray-200 rounded-xl hover:border-vermelho hover:bg-vermelho hover:text-white transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                                            onClick={() => {
+                                                onUsuarioAdicionado();
+                                                setValue("usuario", usuario);
+                                            }}
                                         >
                                             <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 group-hover:bg-white/20">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
