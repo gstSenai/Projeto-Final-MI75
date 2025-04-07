@@ -1,18 +1,17 @@
 "use client"
-import { UseFormRegister, UseFormSetValue, FieldErrors } from "react-hook-form"
+import { UseFormSetValue, FieldErrors } from "react-hook-form"
 import { RelacaoCorretorImovel } from "./relacaoCorretorImovel"
 import { RelacaoProprietarioImovel } from "./relacaoProprietarioImovel"
 import { FormData } from "../index"
 
 interface RelacaoImovelProps {
-    register: UseFormRegister<FormData>
-    errors: FieldErrors<FormData>
     setValue: UseFormSetValue<FormData>
+    errors: FieldErrors<FormData>
     onProprietarioAdicionado: () => void
     onUsuarioAdicionado: () => void
 }
 
-export function RelacaoImovel({ register, errors, setValue, onProprietarioAdicionado, onUsuarioAdicionado }: RelacaoImovelProps) {
+export function RelacaoImovel({ setValue, errors, onProprietarioAdicionado, onUsuarioAdicionado }: RelacaoImovelProps) {
     return (
         <div className="flex flex-col w-full max-w-4xl mx-auto">
             <div className="w-full">
@@ -21,8 +20,6 @@ export function RelacaoImovel({ register, errors, setValue, onProprietarioAdicio
                         <div className="mt-8">
                             <RelacaoCorretorImovel
                                 placeholder="Corretores"
-                                name="usuario"
-                                register={register}
                                 setValue={setValue}
                                 className="w-full h-40"
                                 errors={errors?.usuario} 
@@ -30,8 +27,6 @@ export function RelacaoImovel({ register, errors, setValue, onProprietarioAdicio
                             />
                             <RelacaoProprietarioImovel
                                 placeholder="Proprietários"
-                                name="proprietarios"
-                                register={register}
                                 setValue={setValue}
                                 className="w-full h-40"
                                 errors={errors?.proprietarios}

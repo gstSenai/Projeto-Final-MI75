@@ -3,15 +3,16 @@
 import Image from "next/image"
 import { useState } from "react"
 import type React from "react"
-import type { UseFormRegister, FieldError, FieldValues } from "react-hook-form"
+import type { UseFormRegister, FieldError } from "react-hook-form"
+import { FormData } from "../index.tsx"
 
-interface FormularioEditarInputProps<T extends FieldValues = FieldValues> {
+interface FormularioEditarInputProps {
   placeholder: string
   name: string
   showOptions?: boolean
   onChange?: (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
   custumizacaoClass: string
-  register: UseFormRegister<T>
+  register: UseFormRegister<FormData>
   options?: string[]
   errors?: FieldError | undefined
   required?: boolean
@@ -22,7 +23,7 @@ interface FormularioEditarInputProps<T extends FieldValues = FieldValues> {
   }
 }
 
-export function FormularioEditarInput<T extends FieldValues = FieldValues>({
+export function FormularioEditarInput({
   placeholder,
   name,
   showOptions = false,
@@ -42,10 +43,6 @@ export function FormularioEditarInput<T extends FieldValues = FieldValues>({
     if (onChange) {
       onChange(e)
     }
-  }
-
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    // ...
   }
 
   const getIconPath = () => {
@@ -79,7 +76,7 @@ export function FormularioEditarInput<T extends FieldValues = FieldValues>({
 
           {options ? (
             <select
-              {...register(name as any, { required: required ? `${placeholder} é obrigatório` : false })}
+              {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
               onChange={handleChange}
               value={inputValue}
               className="w-full bg-transparent outline-none text-gray-900 "

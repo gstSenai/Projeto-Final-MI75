@@ -2,6 +2,7 @@
 import { FormularioInput } from "../formularioInput"
 import { Montserrat } from "next/font/google"
 import { FieldErrors, UseFormRegister } from "react-hook-form"
+import { FormData } from "../index"
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -9,22 +10,10 @@ const montserrat = Montserrat({
     display: 'swap',
 });
 
-interface FormData {
-    usuario: {
-        nome: string;
-        sobrenome: string;
-        tipo_conta: string;
-        telefone: string;
-        email: string;
-        senha: string;
-        id?: number;
-    }
-}
-
 
 interface DadosUsuarioSectionProps {
     register: UseFormRegister<FormData>
-    errors: FieldErrors<FormData> | undefined
+    errors: FieldErrors<FormData>
 }
 
 const formatarTelefone = (value: string) => {

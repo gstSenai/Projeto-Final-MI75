@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import type { UseFormRegister, UseFormSetValue, FieldErrors, Path } from "react-hook-form"
+import type { UseFormRegister, UseFormSetValue, FieldErrors } from "react-hook-form"
 import { FormularioInput } from "../formularioInput"
 import { Montserrat } from "next/font/google"
 import { FormData } from "../index"

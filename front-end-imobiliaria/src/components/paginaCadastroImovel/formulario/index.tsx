@@ -51,13 +51,13 @@ const ImovelProps = z.object({
 
 const ImovelCaracteristicas = z.object({
     id: z.number().optional(),
-    numero_quartos: z.coerce.number().min(1, { message: "Número de quartos é obrigatório" }),
-    numero_banheiros: z.coerce.number().min(1, { message: "Número de banheiros é obrigatório" }),
-    numero_suites: z.coerce.number().min(1, { message: "Número de suítes é obrigatório" }),
-    numero_vagas: z.coerce.number().min(1, { message: "Número de vagas é obrigatório" }),
-    test_piscina:  z.string().min(1, { message: "Piscina é obrigatório" }).optional(),
+    numero_quartos: z.coerce.number().min(0, { message: "Número de quartos é obrigatório" }),
+    numero_banheiros: z.coerce.number().min(0, { message: "Número de banheiros é obrigatório" }),
+    numero_suites: z.coerce.number().min(0, { message: "Número de suítes é obrigatório" }),
+    numero_vagas: z.coerce.number().min(0, { message: "Número de vagas é obrigatório" }),
+    test_piscina: z.string().optional(),
     piscina: z.boolean().default(false),
-    numero_salas: z.coerce.number().min(1, { message: "Número de salas é obrigatório" }),
+    numero_salas: z.coerce.number().min(0, { message: "Número de salas é obrigatório" }),
 })
 
 const EnderecoImovelProps = z.object({
@@ -152,12 +152,9 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                 test_destaque: "",
                 status_imovel: "",
                 test_visibilidade: "",
-                destaque: undefined,
-                visibilidade: undefined,
             },
             imovelCaracteristicas: {
                 test_piscina: "",
-                piscina: undefined
             },
             endereco: {
                 uf: ""
@@ -241,7 +238,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
 
             console.log("Sending address data:", data);
 
-            const response = await request("POST", "http://localhost:9090/imovel/create", data)
+            const response = await request("POST", "http://localhost:9090/imovel/create", data) as ImovelProps
             return response
         } catch (error) {
             console.error("Erro ao adicionar imóvel:", error)
@@ -301,7 +298,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                     campos.forEach(campo => {
                         const valor = values.imovel[campo];
                         if (valor && !String(valor).includes(',')) {
-                            setValue(`imovel.${campo}`, (`${valor},00`));
+                            setValue(`imovel.${campo}`, valor);
                         }
                     });
                 }
@@ -316,15 +313,37 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
             }
 
             if (currentStep === 3) {
-                isValid = await trigger('imovelCaracteristicas');
+                isValid = await trigger(['imovel', 'imovelCaracteristicas']);
                 if (!isValid) {
                     setErrorMessage("Por favor, preencha todos os campos obrigatórios");
                     setShowErrorModal(true);
-                    return;
+                    setErrorMessage("Por favor, selecione o tipo de transação e o tipo de imóvel");
+                    const formData = getValues();
+                    const camposFaltantes = [];
+
+                    if (!formData.imovel.tipo_transacao) camposFaltantes.push("tipo de transação");
+                    if (!formData.imovel.tipo_imovel) camposFaltantes.push("tipo de imóvel");
+                    if (!formData.imovel.test_destaque) camposFaltantes.push("destaque");
+                    if (!formData.imovel.test_visibilidade) camposFaltantes.push("visibilidade");;
+
+                    if (camposFaltantes.length > 0) {
+                        setErrorMessage(`Por favor, preencha os seguintes campos: ${camposFaltantes.join(", ")}`);
+                        setShowErrorModal(true);
+                        return;
+                    }
                 }
             }
 
             if (currentStep === 4) {
+                if (!proprietarioAdicionado || !usuarioAdicionado) {
+                    const camposFaltantes = [];
+                    if (!proprietarioAdicionado) camposFaltantes.push("proprietário");
+                    if (!usuarioAdicionado) camposFaltantes.push("usuario");
+                    
+                    setErrorMessage(`Por favor, adicione um ${camposFaltantes.join(" e um ")} antes de salvar`);
+                    setShowErrorModal(true);
+                    return;
+                }
             }
 
             setCurrentStep(currentStep + 1);
@@ -347,16 +366,20 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
     };
 
 
-    const onSubmitImovel = async (data: {
-        imovel: ImovelProps; 
-        imovelCaracteristicas: ImovelCaracteristicas;
-        endereco: EnderecoImovelProps;
-        proprietarios: ProprietarioProps
-        usuario: UsuarioProps
-    }) => {
+    const onSubmitImovel = async (data: FormData) => {
         if (isSubmitting) return;
 
         try {
+            if (!proprietarioAdicionado || !usuarioAdicionado) {
+                const camposFaltantes = [];
+                if (!proprietarioAdicionado) camposFaltantes.push("proprietário");
+                if (!usuarioAdicionado) camposFaltantes.push("corretor");
+                
+                setErrorMessage(`Por favor, adicione um ${camposFaltantes.join(" e um ")} antes de salvar`);
+                setShowErrorModal(true);
+                return;
+            }
+
             if (Object.keys(errors).length > 0) {
                 if (errors.endereco) {
                     setErrorMessage("Por favor, preencha todos os campos do endereço corretamente");
@@ -370,7 +393,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                     setCurrentStep(2);
                     return;
                 }
-                if (errors.imovelCaracteristicas) {
+                if (errors.imovel || errors.imovelCaracteristicas) {
                     setErrorMessage("Por favor, preencha todos os campos obrigatórios");
                     setShowErrorModal(true);
                     setCurrentStep(3);
@@ -407,11 +430,15 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                 id_usuario: usuario
             };
 
+            console.log("Dados do imóvel a serem enviados:", immobileData);
+            console.log("Proprietário selecionado:", proprietarios);
+            console.log("Corretor selecionado:", usuario);
+
             const response = await addImovel(immobileData);
 
-            if (response && (response as any).id) {
+            if (response && response.id) {
                 if (images.length > 0) {
-                    await uploadImages((response as any).id);
+                    await uploadImages(response.id);
                 } else {
                     console.log("Nenhuma imagem selecionada para upload");
                 }
@@ -474,7 +501,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
     return (
         <>                   
          {adicionarAberto && (
-            <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50`}>
+            <div className="fixed inset-0 bg-black bg-opacity-50 px-6 flex items-center justify-center z-50">
                 <div className="bg-white rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-semibold text-vermelho">
@@ -587,9 +614,8 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                                     className="space-y-4"
                                 >
                                     <RelacaoImovel
-                                        register={register}
-                                        errors={errors}
                                         setValue={setValue}
+                                        errors={errors}
                                         onProprietarioAdicionado={handleProprietarioAdicionado}
                                         onUsuarioAdicionado={handleUsuarioAdicionado}
                                     />

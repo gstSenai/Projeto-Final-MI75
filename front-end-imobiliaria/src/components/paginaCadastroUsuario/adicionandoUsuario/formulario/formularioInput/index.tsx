@@ -2,18 +2,19 @@
 
 import Image from "next/image"
 import type React from "react"
-import type { UseFormRegister, FieldError, FieldValues, Path } from "react-hook-form"
+import type { UseFormRegister, FieldError } from "react-hook-form"
+import { FormData } from "../index"
 
-interface FormularioInputProps<T extends FieldValues = FieldValues> {
+interface FormularioInputProps {
   placeholder?: string
   interName?: string
-  name: Path<T>
+  name: string
   value?: string
   showOptions?: boolean
   onChange?: (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
   customizacaoClass: string
   options?: string[]
-  register: UseFormRegister<T>
+  register: UseFormRegister<FormData>
   errors?: FieldError | undefined
   required?: boolean
   disabled?: boolean
@@ -23,7 +24,7 @@ interface FormularioInputProps<T extends FieldValues = FieldValues> {
   iconCaneta?: boolean
 }
 
-export function FormularioInput<T extends FieldValues = FieldValues>({
+export function FormularioInput({
   placeholder,
   interName,
   name,
@@ -38,7 +39,7 @@ export function FormularioInput<T extends FieldValues = FieldValues>({
   icon,
   onChange,
   iconCaneta,
-}: FormularioInputProps<T>) {
+}: FormularioInputProps) {
   const getIconPath = () => {
     switch (icon?.type) {
       case "areaCT":
@@ -75,7 +76,7 @@ export function FormularioInput<T extends FieldValues = FieldValues>({
 
         {options ? (
           <select
-            {...register(name, { required })}
+            {...register(name as keyof FormData, { required })}
             value={value}
             onChange={onChange}
             disabled={disabled}
@@ -94,7 +95,7 @@ export function FormularioInput<T extends FieldValues = FieldValues>({
           <input
             type="text"
             placeholder={`${interName} ${required ? "*" : ""}`}
-            {...register(name, { required })}
+            {...register(name as keyof FormData, { required })}
             value={value}
             onChange={onChange}
             disabled={disabled}
