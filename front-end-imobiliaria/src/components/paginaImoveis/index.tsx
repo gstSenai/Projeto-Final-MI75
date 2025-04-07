@@ -44,7 +44,7 @@ export function ListaImoveis() {
     totalPages: 0,
     totalElements: 0,
     currentPage: 0,
-    size: 10,
+    size: 12,
   })
 
   const fetchImoveis = async (page = 0) => {
@@ -75,7 +75,7 @@ export function ListaImoveis() {
         totalPages: data.totalPages || 1,
         totalElements: data.totalElements || 0,
         currentPage: data.number || 0,
-        size: data.size || 10,
+        size: data.size || 12,
       })
 
       const maiorId = Math.max(...imoveisArray.map((imovel: any) => imovel.id))
@@ -105,18 +105,68 @@ export function ListaImoveis() {
     }
   }
 
-  const refreshData = () => {
-    setImoveis([]);
-    setMostrarFiltros(false);
-    setPaginationInfo({
-      totalPages: 0,
-      totalElements: 0, 
-      currentPage: 0,
-      size: 10,
-    });
-    fetchImoveis(0);
-};
+  const refreshData = async () => {
+    try {
+      setLoading(true);
+      setImoveis([]);
+      setTipoTransacao("Todos");
+      setMostrarFiltros(false);
+      setUltimoId(null);
+      setPaginationInfo({
+        totalPages: 0,
+        totalElements: 0,
+        currentPage: 0,
+        size: 12,
+      });
+      
+      const response = await fetch(`http://localhost:9090/imovel/getAll?page=0&size=10`, {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache",
+          "Pragma": "no-cache",
+          "Expires": "0",
+        },
+      });
 
+      if (!response.ok) {
+        throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const imoveisArray = data.content || [];
+      
+      if (imoveisArray.length === 0) {
+        setImoveis([]);
+        return;
+      }
+
+      setPaginationInfo({
+        totalPages: data.totalPages || 1,
+        totalElements: data.totalElements || 0,
+        currentPage: data.number || 0,
+        size: data.size || 12,
+      });
+
+      const imoveisFormatados = imoveisArray.map((imovel: any) => ({
+        id: imovel.id || 0,
+        titulo: imovel.nome_propriedade || "Sem título",
+        cidade: imovel.id_endereco?.cidade || "Cidade não informada",
+        qtdDormitorios: imovel.id_caracteristicasImovel?.numero_quartos || 0,
+        qtdSuite: imovel.id_caracteristicasImovel?.numero_suites || 0,
+        qtdBanheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
+        preco: imovel.valor_venda || 0,
+        codigo: imovel.codigo || 0,
+        tipo_transacao: imovel.tipo_transacao || "Indefinido",
+      }));
+
+      setImoveis(imoveisFormatados);
+    } catch (error) {
+      console.error("Erro ao buscar imóveis:", error);
+      setError("Erro ao carregar imóveis. Por favor, tente novamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     refreshData()
@@ -183,15 +233,18 @@ export function ListaImoveis() {
             className="bg-vermelho text-white px-6 py-2 rounded-lg transition duration-300 hover:opacity-80"
             onClick={() => setMostrarFiltros(!mostrarFiltros)}
           >
-            {mostrarFiltros ? "Filtrar" : "Filtrar"}
+            {mostrarFiltros ? "Fechar Filtros" : "Filtrar"}
           </button>
-          <button className="underline decoration-vermelho px-4 py-2 rounded-lg" onClick={refreshData}>
+          <button 
+            className="underline decoration-vermelho px-4 py-2 rounded-lg" 
+            onClick={() => refreshData()}
+          >
             <p className="text-vermelho font-bold">Restaurar Padrão</p>
           </button>
         </div>
 
         {mostrarFiltros && (
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center">
             <FiltroImoveis
               mostrarFiltros={mostrarFiltros}
               setMostrarFiltros={setMostrarFiltros}
@@ -270,11 +323,6 @@ export function ListaImoveis() {
                 </nav>
               </div>
             )}
-
-            <div className="flex justify-center mb-10 text-sm text-gray-500 mt-10">
-              Mostrando {imoveisFiltrados.length} de {paginationInfo.totalElements} imóveis • Página{" "}
-              {paginationInfo.currentPage + 1} de {paginationInfo.totalPages}
-            </div>
           </>
         )}
       </div>
