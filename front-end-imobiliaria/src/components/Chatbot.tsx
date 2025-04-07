@@ -4,14 +4,14 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-type Message = {
-  text: string;
-  isBot: boolean;
-  timestamp: Date;
+interface Message {
+  type: 'user' | 'bot';
+  content: string;
+  timestamp?: Date;
   hasAction?: boolean;
   options?: ChatOption[];
   isFAQResponse?: boolean;
-};
+}
 
 type ChatOption = {
   text: string;
@@ -30,11 +30,13 @@ const FAQ_OPTIONS = [
 const Chatbot = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [message, setMessage] = useState('');
+  const [inputMessage, setInputMessage] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
+  const [isAskingEmail, setIsAskingEmail] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: 'Olá! Bem-vindo(a) à nossa imobiliária! Como posso ajudar hoje?',
-      isBot: true,
+      type: 'bot',
+      content: 'Olá! Bem-vindo(a) à nossa imobiliária! Como posso ajudar hoje?',
       timestamp: new Date(),
       options: [
         { text: 'Relatar um problema', action: 'REPORT' },
@@ -45,6 +47,36 @@ const Chatbot = () => {
     }
   ]);
 
+  const sendEmail = async (subject: string, message: string, customerEmail: string) => {
+    try {
+      console.log('Iniciando envio de email...', { subject, message, customerEmail });
+      const response = await fetch('/api/sendEmailSendGrid', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          subject,
+          message,
+          customerEmail,
+        }),
+      });
+
+      console.log('Resposta recebida:', response.status);
+      const data = await response.json();
+      console.log('Dados da resposta:', data);
+
+      if (!response.ok) {
+        throw new Error(data.details || data.error || 'Erro ao enviar email');
+      }
+
+      return data;
+    } catch (error: any) {
+      console.error('Erro ao enviar email:', error);
+      throw new Error(error.message || 'Erro ao enviar email');
+    }
+  };
+
   const handleChatWithBroker = () => {
     router.push('/chatOnline');
   };
@@ -52,8 +84,8 @@ const Chatbot = () => {
   const handleFeedback = (wasHelpful: boolean) => {
     if (wasHelpful) {
       setMessages(prev => [...prev, {
-        text: 'Fico feliz em ter ajudado! Se precisar de mais alguma coisa, é só perguntar.',
-        isBot: true,
+        type: 'bot',
+        content: 'Fico feliz em ter ajudado! Se precisar de mais alguma coisa, é só perguntar.',
         timestamp: new Date(),
         options: [
           { text: 'Voltar para Dúvidas Frequentes', action: 'FAQ' },
@@ -62,8 +94,8 @@ const Chatbot = () => {
       }]);
     } else {
       setMessages(prev => [...prev, {
-        text: 'Desculpe não ter conseguido ajudar completamente. Vou te conectar com um de nossos atendentes para um suporte mais detalhado.',
-        isBot: true,
+        type: 'bot',
+        content: 'Desculpe não ter conseguido ajudar completamente. Vou te conectar com um de nossos atendentes para um suporte mais detalhado.',
         timestamp: new Date(),
         hasAction: true
       }]);
@@ -75,21 +107,22 @@ const Chatbot = () => {
 
     switch (action) {
       case 'REPORT':
+        setIsAskingEmail(true);
         newMessage = {
-          text: 'Por favor, descreva o problema que você está enfrentando. Sua mensagem será enviada para nossa equipe de atendimento e corretores.',
-          isBot: true,
+          type: 'bot',
+          content: 'Por favor, insira seu email para contato:',
           timestamp: new Date(),
         };
         break;
 
       case 'BROKER':
         newMessage = {
-          text: 'Você pode falar com nossos corretores:\n\n' +
-                '• João Silva: (47) 98765-4321\n' +
-                '• Maria Santos: (47) 98765-4322\n' +
-                '• Pedro Oliveira: (47) 98765-4323\n\n' +
-                'Ou clique no botão abaixo para iniciar um chat online com um corretor disponível:',
-          isBot: true,
+          type: 'bot',
+          content: 'Você pode falar com nossos corretores:\n\n' +
+                    '• João Silva: (47) 98765-4321\n' +
+                    '• Maria Santos: (47) 98765-4322\n' +
+                    '• Pedro Oliveira: (47) 98765-4323\n\n' +
+                    'Ou clique no botão abaixo para iniciar um chat online com um corretor disponível:',
           timestamp: new Date(),
           hasAction: true
         };
@@ -97,8 +130,8 @@ const Chatbot = () => {
 
       case 'FAQ':
         newMessage = {
-          text: 'Selecione sua dúvida:',
-          isBot: true,
+          type: 'bot',
+          content: 'Selecione sua dúvida:',
           timestamp: new Date(),
           options: FAQ_OPTIONS.map(question => ({
             text: question,
@@ -109,8 +142,8 @@ const Chatbot = () => {
 
       case 'ATTENDANT':
         newMessage = {
-          text: 'Em breve você será conectado com um de nossos atendentes...',
-          isBot: true,
+          type: 'bot',
+          content: 'Em breve você será conectado com um de nossos atendentes...',
           timestamp: new Date(),
         };
         break;
@@ -119,8 +152,8 @@ const Chatbot = () => {
         if (action.startsWith('FAQ_')) {
           const question = action.replace('FAQ_', '');
           newMessage = {
-            text: getFAQResponse(question),
-            isBot: true,
+            type: 'bot',
+            content: getFAQResponse(question),
             timestamp: new Date(),
             isFAQResponse: true,
             options: [
@@ -136,8 +169,8 @@ const Chatbot = () => {
           return;
         } else {
           newMessage = {
-            text: 'Desculpe, não entendi. Como posso ajudar?',
-            isBot: true,
+            type: 'bot',
+            content: 'Desculpe, não entendi. Como posso ajudar?',
             timestamp: new Date(),
           };
         }
@@ -165,31 +198,107 @@ const Chatbot = () => {
     }
   };
 
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      const userMessage: Message = {
-        text: message.trim(),
-        isBot: false,
-        timestamp: new Date(),
-      };
-      
-      setMessages(prev => [...prev, userMessage]);
-      setMessage('');
+  const handleSendMessage = async () => {
+    if (!inputMessage.trim()) return;
 
-      // Se for um relato de problema, envia uma confirmação
-      if (messages[messages.length - 1]?.text.includes('descreva o problema')) {
-        const confirmationMessage: Message = {
-          text: 'Obrigado por relatar o problema. Nossa equipe foi notificada e entrará em contato em breve.',
-          isBot: true,
-          timestamp: new Date(),
-        };
-        setMessages(prev => [...prev, confirmationMessage]);
+    const userMessage = inputMessage.trim();
+    setInputMessage('');
+
+    if (isAskingEmail) {
+      // Validar email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(userMessage)) {
+        setMessages(prev => [...prev, { 
+          type: 'bot', 
+          content: 'Por favor, insira um email válido.',
+          timestamp: new Date()
+        }]);
+        return;
       }
+      setCustomerEmail(userMessage);
+      setIsAskingEmail(false);
+      setMessages(prev => [...prev, { 
+        type: 'user', 
+        content: userMessage,
+        timestamp: new Date()
+      }]);
+      setMessages(prev => [...prev, { 
+        type: 'bot', 
+        content: 'Obrigado por fornecer seu email. Agora, por favor, descreva detalhadamente o problema que você está enfrentando para que nossa equipe possa ajudá-lo da melhor forma possível.',
+        timestamp: new Date()
+      }]);
+      return;
+    }
+
+    setMessages(prev => [...prev, { 
+      type: 'user', 
+      content: userMessage,
+      timestamp: new Date()
+    }]);
+
+    try {
+      if (userMessage.toLowerCase().includes('problema')) {
+        setIsAskingEmail(true);
+        setMessages(prev => [...prev, { 
+          type: 'bot', 
+          content: 'Para que possamos prestar um atendimento adequado, por favor, forneça seu email para contato:',
+          timestamp: new Date()
+        }]);
+        return;
+      }
+
+      // Se já temos o email do cliente e a mensagem não é sobre reportar um problema
+      if (customerEmail && !isAskingEmail) {
+        try {
+          setMessages(prev => [...prev, { 
+            type: 'bot', 
+            content: 'Estamos processando sua solicitação e enviando para nossa equipe de atendimento...',
+            timestamp: new Date()
+          }]);
+
+          await sendEmail(
+            'Nova solicitação de atendimento via chatbot',
+            `Prezado(a) atendente,\n\nRecebemos uma nova solicitação de atendimento:\n\nCliente: ${customerEmail}\n\nMensagem:\n${userMessage}\n\nPor favor, entre em contato com o cliente o mais breve possível pelo chatBot!\n\nAtenciosamente,\nSistema de Chatbot`,
+            customerEmail
+          );
+
+          setMessages(prev => [...prev, { 
+            type: 'bot', 
+            content: 'Sua solicitação foi registrada com sucesso em nosso sistema. Um de nossos atendentes entrará em contato com você aqui mesmo pelo chat em breve. Por favor, mantenha esta janela aberta. Agradecemos sua paciência e compreensão.',
+            timestamp: new Date()
+          }]);
+        } catch (emailError: any) {
+          console.error('Erro ao enviar email:', emailError);
+          setMessages(prev => [...prev, { 
+            type: 'bot', 
+            content: `Infelizmente, ocorreu um erro ao processar sua solicitação: ${emailError.message}. Por favor, tente novamente mais tarde ou entre em contato diretamente com nosso atendimento através do telefone (47) 9999-9999.`,
+            timestamp: new Date()
+          }]);
+        }
+      }
+
+      // ... existing code ...
+    } catch (error: any) {
+      console.error('Erro ao processar mensagem:', error);
+      setMessages(prev => [...prev, { 
+        type: 'bot', 
+        content: `Desculpe, ocorreu um erro: ${error.message}`,
+        timestamp: new Date()
+      }]);
     }
   };
 
+  const addMessage = (type: 'user' | 'bot', text: string) => {
+    const newMessage: Message = {
+      type,
+      content: text,
+      timestamp: new Date(),
+    };
+    setMessages(prev => [...prev, newMessage]);
+  };
+
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-32 right-0 z-50">
       {isOpen ? (
         <div className="bg-[#702632] rounded-2xl shadow-lg w-64">
           {/* Header */}
@@ -213,19 +322,19 @@ const Chatbot = () => {
           </div>
 
           {/* Chat Area */}
-          <div className="bg-[#F8E8E8] h-72 p-3 rounded-2xl overflow-y-auto mx-1">
+          <div className="bg-[#F8E8E8] h-72 p-3 rounded-2xl mx-1 overflow-y-auto overflow-x-hidden">
             {messages.map((msg, index) => (
               <div key={index}>
                 <div
                   className={`${
-                    msg.isBot
+                    msg.type === 'bot'
                       ? 'bg-white rounded-xl p-2 max-w-[80%] mb-3 shadow-sm'
                       : 'bg-[#702632] text-white rounded-xl p-2 max-w-[80%] mb-3 shadow-sm ml-auto'
                   }`}
                 >
-                  <p className="text-xs whitespace-pre-line">{msg.text}</p>
+                  <p className="text-xs whitespace-pre-line break-words">{msg.content}</p>
                 </div>
-                {msg.isBot && msg.hasAction && (
+                {msg.type === 'bot' && msg.hasAction && (
                   <button
                     onClick={handleChatWithBroker}
                     className="bg-[#8A2E3C] text-white text-xs py-2 px-4 rounded-xl hover:bg-[#702632] transition-colors mb-3"
@@ -259,8 +368,8 @@ const Chatbot = () => {
             <div className="flex gap-2">
               <input
                 type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder="Digitar..."
                 className="flex-1 px-3 py-1.5 rounded-xl text-xs focus:outline-none"
