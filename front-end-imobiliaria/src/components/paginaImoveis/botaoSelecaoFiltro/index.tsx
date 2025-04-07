@@ -1,4 +1,5 @@
 "use client";
+import Image from 'next/image';
 import { useState } from 'react';
 
 interface PlaceFilterProps {
@@ -61,10 +62,12 @@ const PlaceFilter = ({ texto, tipo, onChange }: PlaceFilterProps) => {
                                 ${selected.includes(tipo.label) ? "border-[#702632]" : "border-transparent"}`}
                             onClick={() => handleSelection(tipo.label)}
                         >
-                            <img
+                            <Image
                                 src={tipo.src}
                                 alt={tipo.alt}
                                 className="w-6 h-6 object-cover"
+                                width={24}
+                                height={24}
                             />
                         </button>
                     ))}

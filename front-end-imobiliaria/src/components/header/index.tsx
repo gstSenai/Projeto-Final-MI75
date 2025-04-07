@@ -3,6 +3,7 @@
 import { Inter } from 'next/font/google';
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 // Carregando a fonte Inter
 const inter = Inter({
@@ -21,10 +22,10 @@ export function Header() {
     const [currentImageEspanhol, setCurrentImageEspanhol] = useState('/imagensHeader/Espanha.png')
     const [isLoggedIn, setIsLoggedIn] = useState(false)
 
-    const handleLogin = () => {
-        setIsLoggedIn(true)
-        setShowProfileModal(false)
-    }
+//    const handleLogin = () => {
+//        setIsLoggedIn(true)
+//        setShowProfileModal(false)
+//    }
 
     const handleLogout = () => {
         setIsLoggedIn(false)
@@ -43,10 +44,10 @@ export function Header() {
                         <div>
                             <nav>
                                 <ul className="flex flex-row max-lg:text-base text-xl whitespace-nowrap md:gap-4 lg:gap-6 text-[#303030] max-md:hidden">
-                                    <li><a href="/">Início</a></li>
-                                    <li><a href="#">Propriedades</a></li>
-                                    <li><a href="#">Corretores</a></li>
-                                    <li><a href="/sobreNos">Sobre nós</a></li>
+                                    <li><Link href="/">Início</Link></li>
+                                    <li><Link href="#">Propriedades</Link></li>
+                                    <li><Link href="#">Corretores</Link></li>
+                                    <li><Link href="/sobreNos">Sobre nós</Link></li>
                                 </ul>
                             </nav>
                         </div>
@@ -129,28 +130,28 @@ export function Header() {
                                 <div className="absolute top-[calc(100%+0.5rem)] right-0 w-40 bg-[#702632] rounded-lg shadow-lg py-1 z-50">
                                     {!isLoggedIn ? (
                                         <>
-                                            <a 
+                                            <Link 
                                                 href="/login" 
                                                 className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
                                             >
                                                 Fazer login
-                                            </a>
+                                            </Link>
                                             <div className="w-full h-[1px] bg-white opacity-50"></div>
-                                            <a 
+                                            <Link 
                                                 href="/cadastro" 
                                                 className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
                                             >
                                                 Cadastrar-se
-                                            </a>
+                                            </Link>
                                         </>
                                     ) : (
                                         <>
-                                            <a 
+                                            <Link 
                                                 href="/perfil" 
                                                 className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
                                             >
                                                 Perfil
-                                            </a>
+                                            </Link>
                                             <div className="w-full h-[1px] bg-white opacity-50"></div>
                                             <button 
                                                 onClick={handleLogout}
@@ -190,7 +191,7 @@ export function Header() {
                                         height={40} 
                                         className="rounded-full cursor-pointer"
                                     />
-                                    <a href="/perfil" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Nome do Usuário</a>
+                                    <Link href="/perfil" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Nome do Usuário</Link>
                                 </div>
                                 <Image
                                     onClick={() => setHambuguerMobile(false)}
@@ -205,30 +206,30 @@ export function Header() {
                             <ul className="space-y-3 text-start my-3">
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/logoMinuscula.png" alt="simbolo HAV" width={20}  height={20} className='h-full'/>
-                                    <a  href="/paginaInicial" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Início</a>
+                                    <Link  href="/paginaInicial" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Início</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/casa.png" alt="simbolo casas" width={20}  height={20} className='h-full'/>
-                                    <a href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Propriedades</a>
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Propriedades</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/corretores.png" alt="simbolo corretores" width={20}  height={20} className='h-full'/>
-                                    <a href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Corretores</a>
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Corretores</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/informacao.png" alt="simbolo Sobre nos" width={20}  height={20} className='h-full'/>
-                                    <a href="/sobreNos" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Sobre nós</a>
+                                    <Link href="/sobreNos" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Sobre nós</Link>
                                 </li>
                             </ul>
                             <div className='bg-black p-[0.2px] w-full'></div>
                             <ul className="space-y-3 text-start mt-3">
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/sino.png" alt="chat corretores" width={20}  height={20} className='h-full'/>
-                                    <a href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Chat corretores</a>
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Chat corretores</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/configuracoes.png" alt="configurações" width={20}  height={20} className='h-full'/>
-                                    <a href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Configurações</a>
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Configurações</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/logout.png" alt="logout" width={20}  height={20} className='h-full'/>

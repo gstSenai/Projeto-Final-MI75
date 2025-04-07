@@ -1,18 +1,19 @@
 "use client"
 
+import Image from "next/image"
 import type React from "react"
-import type { UseFormRegister, FieldError } from "react-hook-form"
+import type { UseFormRegister, FieldError, FieldValues, Path } from "react-hook-form"
 
-interface FormularioInputProps {
+interface FormularioInputProps<T extends FieldValues = FieldValues> {
   placeholder?: string
   interName?: string
-  name: string
+  name: Path<T>
   value?: string
   showOptions?: boolean
   onChange?: (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
   customizacaoClass: string
   options?: string[]
-  register: UseFormRegister<any>
+  register: UseFormRegister<T>
   errors?: FieldError | undefined
   required?: boolean
   disabled?: boolean
@@ -22,7 +23,7 @@ interface FormularioInputProps {
   iconCaneta?: boolean
 }
 
-export function FormularioInput({
+export function FormularioInput<T extends FieldValues = FieldValues>({
   placeholder,
   interName,
   name,
@@ -37,7 +38,7 @@ export function FormularioInput({
   icon,
   onChange,
   iconCaneta,
-}: FormularioInputProps) {
+}: FormularioInputProps<T>) {
   const getIconPath = () => {
     switch (icon?.type) {
       case "areaCT":
@@ -69,8 +70,8 @@ export function FormularioInput({
           errors ? "border-red-500" : "border-gray-500"
         }`}
       >
-        {iconCaneta && <img src="/iconsForms/canetaEditar.png" alt="Editar" className="h-6 ml-4" />}
-        {iconPath && <img src={iconPath} alt={`Ícone ${icon?.type}`} className="h-6 lg:h-9" />}
+        {iconCaneta && <Image src="/iconsForms/canetaEditar.png" alt="Editar" className="h-6 ml-4" width={20} height={20} />}
+        {iconPath && <Image src={iconPath} alt={`Ícone ${icon?.type}`} className="h-6 lg:h-9" width={20} height={20} />}
 
         {options ? (
           <select
@@ -101,7 +102,7 @@ export function FormularioInput({
           />
         )}
 
-        {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-6" />}
+        {showOptions && <Image src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-6" width={20} height={20} />}
       </div>
 
       {errors && <span className="text-red-500 text-sm">{errors.message}</span>}

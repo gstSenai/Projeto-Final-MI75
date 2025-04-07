@@ -1,7 +1,7 @@
 import { Montserrat } from "next/font/google";
 import { Footer } from '@/components/footer';
 import { Header } from "@/components/header";
-
+import Image from "next/image";
 const montserrat = Montserrat({
     subsets: ['latin'],
     weight: ['400', '800', '900'],
@@ -12,14 +12,16 @@ export default function Sobre() {
     return (
       <>
       <Header />
-        <div className=" p-1 md: bg-[#DFDAD0] min-h-screen flex flex-col items-center font-montserrat">
+        <div className={`${montserrat.className} p-1 md: bg-[#DFDAD0] min-h-screen flex flex-col items-center`}>
 
             <div className=" md: relative w-full max-w-6xl mb-12 p-6">
                 <div className="w-full md: relative rounded-lg overflow-hidden">
-                    <img
+                    <Image
                         src="/imgSobreNos/capa.png"
                         alt="Sobre nós"
                         className="h-[500px] md:w-max object-cover "
+                        width={100}
+                        height={100}
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-25"></div>
                     <div className="absolute inset-0 flex items-center p-6">
@@ -36,10 +38,12 @@ export default function Sobre() {
             <div className=" w-full max-w-6xl p-6  font-montserrat">
 
                 <div className="flex flex-col md:flex-row items-center gap-14 mb-28">
-                    <img
+                    <Image
                         src="/imgSobreNos/missoes.png"
                         alt="Missão"
                         className="w-full md:w-[50%] rounded-lg shadow-md"
+                        width={100}
+                        height={100}
                     />
                     <div>
                         <h2 className="text-[30px] font-bold mb-2">Missões</h2>
@@ -49,7 +53,7 @@ export default function Sobre() {
                 </div>
 
                 <div className="flex flex-col md:flex-row-reverse items-center gap-14 mb-28">
-                    <img
+                    <Image
                         src="/imgSobreNos/visao.png"
                         alt="Visão"
                         className="w-full md:w-[50%] rounded-lg shadow-md"
@@ -71,10 +75,12 @@ export default function Sobre() {
                         <p>contato@havimobiliaria.com.br</p>
                     </div>
                     <div className="flex items-center">
-                        <img
+                        <Image
                             src="/imgSobreNos/HAV.png"
                             alt="HAV Imobiliária"
                             className="w-48 h-48"
+                            width={100}
+                            height={100}
                         />
                     </div>
                 </div>

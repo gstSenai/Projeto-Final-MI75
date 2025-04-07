@@ -1,12 +1,13 @@
 "use client"
-import { UseFormRegister, UseFormSetValue } from "react-hook-form"
+import { UseFormRegister, UseFormSetValue, FieldErrors } from "react-hook-form"
 import { RelacaoCorretorImovel } from "./relacaoCorretorImovel"
 import { RelacaoProprietarioImovel } from "./relacaoProprietarioImovel"
+import { FormData } from "../index"
 
 interface RelacaoImovelProps {
-    register: UseFormRegister<any>
-    errors: any
-    setValue: UseFormSetValue<any>
+    register: UseFormRegister<FormData>
+    errors: FieldErrors<FormData>
+    setValue: UseFormSetValue<FormData>
     onProprietarioAdicionado: () => void
     onUsuarioAdicionado: () => void
 }
@@ -20,20 +21,20 @@ export function RelacaoImovel({ register, errors, setValue, onProprietarioAdicio
                         <div className="mt-8">
                             <RelacaoCorretorImovel
                                 placeholder="Corretores"
-                                name="imovel.usuario"
+                                name="usuario"
                                 register={register}
                                 setValue={setValue}
                                 className="w-full h-40"
-                                errors={errors?.imovel?.usuario} 
+                                errors={errors?.usuario} 
                                 onUsuarioAdicionado={onUsuarioAdicionado}
                             />
                             <RelacaoProprietarioImovel
                                 placeholder="Proprietários"
-                                name="imovel.proprietarios"
+                                name="proprietarios"
                                 register={register}
                                 setValue={setValue}
                                 className="w-full h-40"
-                                errors={errors?.imovel?.proprietarios}
+                                errors={errors?.proprietarios}
                                 onProprietarioAdicionado={onProprietarioAdicionado}
                             />
                         </div>
@@ -43,4 +44,5 @@ export function RelacaoImovel({ register, errors, setValue, onProprietarioAdicio
         </div>
     )
 }
+
 

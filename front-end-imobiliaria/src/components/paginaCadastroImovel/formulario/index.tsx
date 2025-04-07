@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { EnderecoSection } from "../formulario/endereco-section"
 import { DadosImovelSection } from "./dados-imovel-section"
@@ -71,7 +71,7 @@ const EnderecoImovelProps = z.object({
     bairro: z.string().min(1, { message: "Bairro é obrigatório" }),
     cidade: z.string().min(1, { message: "Cidade é obrigatória" }),
     uf: z.string().min(1, { message: "UF é obrigatória" }),
-    complemento: z.string().optional(),
+    numero_apartamento: z.string().optional(),
 })
 
 const ProprietarioProps = z.object({
@@ -224,12 +224,12 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
 
             const response = await request("POST", "http://localhost:9090/endereco/create", data);
 
-            if (response && response.id) {
+            if (response && (response as unknown as { id: number }).id) {
                 return response;
             }
 
             console.error("Resposta do servidor:", response);
-            throw new Error(`Falha ao criar o endereço: ${response.status}`);
+            throw new Error(`Falha ao criar o endereço: ${(response as unknown as { status: number }).status}`);
         } catch (error) {
             console.error("Erro ao adicionar endereço:", error);
             throw error;
@@ -301,7 +301,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                     campos.forEach(campo => {
                         const valor = values.imovel[campo];
                         if (valor && !String(valor).includes(',')) {
-                            setValue(`imovel.${campo}`, `${valor},00`);
+                            setValue(`imovel.${campo}`, (`${valor},00`));
                         }
                     });
                 }
@@ -348,7 +348,8 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
 
 
     const onSubmitImovel = async (data: {
-        imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas;
+        imovel: ImovelProps; 
+        imovelCaracteristicas: ImovelCaracteristicas;
         endereco: EnderecoImovelProps;
         proprietarios: ProprietarioProps
         usuario: UsuarioProps
@@ -408,15 +409,15 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
 
             const response = await addImovel(immobileData);
 
-            if (response && response.id) {
+            if (response && (response as any).id) {
                 if (images.length > 0) {
-                    await uploadImages(response.id);
+                    await uploadImages((response as any).id);
                 } else {
                     console.log("Nenhuma imagem selecionada para upload");
                 }
 
                 console.log("Imóvel criado com sucesso:", response);
-                setLastAddedImovel(response);
+                setLastAddedImovel(response as ImovelProps);
                 setAdicionadoComSucesso(true);
                 setAdicionarAberto(false);
 
@@ -455,6 +456,19 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
         }
     }
 
+    const handleProprietarioAdicionado = () => {
+        setProprietarioAdicionado(true)
+    }
+
+    const handleUsuarioAdicionado = () => {
+        setUsuarioAdicionado(true)
+    }
+
+    useEffect(() => { 
+        console.log(errors)
+        console.log(getValues())
+    }, [errors, getValues])
+
     if (!isOpen) return null;
 
     return (
@@ -486,7 +500,10 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                                     transition={{ duration: 0.2 }}
                                     className="space-y-4"
                                 >
-                                    <EnderecoSection register={register} errors={errors} setValue={setValue} />
+                                    <EnderecoSection 
+                                    register={register} 
+                                    errors={errors} 
+                                    setValue={setValue} />
 
                                     <div className="flex gap-10 mt-4">
                                         <Botao
@@ -573,8 +590,8 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                                         register={register}
                                         errors={errors}
                                         setValue={setValue}
-                                        onProprietarioAdicionado={() => setProprietarioAdicionado(true)}
-                                        onUsuarioAdicionado={() => setUsuarioAdicionado(true)}
+                                        onProprietarioAdicionado={handleProprietarioAdicionado}
+                                        onUsuarioAdicionado={handleUsuarioAdicionado}
                                     />
                                     <div className="flex justify-end gap-4 mt-4">
                                         <Botao

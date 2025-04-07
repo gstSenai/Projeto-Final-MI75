@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { Botao } from "@/components/botao"
 import { FormularioEditarInput } from "./formularioEditarInput"
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { isValid, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormularioImagemEditProprietario } from "./formularioImagemEditProprietario"
 
@@ -236,7 +236,9 @@ export function EditarProprietario({ selectedProprietarios, onComplete }: Editar
     }
 
     const handleClick = async () => {
-        const isValid = await trigger('proprietario', 'proprietario.nome', 'proprietario.sobrenome', 'proprietario.cpf', 'proprietario.email', 'proprietario.telefone', 'proprietario.celular', 'proprietario.data_nascimento')
+        const isValid = await trigger(['proprietario', 'proprietario.nome', 'proprietario.sobrenome', 
+            'proprietario.cpf', 'proprietario.email', 'proprietario.telefone', 
+            'proprietario.celular', 'proprietario.data_nascimento'])
         if (!isValid) {
             console.log("Erro de validação")
             return

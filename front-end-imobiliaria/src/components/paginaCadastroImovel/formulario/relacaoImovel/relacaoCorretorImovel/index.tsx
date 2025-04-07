@@ -1,7 +1,8 @@
 "use client"
 
-import type { UseFormRegister, UseFormSetValue } from "react-hook-form"
+import type { UseFormRegister, UseFormSetValue, FieldErrors, Path } from "react-hook-form"
 import { useEffect, useState } from "react"
+import { FormData } from "../../index"
 
 type UsuarioType = {
     id?: number
@@ -14,85 +15,17 @@ type UsuarioType = {
     imagem_usuario: string
 }
 
-type FormData = {
-    imovel: {
-        nome_propriedade: string
-        tipo_transacao: string
-        valor_venda: number
-        tipo_imovel: string
-        status_imovel: string
-        valor_promocional: number
-        destaque: boolean
-        visibilidade: boolean
-        valor_iptu: number
-        condominio: number
-        area_construida: number
-        area_terreno: number
-        descricao?: string
-        usuario: UsuarioType[]
-    }
-    imovelCaracteristicas: {
-        numero_quartos: number
-        numero_banheiros: number
-        numero_suites: number
-        numero_vagas: number
-        piscina: boolean
-        numero_salas: number
-    }
-    endereco: {
-        cep: string
-        rua: string
-        numero: string
-        bairro: string
-        cidade: string
-        uf: string
-        complemento?: string
-    }
-    proprietarios: {
-        id?: number
-        nome: string
-        sobrenome: string
-        telefone: string
-        celular: string
-        data_nascimento: string
-        email: string
-        enderecoProprietario: {
-            id: number
-            cep: string
-            rua: string
-            tipo_residencia: string
-            numero_imovel: number
-            numero_apartamento: number
-            bairro: string
-            cidade: string
-            uf: string
-        }
-    }
-    usuario: {
-        id?: number
-        nome: string
-        email: string
-        senha: string
-    }
-}
-
-type FormErrors = {
-    message?: string
-    type?: string
-}
-
 interface RelacaoCorretorImovelProps {
     placeholder: string
-    name: "imovel.usuario"
-    className?: string
+    name: string
     register: UseFormRegister<FormData>
     setValue: UseFormSetValue<FormData>
-    required?: boolean
-    errors?: FormErrors
+    className?: string
+    errors?: FieldErrors<FormData>
     onUsuarioAdicionado: () => void
 }
 
-export function RelacaoCorretorImovel({ className = "", register, name, placeholder, required, errors, onUsuarioAdicionado, setValue }: RelacaoCorretorImovelProps) {
+export function RelacaoCorretorImovel({ className = "", register, name, errors, onUsuarioAdicionado, setValue }: RelacaoCorretorImovelProps) {
     const [usuarios, setUsuarios] = useState<UsuarioType[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -187,7 +120,7 @@ export function RelacaoCorretorImovel({ className = "", register, name, placehol
                                                 type="radio"
                                                 id={`corretor-${usuario.id}`}
                                                 value={usuario.id}
-                                                {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
+                                                {...register(name as Path<FormData>, { required: true })}
                                                 onChange={() => onUsuarioAdicionado()}
                                                 className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 text-vermelho border-gray-300 rounded-full focus:ring-vermelho group-hover:border-white group-hover:ring-white"
                                             />
@@ -198,7 +131,7 @@ export function RelacaoCorretorImovel({ className = "", register, name, placehol
                         )}
                     </div>
                 </div>
-                {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
+                {errors && <span className="text-red-500 text-sm">Campo obrigatório</span>}
             </div>
         </div>
     )

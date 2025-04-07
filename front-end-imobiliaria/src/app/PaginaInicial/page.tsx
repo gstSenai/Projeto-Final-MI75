@@ -1,10 +1,10 @@
 import { ImoveisDisponiveis } from '@/components/NumeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisAlugados } from '@/components/NumeroAtualizaveis/ImoveisAlugados';
 import { ImoveisVendidos } from '@/components/NumeroAtualizaveis/ImoveisVendidos';
-import { PesquisaPaginaInicial } from '@/components/PaginaInicial/PesquisaPaginaInicial';
+import { PesquisaPaginaInicial } from '@/components/paginaInicial/pesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
 import Carousel from '@/components/paginaInicial/carrossel';
-import BotaoImageTexto from '@/components/paginaInicial/BotaoImageTexto';
+import BotaoImageTexto from '@/components/paginaInicial/botaoImageTexto';
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';

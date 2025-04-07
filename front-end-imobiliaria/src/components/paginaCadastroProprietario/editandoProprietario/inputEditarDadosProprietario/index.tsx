@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState } from "react";
 
 interface FormularioInputProps {
@@ -30,11 +31,13 @@ function FormularioInput({
             action="text"
             className={`flex items-center lg:max-h-[58px] xl:max-h-[60px] 2xl:max-h-[62px] max-lg:justify-center gap-6 xl:py-4 2xl:py-6 py-3.5 bg-white border border-black rounded-2xl max-lg:bg-transparent max-lg:border-transparent max-lg:p-0 ${custumizacaoClass}`}
         >
-            <img
+            <Image
                 src="/iconsForms/canetaEditar.png"
                 alt="Editar"
                 className="lg:h-6 ml-4"
                 onClick={handleClick}
+                width={24}
+                height={24}
             />
             {options ? (
                 <select
@@ -66,10 +69,12 @@ function FormularioInput({
                 />
             )}
             {showOptions && (
-                <img
+                <Image
                     src="/iconsForms/botaoOpcoes.png"
                     alt="Botão Opções"
                     className="ml-auto mr-4 lg:h-6"
+                    width={20}
+                    height={20}
                 />
             )}
         </form>

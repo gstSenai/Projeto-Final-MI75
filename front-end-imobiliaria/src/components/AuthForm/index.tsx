@@ -4,6 +4,7 @@ import { Montserrat } from "next/font/google";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { z } from "zod";
+import Image from "next/image";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -117,9 +118,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
           <div className="w-full md:w-[40%] flex flex-col py-16 items-center justify-center bg-gradient-to-b from-[rgba(223,218,208,1)] to-[rgba(115,115,115,0.3)] rounded-l-lg">
             <h1 className="text-[34px] font-bold text-[#280202] tracking-[2px]">BEM VINDO</h1>
             <h2 className="text-3xl font-semibold text-[#280202] tracking-[6px]">HAV</h2>
-            <img src="/logos/logoLogin.png" alt="Logo" className="w-36 my-4 pr-2" />
+            <Image src="/logos/logoLogin.png" alt="Logo" width={144} height={144} className="w-36 my-4 pr-2" />
             <button className="bg-white border border-gray-300 text-[#702632] text-[14px] font-bold py-2.5 px-2 w-[240px] rounded-xl flex justify-center items-center mt-4">
-              <img src="/loginIcons/google-icon.png" alt="Google" className="w-5 h-5 mr-2" />
+                <Image src="/loginIcons/google-icon.png" alt="Google" width={20} height={20} className="w-5 h-5 mr-2" />
               Continue com o Google
             </button>
             <a href="#" onClick={handleRedirect} className="text-[12px] mt-2 text-black font-medium underline hover:text-[#702632]">{loginOuCadastro}</a>

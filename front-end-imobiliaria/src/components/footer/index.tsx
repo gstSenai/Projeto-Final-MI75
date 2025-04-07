@@ -20,16 +20,16 @@ export function Footer() {
                     </p>
                     <div className="flex gap-4 pt-4">
                         <Link href="https://facebook.com" target="_blank">
-                            <img src="/iconFooter/facebook.png" alt="facebook" className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
+                            <Image src="/iconFooter/facebook.png" alt="facebook" width={20} height={20} className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
                         </Link>
                         <Link href="https://linkedin.com" target="_blank">
-                            <img src="/iconFooter/linkedin.png" alt="linkedin" className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
+                            <Image src="/iconFooter/linkedin.png" alt="linkedin" width={20} height={20} className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
                         </Link>
                         <Link href="https://instagram.com" target="_blank">
-                            <img src="/iconFooter/instagram.png" alt="instagram" className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
+                            <Image src="/iconFooter/instagram.png" alt="instagram" width={20} height={20} className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
                         </Link>
                         <Link href="https://whatsapp.com" target="_blank">
-                            <img src="/iconFooter/zap.png" alt="whatsapp" className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
+                            <Image src="/iconFooter/zap.png" alt="whatsapp" width={20} height={20} className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
                         </Link>
                     </div>
                 </div>
