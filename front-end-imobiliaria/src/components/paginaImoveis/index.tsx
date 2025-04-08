@@ -60,7 +60,7 @@ export function ListaImoveis() {
     totalPages: 0,
     totalElements: 0,
     currentPage: 0,
-    size: 10,
+    size: 12,
   })
 
   const fetchImoveis = async (page = 0) => {
@@ -162,6 +162,7 @@ export function ListaImoveis() {
         currentPage: data.number || 0,
         size: data.size || 12,
       });
+
 
       const imoveisFormatados = imoveisArray.map((imovel: ImovelCompleto) => ({
         id: imovel.id || 0,
@@ -265,15 +266,18 @@ export function ListaImoveis() {
             className="bg-vermelho text-white px-6 py-2 rounded-lg transition duration-300 hover:opacity-80"
             onClick={() => setMostrarFiltros(!mostrarFiltros)}
           >
-            {mostrarFiltros ? "Filtrar" : "Filtrar"}
+            {mostrarFiltros ? "Fechar Filtros" : "Filtrar"}
           </button>
-          <button className="underline decoration-vermelho px-4 py-2 rounded-lg" onClick={refreshData}>
+          <button 
+            className="underline decoration-vermelho px-4 py-2 rounded-lg" 
+            onClick={() => refreshData()}
+          >
             <p className="text-vermelho font-bold">Restaurar Padrão</p>
           </button>
         </div>
 
         {mostrarFiltros && (
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center">
             <FiltroImoveis
               mostrarFiltros={mostrarFiltros}
               setMostrarFiltros={setMostrarFiltros}
@@ -294,7 +298,7 @@ export function ListaImoveis() {
           </div>
         ) : (
           <>
-            <div className="flex flex-wrap justify-center gap-6 mt-6">
+            <div className="flex flex-wrap justify-center items-start gap-6 mt-6">
               {imoveisFiltrados.length > 0 ? (
                 imoveisFiltrados.map((imovel) => (
                   <Card
@@ -352,11 +356,6 @@ export function ListaImoveis() {
                 </nav>
               </div>
             )}
-
-            <div className="flex justify-center mb-10 text-sm text-gray-500 mt-10">
-              Mostrando {imoveisFiltrados.length} de {paginationInfo.totalElements} imóveis • Página{" "}
-              {paginationInfo.currentPage + 1} de {paginationInfo.totalPages}
-            </div>
           </>
         )}
       </div>

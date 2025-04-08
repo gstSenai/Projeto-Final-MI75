@@ -79,7 +79,6 @@ public class UsuarioController {
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
-
         service.deleteById(id);
     }
 

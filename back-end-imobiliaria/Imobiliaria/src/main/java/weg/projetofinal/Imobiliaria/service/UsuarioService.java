@@ -36,6 +36,7 @@ public class UsuarioService {
 
 
     public Page<Usuario> findAll(Pageable pageable) {
+
         return repository.findAll(pageable);
     }
 
@@ -84,8 +85,6 @@ public class UsuarioService {
 
         return repository.findAll(usuarioSpecification);
     }
-
-
 
     public List<Usuario> listarCorretores() {
         Specification<Usuario> usuarioSpecification =
