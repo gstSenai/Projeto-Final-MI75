@@ -265,7 +265,7 @@ export function ListaImoveis() {
           </div>
         ) : (
           <>
-            <div className="flex flex-wrap justify-center gap-6 mt-6">
+            <div className="flex flex-wrap justify-center items-start gap-6 mt-6">
               {imoveisFiltrados.length > 0 ? (
                 imoveisFiltrados.map((imovel) => (
                   <Card
