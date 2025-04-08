@@ -11,6 +11,13 @@ import { useForm } from 'react-hook-form';
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { EnderecoProprietarioSection } from "./endereco-proprietario-section"
+import { Montserrat } from "next/font/google";
+
+const montserrat = Montserrat({
+    subsets: ["latin"],
+    weight: ["400", '500', '600', "800"],
+    display: "swap",
+});
 
 const ProprietarioProps = z.object({
     id: z.number().optional(),
@@ -63,6 +70,18 @@ const EnderecoProps = z.object({
     uf: z.string().min(2, { message: "UF inválida" }),
 })
 
+// Interface para a resposta da API
+interface EnderecoResponse {
+    id: number;
+    cep: string;
+    rua: string;
+    tipo_residencia: string;
+    numero_imovel: number;
+    numero_apartamento?: number;
+    bairro: string;
+    cidade: string;
+    uf: string;
+}
 
 const FormSchema = z.object({
     proprietario: ProprietarioProps,
@@ -79,7 +98,7 @@ interface InputDadosUsuarioProps {
 }
 
 export function Formulario({ onComplete }: InputDadosUsuarioProps) {
-    const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors }, setValue, trigger } = useForm<FormData>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
         },
@@ -91,6 +110,8 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [imagem, setImagem] = useState<File | null>(null)
     const [currentSection, setCurrentSection] = useState<'dados' | 'endereco'>('dados')
+    const [showErrorModal, setShowErrorModal] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -100,7 +121,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
 
     const addEndereco = async (data: EnderecoData) => {
         try {
-            const response = await request("POST", "http://localhost:9090/enderecoProprietario/create", data)
+            const response = await request("POST", "http://localhost:9090/enderecoProprietario/create", data) as EnderecoResponse;
 
             if (!response || typeof response.id === "undefined") {
                 throw new Error("Falha ao criar o endereço: resposta inválida do servidor");
@@ -155,22 +176,101 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
         }
     }
 
+    const validateCurrentSection = async () => {
+        let isValid = false;
+
+        if (currentSection === 'dados') {
+            isValid = await trigger([
+                'proprietario.nome',
+                'proprietario.sobrenome',
+                'proprietario.cpf',
+                'proprietario.telefone',
+                'proprietario.celular',
+                'proprietario.data_nascimento',
+                'proprietario.email'
+            ]);
+
+            if (!isValid) {
+                const camposFaltantes = [];
+                if (errors.proprietario?.nome) camposFaltantes.push("nome");
+                if (errors.proprietario?.sobrenome) camposFaltantes.push("sobrenome");
+                if (errors.proprietario?.cpf) camposFaltantes.push("CPF");
+                if (errors.proprietario?.telefone) camposFaltantes.push("telefone");
+                if (errors.proprietario?.celular) camposFaltantes.push("celular");
+                if (errors.proprietario?.data_nascimento) camposFaltantes.push("data de nascimento");
+                if (errors.proprietario?.email) camposFaltantes.push("email");
+
+                setErrorMessage(`Por favor, preencha corretamente os seguintes campos: ${camposFaltantes.join(", ")}`);
+                setShowErrorModal(true);
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    const handleNext = async () => {
+        const isValid = await validateCurrentSection();
+        if (isValid) {
+            setCurrentSection('endereco');
+        }
+    };
+
     const onSubmitUsuario = async (data: FormData) => {
         if (isSubmitting) return;
-        
+
         try {
             setIsSubmitting(true);
             const { proprietario, endereco } = data;
 
             if (!endereco || !proprietario) {
-                throw new Error("Dados incompletos do formulário");
+                setErrorMessage("Dados incompletos do formulário");
+                setShowErrorModal(true);
+                return;
+            }
+
+            // Validação dos campos obrigatórios
+            if (currentSection === 'dados') {
+                const camposFaltantes = [];
+                if (!proprietario.nome) camposFaltantes.push("nome");
+                if (!proprietario.sobrenome) camposFaltantes.push("sobrenome");
+                if (!proprietario.cpf) camposFaltantes.push("CPF");
+                if (!proprietario.telefone) camposFaltantes.push("telefone");
+                if (!proprietario.celular) camposFaltantes.push("celular");
+                if (!proprietario.data_nascimento) camposFaltantes.push("data de nascimento");
+                if (!proprietario.email) camposFaltantes.push("email");
+
+                if (camposFaltantes.length > 0) {
+                    setErrorMessage(`Por favor, preencha os seguintes campos: ${camposFaltantes.join(", ")}`);
+                    setShowErrorModal(true);
+                    return;
+                }
+            }
+
+            if (currentSection === 'endereco') {
+                const camposFaltantes = [];
+                if (!endereco.cep) camposFaltantes.push("CEP");
+                if (!endereco.rua) camposFaltantes.push("rua");
+                if (!endereco.tipo_residencia) camposFaltantes.push("tipo de residência");
+                if (!endereco.numero_imovel) camposFaltantes.push("número do imóvel");
+                if (!endereco.bairro) camposFaltantes.push("bairro");
+                if (!endereco.cidade) camposFaltantes.push("cidade");
+                if (!endereco.uf) camposFaltantes.push("UF");
+
+                if (camposFaltantes.length > 0) {
+                    setErrorMessage(`Por favor, preencha os seguintes campos: ${camposFaltantes.join(", ")}`);
+                    setShowErrorModal(true);
+                    return;
+                }
             }
 
             console.log("Enviando endereço:", endereco);
             const enderecoResponse = await addEndereco(endereco);
 
             if (!enderecoResponse || !enderecoResponse.id) {
-                throw new Error("Falha ao criar endereço");
+                setErrorMessage("Falha ao criar endereço");
+                setShowErrorModal(true);
+                return;
             }
 
             const proprietarioData = {
@@ -190,7 +290,8 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
             }
         } catch (error) {
             console.error("Erro detalhado ao salvar usuário:", error);
-            alert(`Erro ao salvar usuário: ${error instanceof Error ? error.message : "Erro desconhecido"}`);
+            setErrorMessage(`Erro ao salvar usuário: ${error instanceof Error ? error.message : "Erro desconhecido"}`);
+            setShowErrorModal(true);
         } finally {
             setIsSubmitting(false);
         }
@@ -213,13 +314,12 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
     return (
         <>
             {showForm && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-4 z-50">
-                    <div className="bg-white rounded-2xl p-4 max-w-4xl w-full max-h-[90vh] flex flex-col">
-                        <div className="flex justify-between items-center mb-3">
-                            <h2 className="text-2xl font-semibold text-vermelho">Cadastrar Proprietário</h2>
+                <div className={`fixed inset-0 bg-black bg-opacity-50 px-6 flex items-center justify-center z-50 ${montserrat.className}`}>
+                    <div className="bg-white rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-semibold text-vermelho">Cadastro de Proprietário</h2>
                             <button
-                                className="bg-[#DFDAD0] py-1.5 px-3 rounded-full text-vermelho lg:text-xl transition-transform duration-300 hover:scale-110
-                             hover:bg-vermelho hover:text-[#DFDAD0]"
+                                className="bg-[#DFDAD0] px-3 py-1 rounded-full text-vermelho hover:bg-vermelho hover:text-[#DFDAD0] transition-colors"
                                 onClick={() => setShowForm(false)}
                             >
                                 X
@@ -231,37 +331,43 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                                 {currentSection === 'dados' && (
                                     <div>
                                         <div className="space-y-4">
-                                            <FormularioImagem handleImageChange={handleImageChange} />
-                                            <DadosProprietarioSection register={register} errors={errors.proprietario} />
-                                        </div>
-                                        <div className="flex justify-between mt-4">
-                                            <Botao 
-                                                className="max-lg:text-sm bg-vermelho h-9" 
-                                                onClick={() => setShowForm(false)} 
-                                                texto="Cancelar" 
-                                            />
-                                            <Botao 
-                                                className="max-lg:text-sm bg-vermelho h-9" 
-                                                onClick={() => setCurrentSection('endereco')} 
-                                                texto="Próximo" 
-                                            />
+                                            <div className="flex flex-col items-center gap-4">
+                                                <FormularioImagem handleImageChange={handleImageChange} />
+                                            </div>
+
+                                            <div className="space-y-4 mb-4">
+                                                <DadosProprietarioSection register={register} errors={errors} />
+                                            </div>
+
+                                            <div className="flex justify-between mt-4">
+                                                <Botao
+                                                    className="bg-vermelho lg:w-1/3 h-10"
+                                                    onClick={() => setShowForm(false)}
+                                                    texto="Cancelar"
+                                                />
+                                                <Botao
+                                                    className="bg-vermelho lg:w-1/3 h-10"
+                                                    onClick={handleNext}
+                                                    texto="Próximo"
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 )}
 
                                 {currentSection === 'endereco' && (
                                     <div>
-                                        <EnderecoProprietarioSection setValue={setValue} register={register} errors={errors.proprietario} />
+                                        <EnderecoProprietarioSection setValue={setValue} register={register} errors={errors} />
                                         <div className="flex justify-between mt-4">
-                                            <Botao 
-                                                className="max-lg:text-sm bg-vermelho h-9" 
-                                                onClick={() => setCurrentSection('dados')} 
-                                                texto="Voltar" 
+                                            <Botao
+                                                className="bg-vermelho lg:w-1/2 h-10"
+                                                onClick={() => setCurrentSection('dados')}
+                                                texto="Voltar"
                                             />
-                                            <Botao 
-                                                className="max-lg:text-sm bg-vermelho h-9" 
-                                                onClick={handleSubmit(onSubmitUsuario)} 
-                                                texto="Salvar cadastro" 
+                                            <Botao
+                                                className="bg-vermelho lg:w-1/2 h-10"
+                                                onClick={handleSubmit(onSubmitUsuario)}
+                                                texto="Salvar cadastro"
                                             />
                                         </div>
                                     </div>
@@ -271,7 +377,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                     </div>
                 </div>
             )}
-            
+
             <AnimatePresence>
                 {showModal && lastAddedProprietario && (
                     <motion.div
@@ -290,6 +396,35 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {showErrorModal && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]"
+                >
+                    <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-2xl font-semibold text-vermelho">Campos Inválidos</h2>
+                            <button
+                                className="bg-[#DFDAD0] px-3 py-1 rounded-full text-vermelho hover:bg-vermelho hover:text-[#DFDAD0] transition-colors"
+                                onClick={() => setShowErrorModal(false)}
+                            >
+                                X
+                            </button>
+                        </div>
+                        <p className="text-gray-700 text-lg mb-4">{errorMessage}</p>
+                        <div className="flex justify-end">
+                            <Botao
+                                className="bg-vermelho lg:w-1/3 h-10"
+                                texto="OK"
+                                onClick={() => setShowErrorModal(false)}
+                            />
+                        </div>
+                    </div>
+                </motion.div>
+            )}
         </>
     )
 }

@@ -2,24 +2,13 @@
 import { FormularioInput } from "../formularioInput"
 import { Montserrat } from "next/font/google"
 import { UseFormRegister, FieldErrors } from "react-hook-form"
+import { FormData } from "../index"
 
 const montserrat = Montserrat({
     subsets: ['latin'],
     weight: ['400', '800'],
     display: 'swap',
 });
-
-interface FormData {
-    proprietario: {
-        nome: string;
-        sobrenome: string;
-        cpf: string;
-        data_nascimento: string;
-        telefone: string;
-        celular: string;
-        email: string;
-    }
-}
 
 interface DadosProprietarioSectionProps {
     register: UseFormRegister<FormData>
@@ -112,7 +101,7 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                         register={register}
                         required
                         customizacaoClass="w-full p-2 border border-gray-500 rounded"
-                        maxLength={14}
+                        maxLength={15}
                         onChange={(e) => {
                             e.target.value = formatarTelefone(e.target.value);
                         }}

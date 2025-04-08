@@ -1,5 +1,5 @@
 "use client";
-import { useState, ReactNode, useRef, Children, useEffect } from "react";
+import { useState, ReactNode, useRef, Children, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface CarouselProps {
@@ -25,6 +25,23 @@ export default function Carousel({ type, children }: CarouselProps) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const handleSlideChange = useCallback((direction: number) => {
+    if (isAnimating) return;
+
+    setIsAnimating(true);
+    setCurrentSlide((prev) => {
+      const newIndex = prev + direction;
+      if (newIndex < 0) return totalSlides - 1;
+      if (newIndex >= totalSlides) return 0;
+      return newIndex;
+    });
+
+    // Reseta a animação após a transição
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 500);
+  }, [isAnimating, totalSlides]);
+
   useEffect(() => {
     // Limpa o intervalo anterior se existir
     if (intervalRef.current) {
@@ -44,24 +61,7 @@ export default function Carousel({ type, children }: CarouselProps) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [currentSlide, totalSlides, isAnimating, isDragging]);
-
-  const handleSlideChange = (direction: number) => {
-    if (isAnimating) return;
-
-    setIsAnimating(true);
-    setCurrentSlide((prev) => {
-      const newIndex = prev + direction;
-      if (newIndex < 0) return totalSlides - 1;
-      if (newIndex >= totalSlides) return 0;
-      return newIndex;
-    });
-
-    // Reseta a animação após a transição
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 500);
-  };
+  }, [currentSlide, totalSlides, isAnimating, isDragging, handleSlideChange]);
 
   const prevSlide = () => handleSlideChange(-1);
   const nextSlide = () => handleSlideChange(1);

@@ -23,69 +23,72 @@ const ProprietarioProps = z.object({
   nome: z.string().min(1, { message: "O nome é obrigatório" }),
   sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
   cpf: z.string()
-    .min(14, { message: "CPF inválido" })
-    .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, { message: "Formato de CPF inválido" })
-    .transform((cpf) => cpf.replace(/\D/g, '')),
+      .min(14, { message: "CPF inválido" })
+      .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, { message: "Formato de CPF inválido" })
+      .transform((cpf) => cpf.replace(/\D/g, '')),
   telefone: z.string()
-    .min(11, { message: "Telefone inválido" })
-    .regex(/^\(\d{2}\)\s\d{5}-\d{4}$/, { message: "Formato de telefone inválido" })
-    .transform((tel) => tel.replace(/\D/g, '')),
+      .min(11, { message: "Telefone inválido" })
+      .regex(/^\(\d{2}\)\s\d{5}-\d{4}$/, { message: "Formato de telefone inválido" })
+      .transform((tel) => tel.replace(/\D/g, '')),
   celular: z.string()
-    .min(11, { message: "Celular inválido" })
-    .regex(/^\(\d{2}\)\s\d{5}-\d{4}$/, { message: "Formato de celular inválido" })
-    .transform((cel) => cel.replace(/\D/g, '')),
+      .min(11, { message: "Celular inválido" })
+      .regex(/^\(\d{2}\)\s\d{5}-\d{4}$/, { message: "Formato de celular inválido" })
+      .transform((cel) => cel.replace(/\D/g, '')),
   data_nascimento: z.string()
-    .min(10, { message: "Data deve estar no formato DD/MM/AAAA" })
-    .regex(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/, {
-      message: "Data deve estar no formato DD/MM/AAAA"
-    })
-    .transform((data) => {
-      const [dia, mes, ano] = data.split('/').map(Number);
-      return new Date(ano, mes - 1, dia);
-    }),
+      .min(10, { message: "Data deve estar no formato DD/MM/AAAA" })
+      .regex(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/, {
+          message: "Data deve estar no formato DD/MM/AAAA"
+      })
+      .transform((data) => {
+          const [dia, mes, ano] = data.split('/').map(Number);
+          return new Date(ano, mes - 1, dia);
+      }),
   email: z.string().email({ message: "E-mail inválido" }),
-  imagem_proprietario: z.string().optional(),
   enderecoProprietario: z.object({
-    id: z.number().optional(),
-    cep: z.string().min(8, { message: "CEP inválido" }),
-    rua: z.string().min(1, { message: "Rua inválida" }),
-    tipo_residencia: z.string().min(1, { message: "Tipo de residência inválido" }),
-    numero_imovel: z.coerce.number().min(1, { message: "Número do imóvel inválido" }),
-    numero_apartamento: z.coerce.number().min(1, { message: "Número do apartamento inválido" }),
-    bairro: z.string().min(1, { message: "Bairro inválido" }),
-    cidade: z.string().min(1, { message: "Cidade inválida" }),
-    uf: z.string().min(2, { message: "UF inválida" }),
+      id: z.number().optional(),
+      cep: z.string().min(8, { message: "CEP inválido" }),
+      rua: z.string().min(1, { message: "Rua inválida" }),
+      tipo_residencia: z.string().min(1, { message: "Tipo de residência inválido" }),
+      numero_imovel: z.coerce.number().min(1, { message: "Número do imóvel inválido" }),
+      numero_apartamento: z.coerce.number().min(1, { message: "Número do apartamento inválido" }).optional(),
+      bairro: z.string().min(1, { message: "Bairro inválido" }),
+      cidade: z.string().min(1, { message: "Cidade inválida" }),
+      uf: z.string().min(2, { message: "UF inválida" }),
   }).optional(),
-  ImovelProprietarioResponseDTO: z.array(z.object({
-    id: z.number().optional(),
-    codigo: z.number().optional(),
-    nome_propriedade: z.string().min(1, { message: "Nome da propriedade inválido" }),
-    tipo_transacao: z.string().min(1, { message: "Tipo de transação inválido" }),
-    valor_venda: z.number().min(1, { message: "Valor de venda inválido" }),
-    tipo_imovel: z.string().min(1, { message: "Tipo de imóvel inválido" }),
-    status_imovel: z.string().min(1, { message: "Status do imóvel inválido" }),
-    valor_promocional: z.number().min(1, { message: "Valor promocional inválido" }),
-    destaque: z.boolean().optional(),
-    visibilidade: z.boolean().optional(),
-    valor_iptu: z.number().min(1, { message: "Valor doIPTU inválido" }),
-    condominio: z.number().min(1, { message: "Condomínio inválido" }),
-    area_construida: z.number().min(1, { message: "Área construída inválida" }),
-    area_terreno: z.number().min(1, { message: "Área do terreno inválida" }),
-    descricao: z.string().min(1, { message: "Descrição inválida" }),
-  })).optional(),
+})
+
+const EnderecoProps = z.object({
+  id: z.number().optional(),
+  cep: z.string().min(8, { message: "CEP inválido" }),
+  rua: z.string().min(1, { message: "Rua inválida" }),
+  tipo_residencia: z.string().min(1, { message: "Tipo de residência inválido" }),
+  numero_imovel: z.coerce.number().min(1, { message: "Número do imóvel inválido" }),
+  numero_apartamento: z.coerce.number().optional(),
+  bairro: z.string().min(1, { message: "Bairro inválido" }),
+  cidade: z.string().min(1, { message: "Cidade inválida" }),
+  uf: z.string().min(2, { message: "UF inválida" }),
 })
 
 type ProprietarioProps = z.infer<typeof ProprietarioProps>
+type EnderecoProps = z.infer<typeof EnderecoProps>
+type FormData = { 
+  proprietario: ProprietarioProps;
+  endereco: EnderecoProps;
+}
+
+export type { FormData }
 
 interface ResponseProps {
   content: ProprietarioProps[]
 }
 
 export default function TabelaProprietario() {
-  const { register, watch, reset } = useForm({
+  const { register, watch, reset } = useForm<FormData>({
     defaultValues: {
-      "proprietario.nome": "",
-      "proprietario.email": "",
+      proprietario: {
+        nome: "",
+        email: "",
+      }
     }
   });
   const [selectedProprietarios, setSelectedProprietarios] = useState<ProprietarioProps[]>([])

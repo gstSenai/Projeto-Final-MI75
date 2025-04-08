@@ -190,10 +190,8 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                         <div className="space-y-4 pt-10">
                                                             <div className="flex flex-col gap-4">
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`nome_${usuario.id}`} className="block text-lg">
-                                                                        Nome:
-                                                                    </label>
                                                                     <FormularioEditarInput
+                                                                        label="Nome"
                                                                         placeholder="Ex: Caio"
                                                                         name="usuario.nome"
                                                                         value={usuario.nome}
@@ -205,10 +203,8 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                 </div>
 
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`sobrenome_${usuario.id}`} className="block text-lg">
-                                                                        Sobrenome:
-                                                                    </label>
                                                                     <FormularioEditarInput
+                                                                        label="Sobrenome"
                                                                         placeholder="Ex: Souza"
                                                                         name="usuario.sobrenome"
                                                                         value={usuario.sobrenome}
@@ -220,10 +216,8 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                 </div>
 
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`tipo_conta_${usuario.id}`} className="block text-lg">
-                                                                        Tipo da Conta:
-                                                                    </label>
                                                                     <FormularioEditarInput
+                                                                        label="Tipo da Conta"
                                                                         placeholder=""
                                                                         name="usuario.tipo_conta"
                                                                         value={usuario.tipo_conta}
@@ -236,10 +230,8 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                 </div>
 
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`email_${usuario.id}`} className="block text-lg">
-                                                                        E-mail:
-                                                                    </label>
                                                                     <FormularioEditarInput
+                                                                        label="E-mail"
                                                                         placeholder="Ex: caio@gmail.com"
                                                                         name="usuario.email"
                                                                         value={usuario.email}
@@ -251,10 +243,8 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                 </div>
 
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`senha_${usuario.id}`} className="block text-lg">
-                                                                        Senha:
-                                                                    </label>
                                                                     <FormularioEditarInput
+                                                                        label="Senha"
                                                                         placeholder=""
                                                                         name="usuario.senha"
                                                                         value={usuario.senha}
@@ -264,6 +254,7 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                         errors={errors?.usuario?.senha}
                                                                     />
                                                                 </div>
+
                                                             </div>
                                                         </div>
                                                     </React.Fragment>

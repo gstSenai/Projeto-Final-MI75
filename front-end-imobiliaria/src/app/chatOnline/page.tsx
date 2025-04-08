@@ -33,14 +33,10 @@ export default function Chat() {
     }
   };
 
-  const handleEmojiClick = (emojiObject: any) => {
-    setMessage((prevMessage) => prevMessage + emojiObject.emoji);
+  const handleEmojiClick = (emojiObject: unknown) => {
+    setMessage((prevMessage) => prevMessage + (emojiObject as { emoji: string }).emoji);
     setShowEmojiPicker(false);
   };
-
-  const handleMessage = (message: string) => {
-    // ...
-  }
 
   return (
     <>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Card } from "../cardImovel"
 import { Montserrat } from "next/font/google"
 import { FiltroImoveis } from "./botaoFiltro"
@@ -63,7 +63,7 @@ export function ListaImoveis() {
     size: 10,
   })
 
-  const fetchImoveis = async (page = 0) => {
+  const fetchImoveis = useCallback(async (page = 0) => {
     try {
       setLoading(true)
       const response = await fetch(`http://localhost:9090/imovel/getAll?page=${page}&size=${paginationInfo.size}`, {
@@ -119,7 +119,7 @@ export function ListaImoveis() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [paginationInfo.size, ultimoId, paginationInfo.currentPage])
 
   const refreshData = async () => {
     try {
@@ -186,7 +186,7 @@ export function ListaImoveis() {
 
   useEffect(() => {
     fetchImoveis();
-  }, [fetchImoveis, imoveis.length]);
+  }, [fetchImoveis]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && newPage < paginationInfo.totalPages) {
@@ -198,7 +198,7 @@ export function ListaImoveis() {
     if (imoveis.length > 0) {
       fetchImoveis(0)
     }
-  }, [tipoTransacao])
+  }, [tipoTransacao, fetchImoveis, imoveis.length])
 
   const imoveisFiltrados =
     tipoTransacao === "Todos" ? imoveis : imoveis.filter((imovel) => imovel.tipo_transacao === tipoTransacao)
