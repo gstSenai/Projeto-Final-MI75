@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import PanZoom from "react-easy-panzoom";
 
@@ -24,13 +25,18 @@ function ImageUpload({ imagePreview, handleFileChange, className = "", onClick, 
       onDoubleClick={onDoubleClick}
     >
       {imagePreview ? (
-        <PanZoom>
-          <img
-            src={imagePreview}
-            alt="Pré-visualização"
-            className="w-full h-full object-cover"
-          />
-        </PanZoom>
+        <div className="w-full h-full">
+          {/* @ts-expect-error - Ignorando erro de tipo temporariamente */}
+          <PanZoom>
+            <Image
+              src={imagePreview}
+              alt="Pré-visualização"
+              className="w-full h-full object-cover"
+              width={100}
+              height={100}
+            />
+          </PanZoom>
+        </div>
       ) : (
         <span className="rounded-full px-3 py-1 bg-gray-400 text-white text-2xl">+</span>
       )}
@@ -91,13 +97,16 @@ export function FormularioImagem({ onImagesChange }: FormularioImagemProps) {
         onClick={handleFullscreenClick}
       >
         <div className="relative w-full h-full flex items-center justify-center">
-          <PanZoom>
-            <img
-              src={imagePreviews[selectedImageIndex] || ''}
-              alt="Visualização em tela cheia"
-              className="max-w-full max-h-full object-contain"
-            />
-          </PanZoom>
+          <div className="w-full h-full">
+            {/* @ts-expect-error - Ignorando erro de tipo temporariamente */}
+            <PanZoom>
+              <Image
+                src={imagePreviews[selectedImageIndex] || ''}
+                alt="Visualização em tela cheia"
+                className="max-w-full max-h-full object-contain"
+              />
+            </PanZoom>
+          </div>
           <button 
             className="absolute top-4 right-4 text-white text-2xl bg-red-500 rounded-full w-10 h-10 flex items-center justify-center"
             onClick={handleFullscreenClick}
@@ -146,3 +155,4 @@ export function FormularioImagem({ onImagesChange }: FormularioImagemProps) {
     </div>
   );
 }
+

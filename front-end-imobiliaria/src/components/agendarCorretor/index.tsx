@@ -9,8 +9,9 @@ const montserrat = Montserrat({
 });
 
 import { Botao } from "../botao/index";
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import request from "@/routes/request"
+import Image from 'next/image';
 
 interface Corretor {
     id: number;
@@ -25,27 +26,27 @@ export default function AgendarCorretor({ id }: { id: number }) {
     const [isLoading, setIsLoading] = useState(false)
     const [corretor, setCorretor] = useState<Corretor | null>(null)
 
-    const getCorretor = async () => {
+    const getCorretor = useCallback(async () => {
         setIsLoading(true);
         try {
             const response = await request("GET", `http://localhost:9090/usuario/getById/${id}`);
             console.log("Resposta da API:", response);
-            setCorretor(response);
+            setCorretor(response as Corretor);
         } catch (error) {
             console.error("Erro ao buscar corretor:", error);
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [id]);
 
     useEffect(() => {
         console.log("ID recebido:", id);
         getCorretor();
-    }, [id]);
+    }, [getCorretor]);
 
 
     return (
-        <div className="flex flex-col gap-4 py-4 w-72">
+        <div className={`flex flex-col gap-4 py-4 w-72 ${montserrat.className}`}>
             <div>
                 {isLoading ? (
                     <p>Carregando...</p>
@@ -53,10 +54,12 @@ export default function AgendarCorretor({ id }: { id: number }) {
                     <>
                         {corretor && (
                             <div className="flex flex-col items-center justify-center px-1 text-center">
-                                <img
+                                <Image
                                     src={`http://localhost:9090/usuario/imagem/${corretor.imagem_usuario}`}
                                     alt={`Foto de ${corretor.nome}`}
                                     className="w-40 h-40 rounded-full object-cover"
+                                    width={100}
+                                    height={100}
                                 />
                                 <div className="pt-4">
                                     <p>Corretor {corretor.nome + " " + corretor.sobrenome}</p>

@@ -1,7 +1,8 @@
 "use client"
 import { FormularioInput } from "../formularioInput"
 import { Montserrat } from "next/font/google"
-import { UseFormRegister } from "react-hook-form"
+import { FieldErrors, UseFormRegister } from "react-hook-form"
+import { FormData } from "../index"
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -9,9 +10,10 @@ const montserrat = Montserrat({
     display: 'swap',
 });
 
+
 interface DadosUsuarioSectionProps {
-    register: UseFormRegister<any>
-    errors: any
+    register: UseFormRegister<FormData>
+    errors: FieldErrors<FormData>
 }
 
 const formatarTelefone = (value: string) => {
@@ -37,7 +39,7 @@ export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionPro
                         register={register}
                         required
                         customizacaoClass="w-full"
-                        errors={errors?.nome}
+                        errors={errors?.usuario?.nome}
                     />
                     <FormularioInput
                         placeholder="Sobrenome:"
@@ -46,7 +48,7 @@ export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionPro
                         register={register}
                         required
                         customizacaoClass="w-full"
-                        errors={errors?.sobrenome}
+                        errors={errors?.usuario?.sobrenome}
                     />
                     <FormularioInput
                         placeholder="Tipo da Conta:"
@@ -55,7 +57,7 @@ export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionPro
                         register={register}
                         customizacaoClass="w-full"
                         options={['Usuario', 'Corretor', 'Administrador', 'Editor']}
-                        errors={errors?.tipo_conta}
+                        errors={errors?.usuario?.tipo_conta}
                     />
                 </div>
 
@@ -67,7 +69,7 @@ export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionPro
                         register={register}
                         required
                         customizacaoClass="w-full"
-                        errors={errors?.telefone}
+                        errors={errors?.usuario?.telefone}
                         onChange={(e) => {
                             e.target.value = formatarTelefone(e.target.value);
                         }}
@@ -79,7 +81,7 @@ export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionPro
                         register={register}
                         required
                         customizacaoClass="w-full"
-                        errors={errors?.email}
+                        errors={errors?.usuario?.email}
                     />
                     <FormularioInput
                         placeholder="Senha:"
@@ -88,7 +90,7 @@ export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionPro
                         register={register}
                         required
                         customizacaoClass="w-full"
-                        errors={errors?.senha}
+                        errors={errors?.usuario?.senha}
                     />
                 </div>
             </div>

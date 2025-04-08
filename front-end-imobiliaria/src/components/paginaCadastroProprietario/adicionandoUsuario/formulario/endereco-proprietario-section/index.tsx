@@ -1,7 +1,7 @@
 "use client"
 import { FormularioInput } from "../formularioInput"
 import { Montserrat } from "next/font/google"
-import { UseFormRegister, UseFormSetValue } from "react-hook-form"
+import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form"
 import { useState } from "react"
 
 const montserrat = Montserrat({
@@ -10,14 +10,36 @@ const montserrat = Montserrat({
     display: 'swap',
 });
 
+interface FormData {
+    endereco?: {
+        cep: string;
+        uf: string;
+        cidade: string;
+        bairro: string;
+        rua: string;
+        tipo_residencia: string;
+        numero_imovel: string;
+        numero_apartamento: string;
+    };
+        cep: string;
+        uf: string;
+        cidade: string;
+        bairro: string;
+        rua: string;
+        tipo_residencia: string;
+        numero_imovel: string;
+        numero_apartamento: string;
+}
+
+
+
 interface EnderecoProprietarioSectionProps {
-    register: UseFormRegister<any>
-    setValue: UseFormSetValue<any>
-    errors: any
+    register: UseFormRegister<FormData>
+    setValue: UseFormSetValue<FormData>
+    errors: FieldErrors<FormData>
 }
 
 export function EnderecoProprietarioSection({ register, setValue, errors }: EnderecoProprietarioSectionProps) {
-    const [cep, setCep] = useState("")
     const [isLoading, setIsLoading] = useState(false)
 
     const buscarCep = async (cepValue: string) => {
@@ -58,10 +80,9 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
                     interName=""
                     required
-                    errors={errors?.cep?.message}
+                    errors={errors?.cep}
                     onChange={(e) => {
                         const novoCep = e.target.value
-                        setCep(novoCep)
                         if (novoCep.replace(/\D/g, "").length === 8) buscarCep(novoCep)
                     }}
                 />

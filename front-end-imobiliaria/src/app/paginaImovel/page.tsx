@@ -1,8 +1,7 @@
 import { Montserrat } from 'next/font/google';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { BarraStatusImovel } from '@/components/barraStatusImovel';
-import Image from 'next/image';
+import BarraStatusImovel from '@/components/barraStatusImovel';
 import { Card } from '@/components/cardImovel/index';
 import AgendarCorretor from '@/components/agendarCorretor';
 
@@ -18,7 +17,7 @@ export default function PaginaImovel() {
         <>
             <Header />
 
-            <div className='pt-24 px-8 max-lg:px-8 lg:px-8 xl:px-10'>
+            <div className={`pt-24 px-8 max-lg:px-8 lg:px-8 xl:px-10 ${montserrat.className}`}>
 
                 <main>
                     <a className='opacity-40 text-xl' href="/paginaImoveis">Imóveis  &gt;</a>

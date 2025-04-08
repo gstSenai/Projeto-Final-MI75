@@ -1,12 +1,13 @@
 "use client"
-import { UseFormRegister } from "react-hook-form"
+import { UseFormRegister, FieldErrors } from "react-hook-form"
 import { FormularioInput } from "../formularioInput"
 import { Descricao } from "../descricao"
 import { FormularioImagem } from "../formularioImagem"
+import { FormData } from "../index"
 
 interface DadosImovelSectionProps {
-    register: UseFormRegister<any>
-    errors: any
+    register: UseFormRegister<FormData>
+    errors: FieldErrors<FormData>
     onImagesChange?: (files: File[]) => void;
 }
 

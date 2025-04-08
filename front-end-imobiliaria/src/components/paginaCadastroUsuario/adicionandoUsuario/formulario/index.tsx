@@ -38,6 +38,8 @@ const FormSchema = z.object({
 type UsuarioData = z.infer<typeof UsuarioProps>
 type FormData = z.infer<typeof FormSchema>
 
+export type { FormData }
+
 interface InputDadosUsuarioProps {
     onComplete?: () => void
 }
@@ -163,7 +165,8 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                     </div>
 
                     <div className="space-y-4 mb-4">
-                        <DadosUsuarioSection register={register} errors={errors.usuario} />
+                        <DadosUsuarioSection register={register} 
+                        errors={errors} />
                     </div>
 
                     <div className="flex justify-end gap-4 mt-4">

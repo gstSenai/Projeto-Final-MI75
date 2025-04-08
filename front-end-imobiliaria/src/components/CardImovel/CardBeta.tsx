@@ -27,7 +27,7 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                 <div className="flex justify-center items-center">
                     <div className="flex flex-col w-full max-w-[375px] lg:max-w-[500px] lg:px-4">
                         <div className="w-full">
-                            <img src="/fotoImovel.png" alt="Imagem Imovel" className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[400px]" />
+                            <Image src="/fotoImovel.png" alt="Imagem Imovel" width={500} height={300} className="w-full max-w-[500px] lg:max-w-[350px] 2xl:max-w-[400px]"  />
                         </div>
                         <div className="w-full bg-white shadow-[5px_20px_100px_rgb(0,0,0,0.1)] rounded-b-[20px] py-2">
                             <div className="flex flex-col justify-center items-center">

@@ -1,18 +1,19 @@
 "use client"
 
+import Image from "next/image"
 import { useState } from "react"
 import type React from "react"
-import type { UseFormRegister } from "react-hook-form"
+import type { FieldValues, UseFormRegister, Path } from "react-hook-form"
 import type { FieldError } from "react-hook-form"
 
-interface FormularioEditarInputProps {
+interface FormularioEditarInputProps<T extends FieldValues = FieldValues> {
   placeholder: string
   name: string
   label?: string
   showOptions?: boolean
   onChange?: (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
   custumizacaoClass: string
-  register: UseFormRegister<any>
+  register: UseFormRegister<T>
   options?: string[]
   errors?: FieldError | undefined
   required?: boolean
@@ -22,7 +23,7 @@ interface FormularioEditarInputProps {
   }
 }
 
-export function FormularioEditarInput({
+export function FormularioEditarInput<T extends FieldValues = FieldValues>({
   placeholder,
   name,
   label,
@@ -35,7 +36,7 @@ export function FormularioEditarInput({
   value = "",
   icon,
   onChange,
-}: FormularioEditarInputProps) {
+}: FormularioEditarInputProps<T>) {
   const [inputValue, setInputValue] = useState<string | number>(value)
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
@@ -74,16 +75,18 @@ export function FormularioEditarInput({
       <div className={`relative ${custumizacaoClass}`}>
         <div className="flex items-center w-full rounded-lg">
           {iconPath && (
-            <img 
+            <Image
               src={iconPath} 
               alt={`Ícone ${icon?.type}`} 
               className="h-5 mr-2" 
+              width={20}
+              height={20}
             />
           )}
 
           {options ? (
             <select
-              {...register(name, { 
+              {...register(name as Path<T>, { 
                 required: required ? `${placeholder} é obrigatório` : false 
               })}
               onChange={handleChange}
@@ -103,7 +106,7 @@ export function FormularioEditarInput({
             <input
               type="text"
               placeholder={`${placeholder} ${required ? "*" : ""}`}
-              {...register(name, { 
+              {...register(name as Path<T>, { 
                 required: required ? `${placeholder} é obrigatório` : false 
               })}
               value={inputValue}
@@ -113,10 +116,12 @@ export function FormularioEditarInput({
           )}
 
           {showOptions && (
-            <img 
+            <Image 
               src="/iconsForms/botaoOpcoes.png" 
               alt="Botão Opções" 
-              className="h-5 ml-auto" 
+              className="h-5 ml-auto"
+              width={20}
+              height={20}
             />
           )}
         </div>

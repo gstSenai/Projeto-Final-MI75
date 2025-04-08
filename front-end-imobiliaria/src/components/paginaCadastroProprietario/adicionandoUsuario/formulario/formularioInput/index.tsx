@@ -1,20 +1,20 @@
 "use client"
 
 import type React from "react"
-import type { UseFormRegister, FieldError } from "react-hook-form"
+import type { UseFormRegister, FieldError, FieldValues, Path, FieldErrors } from "react-hook-form"
 import Image from "next/image"
 
-interface FormularioInputProps {
+interface FormularioInputProps<T extends FieldValues = FieldValues> {
   placeholder?: string
   interName?: string
-  name: string
+  name: Path<T>
   value?: string
   showOptions?: boolean
   onChange?: (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
   customizacaoClass: string
   options?: string[]
-  register: UseFormRegister<any>
-  errors?: FieldError | undefined
+  register: UseFormRegister<T>
+  errors?: FieldError | FieldErrors<T> | undefined
   required?: boolean
   disabled?: boolean
   icon?: {
@@ -22,9 +22,10 @@ interface FormularioInputProps {
   }
   iconCaneta?: boolean
   label?: string
+  maxLength?: number
 }
 
-export function FormularioInput({
+export function FormularioInput<T extends FieldValues = FieldValues>({
   interName,
   name,
   value,
@@ -39,7 +40,8 @@ export function FormularioInput({
   onChange,
   iconCaneta,
   label,
-}: FormularioInputProps) {
+  maxLength,
+}: FormularioInputProps<T>) {
   const getIconPath = () => {
     switch (icon?.type) {
       case "areaCT":
@@ -100,13 +102,14 @@ export function FormularioInput({
             onChange={onChange}
             disabled={disabled}
             className="w-full outline-none text-gray-900 disabled:opacity-50"
+            maxLength={maxLength}
           />
         )}
 
         {showOptions && <Image src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-6" />}
       </div>
 
-      {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
+      {errors && <span className="text-red-500 text-sm">{errors.message?.toString()}</span>}
     </div>
   )
 }

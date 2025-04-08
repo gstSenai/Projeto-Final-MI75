@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Montserrat } from "next/font/google";
+import Image from "next/image";
 
 const montserrat = Montserrat({
     subsets: ["latin"],
@@ -105,13 +106,15 @@ export function FormularioImagemEditProprietario({ handleImageUpload, imagemAtua
                         onMouseUp={handleMouseUp}
                         onMouseLeave={handleMouseUp}
                     >
-                        <img
+                        <Image
                             src={imagePreview}
                             alt="Pré-visualização"
                             className="w-full h-full object-cover transition-transform duration-200"
                             style={{
                                 transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`
                             }}
+                            width={100}
+                            height={100}
                         />
                     </div>
                 ) : (
