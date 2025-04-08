@@ -13,7 +13,6 @@ public class EnderecoService {
 
     private EnderecoRepository enderecoRepository;
 
-
     public Endereco create(Endereco endereco) {
         return enderecoRepository.save(endereco);
     }
@@ -32,6 +31,7 @@ public class EnderecoService {
     }
 
     public void delete(Integer id) {
+
         enderecoRepository.deleteById(id);
     }
 }

@@ -1,13 +1,12 @@
 package weg.projetofinal.Imobiliaria.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelUsuarioGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.UsuarioGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.UsuarioImovelGetResponseDTO;
-
+import org.hibernate.validator.constraints.br.CPF;
 import java.util.Date;
 import java.util.List;
 
@@ -46,23 +45,13 @@ public class Usuario {
     @Column(nullable = false)
     private String senha;
 
-    @OneToMany(mappedBy = "id_usuario")
-    private List<Imovel> imovel;
+    private String imagem_usuario;
 
-    public UsuarioImovelGetResponseDTO convert(){
-        return new UsuarioImovelGetResponseDTO(
-                this.id, this.nome, this.sobrenome,this.cpf,
-                this.tipo_conta, this.telefone, this.data_nascimento,
-                this.email, this.senha);
-    }
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "id_endereco_usuario")
+    private EnderecoUsuario enderecoUsuario;
 
-    public UsuarioGetResponseDTO convert2(){
-        List<ImovelUsuarioGetResponseDTO> imoveisDTO = this.imovel.stream()
-                .map(Imovel::convert3)
-                .toList();
-        return new UsuarioGetResponseDTO(
-                this.id, this.nome, this.sobrenome,this.cpf,
-                this.tipo_conta, this.telefone, this.data_nascimento,
-                this.email, this.senha, imoveisDTO);
-    }
+    @OneToMany(mappedBy = "usuario")
+    private List<Agendamento> agendamentos;
+
 }

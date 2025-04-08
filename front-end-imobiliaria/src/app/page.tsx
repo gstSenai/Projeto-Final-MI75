@@ -1,5 +1,4 @@
-import { Montserrat } from 'next/font/google';
-
+import { Footer } from "@/components/footer";
 
 // Carregando a fonte Inter
 const montserrat = Montserrat({
@@ -27,3 +26,10 @@ export default function PaginaEditor() {
 }
 
 //sm: md: lg: 2xl:
+export default function footer() {
+    return (
+        <>
+            <Footer />
+        </>
+    )
+}
