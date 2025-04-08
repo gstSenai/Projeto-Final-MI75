@@ -127,7 +127,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
           </div>
 
           <div className="w-full md:w-[65%] flex flex-col justify-center items-center p-6">
-            <h2 className="text-4xl font-bold text-[#702632] tracking-[6px] mb-6">{title}</h2>
+            <h2 className="max-sm:text-2xl text-4xl font-bold text-[#702632] tracking-[6px] mb-6">{title}</h2>
             <form onSubmit={handleSubmit}>
               {isCadastro && (
                 <div className="mb-2">
@@ -176,7 +176,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                             onClick={togglePasswordVisibility}
                             className="absolute inset-y-11 right-4 flex items-center"
                           >
-                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            {showPassword ? <Eye size={20}/> : <EyeOff size={20}  />}
                           </button>
                         </div>
                         {errors.senha && <p className="w-[300px] text-[#CF2020] opacity-80 text-sm">{errors.senha}</p>}
@@ -206,7 +206,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                             onClick={togglePasswordVisibility}
                             className="absolute inset-y-11 right-4 pb-4 flex items-center"
                           >
-                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            {showPassword ? <Eye size={20}/> : <EyeOff size={20}  />}
                           </button>
                         </div>
                         {errors.senha && <p className="w-[300px] text-[#CF2020] opacity-80 text-sm">{errors.senha}</p>}
@@ -234,7 +234,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                         onClick={togglePasswordVisibility}
                         className="absolute inset-y-11 right-4 pb-4 flex items-center"
                       >
-                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        {showPassword ? <Eye size={20}/> : <EyeOff size={20}  />}
                       </button>
                     </div>
                   </div>
@@ -258,14 +258,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                     onClick={toggleConfirmPasswordVisibility}
                     className="absolute inset-y-11 right-4 flex items-center"
                   >
-                    {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    {showConfirmPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                   </button>
                   {errors.confirmarSenha && <p className="max-w-xs break-words text-[#CF2020] opacity-80 text-sm">{errors.confirmarSenha}</p>}
                 </div>
               )}
 
               <div className="flex justify-center mt-4">
-                <button className="md:w-[45%] font-bold bg-[#FFFBFB] text-[#702632] py-2 rounded-lg" type="submit">
+                <button className="md:w-[45%] font-bold bg-[#FFFBFB] text-[#702632] p-2 rounded-lg" type="submit">
                   {buttonText}
                 </button>
               </div>

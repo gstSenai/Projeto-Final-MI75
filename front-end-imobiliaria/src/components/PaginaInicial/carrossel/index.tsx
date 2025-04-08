@@ -1,5 +1,5 @@
 "use client";
-import { useState, ReactNode, useRef, Children, useEffect } from "react";
+import { useState, ReactNode, useRef, Children, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface CarouselProps {
@@ -25,6 +25,23 @@ export default function Carousel({ type, children }: CarouselProps) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const handleSlideChange = useCallback((direction: number) => {
+    if (isAnimating) return;
+
+    setIsAnimating(true);
+    setCurrentSlide((prev) => {
+      const newIndex = prev + direction;
+      if (newIndex < 0) return totalSlides - 1;
+      if (newIndex >= totalSlides) return 0;
+      return newIndex;
+    });
+
+    // Reseta a animação após a transição
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 500);
+  }, [isAnimating, totalSlides]);
+
   useEffect(() => {
     // Limpa o intervalo anterior se existir
     if (intervalRef.current) {
@@ -44,24 +61,7 @@ export default function Carousel({ type, children }: CarouselProps) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [currentSlide, totalSlides, isAnimating, isDragging]);
-
-  const handleSlideChange = (direction: number) => {
-    if (isAnimating) return;
-
-    setIsAnimating(true);
-    setCurrentSlide((prev) => {
-      const newIndex = prev + direction;
-      if (newIndex < 0) return totalSlides - 1;
-      if (newIndex >= totalSlides) return 0;
-      return newIndex;
-    });
-
-    // Reseta a animação após a transição
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 500);
-  };
+  }, [currentSlide, totalSlides, isAnimating, isDragging, handleSlideChange]);
 
   const prevSlide = () => handleSlideChange(-1);
   const nextSlide = () => handleSlideChange(1);
@@ -211,7 +211,68 @@ export default function Carousel({ type, children }: CarouselProps) {
     );
   }
 
-  if (type === "ajusteNormal") {
+  
+  if (type = "ajusteNormal") {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isMobile, setIsMobile] = useState(false); // Estado para armazenar se é mobile
+    const childrenArray = Children.toArray(children); // Transforma children em um array
+    const totalSlides = childrenArray.length;
+    const carouselRef = useRef<HTMLDivElement>(null);
+    let startX = 0;
+    let isDragging = false;
+
+    // Efeito para verificar o tamanho da tela apenas no lado do cliente
+    useEffect(() => {
+      const handleResize = () => {
+        setIsMobile(window.innerWidth < 768);
+      };
+
+      // Verifica o tamanho da tela ao montar o componente
+      handleResize();
+
+      // Adiciona um listener para redimensionamento da tela
+      window.addEventListener("resize", handleResize);
+
+      // Remove o listener ao desmontar o componente
+      return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    // Define o número de itens por visualização com base no tamanho da tela
+    const getItemsPerView = () => {
+      return isMobile ? 1 : 4; // 1 item no mobile, 4 no desktop
+    };
+
+    const itemsPerView = getItemsPerView();
+
+    const prevSlide = () => {
+      setCurrentIndex((prev) => (prev === 0 ? totalSlides - itemsPerView : prev - 1));
+    };
+
+    const nextSlide = () => {
+      setCurrentIndex((prev) => (prev >= totalSlides - itemsPerView ? 0 : prev + 1));
+    };
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+      if (!isDragging) return;
+      const deltaX = e.touches[0].clientX - startX;
+      if (deltaX > 50) {
+        prevSlide();
+        isDragging = false;
+      } else if (deltaX < -50) {
+        nextSlide();
+        isDragging = false;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      isDragging = false;
+    };
+
     return (
       <div
         className="relative w-full mx-auto mt-16 mb-32 overflow-hidden p-6"
@@ -222,7 +283,7 @@ export default function Carousel({ type, children }: CarouselProps) {
       >
         <div
           className="flex transition-transform duration-300 ease-in-out"
-          style={{ transform: `translateX(-${currentSlide * (100 / itemsPerView)}%)` }}
+          style={{ transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)` }}
         >
           {childrenArray.map((child, index) => (
             <div
@@ -234,20 +295,22 @@ export default function Carousel({ type, children }: CarouselProps) {
           ))}
         </div>
         <button
-          onClick={normalPrevSlide}
+          onClick={prevSlide}
           className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg text-sm invisible md:invisible lg:visible"
         >
           <ChevronLeft size={24} />
         </button>
         <button
-          onClick={normalNextSlide}
+          onClick={nextSlide}
           className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg text-sm invisible md:invisible lg:visible"
         >
           <ChevronRight size={24} />
         </button>
       </div>
+
     );
   }
+
 
   // Default return if type doesn't match
   return null;

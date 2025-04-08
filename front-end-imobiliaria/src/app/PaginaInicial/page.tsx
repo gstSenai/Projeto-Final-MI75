@@ -1,14 +1,14 @@
 import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
 import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
-import { PesquisaPaginaInicial } from '@/components/paginaInicial/PesquisaPaginaInicial';
+import { PesquisaPaginaInicial } from '@/components/PaginaInicial/pesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
-import Carousel from '@/components/paginaInicial/carrossel';
-import BotaoImageTexto from '@/components/paginaInicial/BotaoImageTexto';
+import Carousel from '@/components/PaginaInicial/carrossel';
+import BotaoImageTexto from '@/components/PaginaInicial/BotaoImageTexto';
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { Card } from '@/components/cardImovel/index';
+import { Card } from '@/components/CardImovel/index';
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -121,14 +121,14 @@ export default function PaginaInicial() {
                     </div>
 
                     <Carousel type={"ajusteNormal"}>
-                        <BotaoImageTexto src="paginaInicial/ImagensCidade/jaragua.png" texto="Jaraguá do Sul" />
-                        <BotaoImageTexto src="paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
-                        <BotaoImageTexto src="paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
-                        <BotaoImageTexto src="paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
-                        <BotaoImageTexto src="paginaInicial/ImagensCidade/jaragua.png" texto="Jaraguá do Sul" />
-                        <BotaoImageTexto src="paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
-                        <BotaoImageTexto src="paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
-                        <BotaoImageTexto src="paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
+                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/Jaragua.png" texto="Jaraguá do Sul" />
+                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
+                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
+                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
+                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/Jaragua.png" texto="Jaraguá do Sul" />
+                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
+                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
+                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
                     </Carousel>
                 </section>
                 <footer className='bg-[#6d2431]'>
@@ -137,9 +137,9 @@ export default function PaginaInicial() {
                         <div className="relative inset-0 flex flex-col lg:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around self-center 2xl:items-start text-white p-8 mx-auto gap-20 lg:gap-20 xl:gap-32">
                             <div className='flex text-center items-center gap-7'>
                                 <Image
-                                 src="/paginaInicial/inconeImoveisACV/imoveisCadastros.png" 
-                                 alt="imoveis Cadastrados" objectFit="cover"
-                                 width={90} height={94} quality={100} />
+                                    src="/paginaInicial/inconeImoveisACV/imoveisCadastros.png"
+                                    alt="imoveis Cadastrados" objectFit="cover"
+                                    width={90} height={94} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisDisponiveis />
                                     <p>Imoveis Cadastrados</p>
@@ -147,9 +147,9 @@ export default function PaginaInicial() {
                             </div>
 
                             <div className='flex text-center items-center gap-7'>
-                                <Image src="/paginaInicial/inconeImoveisACV/imoveisVendidos.png" 
-                                alt="Imoveis Vendidos" objectFit="cover" 
-                                width={90} height={94} quality={100} />
+                                <Image src="/paginaInicial/inconeImoveisACV/imoveisVendidos.png"
+                                    alt="Imoveis Vendidos" objectFit="cover"
+                                    width={90} height={94} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisVendidos />
                                     <p>Imoveis Vendidos</p>
@@ -157,9 +157,9 @@ export default function PaginaInicial() {
                             </div>
 
                             <div className='flex text-center items-center gap-7'>
-                                <Image src="/paginaInicial/inconeImoveisACV/imoveisAlugados.png" 
-                                alt="Imoveis Alugados" objectFit="cover" 
-                                width={90} height={94} quality={100} />
+                                <Image src="/paginaInicial/inconeImoveisACV/imoveisAlugados.png"
+                                    alt="Imoveis Alugados" objectFit="cover"
+                                    width={90} height={94} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisAlugados />
                                     <p>Imoveis Alugados</p>

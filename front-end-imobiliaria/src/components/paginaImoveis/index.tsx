@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Card } from "../cardImovel"
 import { Montserrat } from "next/font/google"
 import { FiltroImoveis } from "./botaoFiltro"
@@ -60,10 +60,10 @@ export function ListaImoveis() {
     totalPages: 0,
     totalElements: 0,
     currentPage: 0,
-    size: 10,
+    size: 12,
   })
 
-  const fetchImoveis = async (page = 0) => {
+  const fetchImoveis = useCallback(async (page = 0) => {
     try {
       setLoading(true)
       const response = await fetch(`http://localhost:9090/imovel/getAll?page=${page}&size=${paginationInfo.size}`, {
@@ -119,7 +119,7 @@ export function ListaImoveis() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [paginationInfo.size, ultimoId, paginationInfo.currentPage])
 
   const refreshData = async () => {
     try {
@@ -163,6 +163,7 @@ export function ListaImoveis() {
         size: data.size || 12,
       });
 
+
       const imoveisFormatados = imoveisArray.map((imovel: ImovelCompleto) => ({
         id: imovel.id || 0,
         titulo: imovel.nome_propriedade || "Sem título",
@@ -186,7 +187,7 @@ export function ListaImoveis() {
 
   useEffect(() => {
     fetchImoveis();
-  }, [fetchImoveis, imoveis.length]);
+  }, [fetchImoveis]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && newPage < paginationInfo.totalPages) {
@@ -198,7 +199,7 @@ export function ListaImoveis() {
     if (imoveis.length > 0) {
       fetchImoveis(0)
     }
-  }, [tipoTransacao])
+  }, [tipoTransacao, fetchImoveis, imoveis.length])
 
   const imoveisFiltrados =
     tipoTransacao === "Todos" ? imoveis : imoveis.filter((imovel) => imovel.tipo_transacao === tipoTransacao)
@@ -265,15 +266,18 @@ export function ListaImoveis() {
             className="bg-vermelho text-white px-6 py-2 rounded-lg transition duration-300 hover:opacity-80"
             onClick={() => setMostrarFiltros(!mostrarFiltros)}
           >
-            {mostrarFiltros ? "Filtrar" : "Filtrar"}
+            {mostrarFiltros ? "Fechar Filtros" : "Filtrar"}
           </button>
-          <button className="underline decoration-vermelho px-4 py-2 rounded-lg" onClick={refreshData}>
+          <button 
+            className="underline decoration-vermelho px-4 py-2 rounded-lg" 
+            onClick={() => refreshData()}
+          >
             <p className="text-vermelho font-bold">Restaurar Padrão</p>
           </button>
         </div>
 
         {mostrarFiltros && (
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center">
             <FiltroImoveis
               mostrarFiltros={mostrarFiltros}
               setMostrarFiltros={setMostrarFiltros}
@@ -294,7 +298,7 @@ export function ListaImoveis() {
           </div>
         ) : (
           <>
-            <div className="flex flex-wrap justify-center gap-6 mt-6">
+            <div className="flex flex-wrap justify-center items-start gap-6 mt-6">
               {imoveisFiltrados.length > 0 ? (
                 imoveisFiltrados.map((imovel) => (
                   <Card
@@ -352,11 +356,6 @@ export function ListaImoveis() {
                 </nav>
               </div>
             )}
-
-            <div className="flex justify-center mb-10 text-sm text-gray-500 mt-10">
-              Mostrando {imoveisFiltrados.length} de {paginationInfo.totalElements} imóveis • Página{" "}
-              {paginationInfo.currentPage + 1} de {paginationInfo.totalPages}
-            </div>
           </>
         )}
       </div>

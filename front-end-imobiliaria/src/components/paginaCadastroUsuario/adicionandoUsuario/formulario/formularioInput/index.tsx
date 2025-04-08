@@ -2,10 +2,10 @@
 
 import Image from "next/image"
 import type React from "react"
-import type { UseFormRegister, FieldError } from "react-hook-form"
-import { FormData } from "../index"
+import type { UseFormRegister, FieldError, FieldValues, Path } from "react-hook-form"
+import type { FormData } from "../index"
 
-interface FormularioInputProps {
+interface FormularioInputProps<T extends FieldValues = FormData> {
   placeholder?: string
   interName?: string
   name: string
@@ -14,7 +14,7 @@ interface FormularioInputProps {
   onChange?: (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
   customizacaoClass: string
   options?: string[]
-  register: UseFormRegister<FormData>
+  register: UseFormRegister<T>
   errors?: FieldError | undefined
   required?: boolean
   disabled?: boolean
@@ -24,7 +24,7 @@ interface FormularioInputProps {
   iconCaneta?: boolean
 }
 
-export function FormularioInput({
+export function FormularioInput<T extends FieldValues = FormData>({
   placeholder,
   interName,
   name,
@@ -39,7 +39,7 @@ export function FormularioInput({
   icon,
   onChange,
   iconCaneta,
-}: FormularioInputProps) {
+}: FormularioInputProps<T>) {
   const getIconPath = () => {
     switch (icon?.type) {
       case "areaCT":
@@ -76,7 +76,7 @@ export function FormularioInput({
 
         {options ? (
           <select
-            {...register(name as keyof FormData, { required })}
+            {...register(name as Path<T>, { required })}
             value={value}
             onChange={onChange}
             disabled={disabled}
@@ -95,7 +95,7 @@ export function FormularioInput({
           <input
             type="text"
             placeholder={`${interName} ${required ? "*" : ""}`}
-            {...register(name as keyof FormData, { required })}
+            {...register(name as Path<T>, { required })}
             value={value}
             onChange={onChange}
             disabled={disabled}

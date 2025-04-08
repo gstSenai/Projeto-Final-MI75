@@ -1,20 +1,21 @@
 "use client"
 
 import type React from "react"
-import type { UseFormRegister, FieldError, FieldValues, Path, FieldErrors } from "react-hook-form"
+import type { UseFormRegister, FieldError } from "react-hook-form"
 import Image from "next/image"
+import { FormData } from "../index"
 
-interface FormularioInputProps<T extends FieldValues = FieldValues> {
+interface FormularioInputProps{
   placeholder?: string
   interName?: string
-  name: Path<T>
+  name: string
   value?: string
   showOptions?: boolean
   onChange?: (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
   customizacaoClass: string
   options?: string[]
-  register: UseFormRegister<T>
-  errors?: FieldError | FieldErrors<T> | undefined
+  register: UseFormRegister<FormData>
+  errors?: FieldError | undefined
   required?: boolean
   disabled?: boolean
   icon?: {
@@ -25,7 +26,7 @@ interface FormularioInputProps<T extends FieldValues = FieldValues> {
   maxLength?: number
 }
 
-export function FormularioInput<T extends FieldValues = FieldValues>({
+export function FormularioInput({
   interName,
   name,
   value,
@@ -41,7 +42,7 @@ export function FormularioInput<T extends FieldValues = FieldValues>({
   iconCaneta,
   label,
   maxLength,
-}: FormularioInputProps<T>) {
+}: FormularioInputProps) {
   const getIconPath = () => {
     switch (icon?.type) {
       case "areaCT":
@@ -78,7 +79,7 @@ export function FormularioInput<T extends FieldValues = FieldValues>({
 
         {options ? (
           <select
-            {...register(name, { required })}
+            {...register(name as keyof FormData, { required })}
             value={value}
             onChange={onChange}
             disabled={disabled}
@@ -97,7 +98,7 @@ export function FormularioInput<T extends FieldValues = FieldValues>({
           <input
             type="text"
             placeholder={`${interName} ${required ? "*" : ""}`}
-            {...register(name, { required })}
+            {...register(name as keyof FormData, { required })}
             value={value}
             onChange={onChange}
             disabled={disabled}
@@ -109,7 +110,7 @@ export function FormularioInput<T extends FieldValues = FieldValues>({
         {showOptions && <Image src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-6" />}
       </div>
 
-      {errors && <span className="text-red-500 text-sm">{errors.message?.toString()}</span>}
+      {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
     </div>
   )
 }
