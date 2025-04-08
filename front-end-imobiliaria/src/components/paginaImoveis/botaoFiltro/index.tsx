@@ -11,10 +11,28 @@ const montserrat = Montserrat({
     display: "swap",
 })
 
+interface ImovelCompleto {
+    id: number;
+    nome_propriedade: string;
+    id_endereco: {
+        cidade: string;
+    }
+    id_caracteristicasImovel: {
+        numero_quartos: number;
+        numero_suites: number;
+        numero_banheiros: number;
+    }
+    valor_venda: number;
+    codigo: number;
+    tipo_transacao: string;
+}
+
 interface FiltroImoveisProps {
-    mostrarFiltros: boolean
-    setMostrarFiltros: (value: boolean) => void
-    setImoveis: (imoveis: any[]) => void
+
+    mostrarFiltros: boolean;
+    setMostrarFiltros: (value: boolean) => void;
+    setImoveis: (imoveis: ImovelCompleto[]) => void;
+
 }
 
 export function FiltroImoveis({ mostrarFiltros, setMostrarFiltros, setImoveis }: FiltroImoveisProps) {
@@ -110,7 +128,7 @@ export function FiltroImoveis({ mostrarFiltros, setMostrarFiltros, setImoveis }:
 
             const data = await response.json();
 
-            const imoveisFormatados = data.map((imovel: any) => ({
+            const imoveisFormatados = data.map((imovel: ImovelCompleto) => ({
                 id: imovel.id || 0,
                 titulo: imovel.nome_propriedade || "Sem título",
                 cidade: imovel.id_endereco?.cidade || "Cidade não informada",

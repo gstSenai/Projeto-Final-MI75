@@ -5,13 +5,78 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6a19b67c-7436-4fa1-8d76-d7f35d209a8e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Imobiliaria/src/main/java/weg/projetofinal/Imobiliaria/model/entity/EnderecoUsuario.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Imobiliaria/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Imobiliaria/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/ -i" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/PaginaInicial/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/PaginaInicial/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/PoliticaPrivacidade/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/PoliticaPrivacidade/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/chatOnline/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/chatOnline/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/getTest/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/getTest/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/paginaAgendamento/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/paginaAgendamento/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/paginaCorretores/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/paginaCorretores/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/paginaImovel/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/paginaImovel/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/sobreNos/card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/sobreNos/card.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/sobreNos/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/sobreNos/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/teste/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/app/teste/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/AuthForm/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/AuthForm/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/Calendario/cn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/Calendario/cn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/Calendario/selecaoHorario/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/Calendario/selecaoHorario/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/CardImovel/CardBeta.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/CardImovel/CardBeta.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/PaginaInicial/BotaoImageTexto/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/PaginaInicial/BotaoImageTexto/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/PaginaInicial/botaoselecao/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/PaginaInicial/botaoselecao/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/PaginaInicial/carrossel/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/PaginaInicial/carrossel/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/agendarCorretor/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/agendarCorretor/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/barraStatusImovel/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/barraStatusImovel/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/cardImovel/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/cardImovel/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/faq/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/faq/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/favoritar/index.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/footer/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/footer/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/header/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/header/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/map/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/map/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/editarImovel/formularioEditarInput/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/editarImovel/formularioEditarInput/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/dados-imovel-section/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/dados-imovel-section/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/descricao/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/descricao/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/endereco-section/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/endereco-section/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/formularioImagem/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/formularioImagem/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/formularioInput/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/formularioInput/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/relacaoImovel/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/relacaoImovel/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/relacaoImovel/relacaoCorretorImovel/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/relacaoImovel/relacaoCorretorImovel/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/relacaoImovel/relacaoProprietarioImovel/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/relacaoImovel/relacaoProprietarioImovel/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/tiposTransacao/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroImovel/formulario/tiposTransacao/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroProprietario/adicionandoUsuario/formulario/dados-imovel-section/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroProprietario/adicionandoUsuario/formulario/dados-imovel-section/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroProprietario/adicionandoUsuario/formulario/endereco-proprietario-section/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroProprietario/adicionandoUsuario/formulario/endereco-proprietario-section/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroProprietario/adicionandoUsuario/formulario/formularioInput/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroProprietario/adicionandoUsuario/formulario/formularioInput/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroProprietario/editandoProprietario/formularioImagemEditProprietario/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroProprietario/editandoProprietario/formularioImagemEditProprietario/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroProprietario/editandoProprietario/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroProprietario/editandoProprietario/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroProprietario/editandoProprietario/inputEditarDadosProprietario/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroProprietario/editandoProprietario/inputEditarDadosProprietario/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroUsuario/adicionandoUsuario/formulario/dados-imovel-section/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroUsuario/adicionandoUsuario/formulario/dados-imovel-section/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroUsuario/adicionandoUsuario/formulario/formularioImagem/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroUsuario/adicionandoUsuario/formulario/formularioImagem/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroUsuario/adicionandoUsuario/formulario/formularioInput/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroUsuario/adicionandoUsuario/formulario/formularioInput/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroUsuario/editandoUsuario/formularioEditarInput/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroUsuario/editandoUsuario/formularioEditarInput/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroUsuario/editandoUsuario/formularioImagemEdit/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroUsuario/editandoUsuario/formularioImagemEdit/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroUsuario/editandoUsuario/inputEditarDadosUsuario/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaCadastroUsuario/editandoUsuario/inputEditarDadosUsuario/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaImoveis/botaoFiltro/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaImoveis/botaoFiltro/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaImoveis/botaoSelecaoFiltro/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaImoveis/botaoSelecaoFiltro/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaImoveis/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaImoveis/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/routes/request.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/routes/request.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/types/react-easy-panzoom.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/types/react-easy-panzoom.d.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -24,20 +89,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.HavApplication.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/kaua_santo/Documents/GitHub/Projeto-Final-MI75/back-end-imobiliaria&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.HavApplication.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.HavApplication.executor": "Run",
+    "git-widget-placeholder": "dev",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/kaua_santo/Documents/GitHub/Projeto-Final-MI75/back-end-imobiliaria",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.0"
   }
-}</component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RunManager" selected="Spring Boot.HavApplication">
     <configuration name="HavApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="weg.projetofinal.Imobiliaria.HavApplication" />
       <module name="Imobiliaria" />
@@ -51,8 +122,23 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="HavApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="Imobiliaria" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="weg.projetofinal.Imobiliaria.HavApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="weg.projetofinal.Imobiliaria.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.HavApplication" />
         <item itemvalue="Application.HavApplication" />
       </list>
     </recent_temporary>

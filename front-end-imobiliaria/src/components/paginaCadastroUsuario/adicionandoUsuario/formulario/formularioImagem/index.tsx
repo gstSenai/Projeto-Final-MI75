@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { Montserrat } from "next/font/google";
+import Image from "next/image";
+
 
 const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["400", "800"],
+  weight: ["400",'500', '600', "800"],
   display: "swap",
 });
 
@@ -38,26 +40,25 @@ export function FormularioImagem({ handleImageChange }: FormularioImagemProps) {
 
   return (
     <div className={`flex ${montserrat.className} flex-col items-center gap-4 mb-10`}>
-      <label className="text-xl font-medium text-black">Foto de perfil</label>
-      <div className="relative bg-gray-300 hover:bg-gray-400 h-56 w-56 rounded-full flex items-center justify-center overflow-hidden transition border border-gray-500 shadow-lg">
+      <div className="relative bg-gray-100 hover:bg-gray-200 h-56 w-56 rounded-full flex items-center justify-center overflow-hidden transition-all duration-300 border-2 border-dashed border-gray-300">
         {isLoading ? (
           <div className="flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-500"></div>
           </div>
         ) : imagePreview ? (
-          <div
-            className="w-full h-full relative"
-          >
-            <img
+          <div className="w-full h-full relative">
+            <Image
               src={imagePreview}
               alt="Pré-visualização"
               className="w-full h-full object-cover transition-transform duration-200"
+              width={100}
+              height={100}
             />
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center gap-2">
-            <span className="rounded-full w-10 h-10 bg-gray-400 text-white text-2xl flex items-center justify-center">+</span>
-            <span className="text-gray-600 text-sm">Clique para enviar</span>
+            <span className="rounded-full w-10 h-10 bg-gray-300 text-gray-600 text-2xl flex items-center justify-center">+</span>
+            <span className="text-gray-500 text-sm">Carregar foto</span>
           </div>
         )}
         <input
@@ -68,6 +69,5 @@ export function FormularioImagem({ handleImageChange }: FormularioImagemProps) {
         />
       </div>
     </div>
-
   );
 }

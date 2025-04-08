@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Montserrat } from "next/font/google";
+import Image from "next/image";
 
 const montserrat = Montserrat({
     subsets: ["latin"],
@@ -90,7 +91,6 @@ export function FormularioImagemEdit({ handleImageUpload, imagemAtual }: Formula
 
     return (
         <div className={`flex ${montserrat.className} flex-col items-center gap-4 mb-10`}>
-            <label className="text-xl font-medium text-black">Foto de perfil</label>
             <div className="relative bg-gray-300 hover:bg-gray-400 h-56 w-56 rounded-full flex items-center justify-center overflow-hidden transition border border-gray-500 shadow-lg">
                 {isLoading ? (
                     <div className="flex items-center justify-center">
@@ -105,13 +105,15 @@ export function FormularioImagemEdit({ handleImageUpload, imagemAtual }: Formula
                         onMouseUp={handleMouseUp}
                         onMouseLeave={handleMouseUp}
                     >
-                        <img
+                        <Image
                             src={imagePreview}
                             alt="Pré-visualização"
                             className="w-full h-full object-cover transition-transform duration-200"
                             style={{
                                 transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`
                             }}
+                            width={100}
+                            height={100}
                         />
                     </div>
                 ) : (

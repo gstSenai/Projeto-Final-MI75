@@ -12,6 +12,22 @@ const montserrat = Montserrat({
   display: "swap",
 })
 
+interface ImovelCompleto {
+  id: number
+  nome_propriedade: string
+  id_endereco: {
+    cidade: string
+  }
+  id_caracteristicasImovel: {
+    numero_quartos: number
+    numero_suites: number
+    numero_banheiros: number
+  }
+  valor_venda: number
+  codigo: number
+  tipo_transacao: string
+}
+
 interface Imovel {
   id: number
   titulo: string
@@ -78,12 +94,12 @@ export function ListaImoveis() {
         size: data.size || 12,
       })
 
-      const maiorId = Math.max(...imoveisArray.map((imovel: any) => imovel.id))
+      const maiorId = Math.max(...imoveisArray.map((imovel: Imovel) => imovel.id))
       if (ultimoId !== null && maiorId === ultimoId && page === paginationInfo.currentPage) {
         return
       }
 
-      const imoveisFormatados = imoveisArray.map((imovel: any) => ({
+      const imoveisFormatados = imoveisArray.map((imovel: ImovelCompleto) => ({
         id: imovel.id || 0,
         titulo: imovel.nome_propriedade || "Sem título",
         cidade: imovel.id_endereco?.cidade || "Cidade não informada",
@@ -147,7 +163,8 @@ export function ListaImoveis() {
         size: data.size || 12,
       });
 
-      const imoveisFormatados = imoveisArray.map((imovel: any) => ({
+
+      const imoveisFormatados = imoveisArray.map((imovel: ImovelCompleto) => ({
         id: imovel.id || 0,
         titulo: imovel.nome_propriedade || "Sem título",
         cidade: imovel.id_endereco?.cidade || "Cidade não informada",
@@ -169,8 +186,8 @@ export function ListaImoveis() {
   };
 
   useEffect(() => {
-    refreshData()
-  }, [])
+    fetchImoveis();
+  }, [fetchImoveis, imoveis.length]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && newPage < paginationInfo.totalPages) {
@@ -205,6 +222,22 @@ export function ListaImoveis() {
 
     return pageNumbers
   }
+
+  // Wrapper function to convert ImovelCompleto[] to Imovel[]
+  const handleSetImoveis = (imoveisCompletos: ImovelCompleto[]) => {
+    const imoveisFormatados = imoveisCompletos.map((imovel) => ({
+      id: imovel.id || 0,
+      titulo: imovel.nome_propriedade || "Sem título",
+      cidade: imovel.id_endereco?.cidade || "Cidade não informada",
+      qtdDormitorios: imovel.id_caracteristicasImovel?.numero_quartos || 0,
+      qtdSuite: imovel.id_caracteristicasImovel?.numero_suites || 0,
+      qtdBanheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
+      preco: imovel.valor_venda || 0,
+      codigo: imovel.codigo || 0,
+      tipo_transacao: imovel.tipo_transacao || "Indefinido"
+    }));
+    setImoveis(imoveisFormatados);
+  };
 
   return (
     <>
@@ -248,7 +281,7 @@ export function ListaImoveis() {
             <FiltroImoveis
               mostrarFiltros={mostrarFiltros}
               setMostrarFiltros={setMostrarFiltros}
-              setImoveis={setImoveis}
+              setImoveis={handleSetImoveis}
             />
           </div>
         )}

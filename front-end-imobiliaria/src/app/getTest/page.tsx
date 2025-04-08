@@ -3,9 +3,20 @@
 import { Card } from "@/components/cardImovel";
 import { useState, useEffect } from "react";
 
+interface Imovel {
+    id: number;
+    titulo: string;
+    cidade: string;
+    qtdDormitorios: number;
+    qtdSuite: number;
+    qtdBanheiros: number;
+    preco: number;
+    codigo: number;
+}
 
-export default function getTest() {
-    const [imoveis, setImoveis] = useState<any[]>([]);
+
+export function GetTest() {
+    const [imoveis, setImoveis] = useState<Imovel[]>([]);
 
     useEffect(() => {
         fetch("http://localhost:9090/imovel")

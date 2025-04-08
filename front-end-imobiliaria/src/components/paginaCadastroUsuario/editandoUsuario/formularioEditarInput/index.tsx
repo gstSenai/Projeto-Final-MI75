@@ -1,8 +1,10 @@
 "use client"
 
+import Image from "next/image"
 import { useState } from "react"
 import type React from "react"
 import type { UseFormRegister, FieldError } from "react-hook-form"
+import { FormData } from "../index.tsx"
 
 interface FormularioEditarInputProps {
   placeholder: string
@@ -10,7 +12,7 @@ interface FormularioEditarInputProps {
   showOptions?: boolean
   onChange?: (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
   custumizacaoClass: string
-  register: UseFormRegister<any>
+  register: UseFormRegister<FormData>
   options?: string[]
   errors?: FieldError | undefined
   required?: boolean
@@ -33,13 +35,13 @@ export function FormularioEditarInput({
   value = "",
   icon,
   onChange,
-}: FormularioEditarInputProps) {
+}: FormularioEditarInputProps<T>) {
   const [inputValue, setInputValue] = useState(value)
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    setInputValue(event.target.value)
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setInputValue(e.target.value)
     if (onChange) {
-      onChange(event)
+      onChange(e)
     }
   }
 
@@ -70,7 +72,7 @@ export function FormularioEditarInput({
     <>
       <div className={`relative  ${custumizacaoClass}`}>
         <div className="flex items-center w-full rounded-lg">
-          {iconPath && <img src={iconPath || "/placeholder.svg"} alt={`Ícone ${icon?.type}`} className="h-5 mr-2" />}
+          {iconPath && <Image src={iconPath || "/placeholder.svg"} alt={`Ícone ${icon?.type}`} className="h-5 mr-2" width={20} height={20} />}
 
           {options ? (
             <select
@@ -92,14 +94,14 @@ export function FormularioEditarInput({
             <input
               type="text"
               placeholder={`${placeholder} ${required ? "*" : ""}`}
-              {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
+              {...register(name as any, { required: required ? `${placeholder} é obrigatório` : false })}
               value={inputValue}
               onChange={handleChange}
               className="w-full outline-none text-gray-900"
             />
           )}
 
-          {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="h-5 ml-auto" />}
+          {showOptions && <Image src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="h-5 ml-auto" width={20} height={20} />}
         </div>
       </div>
       {errors && <span className="text-red-500 text-sm">{errors.message}</span>}

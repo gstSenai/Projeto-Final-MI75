@@ -1,9 +1,9 @@
 const request = async (
     method: "GET" | "POST" | "PUT" | "DELETE",
     url: string,
-    body?: any,
+    body?: unknown,
     headers: Record<string, string> = {} 
-): Promise<any> => {
+): Promise<unknown> => {
     try {
         const options: RequestInit = {
             method,

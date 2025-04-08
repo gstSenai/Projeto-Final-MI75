@@ -12,7 +12,7 @@ public record ProprietarioPutRequestDTO(
         String celular,
         Date data_nascimento,
         String email,
-        String imagem_usuario,
+        String imagem_proprietario,
         EnderecoProprietario enderecoProprietario
 ) {
 

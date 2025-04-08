@@ -46,6 +46,6 @@ public class Proprietario {
     @JoinColumn(name = "id_proprietario")
     private EnderecoProprietario enderecoProprietario;
 
-    @OneToMany(mappedBy = "proprietario")
+    @OneToMany(mappedBy = "id_proprietario")
     private List<Imovel> imoveis;
 }

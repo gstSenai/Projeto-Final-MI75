@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { Montserrat } from 'next/font/google'
-import { Formulario } from "../adicionandoUsuario/formulario"
 import { RemoveUsuario } from "../removerUsuario"
 import { EditarUsuario } from "../editandoUsuario"
 import { z } from "zod"
@@ -10,6 +9,7 @@ import Image from "next/image"
 import { FormularioInput } from "../adicionandoUsuario/formulario/formularioInput"
 import { useForm } from "react-hook-form"
 import { Botao } from "@/components/botao"
+import { FormularioUsuarioModal } from "@/components/modal/FormularioUsuarioModal"
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
@@ -22,15 +22,12 @@ const UsuarioProps = z.object({
   id: z.number().optional(),
   nome: z.string().min(1, { message: "O nome é obrigatório" }),
   sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
-  cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
   tipo_conta: z.string().min(1, {
     message: "Selecione um tipo de conta válido",
   }),
-  telefone: z.string().min(10, { message: "Telefone inválido" }),
-  data_nascimento: z.string(),
   email: z.string().email({ message: "E-mail inválido" }),
   senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
-  idEnderecoUsuario: z.number().optional(),
+  ativo: z.boolean().optional(),
 })
 
 type UsuarioProps = z.infer<typeof UsuarioProps>
@@ -49,19 +46,15 @@ export default function TabelaUsuario() {
   });
   const [selectedUsuarios, setSelectedUsuarios] = useState<UsuarioProps[]>([])
   const [usuariosFiltros, setUsuariosFiltros] = useState<ResponseProps | null>(null)
-  const [adicionar, setAdicionar] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [remover, setRemover] = useState(false)
   const [editar, setEditar] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [showSidebar, setShowSidebar] = useState(false)
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   const handleAddUsuario = () => {
-    setAdicionar(!adicionar)
-    setEditar(false)
-    setRemover(false)
-    if (adicionar) {
-      refreshData()
-    }
+    setIsModalOpen(true)
   }
 
   const handleRemoveUsuario = () => {
@@ -70,15 +63,13 @@ export default function TabelaUsuario() {
       return
     }
 
-    setAdicionar(false)
-    setEditar(false)
     setRemover(!remover)
     if (remover) {
       refreshData()
     }
   }
 
-  const handleEditusuario = () => {
+  const handleEditUsuario = () => {
     if (selectedUsuarios.length === 0) {
       alert("Selecione um usuário para editar")
       return
@@ -87,8 +78,6 @@ export default function TabelaUsuario() {
       return
     }
 
-    setAdicionar(false)
-    setRemover(false)
     setEditar(!editar)
     if (editar) {
       refreshData()
@@ -121,8 +110,7 @@ export default function TabelaUsuario() {
   }
 
   const refreshData = () => {
-    setSelectedUsuarios([])
-    getUsuario()
+    setRefreshTrigger(prev => prev + 1)
   }
 
   const toggleUsuarioselection = (usuario: UsuarioProps) => {
@@ -139,13 +127,15 @@ export default function TabelaUsuario() {
 
   useEffect(() => {
     getUsuario();
-  }, []);
+    setRemover(false)
+    setEditar(false)
+  }, [refreshTrigger]);
 
   return (
     <>
       <div className={`flex flex-col gap-10 sm:flex-col lg:flex-row ${montserrat.className}`}>
         <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden w-full lg:w-5/6">
-          <div className="overflow-x-auto max-h-[500px]">
+          <div className="overflow-x-auto max-h-[350px]">
             <table className="w-full border-separate border-spacing-0">
               <thead>
                 <tr className="bg-vermelho text-white sticky top-0 z-[5]">
@@ -156,13 +146,13 @@ export default function TabelaUsuario() {
                     <p>E-mail</p>
                   </th>
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
-                    <p>CPF</p>
-                  </th>
-                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Tipo Conta</p>
                   </th>
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Telefone</p>
+                  </th>
+                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
+                    <p>Ativo</p>
                   </th>
                 </tr>
               </thead>
@@ -186,17 +176,17 @@ export default function TabelaUsuario() {
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
                           {usuario.nome}
                         </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
+                          {usuario.sobrenome}
+                        </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 max-w-[20rem] truncate whitespace-nowrap overflow-hidden">
                           {usuario.email}
-                        </td>
-                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
-                          {usuario.cpf}
                         </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
                           {usuario.tipo_conta}
                         </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
-                          {usuario.telefone}
+                          {usuario.ativo ? "Ativo" : "Inativo"}
                         </td>
                       </tr>
                     )
@@ -236,7 +226,7 @@ export default function TabelaUsuario() {
           </button>
 
           <button
-            onClick={handleEditusuario}
+            onClick={handleEditUsuario}
             className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading || selectedUsuarios.length !== 1}
           >
@@ -320,7 +310,7 @@ export default function TabelaUsuario() {
                     getUsuario();
                     setTimeout(() => {
                       setShowSidebar(false);
-                    }, 100);
+                  }, 100);
                   }}
                   className="text-base bg-vermelho"
                 />
@@ -342,9 +332,13 @@ export default function TabelaUsuario() {
           </div>
         </div>
       </div>
-      {adicionar && <Formulario onComplete={refreshData} />}
       {remover && <RemoveUsuario selectedUsers={selectedUsuarios} onComplete={refreshData} />}
       {editar && <EditarUsuario selectedUsuarios={selectedUsuarios} onComplete={refreshData} />}
+      <FormularioUsuarioModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onComplete={refreshData}
+      />
     </>
   )
 }
