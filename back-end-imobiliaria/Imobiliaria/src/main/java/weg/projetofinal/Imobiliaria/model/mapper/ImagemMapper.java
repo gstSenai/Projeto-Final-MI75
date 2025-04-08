@@ -2,9 +2,9 @@ package weg.projetofinal.Imobiliaria.model.mapper;
 
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
-import weg.projetofinal.Imobiliaria.model.dto.ImagemGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.ImagemPostRequestDTO;
-import weg.projetofinal.Imobiliaria.model.dto.ImagemPutResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.imagem.ImagemGetResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.imagem.ImagemPostRequestDTO;
+import weg.projetofinal.Imobiliaria.model.dto.imagem.ImagemPutResponseDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Imagem;
 
 @Mapper(componentModel = "spring")

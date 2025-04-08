@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react"
 import { Montserrat } from 'next/font/google'
-import request from "@/routes/request"
-import { Formulario } from "../adicionandoUsuario/formulario"
 import { RemoveUsuario } from "../removerUsuario"
 import { EditarUsuario } from "../editandoUsuario"
 import { z } from "zod"
-
+import Image from "next/image"
+import { FormularioInput } from "../adicionandoUsuario/formulario/formularioInput"
+import { useForm } from "react-hook-form"
+import { Botao } from "@/components/botao"
+import { FormularioUsuarioModal } from "@/components/modal/FormularioUsuarioModal"
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
@@ -17,107 +19,103 @@ const montserrat = Montserrat({
 })
 
 const UsuarioProps = z.object({
-    id: z.number().optional(),
-    nome: z.string().min(1, { message: "O nome é obrigatório" }),
-    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
-    cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
-    tipo_conta: z.string().min(1, {
-        message: "Selecione um tipo de conta válido",
-    }),
-    telefone: z.string().min(10, { message: "Telefone inválido" }),
-    data_nascimento: z.string(),
-    email: z.string().email({ message: "E-mail inválido" }),
-    senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
-    idEnderecoUsuario: z.number().optional(),
+  id: z.number().optional(),
+  nome: z.string().min(1, { message: "O nome é obrigatório" }),
+  sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+  tipo_conta: z.string().min(1, {
+    message: "Selecione um tipo de conta válido",
+  }),
+  email: z.string().email({ message: "E-mail inválido" }),
+  senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+  ativo: z.boolean().optional(),
 })
-
-
-const EnderecoProps = z.object({
-    id: z.number().optional(),
-    cep: z.string().min(1, { message: "CEP é obrigatório" }),
-    rua: z.string().min(1, { message: "Rua é obrigatória" }),
-    tipo_residencia: z.string().min(1, { message: "Tipo de residência é obrigatório" }),
-    numero_imovel: z.coerce.number().min(1, { message: "Número do imóvel é obrigatório" }),
-    numero_apartamento: z.coerce.number().optional(),
-    bairro: z.string().min(1, { message: "Bairro é obrigatório" }),
-    cidade: z.string().min(1, { message: "Cidade é obrigatória" }),
-    uf: z.string().min(1, { message: "UF é obrigatório" }),
-})
-
 
 type UsuarioProps = z.infer<typeof UsuarioProps>
-type EnderecoProps = z.infer<typeof EnderecoProps>
+type FormData = { usuario: UsuarioProps }
+
+export type { FormData }
 
 interface ResponseProps {
   content: UsuarioProps[]
 }
 
 export default function TabelaUsuario() {
+  const { register, watch, reset } = useForm<FormData>({
+    defaultValues: {
+      usuario: {
+        nome: "",
+        email: "",
+        tipo_conta: "",
+      },
+    }
+  });
   const [selectedUsuarios, setSelectedUsuarios] = useState<UsuarioProps[]>([])
-  const [usuarios, setUsuarios] = useState<ResponseProps | null>(null)
-  const [adicionar, setAdicionar] = useState(false)
+  const [usuariosFiltros, setUsuariosFiltros] = useState<ResponseProps | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [remover, setRemover] = useState(false)
   const [editar, setEditar] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [showSidebar, setShowSidebar] = useState(false)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   const handleAddUsuario = () => {
-    setAdicionar(!adicionar)
-    setEditar(false)
-    setRemover(false)
-    if (adicionar) {
-      refreshData()
-    }
+    setIsModalOpen(true)
   }
 
   const handleRemoveUsuario = () => {
     if (selectedUsuarios.length === 0) {
-      alert("Selecione pelo menos um imóvel para remover")
+      alert("Selecione pelo menos um usuário para remover")
       return
     }
 
-    setAdicionar(false)
-    setEditar(false)
     setRemover(!remover)
     if (remover) {
       refreshData()
     }
   }
 
-  const handleEditusuario = () => {
+  const handleEditUsuario = () => {
     if (selectedUsuarios.length === 0) {
-      alert("Selecione um imóvel para editar")
+      alert("Selecione um usuário para editar")
       return
     } else if (selectedUsuarios.length > 1) {
-      alert("Pode editar um imóvel por vez")
+      alert("Pode editar um usuário por vez")
       return
     }
 
-    setAdicionar(false)
-    setRemover(false)
     setEditar(!editar)
     if (editar) {
       refreshData()
     }
   }
 
-  const getUsuario = async () => {
-    if (isLoading) return
-
+  const getUsuario = async (searchNome?: string, searchEmail?: string, searchTipoConta?: string) => {
     setIsLoading(true)
     try {
-      const usuariosGet = await request("GET", "http://localhost:9090/usuario/getAll")
-      setUsuarios(usuariosGet)
+      const response = await fetch("http://localhost:9090/usuario/getAll");
+      const data = await response.json();
+
+      const usuariosFiltrados = {
+        content: data.content.filter((usuario: UsuarioProps) => {
+          const matchNome = !searchNome || usuario.nome.toLowerCase().includes(searchNome.toLowerCase());
+          const matchEmail = !searchEmail || usuario.email.toLowerCase().includes(searchEmail.toLowerCase());
+          const matchTipoConta = !searchTipoConta || usuario.tipo_conta.toLowerCase().includes(searchTipoConta.toLowerCase());
+
+          return matchNome && matchEmail && matchTipoConta;
+        })
+      };
+
+      setUsuariosFiltros(usuariosFiltrados);
     } catch (error) {
       console.error("Error fetching usuarios:", error)
+      setUsuariosFiltros({ content: [] })
     } finally {
       setIsLoading(false)
     }
   }
 
   const refreshData = () => {
-    setRefreshTrigger((atualizar) => atualizar + 1)
-    setSelectedUsuarios([])
+    setRefreshTrigger(prev => prev + 1)
   }
 
   const toggleUsuarioselection = (usuario: UsuarioProps) => {
@@ -133,34 +131,33 @@ export default function TabelaUsuario() {
   }
 
   useEffect(() => {
-    getUsuario()
-    setAdicionar(false)
-    setEditar(false)
+    getUsuario();
     setRemover(false)
-  }, [refreshTrigger])
+    setEditar(false)
+  }, [refreshTrigger]);
 
   return (
     <>
-      <div className="flex flex-col gap-10 sm:flex-col lg:flex-row font-montserrat">
-        <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden basis-5/6 w-full">
-          <div className="overflow-x-auto max-h-[500px]">
+      <div className={`flex flex-col gap-10 sm:flex-col lg:flex-row ${montserrat.className}`}>
+        <div className="bg-[#F4ECE4] shadow-lg rounded-[20px] overflow-hidden w-full lg:w-5/6">
+          <div className="overflow-x-auto max-h-[350px]">
             <table className="w-full border-separate border-spacing-0">
               <thead>
-                <tr className="bg-vermelho text-white sticky top-0 z-10">
+                <tr className="bg-vermelho text-white sticky top-0 z-[5]">
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Nome</p>
+                  </th>
+                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
+                    <p>Sobrenome</p>
                   </th>
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>E-mail</p>
                   </th>
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
-                    <p>CPF</p>
-                  </th>
-                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Tipo Conta</p>
                   </th>
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
-                    <p>Telefone</p>
+                    <p>Ativo</p>
                   </th>
                 </tr>
               </thead>
@@ -172,7 +169,7 @@ export default function TabelaUsuario() {
                     </td>
                   </tr>
                 ) : (
-                  usuarios?.content?.map((usuario) => {
+                  usuariosFiltros?.content?.map((usuario) => {
                     const isSelected = selectedUsuarios.some(u => u.id === usuario.id)
                     return (
                       <tr
@@ -184,17 +181,17 @@ export default function TabelaUsuario() {
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
                           {usuario.nome}
                         </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
+                          {usuario.sobrenome}
+                        </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 max-w-[20rem] truncate whitespace-nowrap overflow-hidden">
                           {usuario.email}
-                        </td>
-                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
-                          {usuario.cpf}
                         </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
                           {usuario.tipo_conta}
                         </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
-                          {usuario.telefone}
+                          {usuario.ativo ? "Ativo" : "Inativo"}
                         </td>
                       </tr>
                     )
@@ -209,45 +206,144 @@ export default function TabelaUsuario() {
             </div>
           )}
         </div>
+
         <div className="flex flex-col basis-1/6 justify-center items-center pt-11 sm:pt-11 md:pt-14 lg:pt-0 w-full ">
           <button
             onClick={handleAddUsuario}
-            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-[#016E2F] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
-            <div className="pl-5 flex items-center gap-3 justify-start ">
-              <img src="./iconsForms/sinalAdd.png" alt="sinal de adição" className="w-4" />
-              <p className="text-lg font-medium">Adicionar</p>
+            <div className="pl-5 flex items-center gap-3 justify-start">
+              <Image src="/iconsForms/sinalAdd.png" alt="sinal de adição" width={10} height={10} />
+              <span className="text-base font-medium">Adicionar</span>
             </div>
           </button>
 
           <button
             onClick={handleRemoveUsuario}
-            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
+            className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <img src="./iconsForms/sinalRemove.png" alt="sinal de remoção" className="w-4" />
-              <p className="text-lg font-medium">Remover</p>
+              <Image src="/iconsForms/sinalRemove.png" alt="sinal de remoção" width={10} height={10} />
+              <span className="text-base font-medium">Remover</span>
             </div>
           </button>
 
           <button
-            onClick={handleEditusuario}
-            className="w-40 h-[50px] transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
+            onClick={handleEditUsuario}
+            className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-[#252422] text-white rounded-[20px] text-center inline-block align-middle"
             disabled={isLoading || selectedUsuarios.length !== 1}
           >
             <div className="pl-5 flex items-center gap-3 justify-start">
-              <img src="./iconsForms/canetaEditarBranco.png" alt="sinal de edição" className="w-4" />
-              <p className="text-lg font-medium">Editar</p>
+              <Image src="/iconsForms/canetaEditarBranco.png" alt="sinal de edição" width={15} height={15} />
+              <span className="text-base font-medium">Editar</span>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setShowSidebar(!showSidebar)}
+            className="w-36 h-10 transition-transform duration-300 hover:scale-110 m-4 bg-vermelho text-white rounded-[20px] text-center inline-block align-middle"
+          >
+            <div className="pl-5 flex items-center gap-3 justify-start">
+              <Image src="/iconFiltro/filtro.png" alt="filtro" width={15} height={15} />
+              <span className="text-base font-medium">Filtro</span>
             </div>
           </button>
         </div>
-      </div>
 
-      {adicionar && <Formulario onComplete={refreshData} />}
+        <div className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 z-[10] ${showSidebar ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+          <div className={`fixed top-0 left-0 h-full w-96 bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[20] ${showSidebar ? 'translate-x-0' : '-translate-x-full'}`}>
+            <div className="p-6 h-full flex flex-col">
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-2xl font-bold text-vermelho">Filtros de Busca</h2>
+                </div>
+                <button
+                  onClick={() => setShowSidebar(false)}
+                  className="text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div>
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <FormularioInput
+                      placeholder="Nome:"
+                      name="usuario.nome"
+                      interName='Ex: Caio'
+                      register={register}
+                      required
+                      customizacaoClass="w-full"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <FormularioInput
+                      placeholder="E-mail:"
+                      name="usuario.email"
+                      interName='Ex: caio@gmail.com'
+                      register={register}
+                      required
+                      customizacaoClass="w-full"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <FormularioInput
+                      placeholder="Tipo de Conta:"
+                      name="usuario.tipo_conta"
+                      interName=''
+                      register={register}
+                      required
+                      customizacaoClass="w-full"
+                      options={['Usuario', 'Administrador', 'Corretor', 'Editor']}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-10 mt-10 h-10">
+                <Botao
+                  texto="Limpar"
+                  onClick={() => {
+                    reset();
+                    getUsuario();
+                    setTimeout(() => {
+                      setShowSidebar(false);
+                  }, 100);
+                  }}
+                  className="text-base bg-vermelho"
+                />
+                <Botao
+                  texto="Pesquisar"
+                  onClick={() => {
+                    const currentNome = watch("usuario.nome");
+                    const currentEmail = watch("usuario.email");
+                    const currentTipoConta = watch("usuario.tipo_conta");
+                    getUsuario(currentNome, currentEmail, currentTipoConta);
+                    setTimeout(() => {
+                      setShowSidebar(false);
+                    }, 100);
+                  }}
+                  className="text-base bg-vermelho"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       {remover && <RemoveUsuario selectedUsers={selectedUsuarios} onComplete={refreshData} />}
       {editar && <EditarUsuario selectedUsuarios={selectedUsuarios} onComplete={refreshData} />}
+      <FormularioUsuarioModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onComplete={refreshData}
+      />
     </>
   )
 }

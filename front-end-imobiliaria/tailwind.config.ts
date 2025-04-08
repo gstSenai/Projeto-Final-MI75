@@ -16,6 +16,12 @@ export default {
         montserrat: ["Montserrat", "latin",],
         inter: ["Inter", "sans-serif"],
       },
+      screens: {
+        'extra': '1800px',
+      },
+      padding: {
+        "auto": "auto",
+      }
     },
   },
   plugins: [],

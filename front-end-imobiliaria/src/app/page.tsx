@@ -1,4 +1,4 @@
-import { Footer } from "@/components/footer";
+import PaginaInicial from './paginaInicial/page';
 
 // Carregando a fonte Inter
 const montserrat = Montserrat({
@@ -27,9 +27,9 @@ export default function PaginaEditor() {
 
 //sm: md: lg: 2xl:
 export default function footer() {
+
+export default function PaginaEditor() {
     return (
-        <>
-            <Footer />
-        </>
-    )
+            <PaginaInicial/>
+    );
 }

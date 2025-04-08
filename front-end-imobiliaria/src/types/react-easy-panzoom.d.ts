@@ -1,4 +1,4 @@
 declare module 'react-easy-panzoom' {
-    const PanZoom: any;
+    const PanZoom: unknown;
     export default PanZoom;
 }

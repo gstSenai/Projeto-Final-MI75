@@ -3,20 +3,18 @@ import { useState } from "react"
 import { Botao } from "@/components/botao"
 import request from "@/routes/request"
 import { z } from "zod"
+import { motion, AnimatePresence } from "framer-motion"
 
 const UsuarioProps = z.object({
     id: z.number().optional(),
     nome: z.string().min(1, { message: "O nome é obrigatório" }),
     sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
-    cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
     tipo_conta: z.string().min(1, {
         message: "Selecione um tipo de conta válido",
     }),
-    telefone: z.string().min(10, { message: "Telefone inválido" }),
-    data_nascimento: z.string(),
     email: z.string().email({ message: "E-mail inválido" }),
     senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
-    idEnderecoUsuario: z.number().optional(),
+    ativo: z.boolean().optional(),
 })
 
 type UsuarioProps = z.infer<typeof UsuarioProps>
@@ -29,32 +27,25 @@ interface RemoveUsuarioProps {
 export function RemoveUsuario({ selectedUsers, onComplete }: RemoveUsuarioProps) {
     const [showModal, setShowModal] = useState(true)
     const [isDeleting, setIsDeleting] = useState(false)
-    const [lastDeleteUser, setLastDeleteUser] = useState<UsuarioProps | null>(null)
+    const [showSuccessModal, setShowSuccessModal] = useState(false)
 
-    const addUser = async (data: UsuarioProps) => {
-        try {
-            const response = await request('POST', 'http://localhost:9090/usuario/create', data);
-            setLastDeleteUser(response);
-            return response;
-        } catch (error) {
-            console.error("Erro ao adicionar usuário:", error);
-            throw error;
-        }
-    };
 
     const deleteUsers = async (): Promise<void> => {
         setIsDeleting(true)
         try {
+            
             for (const user of selectedUsers) {
                 await request("DELETE", `http://localhost:9090/usuario/delete/${user.id}`)
             }
 
+            setShowModal(false)
+            setShowSuccessModal(true)
+            if (onComplete) {
+                onComplete()
+            }
             setTimeout(() => {
-                setShowModal(false)
-                if (onComplete) {
-                    onComplete()
-                }
-            })
+                setShowSuccessModal(false)
+            }, 5000)
         } catch (error) {
             console.error("Erro ao deletar usuários:", error)
         } finally {
@@ -66,17 +57,6 @@ export function RemoveUsuario({ selectedUsers, onComplete }: RemoveUsuarioProps)
         setShowModal(false)
         if (onComplete) {
             onComplete()
-        }
-    }
-
-    const onSubmitAdd = async () => {
-        if (lastDeleteUser) {
-            await addUser(lastDeleteUser);
-            setShowModal(false);
-            setLastDeleteUser(null);
-            if (onComplete) {
-                onComplete();
-            }
         }
     }
 
@@ -108,28 +88,33 @@ export function RemoveUsuario({ selectedUsers, onComplete }: RemoveUsuarioProps)
                                 <Botao
                                     onClick={handleCancel}
                                     texto="Cancelar"
+                                    className="bg-vermelho h-10"
                                 />
                                 <Botao
                                     onClick={deleteUsers}
                                     texto={isDeleting ? "Removendo..." : "Remover"}
+                                    className="bg-vermelho h-10"
                                 />
                             </div>
                         </div>
                     </div>
                 </div>
             )}
-            {showModal && isDeleting && (
-                <div className="w-full bottom-16 pl-10 items-center relative">
-                    <div className='bg-vermelho/80 w-72 flex gap-1 p-3 rounded-[20px] text-white'>
-                        <p>Removido com Sucesso!</p>
-                        <button
-                            onClick={onSubmitAdd}
-                            className='underline '>
-                            Desfazer
-                        </button>
-                    </div>
-                </div>
-            )}
+            <AnimatePresence>
+                {showSuccessModal && (
+                    <motion.div
+                        initial={{ opacity: 0, x: -100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -100 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="fixed bottom-10 left-0 z-50"
+                    >
+                        <div className="bg-vermelho w-72 flex gap-1 p-3 rounded-tr-lg rounded-br-lg text-white shadow-lg">
+                            <p className="text-center">Removido com Sucesso!</p>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </>
     )
 }
