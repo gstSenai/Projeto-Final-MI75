@@ -1,7 +1,6 @@
 package weg.projetofinal.Imobiliaria.service.specification;
 
 import org.springframework.data.jpa.domain.Specification;
-import weg.projetofinal.Imobiliaria.model.entity.CaracteristicaImovel;
 import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 
 public class ImovelSpecification {
