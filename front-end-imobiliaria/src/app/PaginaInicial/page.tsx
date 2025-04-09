@@ -132,7 +132,7 @@ export default function PaginaInicial() {
                     </Carousel>
                 </section>
                 <footer className='bg-[#6d2431]'>
-                    <div className="relative flex h-[945.95px] lg:h-[690px] xl:h-[600px] w-full mx-auto overflow-hidden pb-44 pt-0 lg:pt-14 lg:pb-80">
+                    <div className="relative flex h-[945.95px] sm:h-[945.95px] md:h-[945.95px] lg:h-[600px] xl:h-[600px] w-full mx-auto overflow-hidden pb-44 pt-0 lg:pt-14 lg:pb-60">
                         <Image src="/paginaInicial/fotosDamainEfotter/PreFotterInicial.png" alt="Fundo Vermelho" layout="fill" objectFit="cover" quality={100} className="absolute top-[-50px] lg:top-[-30px]" />
                         <div className="relative inset-0 flex flex-col lg:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around self-center 2xl:items-start text-white p-8 mx-auto gap-20 lg:gap-20 xl:gap-32">
                             <div className='flex text-center items-center gap-7'>
