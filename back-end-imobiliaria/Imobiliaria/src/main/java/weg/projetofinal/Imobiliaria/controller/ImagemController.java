@@ -44,7 +44,7 @@ public class ImagemController {
                 .map(ImagemMapper.INSTANCE::imagemToImagemGetResponseDTO);
     }
 
-    @GetMapping("getById/{id}")
+    @GetMapping("/getById/{id}")
     public ImagemGetResponseDTO getById(@PathVariable Integer id) {
         Imagem imagem = imagemService.getByIdImagem(id);
         return ImagemMapper.INSTANCE.imagemToImagemGetResponseDTO(imagem);
