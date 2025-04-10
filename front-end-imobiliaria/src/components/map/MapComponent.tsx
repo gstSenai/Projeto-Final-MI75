@@ -3,15 +3,25 @@ import { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { MAPBOX_ACCESS_TOKEN, MAPBOX_STYLE, DEFAULT_CENTER, DEFAULT_ZOOM } from '@/config/mapbox';
+import { geocodeAddress } from '@/utils/geocoding';
 
 interface MapComponentProps {
     markers?: Array<{
-        id: string;
+        id: number;
         lng: number;
         lat: number;
-        title: string;
-        price: string;
-        image: string;
+        nome_propriedade: string;
+        valor_venda: number;
+        id_endereco: {
+            id?: number;
+            cep: string;
+            rua: string;
+            numero: string;
+            bairro: string;
+            cidade: string;
+            uf: string;
+            complemento?: string;
+        };
     }>;
     onMarkerClick?: (markerId: string) => void;
 }
@@ -21,9 +31,75 @@ export default function MapComponent({ markers = [], onMarkerClick }: MapCompone
     const map = useRef<mapboxgl.Map | null>(null);
     const [mapLoaded, setMapLoaded] = useState(false);
     const popupRef = useRef<mapboxgl.Popup | null>(null);
+    const markersRef = useRef<mapboxgl.Marker[]>([]);
+    const [geocodedMarkers, setGeocodedMarkers] = useState<Array<{
+        id: number;
+        lng: number;
+        lat: number;
+        nome_propriedade: string;
+        valor_venda: number;
+        id_endereco: {
+            id?: number;
+            cep: string;
+            rua: string;
+            numero: string;
+            bairro: string;
+            cidade: string;
+            uf: string;
+            complemento?: string;
+        };
+    }>>([]);
+
+    // Função para calcular o tamanho do marcador baseado no zoom
+    const calculateMarkerSize = (zoom: number) => {
+        // Tamanho base quando o zoom está em 13.5 (DEFAULT_ZOOM)
+        const baseSize = 30;
+        // Tamanho mínimo quando o zoom está em 5
+        const minSize = 15;
+        // Tamanho máximo quando o zoom está em 18
+        const maxSize = 40;
+        
+        // Calcula o tamanho baseado no zoom atual
+        if (zoom <= 5) return minSize;
+        if (zoom >= 18) return maxSize;
+        
+        // Interpolação linear entre os tamanhos
+        const size = baseSize + (zoom - DEFAULT_ZOOM) * 2;
+        return Math.max(minSize, Math.min(maxSize, size));
+    };
+
+    // Geocodifica os endereços quando o componente é montado
+    useEffect(() => {
+        const geocodeMarkers = async () => {
+            const geocoded = await Promise.all(
+                markers.map(async (marker) => {
+                    try {
+                        const coordinates = await geocodeAddress(
+                            marker.id_endereco.cep,
+                            marker.id_endereco.numero,
+                            marker.id_endereco.rua,
+                            marker.id_endereco.cidade,
+                            marker.id_endereco.uf
+                        );
+                        return {
+                            ...marker,
+                            lng: coordinates.lng,
+                            lat: coordinates.lat
+                        };
+                    } catch (error) {
+                        console.error(`Erro ao geocodificar endereço do imóvel ${marker.id}:`, error);
+                        return marker; // Mantém as coordenadas originais em caso de erro
+                    }
+                })
+            );
+            setGeocodedMarkers(geocoded);
+        };
+
+        geocodeMarkers();
+    }, [markers]);
 
     useEffect(() => {
-        if (!mapContainer.current) return;
+        if (!mapContainer.current || geocodedMarkers.length === 0) return;
 
         try {
             mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
@@ -46,11 +122,12 @@ export default function MapComponent({ markers = [], onMarkerClick }: MapCompone
                 initializeMap.addControl(new mapboxgl.AttributionControl(), 'bottom-right');
 
                 // Adiciona marcadores
-                markers.forEach(marker => {
+                geocodedMarkers.forEach(marker => {
                     const el = document.createElement('div');
                     el.className = 'marker';
-                    el.style.width = '30px';
-                    el.style.height = '30px';
+                    const size = calculateMarkerSize(DEFAULT_ZOOM);
+                    el.style.width = `${size}px`;
+                    el.style.height = `${size}px`;
                     el.style.backgroundColor = '#702632';
                     el.style.borderRadius = '50%';
                     el.style.border = '2px solid white';
@@ -60,8 +137,8 @@ export default function MapComponent({ markers = [], onMarkerClick }: MapCompone
 
                     // Adiciona um ponto interno branco
                     const innerDot = document.createElement('div');
-                    innerDot.style.width = '8px';
-                    innerDot.style.height = '8px';
+                    innerDot.style.width = `${size * 0.3}px`;
+                    innerDot.style.height = `${size * 0.3}px`;
                     innerDot.style.backgroundColor = 'white';
                     innerDot.style.borderRadius = '50%';
                     innerDot.style.position = 'absolute';
@@ -79,10 +156,10 @@ export default function MapComponent({ markers = [], onMarkerClick }: MapCompone
                     })
                     .setHTML(`
                         <div class="bg-white rounded-lg overflow-hidden shadow-lg">
-                            <img src="${marker.image}" alt="${marker.title}" class="w-full h-40 object-cover"/>
+                            <img src="${marker.id_endereco}" alt="${marker.nome_propriedade}" class="w-full h-40 object-cover"/>
                             <div class="p-4">
-                                <h3 class="font-semibold text-lg text-gray-800">${marker.title}</h3>
-                                <p class="text-[#702632] font-medium mt-2">${marker.price}</p>
+                                <h3 class="font-semibold text-lg text-gray-800">${marker.nome_propriedade}</h3>
+                                <p class="text-[#702632] font-medium mt-2">${marker.valor_venda}</p>
                             </div>
                         </div>
                     `);
@@ -94,6 +171,8 @@ export default function MapComponent({ markers = [], onMarkerClick }: MapCompone
                     })
                     .setLngLat([marker.lng, marker.lat])
                     .addTo(initializeMap);
+
+                    markersRef.current.push(markerInstance);
 
                     // Adiciona eventos de hover
                     el.addEventListener('mouseenter', () => {
@@ -107,7 +186,25 @@ export default function MapComponent({ markers = [], onMarkerClick }: MapCompone
                     // Adiciona evento de clique
                     el.addEventListener('click', () => {
                         if (onMarkerClick) {
-                            onMarkerClick(marker.id);
+                            onMarkerClick(marker.id.toString());
+                        }
+                    });
+                });
+
+                // Atualiza o tamanho dos marcadores quando o zoom muda
+                initializeMap.on('zoom', () => {
+                    const currentZoom = initializeMap.getZoom();
+                    markersRef.current.forEach((marker, index) => {
+                        const el = marker.getElement();
+                        const size = calculateMarkerSize(currentZoom);
+                        el.style.width = `${size}px`;
+                        el.style.height = `${size}px`;
+                        
+                        // Atualiza o tamanho do ponto interno
+                        const innerDot = el.querySelector('div');
+                        if (innerDot) {
+                            innerDot.style.width = `${size * 0.3}px`;
+                            innerDot.style.height = `${size * 0.3}px`;
                         }
                     });
                 });
@@ -122,7 +219,7 @@ export default function MapComponent({ markers = [], onMarkerClick }: MapCompone
         } catch (error) {
             console.error('Erro ao inicializar o mapa:', error);
         }
-    }, [markers, onMarkerClick]);
+    }, [geocodedMarkers, onMarkerClick]);
 
     return (
         <div className="absolute inset-0 bg-gray-100">
