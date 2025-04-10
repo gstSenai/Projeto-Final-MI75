@@ -4,12 +4,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record UsuarioPutRequestDTO(
+public record UsuarioCadastroPostDTO(
+        Integer id,
         @NotBlank String username,
         @NotBlank String sobrenome,
-        @NotBlank String tipo_conta,
         @Email @NotBlank String email,
-        @NotBlank @Size(min = 6) String password,
-        String imagem_usuario
+        @NotBlank @Size(min = 6) String password
 ) {
 }

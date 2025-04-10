@@ -1,6 +1,7 @@
 package weg.projetofinal.Imobiliaria.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioCadastroPostDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioPutRequestDTO;
@@ -43,6 +45,18 @@ public class UsuarioController {
         UsuarioPostRequestDTO usuarioDTO = objectMapper.readValue(usuarioJson, UsuarioPostRequestDTO.class);
         Usuario usuarioCriado = service.createUser(usuarioDTO, imagem);
         return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuarioCriado);
+    }
+
+    @PostMapping("/cadastro")
+    public ResponseEntity<UsuarioGetResponseDTO> cadastrarUsuario(
+            @RequestBody @Valid UsuarioCadastroPostDTO usuarioDTO) {
+
+        Usuario usuarioCriado = service.cadastroUsuario(usuarioDTO);
+
+        UsuarioGetResponseDTO responseDTO = UsuarioMapper.INSTANCE
+                .usuarioToUsuarioGetResponseDTO(usuarioCriado);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
 
