@@ -6,12 +6,10 @@ public record UsuarioAgendamentoGetResponseDTO(
         Integer id,
         String nome,
         String sobrenome,
-        String cpf,
         String tipo_conta,
-        String telefone,
-        Date data_nascimento,
         String email,
         String senha,
+        boolean ativo,
         String imagem_usuario
 ) {
 }

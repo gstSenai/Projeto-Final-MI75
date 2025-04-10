@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Montserrat } from 'next/font/google';
 import { Header } from "../header";
 import { Footer } from "../footer";
+import Image from "next/image";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -20,7 +21,7 @@ const FAQ = ({ title, faqs }: { title: string, faqs: { question: string, answer:
   return (
     <>
       <Header />
-      <div className={`p-8 ${montserrat.className} md:bg-[url('/iconsFaq/imgFundo.png')] bg-cover bg-center`}>
+      <div className={`p-8 ${montserrat.className} md:bg-[url('/iconsFaq/imgFundo.png')] bg-cover bg-center bg-fixed`}>
         <div className="flex flex-col items-start pt-11 pb-5 md:pl-8">
           <h2 className="text-[18px] md:text-2xl font-bold text-gray-800 mb-10 border-b-2 border-[#702632] pb-2 md:w-72 text-left lg:ml-20">
             {title}
@@ -38,10 +39,12 @@ const FAQ = ({ title, faqs }: { title: string, faqs: { question: string, answer:
               placeholder="Descreva o problema"
               className="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <img
+            <Image
               src="/iconsFaq/Vector.png"
               alt="Ícone"
               className="absolute left-3 top-4 w-5 h-5 text-gray-500"
+              width={20}
+              height={20}
             />
           </div>
           <div className="pt-8 w-5xl">

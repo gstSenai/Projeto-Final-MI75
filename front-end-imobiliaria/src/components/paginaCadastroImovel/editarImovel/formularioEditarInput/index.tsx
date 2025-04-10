@@ -1,19 +1,21 @@
 "use client"
 
+import Image from "next/image"
 import { useState } from "react"
 import type React from "react"
-import type { UseFormRegister } from "react-hook-form"
+import type { FieldValues, UseFormRegister, Path } from "react-hook-form"
+import type { FieldError } from "react-hook-form"
 
-interface FormularioEditarInputProps {
+interface FormularioEditarInputProps<T extends FieldValues = FieldValues> {
   placeholder: string
   name: string
   label?: string
   showOptions?: boolean
   onChange?: (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
   custumizacaoClass: string
-  register: UseFormRegister<any>
+  register: UseFormRegister<T>
   options?: string[]
-  errorMessage?: string
+  errors?: FieldError | undefined
   required?: boolean
   value?: string | number
   icon?: {
@@ -21,7 +23,7 @@ interface FormularioEditarInputProps {
   }
 }
 
-export function FormularioEditarInput({
+export function FormularioEditarInput<T extends FieldValues = FieldValues>({
   placeholder,
   name,
   label,
@@ -29,13 +31,13 @@ export function FormularioEditarInput({
   custumizacaoClass,
   register,
   options,
-  errorMessage,
+  errors,
   required = false,
   value = "",
   icon,
   onChange,
-}: FormularioEditarInputProps) {
-  const [inputValue, setInputValue] = useState(value)
+}: FormularioEditarInputProps<T>) {
+  const [inputValue, setInputValue] = useState<string | number>(value)
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     setInputValue(event.target.value)
@@ -72,16 +74,26 @@ export function FormularioEditarInput({
       {label && <label className="block text-lg mb-2">{label}</label>}
       <div className={`relative ${custumizacaoClass}`}>
         <div className="flex items-center w-full rounded-lg">
-          {iconPath && <img src={iconPath || "/placeholder.svg"} alt={`Ícone ${icon?.type}`} className="h-5 mr-2" />}
+          {iconPath && (
+            <Image
+              src={iconPath} 
+              alt={`Ícone ${icon?.type}`} 
+              className="h-5 mr-2" 
+              width={20}
+              height={20}
+            />
+          )}
 
           {options ? (
             <select
-              {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
+              {...register(name as Path<T>, { 
+                required: required ? `${placeholder} é obrigatório` : false 
+              })}
               onChange={handleChange}
               value={inputValue}
-              className="w-full bg-transparent outline-none text-gray-900 "
+              className="w-full bg-transparent outline-none text-gray-900"
             >
-              <option value="" disabled className="text-gray-400 ">
+              <option value="" disabled className="text-gray-400">
                 {placeholder} {required ? "*" : ""}
               </option>
               {options.map((option, index) => (
@@ -94,17 +106,31 @@ export function FormularioEditarInput({
             <input
               type="text"
               placeholder={`${placeholder} ${required ? "*" : ""}`}
-              {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
+              {...register(name as Path<T>, { 
+                required: required ? `${placeholder} é obrigatório` : false 
+              })}
               value={inputValue}
               onChange={handleChange}
               className="w-full outline-none text-gray-900"
             />
           )}
 
-          {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="h-5 ml-auto" />}
+          {showOptions && (
+            <Image 
+              src="/iconsForms/botaoOpcoes.png" 
+              alt="Botão Opções" 
+              className="h-5 ml-auto"
+              width={20}
+              height={20}
+            />
+          )}
         </div>
-        {errorMessage && <span className="text-red-500 text-sm mt-1">{errorMessage}</span>}
       </div>
+      {errors && (
+        <span className="text-red-500 text-sm mt-1 block">
+          {errors.message}
+        </span>
+      )}
     </>
   )
 }

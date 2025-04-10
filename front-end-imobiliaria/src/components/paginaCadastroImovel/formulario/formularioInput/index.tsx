@@ -1,7 +1,9 @@
 "use client"
 
+import Image from "next/image"
 import type React from "react"
 import type { UseFormRegister, FieldError } from "react-hook-form"
+import { FormData } from "../index"
 
 interface FormularioInputProps {
   placeholder?: string
@@ -12,14 +14,15 @@ interface FormularioInputProps {
   onChange?: (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
   customizacaoClass: string
   options?: string[]
-  register: UseFormRegister<any>
-  errors?: FieldError | undefined
+  register: UseFormRegister<FormData>
+  errors?: FieldError | undefined | string
   required?: boolean
   disabled?: boolean
   icon?: {
     type: "areaCT" | "sala" | "banheiro" | "dormitorio" | "suite" | "garagem" | "praia"
   }
   iconCaneta?: boolean
+  maxLength?: number
 }
 
 export function FormularioInput({
@@ -37,6 +40,7 @@ export function FormularioInput({
   icon,
   onChange,
   iconCaneta,
+  maxLength,
 }: FormularioInputProps) {
   const getIconPath = () => {
     switch (icon?.type) {
@@ -68,12 +72,12 @@ export function FormularioInput({
         className={`relative ${customizacaoClass} p-2 gap-2 flex items-center w-full rounded-lg bg-white border ${errors ? "border-red-500" : "border-gray-500"
           }`}
       >
-        {iconCaneta && <img src="/iconsForms/canetaEditar.png" alt="Editar" className="h-6 ml-4" />}
-        {iconPath && <img src={iconPath} alt={`Ícone ${icon?.type}`} className="h-6 lg:h-9" />}
+        {iconCaneta && <Image src="/iconsForms/canetaEditar.png" alt="Editar" className="h-6 ml-4" width={20} height={20} />}
+        {iconPath && <Image src={iconPath} alt={`Ícone ${icon?.type}`} className="h-6 lg:h-6" width={20} height={20} />}
 
         {options ? (
           <select
-            {...register(name, { required })}
+            {...register(name as keyof FormData, { required })}
             value={value}
             onChange={onChange}
             disabled={disabled}
@@ -82,7 +86,7 @@ export function FormularioInput({
             <option value="" disabled>
               {interName} {required ? "*" : ""}
             </option>
-            {options.map((option, index) => (
+            {options.map((option: string, index: number) => (
               <option key={index} value={option} className="text-black">
                 {option}
               </option>
@@ -91,18 +95,19 @@ export function FormularioInput({
         ) : (
           <input
             type="text"
-            placeholder={`${interName} ${required ? "*" : ""}`}
-            {...register(name, { required })}
+            placeholder={`${interName} ${required ? "*" : ""}`} 
+            {...register(name as keyof FormData , { required })}
             value={value}
             onChange={onChange}
             disabled={disabled}
             className="w-full outline-none text-gray-900 disabled:opacity-50"
+            maxLength={maxLength}
           />
         )}
 
-        {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-6" />}
+        {showOptions && <Image src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-6" width={20} height={20} />}
       </div>
-      {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
+      {errors && <span className="text-red-500 text-sm">{typeof errors === 'string' ? errors : errors.message}</span>}
     </div>
   )
 }

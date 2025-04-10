@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 
-// Carregando a fonte Montserrat
 const montserrat = Montserrat({
     subsets: ['latin'],
     weight: ['400', '800'],
@@ -16,7 +15,7 @@ export default function PaginaEditor() {
         <>
             <Header />
 
-            <div className="font-montserrat pt-3 pb-24 lg:pt-14 lg:pb-52">
+            <div className={`${montserrat.className} pt-3 pb-24 lg:pt-14 lg:pb-52`}>
                 <main className="relative flex h-[811px] w-full max-w-[1810px] mx-auto overflow-hidden ">
                     <Image className='rounded-lg' src="/cidadePaginaEditor.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100} />
                     <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32">
@@ -32,17 +31,17 @@ export default function PaginaEditor() {
                         <div className='flex flex-col items-center max-lg:py-4 py-10 md:py-10 2xl:py-0 w-full 2xl:w-96'>
                             <Image src="/gerenciamentoImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
                             <p className='text-2xl lg:text-3xl font-medium opacity-75 text-center leading-tight max-lg:py-10 py-10 w-80'>Gerenciamento de Imóveis</p>
-                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2' texto="Gerenciar" />
+                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2 bg-vermelho h-10' texto="Gerenciar" />
                         </div>
                         <div className='flex flex-col items-center max-lg:py-4 py-10 md:py-10 2xl:py-0 w-full 2xl:w-96'>
                             <Image src="/gerenciamentoProprietarios.png" alt="Cadastro de Imóveis" width={110} height={123} />
                             <p className='text-2xl lg:text-3xl font-medium opacity-75 text-center leading-tight max-lg:py-10 py-10 w-80'>Gerenciamento de Proprietários</p>
-                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2' texto="Gerenciar" />
+                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2 bg-vermelho h-10' texto="Gerenciar" />
                         </div>
                         <div className='flex flex-col items-center max-lg:py-4 py-10 md:py-10 2xl:py-0 w-full 2xl:w-96'>
                             <Image src="/cadastroImoveis.png" alt="Gerenciamento de Imóveis" width={110} height={123} />
                             <p className='text-2xl lg:text-3xl font-medium opacity-75 text-center leading-tight max-lg:py-10 py-10 w-80'>Cadastrar Imóveis</p>
-                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2' texto="Gerenciar" />
+                            <Botao className='w-2/5 sm:w-2/12 lg:w-2/5 2xl:w-1/2 bg-vermelho h-10' texto="Gerenciar" />
                         </div>
                     </div>
                 </section>

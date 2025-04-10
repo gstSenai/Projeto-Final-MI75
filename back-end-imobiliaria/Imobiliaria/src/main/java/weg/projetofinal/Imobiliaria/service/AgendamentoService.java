@@ -18,11 +18,16 @@ public class AgendamentoService {
         return agendamentoRepository.findAll();
     }
 
+
+
+
     public Agendamento procurarPorId(int id) {
         return agendamentoRepository.findById(id)
                 .orElseThrow(() ->
                 new EntityNotFoundException("Agendamento não encontrado com ID: " + id));
     }
+
+
 
     public Agendamento save(Agendamento agendamento) {
         if (agendamento.getUsuario().getId().equals(agendamento.getCorretor().getId())) {
@@ -73,5 +78,7 @@ public class AgendamentoService {
     public void remover(int id) {
         agendamentoRepository.deleteById(id);
     }
+
+
 
 }

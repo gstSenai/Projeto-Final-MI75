@@ -1,4 +1,5 @@
-import AuthForm from "@/components/authForm";
+import AuthForm from "@/components/authForm/index"
+
 
 export default function CadastroPage() {
   return (

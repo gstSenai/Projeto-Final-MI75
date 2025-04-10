@@ -4,6 +4,7 @@ import { Montserrat } from "next/font/google";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { z } from "zod";
+import Image from "next/image";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -117,16 +118,16 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
           <div className="w-full md:w-[40%] flex flex-col py-16 items-center justify-center bg-gradient-to-b from-[rgba(223,218,208,1)] to-[rgba(115,115,115,0.3)] rounded-l-lg">
             <h1 className="text-[34px] font-bold text-[#280202] tracking-[2px]">BEM VINDO</h1>
             <h2 className="text-3xl font-semibold text-[#280202] tracking-[6px]">HAV</h2>
-            <img src="/logos/logoLogin.png" alt="Logo" className="w-36 my-4 pr-2" />
+            <Image src="/logos/logoLogin.png" alt="Logo" width={144} height={144} className="w-36 my-4 pr-2" />
             <button className="bg-white border border-gray-300 text-[#702632] text-[14px] font-bold py-2.5 px-2 w-[240px] rounded-xl flex justify-center items-center mt-4">
-              <img src="/loginIcons/google-icon.png" alt="Google" className="w-5 h-5 mr-2" />
+                <Image src="/loginIcons/google-icon.png" alt="Google" width={20} height={20} className="w-5 h-5 mr-2" />
               Continue com o Google
             </button>
             <a href="#" onClick={handleRedirect} className="text-[12px] mt-2 text-black font-medium underline hover:text-[#702632]">{loginOuCadastro}</a>
           </div>
 
           <div className="w-full md:w-[65%] flex flex-col justify-center items-center p-6">
-            <h2 className="text-4xl font-bold text-[#702632] tracking-[6px] mb-6">{title}</h2>
+            <h2 className="max-sm:text-2xl text-4xl font-bold text-[#702632] tracking-[6px] mb-6">{title}</h2>
             <form onSubmit={handleSubmit}>
               {isCadastro && (
                 <div className="mb-2">
@@ -175,7 +176,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                             onClick={togglePasswordVisibility}
                             className="absolute inset-y-11 right-4 flex items-center"
                           >
-                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            {showPassword ? <Eye size={20}/> : <EyeOff size={20}  />}
                           </button>
                         </div>
                         {errors.senha && <p className="w-[300px] text-[#CF2020] opacity-80 text-sm">{errors.senha}</p>}
@@ -205,7 +206,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                             onClick={togglePasswordVisibility}
                             className="absolute inset-y-11 right-4 pb-4 flex items-center"
                           >
-                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            {showPassword ? <Eye size={20}/> : <EyeOff size={20}  />}
                           </button>
                         </div>
                         {errors.senha && <p className="w-[300px] text-[#CF2020] opacity-80 text-sm">{errors.senha}</p>}
@@ -233,7 +234,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                         onClick={togglePasswordVisibility}
                         className="absolute inset-y-11 right-4 pb-4 flex items-center"
                       >
-                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        {showPassword ? <Eye size={20}/> : <EyeOff size={20}  />}
                       </button>
                     </div>
                   </div>
@@ -257,14 +258,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                     onClick={toggleConfirmPasswordVisibility}
                     className="absolute inset-y-11 right-4 flex items-center"
                   >
-                    {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    {showConfirmPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                   </button>
                   {errors.confirmarSenha && <p className="max-w-xs break-words text-[#CF2020] opacity-80 text-sm">{errors.confirmarSenha}</p>}
                 </div>
               )}
 
               <div className="flex justify-center mt-4">
-                <button className="md:w-[45%] font-bold bg-[#FFFBFB] text-[#702632] py-2 rounded-lg" type="submit">
+                <button className="md:w-[45%] font-bold bg-[#FFFBFB] text-[#702632] p-2 rounded-lg" type="submit">
                   {buttonText}
                 </button>
               </div>

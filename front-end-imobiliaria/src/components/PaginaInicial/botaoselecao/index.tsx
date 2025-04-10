@@ -1,4 +1,5 @@
 "use client";
+import Image from 'next/image';
 import { useState } from 'react';
 
 interface PlaceFilterProps {
@@ -11,10 +12,8 @@ const PlaceFilter = ({ texto, tipo }: PlaceFilterProps) => {
 
     const handleSelection = (value: number | string) => {
         if (selected.includes(value)) {
-            // Remove o valor se já estiver selecionado
             setSelected(selected.filter(item => item !== value));
         } else {
-            // Adiciona o valor se não estiver selecionado
             setSelected([...selected, value]);
         }
     };
@@ -24,7 +23,7 @@ const PlaceFilter = ({ texto, tipo }: PlaceFilterProps) => {
 
         return (
             <div className="flex flex-col gap-2 w-64 xl:w-[320px]">
-                <p className="font-medium lg:font-bold text-2xl w-[270px]">{texto}</p>
+                <p className="font-medium lg:text-lg w-[270px]">{texto}</p>
                 <div className="flex bg-[#DFDAD0] rounded-lg overflow-hidden w-64 xl:w-[320px]">
                     {quartos.map((q, index) => (
                         <button
@@ -52,7 +51,7 @@ const PlaceFilter = ({ texto, tipo }: PlaceFilterProps) => {
 
         return (
             <div className="flex flex-col gap-2 w-[320px]">
-                <p className="font-medium lg:font-bold text-2xl">{texto}</p>
+                <p className="font-medium lg:text-lg text-2xl">{texto}</p>
                 <div className="flex bg-[#DFDAD0] rounded-lg overflow-hidden w-64 xl:w-[320px]">
                     {images.map((img, index) => (
                         <button
@@ -61,10 +60,12 @@ const PlaceFilter = ({ texto, tipo }: PlaceFilterProps) => {
                                 ${selected.includes(img.alt) ? "border-[#702632]" : "border-transparent"}`}
                             onClick={() => handleSelection(img.alt)}
                         >
-                            <img
+                            <Image
                                 src={img.src}
                                 alt={img.alt}
                                 className="w-6 h-6 object-cover"
+                                width={24}
+                                height={24}
                             />
                         </button>
                     ))}

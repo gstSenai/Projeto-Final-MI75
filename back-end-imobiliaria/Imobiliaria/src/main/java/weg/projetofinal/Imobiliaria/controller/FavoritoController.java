@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/favorito")
+@CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
 public class FavoritoController {
 
