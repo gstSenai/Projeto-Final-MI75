@@ -1,22 +1,26 @@
 package weg.projetofinal.Imobiliaria.security.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 import weg.projetofinal.Imobiliaria.repository.UsuarioRepository;
-import weg.projetofinal.Imobiliaria.security.repository.UsuarioDetailsRepository;
 
+
+@AllArgsConstructor
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private UsuarioRepository usuarioDetailsRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
-        return usuarioDetailsRepository.findByNome(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario nao encontrado:" + username));
+    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        Usuario usuario = usuarioRepository.findByUsernameOrEmail(usernameOrEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com: " + usernameOrEmail));
+
+        return UserDetailsImpl.build(usuario);
     }
 }

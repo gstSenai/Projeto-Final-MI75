@@ -1,7 +1,7 @@
 "use client"
 
 import { Inter } from 'next/font/google';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -21,15 +21,23 @@ export function Header() {
     const [currentImageEUA, setCurrentImageEUA] = useState('/imagensHeader/eua.png')
     const [currentImageEspanhol, setCurrentImageEspanhol] = useState('/imagensHeader/Espanha.png')
     const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [username, setUsername] = useState('')
 
-//    const handleLogin = () => {
-//        setIsLoggedIn(true)
-//        setShowProfileModal(false)
-//    }
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const storedUsername = localStorage.getItem('username');
+        if (token && storedUsername) {
+            setIsLoggedIn(true);
+            setUsername(storedUsername);
+        }
+    }, []);
 
     const handleLogout = () => {
-        setIsLoggedIn(false)
-        setShowProfileModal(false)
+        setIsLoggedIn(false);
+        setUsername('');
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        setShowProfileModal(false);
     }
 
     return (
@@ -120,8 +128,8 @@ export function Header() {
                         <div className="flex flex-row items-center max-md:hidden relative">
                             <Image 
                                 onClick={() => setShowProfileModal(!showProfileModal)}
-                                src="/imagensHeader/PERFIL SEM LOGIN.png" 
-                                alt="Perfil sem login" 
+                                src={isLoggedIn ? "/imagensHeader/PERFIL SEM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"} 
+                                alt={isLoggedIn ? "Perfil com login" : "Perfil sem login"} 
                                 width={50} 
                                 height={50} 
                                 className="w-12 md:w-[40px] lg:w-[50px] cursor-pointer" 
@@ -146,6 +154,10 @@ export function Header() {
                                         </>
                                     ) : (
                                         <>
+                                            <div className="px-4 py-2 text-white text-center">
+                                                {username}
+                                            </div>
+                                            <div className="w-full h-[1px] bg-white opacity-50"></div>
                                             <Link 
                                                 href="/perfil" 
                                                 className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
@@ -185,13 +197,17 @@ export function Header() {
                             <div className="flex justify-between items-center mb-4">
                                 <div className="flex items-center gap-3">
                                     <Image 
-                                        src="/imagensHeader/PERFIL SEM LOGIN.png" 
+                                        src={isLoggedIn ? "/imagensHeader/PERFIL COM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"} 
                                         alt="Perfil" 
                                         width={40} 
                                         height={40} 
                                         className="rounded-full cursor-pointer"
                                     />
-                                    <Link href="/perfil" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Nome do Usuário</Link>
+                                    {isLoggedIn ? (
+                                        <span className="text-xl text-[#303030]">{username}</span>
+                                    ) : (
+                                        <Link href="/login" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Fazer login</Link>
+                                    )}
                                 </div>
                                 <Image
                                     onClick={() => setHambuguerMobile(false)}

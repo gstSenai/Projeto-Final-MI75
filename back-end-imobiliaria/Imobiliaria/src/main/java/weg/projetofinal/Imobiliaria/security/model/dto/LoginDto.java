@@ -1,7 +1,15 @@
 package weg.projetofinal.Imobiliaria.security.model.dto;
 
-public record LoginDto(
-        String username,
-        String password
-) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class LoginDto {
+    private String usernameOrEmail;
+    private String password;
 }

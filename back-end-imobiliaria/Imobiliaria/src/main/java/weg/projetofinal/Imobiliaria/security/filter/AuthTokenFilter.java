@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,10 +15,11 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import weg.projetofinal.Imobiliaria.security.service.UserDetailsServiceImpl;
+import weg.projetofinal.Imobiliaria.security.util.JwtUtil;
 
 import java.io.IOException;
 
-@Log4j
+@Slf4j
 @Component
 @AllArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
@@ -29,8 +31,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try{
             String jwt = parseJwt(request);
-            if(jwt != null && jwtUtil.validateJwtToken(jwt)){
-                String username = jwtUtil.getUserNameFromJwtToken(jwt);
+            if(jwt != null && jwtUtil.validateToken(jwt)){
+                String username = jwtUtil.generateTokenFromUsername(jwt);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());

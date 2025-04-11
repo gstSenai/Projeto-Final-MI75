@@ -29,7 +29,6 @@ public class Usuario {
     @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false)
     private String tipo_conta;
 
     @Column(nullable = false, unique = true)
@@ -62,5 +61,27 @@ public class Usuario {
                 joinColumns = @JoinColumn(name = "user_id"),
                 inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+
+    public void atualizarTipoContaPelaRole() {
+        for (Role role : roles) {
+            switch (role.getName()) {
+                case ROLE_ADMIN:
+                    this.tipo_conta = "Administrador";
+                    return;
+                case ROLE_CORRETOR:
+                    this.tipo_conta = "Corretor";
+                    return;
+                case ROLE_EDITOR:
+                    this.tipo_conta = "Editor";
+                    return;
+                case ROLE_USER:
+                    this.tipo_conta = "Usuario";
+                    return;
+                default:
+                    this.tipo_conta = "Desconhecido";
+            }
+        }
+    }
 
 }

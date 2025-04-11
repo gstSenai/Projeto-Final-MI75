@@ -47,19 +47,6 @@ public class UsuarioController {
         return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuarioCriado);
     }
 
-    @PostMapping("/cadastro")
-    public ResponseEntity<UsuarioGetResponseDTO> cadastrarUsuario(
-            @RequestBody @Valid UsuarioCadastroPostDTO usuarioDTO) {
-
-        Usuario usuarioCriado = service.cadastroUsuario(usuarioDTO);
-
-        UsuarioGetResponseDTO responseDTO = UsuarioMapper.INSTANCE
-                .usuarioToUsuarioGetResponseDTO(usuarioCriado);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
-    }
-
-
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
     public Page<UsuarioGetResponseDTO> findAll(

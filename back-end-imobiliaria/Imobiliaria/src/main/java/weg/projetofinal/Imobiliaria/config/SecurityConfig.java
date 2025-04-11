@@ -1,6 +1,7 @@
 package weg.projetofinal.Imobiliaria.config;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -26,9 +27,9 @@ import weg.projetofinal.Imobiliaria.security.service.UserDetailsServiceImpl;
 @AllArgsConstructor
 public class SecurityConfig {
 
-    private UserDetailsServiceImpl userDetailsService;
-    private AuthEntryPointJwt authEntryPointJWT;
-    private AuthTokenFilter authTokenFilter;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final AuthEntryPointJwt authEntryPointJWT;
+    private final AuthTokenFilter authTokenFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
