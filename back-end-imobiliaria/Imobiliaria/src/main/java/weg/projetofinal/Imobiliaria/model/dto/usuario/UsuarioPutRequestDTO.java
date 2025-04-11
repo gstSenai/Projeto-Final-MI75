@@ -5,11 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record UsuarioPutRequestDTO(
-        @NotBlank String nome,
+        @NotBlank String username,
         @NotBlank String sobrenome,
         @NotBlank String tipo_conta,
         @Email @NotBlank String email,
-        @NotBlank @Size(min = 6) String senha,
+        @NotBlank @Size(min = 6) String password,
         String imagem_usuario
 ) {
 }

@@ -4,11 +4,11 @@ import java.util.Date;
 
 public record UsuarioAgendamentoGetResponseDTO(
         Integer id,
-        String nome,
+        String username,
         String sobrenome,
         String tipo_conta,
         String email,
-        String senha,
+        String password,
         boolean ativo,
         String imagem_usuario
 ) {

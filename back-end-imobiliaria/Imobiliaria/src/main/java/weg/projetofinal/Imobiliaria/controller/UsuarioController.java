@@ -1,6 +1,7 @@
 package weg.projetofinal.Imobiliaria.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioCadastroPostDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioPutRequestDTO;
@@ -44,7 +46,6 @@ public class UsuarioController {
         Usuario usuarioCriado = service.createUser(usuarioDTO, imagem);
         return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuarioCriado);
     }
-
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
