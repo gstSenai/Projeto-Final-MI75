@@ -3,6 +3,7 @@ import { FormularioInput } from "../formularioInput"
 import { Montserrat } from "next/font/google"
 import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form"
 import { useState } from "react"
+import { FormData } from "../index"
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -10,28 +11,10 @@ const montserrat = Montserrat({
     display: 'swap',
 });
 
-interface FormData {
-    endereco?: {
-        cep: string;
-        uf: string;
-        cidade: string;
-        bairro: string;
-        rua: string;
-        tipo_residencia: string;
-        numero_imovel: string;
-        numero_apartamento: string;
-    };
-        cep: string;
-        uf: string;
-        cidade: string;
-        bairro: string;
-        rua: string;
-        tipo_residencia: string;
-        numero_imovel: string;
-        numero_apartamento: string;
-}
-
-
+const formatarCEP = (value: string) => {
+    const numbers = value.replace(/\D/g, '');
+    return numbers.replace(/(\d{5})(\d{3})/, '$1-$2').slice(0, 9);
+};
 
 interface EnderecoProprietarioSectionProps {
     register: UseFormRegister<FormData>
@@ -73,17 +56,19 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
         <div className={`flex flex-col mt-6 lg:gap-4 ${montserrat.className}`}>
             <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                 <FormularioInput
+                    label="CEP:"
                     placeholder="CEP:"
                     name="endereco.cep"
-                    label="CEP:"
+                    interName='00000-000'
                     register={register}
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
-                    interName=""
                     required
-                    errors={errors?.cep}
+                    errors={errors?.endereco?.cep}
+                    maxLength={9}
                     onChange={(e) => {
-                        const novoCep = e.target.value
-                        if (novoCep.replace(/\D/g, "").length === 8) buscarCep(novoCep)
+                        const novoCep = formatarCEP(e.target.value);
+                        e.target.value = novoCep;
+                        if (novoCep.replace(/\D/g, "").length === 8) buscarCep(novoCep);
                     }}
                 />
                 <FormularioInput
@@ -94,7 +79,7 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
                     interName=""
                     required
-                    errors={errors?.uf}
+                    errors={errors?.endereco?.uf}
                     disabled={isLoading}
                 />
                 <FormularioInput
@@ -105,7 +90,7 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
                     interName=""
                     required
-                    errors={errors?.cidade}
+                    errors={errors?.endereco?.cidade}
                     disabled={isLoading}
                 />
                 <FormularioInput
@@ -116,7 +101,7 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
                     interName=""
                     required
-                    errors={errors?.rua}
+                    errors={errors?.endereco?.rua}
                     disabled={isLoading}
                 />
             </div>
@@ -129,7 +114,7 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
                     interName=""
                     required
-                    errors={errors?.bairro}
+                    errors={errors?.endereco?.bairro}
                     disabled={isLoading}
                 />
                 <FormularioInput
@@ -141,7 +126,7 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                     options={["Casa", "Apartamento"]}
                     interName="*"
                     required
-                    errors={errors?.tipo_residencia}
+                    errors={errors?.endereco?.tipo_residencia}
                 />
                 <FormularioInput
                     placeholder="Número do Imóvel:"
@@ -151,7 +136,7 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
                     interName=""
                     required
-                    errors={errors?.numero_imovel}
+                    errors={errors?.endereco?.numero_imovel}
                 />
             </div>
             <div className="flex max-lg:flex-col max-lg:gap-4 max-lg:pt-4 gap-10">
@@ -162,7 +147,7 @@ export function EnderecoProprietarioSection({ register, setValue, errors }: Ende
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
                     interName=""
                     label="Número Apartamento (Caso tenha):"
-                    errors={errors?.numero_apartamento}
+                    errors={errors?.endereco?.numero_apartamento}
                 />
             </div>
         </div>

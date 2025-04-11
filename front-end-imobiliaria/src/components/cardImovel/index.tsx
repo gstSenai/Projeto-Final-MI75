@@ -18,17 +18,27 @@ interface CardProps {
     codigo: number;
 }
 
+interface CardPropsId {
+    imovelId : number
+}
+
+interface Usuario {
+    usuarioId : number
+}
+
+
 export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, preco, codigo }: CardProps) {
     return (
         <>
-
-            <button>
-                <div className={`${inter.className} flex justify-center px-6  `}>
-                    <div className="flex flex-col lg:w-full max-lg:max-w-[250px] lg:max-w-[250px] max-w-[300px] max-lg:mt-6">
-                        <div className="w-full max-sm:max-w-[200px]">
-                <Favoritar />
-               
-                            <Image src="/imagensImovel/fotoImovel.png" alt="Imagem Imovel" className="w-full max-md:max-w-[350px]  max-w-[400px] lg:max-w-[350px] 2xl:max-w-[400px]" width={500} height={324} />
+                <div className={`${inter.className} flex justify-center pt-12 lg:pt-0`}>
+                    <div className="flex flex-col lg:w-full lg:max-w-[320px] 2xl:max-w-[400px]">
+                        <div className='relative'>
+                            <div>
+                                <Favoritar usuarioId={1} imovelId={1}/>
+                            </div>
+                            <div className="w-full">
+                                <Image src="/imagensImovel/fotoImovel.png" alt="Imagem Imovel" className="w-full max-md:max-w-[350px]  max-w-[400px] lg:max-w-[350px] 2xl:max-w-[400px]" width={500} height={324} />
+                            </div>
                         </div>
                         <div className="w-full max-md:max-w-[350px] max-sm:max-w-[200px] max-w-[400px] lg:max-w-[350px] 2xl:max-w-[400px] bg-white shadow-[5px_20px_100px_rgb(0,0,0,0.1)] rounded-b-[20px] py-2">
                             <div className="flex flex-col justify-center items-center">
@@ -59,9 +69,7 @@ export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, p
                         </div>
                     </div>
                 </div>
-            </button>
-        </>
+            </>
     );
 }
 
-export default Card;

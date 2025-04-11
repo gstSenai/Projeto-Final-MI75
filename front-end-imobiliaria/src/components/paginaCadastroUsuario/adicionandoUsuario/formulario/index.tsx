@@ -26,7 +26,6 @@ const UsuarioProps = z.object({
     tipo_conta: z.string().min(1, {
         message: "Selecione um tipo de conta válido",
     }),
-    telefone: z.string().min(1, { message: "O telefone é obrigatório" }),
     email: z.string().email({ message: "E-mail inválido" }),
     senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
 })
@@ -165,8 +164,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                     </div>
 
                     <div className="space-y-4 mb-4">
-                        <DadosUsuarioSection register={register} 
-                        errors={errors} />
+                        <DadosUsuarioSection register={register} errors={errors} />
                     </div>
 
                     <div className="flex justify-end gap-4 mt-4">

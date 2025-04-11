@@ -40,10 +40,8 @@ export default function AgendarCorretor({ id }: { id: number }) {
     }, [id]);
 
     useEffect(() => {
-        console.log("ID recebido:", id);
         getCorretor();
     }, [getCorretor]);
-
 
     return (
         <div className={`flex flex-col gap-4 py-4 w-72 ${montserrat.className}`}>

@@ -31,17 +31,22 @@ const UsuarioProps = z.object({
 })
 
 type UsuarioProps = z.infer<typeof UsuarioProps>
+type FormData = { usuario: UsuarioProps }
+
+export type { FormData }
 
 interface ResponseProps {
   content: UsuarioProps[]
 }
 
 export default function TabelaUsuario() {
-  const { register, watch, reset } = useForm({
+  const { register, watch, reset } = useForm<FormData>({
     defaultValues: {
-      "usuario.nome": "",
-      "usuario.email": "",
-      "usuario.tipo_conta": "",
+      usuario: {
+        nome: "",
+        email: "",
+        tipo_conta: "",
+      },
     }
   });
   const [selectedUsuarios, setSelectedUsuarios] = useState<UsuarioProps[]>([])
@@ -143,13 +148,13 @@ export default function TabelaUsuario() {
                     <p>Nome</p>
                   </th>
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
+                    <p>Sobrenome</p>
+                  </th>
+                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>E-mail</p>
                   </th>
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Tipo Conta</p>
-                  </th>
-                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
-                    <p>Telefone</p>
                   </th>
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>Ativo</p>

@@ -203,6 +203,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
           <div className="w-full md:w-[65%] flex flex-col justify-center items-center p-6">
             <h2 className="text-4xl font-bold text-[#702632] tracking-[6px] mb-6">{title}</h2>
             <form onSubmit={handleSubmit} className="w-full max-w-md">
+
               {isCadastro && (
                 <div className="mb-4">
                   <label className="block text-gray-700 mb-2">Nome de Usuário</label>
@@ -282,7 +283,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                   {errors.confirmarSenha && <p className="mt-1 text-sm text-red-600">{errors.confirmarSenha}</p>}
                 </div>
               )}
-
               {apiError && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">{apiError}</div>}
 
               <div className="flex justify-center">

@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { Montserrat } from "next/font/google";
 import Image from "next/image";
+
+
 const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["400", "800"],
+  weight: ["400",'500', '600', "800"],
   display: "swap",
 });
 
@@ -38,25 +40,25 @@ export function FormularioImagem({ handleImageChange }: FormularioImagemProps) {
 
   return (
     <div className={`flex ${montserrat.className} flex-col items-center gap-4 mb-10`}>
-      <div className="relative w-56 h-56 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-200 transition-colors bg-gray-100">
+      <div className="relative bg-gray-100 hover:bg-gray-200 h-56 w-56 rounded-full flex items-center justify-center overflow-hidden transition-all duration-300 border-2 border-dashed border-gray-300">
         {isLoading ? (
           <div className="flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-500"></div>
           </div>
         ) : imagePreview ? (
-          <div className="w-full h-full relative rounded-full overflow-hidden">
+          <div className="w-full h-full relative">
             <Image
               src={imagePreview}
               alt="Pré-visualização"
               className="w-full h-full object-cover transition-transform duration-200"
-              width={200}
-              height={200}
+              width={100}
+              height={100}
             />
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center gap-2">
-            <span className="rounded-full w-14 h-14 bg-gray-300 text-gray-600 text-4xl flex items-center justify-center">+</span>
-            <span className="text-gray-600 text-sm">Carregar foto</span>
+            <span className="rounded-full w-10 h-10 bg-gray-300 text-gray-600 text-2xl flex items-center justify-center">+</span>
+            <span className="text-gray-500 text-sm">Carregar foto</span>
           </div>
         )}
         <input

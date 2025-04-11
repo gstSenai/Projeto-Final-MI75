@@ -90,8 +90,7 @@ type agendamentoProps = z.infer<typeof AgendamentoProps>
 
 export default function PaginaAgendamento() {
   const {
-    register, handleSubmit, watch, formState: { errors },
-    setValue
+    register, handleSubmit, watch
   } = useForm<agendamentoProps>({
     resolver: zodResolver(AgendamentoProps),
   })
@@ -100,7 +99,7 @@ export default function PaginaAgendamento() {
   const [imovelId] = useState(1);
   const [horariosOcupados, setHorariosOcupados] = useState<string[]>([]);
   const [usuarios, setUsuarios] = useState<UserProps[]>([]);
-  const [dataSelecionada, setDataSelecionada] = useState<Date>(new Date());
+  const [dataSelecionada,] = useState<Date>(new Date());
 
   const verificarHorariosOcupados = useCallback(async (data: Date) => {
     try {

@@ -4,9 +4,10 @@ import Image from "next/image"
 import { useState } from "react"
 import type React from "react"
 import type { UseFormRegister, FieldError } from "react-hook-form"
-import { FormData } from "../index.tsx"
+import { FormData } from "../../tabelaUsuario"
 
 interface FormularioEditarInputProps {
+  label?: string
   placeholder: string
   name: string
   showOptions?: boolean
@@ -34,8 +35,9 @@ export function FormularioEditarInput({
   required = false,
   value = "",
   icon,
+  label,
   onChange,
-}: FormularioEditarInputProps<T>) {
+}: FormularioEditarInputProps) {
   const [inputValue, setInputValue] = useState(value)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -70,13 +72,14 @@ export function FormularioEditarInput({
 
   return (
     <>
+      <label htmlFor={name} className="block text-lg">{label}</label>
       <div className={`relative  ${custumizacaoClass}`}>
         <div className="flex items-center w-full rounded-lg">
           {iconPath && <Image src={iconPath || "/placeholder.svg"} alt={`Ícone ${icon?.type}`} className="h-5 mr-2" width={20} height={20} />}
 
           {options ? (
             <select
-              {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
+              {...register(name as keyof FormData, { required: required ? `${placeholder} é obrigatório` : false })}
               onChange={handleChange}
               value={inputValue}
               className="w-full bg-transparent outline-none text-gray-900 "
@@ -94,7 +97,7 @@ export function FormularioEditarInput({
             <input
               type="text"
               placeholder={`${placeholder} ${required ? "*" : ""}`}
-              {...register(name as any, { required: required ? `${placeholder} é obrigatório` : false })}
+              {...register(name as keyof FormData, { required: required ? `${placeholder} é obrigatório` : false })}
               value={inputValue}
               onChange={handleChange}
               className="w-full outline-none text-gray-900"
