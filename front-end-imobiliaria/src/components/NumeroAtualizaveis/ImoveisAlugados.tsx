@@ -1,12 +1,4 @@
 
-
-interface totalAlugados{
-
-    
-}
-
-
-
 export function ImoveisAlugados() {
     return(
     <div className="font-semibold tracking-[7%] text-3xl">

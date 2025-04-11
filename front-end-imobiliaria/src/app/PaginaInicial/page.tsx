@@ -1,3 +1,4 @@
+
 "use client"
 
 import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';

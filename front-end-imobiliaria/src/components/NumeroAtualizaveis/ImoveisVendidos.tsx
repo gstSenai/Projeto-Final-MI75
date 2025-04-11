@@ -1,11 +1,5 @@
 
 
-interface totalVendidos{
-
-
-}
-
-
 
 export function ImoveisVendidos(){
 return(
