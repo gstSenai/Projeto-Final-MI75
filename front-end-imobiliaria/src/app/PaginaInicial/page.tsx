@@ -1,3 +1,4 @@
+"use client"
 
 import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
@@ -21,6 +22,8 @@ import Image from 'next/image';
 
 
 export default function PaginaInicial() {
+
+
     return (
         <div>
             <Header />

@@ -41,7 +41,6 @@ public class ImovelService {
 
 
     public Page<Imovel> getAllImovel(Pageable pageable) {
-
         return repository.findAll(pageable);
     }
 

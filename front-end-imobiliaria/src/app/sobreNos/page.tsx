@@ -57,6 +57,8 @@ export default function Sobre() {
                         src="/imgSobreNos/visao.png"
                         alt="Visão"
                         className="w-full md:w-[50%] rounded-lg shadow-md"
+                        width={100} 
+                        height={100}
                     />
                     <div>
                         <h2 className="text-[30px] font-bold mb-2">Visão</h2>

@@ -28,19 +28,28 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private UserDetailsServiceImpl userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try{
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        try {
             String jwt = parseJwt(request);
-            if(jwt != null && jwtUtil.validateToken(jwt)){
-                String username = jwtUtil.generateTokenFromUsername(jwt);
+            if (jwt != null && jwtUtil.validateToken(jwt)) {
+                String username = jwtUtil.getUsernameFromToken(jwt); // Método correto para extrair username
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities());
+
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        }catch (Exception e){
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            log.error("Cannot set user authentication: {}", e.getMessage());
+            // Opcional: enviar resposta de erro
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
+            return;
         }
         filterChain.doFilter(request, response);
     }
