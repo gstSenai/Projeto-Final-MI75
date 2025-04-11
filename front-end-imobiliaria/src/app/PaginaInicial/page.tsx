@@ -8,7 +8,7 @@ import BotaoImageTexto from '@/components/PaginaInicial/BotaoImageTexto';
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { Card } from '@/components/cardImovel/index';
+import { Card } from '@/components/CardImovel/index';
 
 const montserrat = Montserrat({
     subsets: ['latin'],

@@ -30,9 +30,6 @@ interface Usuario {
 export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, preco, codigo }: CardProps) {
     return (
         <>
-
-            <button>
-
                 <div className={`${inter.className} flex justify-center pt-12 lg:pt-0`}>
                     <div className="flex flex-col lg:w-full lg:max-w-[320px] 2xl:max-w-[400px]">
                         <div className='relative'>
@@ -72,9 +69,7 @@ export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, p
                         </div>
                     </div>
                 </div>
-            </button>
-        </>
+            </>
     );
 }
 
-export default Card;
