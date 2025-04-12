@@ -50,7 +50,7 @@ public class UsuarioController {
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
     public Page<UsuarioGetResponseDTO> findAll(
-            @PageableDefault(sort = "nome", direction = Sort.Direction.ASC) Pageable pageable) {
+            @PageableDefault(sort = "username", direction = Sort.Direction.ASC) Pageable pageable) {
         Page<Usuario> usuarios = service.findAll(pageable);
         return usuarios.map(UsuarioMapper.INSTANCE::usuarioToUsuarioGetResponseDTO);
     }

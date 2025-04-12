@@ -22,8 +22,8 @@ interface AuthFormProps {
 
 type FormData = {
   email: string
-  senha: string
-  nomeUsuario?: string
+  password: string
+  username?: string
   confirmarSenha?: string
 }
 
@@ -155,7 +155,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
       if (!isCadastro) {
         localStorage.setItem("token", data.token)
         localStorage.setItem("username", formData.email.split('@')[0])
-        router.push("/paginaImoveis")
+        router.push("/paginaInicial")
       } else {
         localStorage.setItem("username", formData.nomeUsuario)
         router.push("/login")

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,9 +27,16 @@ public class UsuarioService {
     private final PasswordEncoder passwordEncoder;
 
 
+
     public Usuario createUser(UsuarioPostRequestDTO usuarioDTO, MultipartFile imagem) {
         String imagemUrl = s3Service.uploadFile(imagem);
+
         Usuario usuario = UsuarioMapper.INSTANCE.usuarioPostRequestDTOToUsuario(usuarioDTO);
+
+        if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Senha não pode ser nula ou vazia.");
+        }
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         usuario.setImagem_usuario(imagemUrl);
         return repository.save(usuario);
     }

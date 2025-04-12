@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from "next/navigation"
 
 // Carregando a fonte Inter
 const inter = Inter({
@@ -13,6 +14,7 @@ const inter = Inter({
 });
 
 export function Header() {
+    const router = useRouter()
     const [hamburguerMobile, setHambuguerMobile] = useState(false)
     const [showProfileModal, setShowProfileModal] = useState(false)
     const [showLanguageModal, setShowLanguageModal] = useState(false)
@@ -23,6 +25,7 @@ export function Header() {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [username, setUsername] = useState('')
 
+    
     useEffect(() => {
         const token = localStorage.getItem('token');
         const storedUsername = localStorage.getItem('username');
@@ -38,6 +41,7 @@ export function Header() {
         localStorage.removeItem('token');
         localStorage.removeItem('username');
         setShowProfileModal(false);
+        router.push('/login');
     }
 
     return (
