@@ -21,6 +21,8 @@ public record ImovelGetResponseDTO(
         Double area_construida,
         Double area_terreno,
         String descricao,
+        Double lat,
+        Double lng,
         EnderecoImovelGetResponseDTO id_endereco,
         CaracteristicaImovelGetResponseDTO id_caracteristicasImovel,
         ProprietarioImovelResponseDTO id_proprietario,

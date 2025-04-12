@@ -298,7 +298,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                     campos.forEach(campo => {
                         const valor = values.imovel[campo];
                         if (valor && !String(valor).includes(',')) {
-                            setValue(`imovel.${campo}`, valor);
+                            setValue(`imovel.${campo}`, (valor + ",00"));
                         }
                     });
                 }

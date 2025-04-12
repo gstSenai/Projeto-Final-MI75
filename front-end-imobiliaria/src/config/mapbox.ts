@@ -1,4 +1,4 @@
-export const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoibHVhbmFuaWNoZWxhdHRpIiwiYSI6ImNtOWFqcDY3ZDA2eTkyaXE0b3Z4eW40eDUifQ.gYlUt6PtfGgkap3L2KEiow';
+export const MAPBOX_ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 
 export const MAPBOX_STYLE = 'mapbox://styles/mapbox/streets-v12';
 

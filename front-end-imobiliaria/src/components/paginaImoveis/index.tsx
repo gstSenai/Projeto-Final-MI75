@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
-import { Card } from "../cardImovel"
+import { Card } from "@/components/CardImovel/index"
 import { Montserrat } from "next/font/google"
 import { FiltroImoveis } from "./botaoFiltro"
 import { ChevronLeft, ChevronRight } from "lucide-react"
@@ -42,10 +42,10 @@ interface Imovel {
 }
 
 interface PaginationInfo {
-  totalPages: number
-  totalElements: number
-  currentPage: number
-  size: number
+  currentPage: number;
+  totalPages: number;
+  totalElements: number;
+  size: number;
 }
 
 export function ListaImoveis() {
@@ -57,69 +57,55 @@ export function ListaImoveis() {
   const [mostrarFiltros, setMostrarFiltros] = useState<boolean>(false)
 
   const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>({
+    currentPage: 0,
     totalPages: 0,
     totalElements: 0,
-    currentPage: 0,
-    size: 12,
+    size: 10,
   })
 
-  const fetchImoveis = useCallback(async (page = 0) => {
+  const fetchImoveis = async (page: number) => {
     try {
-      setLoading(true)
+      setLoading(true);
+      const token = localStorage.getItem("token");
       const response = await fetch(`http://localhost:9090/imovel/getAll?page=${page}&size=${paginationInfo.size}`, {
-        cache: "no-store",
         headers: {
-          "Cache-Control": "no-cache",
-          Pragma: "no-cache",
-          Expires: "0",
-        },
-      })
-
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+      
       if (!response.ok) {
-        throw new Error(`Erro na API: ${response.status} ${response.statusText}`)
+        throw new Error('Erro ao buscar imóveis');
       }
 
-      const data = await response.json()
-      const imoveisArray = data.content || []
+      const data = await response.json();
+      
+      const imoveisFormatados = data.content.map((imovel: any) => ({
+        id: imovel.id,
+        titulo: imovel.titulo,
+        descricao: imovel.descricao,
+        preco: imovel.preco,
+        tipoImovel: imovel.tipoImovel,
+        tipoTransacao: imovel.tipoTransacao,
+        endereco: imovel.endereco,
+        caracteristicas: imovel.caracteristicas,
+        imagens: imovel.imagens,
+      }));
 
-      if (imoveisArray.length === 0) {
-        setImoveis([])
-        return
-      }
-
+      setImoveis(imoveisFormatados);
       setPaginationInfo({
-        totalPages: data.totalPages || 1,
-        totalElements: data.totalElements || 0,
-        currentPage: data.number || 0,
-        size: data.size || 12,
-      })
-
-      const maiorId = Math.max(...imoveisArray.map((imovel: Imovel) => imovel.id))
-      if (ultimoId !== null && maiorId === ultimoId && page === paginationInfo.currentPage) {
-        return
-      }
-
-      const imoveisFormatados = imoveisArray.map((imovel: ImovelCompleto) => ({
-        id: imovel.id || 0,
-        titulo: imovel.nome_propriedade || "Sem título",
-        cidade: imovel.id_endereco?.cidade || "Cidade não informada",
-        qtdDormitorios: imovel.id_caracteristicasImovel?.numero_quartos || 0,
-        qtdSuite: imovel.id_caracteristicasImovel?.numero_suites || 0,
-        qtdBanheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
-        preco: imovel.valor_venda || 0,
-        codigo: imovel.codigo || 0,
-        tipo_transacao: imovel.tipo_transacao || "Indefinido",
-      }))
-
-      setImoveis(imoveisFormatados)
-      setUltimoId(maiorId)
+        currentPage: data.number,
+        totalPages: data.totalPages,
+        totalElements: data.totalElements,
+        size: data.size,
+      });
     } catch (error) {
-      console.error("Erro ao buscar imóveis:", error)
-      setError("Erro ao carregar imóveis. Por favor, tente novamente.")
+      console.error('Erro ao buscar imóveis:', error);
+      setImoveis([]);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [paginationInfo.size, ultimoId, paginationInfo.currentPage])
+  };
 
   const refreshData = async () => {
     try {
@@ -129,19 +115,19 @@ export function ListaImoveis() {
       setMostrarFiltros(false);
       setUltimoId(null);
       setPaginationInfo({
+        currentPage: 0,
         totalPages: 0,
         totalElements: 0,
-        currentPage: 0,
-        size: 12,
+        size: 10,
       });
       
+      const token = localStorage.getItem("token");
       const response = await fetch(`http://localhost:9090/imovel/getAll?page=0&size=10`, {
-        cache: "no-store",
         headers: {
-          "Cache-Control": "no-cache",
-          "Pragma": "no-cache",
-          "Expires": "0",
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
         },
+        cache: "no-store",
       });
 
       if (!response.ok) {
@@ -160,7 +146,7 @@ export function ListaImoveis() {
         totalPages: data.totalPages || 1,
         totalElements: data.totalElements || 0,
         currentPage: data.number || 0,
-        size: data.size || 12,
+        size: data.size || 10,
       });
 
 
@@ -186,20 +172,20 @@ export function ListaImoveis() {
   };
 
   useEffect(() => {
-    fetchImoveis();
-  }, [fetchImoveis]);
+    fetchImoveis(0);
+  }, []);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && newPage < paginationInfo.totalPages) {
-      fetchImoveis(newPage)
+      fetchImoveis(newPage);
     }
-  }
+  };
 
   useEffect(() => {
     if (imoveis.length > 0) {
-      fetchImoveis(0)
+      fetchImoveis(0);
     }
-  }, [tipoTransacao, fetchImoveis, imoveis.length])
+  }, [tipoTransacao]);
 
   const imoveisFiltrados =
     tipoTransacao === "Todos" ? imoveis : imoveis.filter((imovel) => imovel.tipo_transacao === tipoTransacao)

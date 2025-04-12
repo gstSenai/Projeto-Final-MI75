@@ -53,8 +53,8 @@ export function Header() {
                             <nav>
                                 <ul className="flex flex-row max-lg:text-base text-xl whitespace-nowrap md:gap-4 lg:gap-6 text-[#303030] max-md:hidden">
                                     <li><Link href="/">Início</Link></li>
-                                    <li><Link href="#">Propriedades</Link></li>
-                                    <li><Link href="#">Corretores</Link></li>
+                                    <li><Link href="/paginaImoveis">Propriedades</Link></li>
+                                    <li><Link href="/paginaCorretores">Corretores</Link></li>
                                     <li><Link href="/sobreNos">Sobre nós</Link></li>
                                 </ul>
                             </nav>
@@ -159,7 +159,7 @@ export function Header() {
                                             </div>
                                             <div className="w-full h-[1px] bg-white opacity-50"></div>
                                             <Link 
-                                                href="/perfil" 
+                                                href="/perfilUsuario" 
                                                 className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
                                             >
                                                 Perfil

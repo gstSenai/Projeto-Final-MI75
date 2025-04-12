@@ -90,7 +90,6 @@
 			<artifactId>aws-java-sdk-s3</artifactId>
 			<version>1.12.620</version>
 		</dependency>
-		<!-- For Maven -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
