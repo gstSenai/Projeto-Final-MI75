@@ -1,5 +1,10 @@
 "use client";
 
+import { useEffect, useState, useCallback } from "react"
+import request from "@/routes/request"
+
+import Image from 'next/image';
+
 import { Montserrat } from 'next/font/google';
 
 const montserrat = Montserrat({
@@ -8,9 +13,6 @@ const montserrat = Montserrat({
     display: 'swap',
 });
 
-import Image from 'next/image';
-import { useEffect, useState, useCallback } from "react"
-import request from "@/routes/request"
 
 
 interface BarraStatusProps {
