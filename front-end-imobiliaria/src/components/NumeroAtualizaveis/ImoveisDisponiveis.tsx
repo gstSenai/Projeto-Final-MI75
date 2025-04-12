@@ -11,7 +11,7 @@ export function ImoveisDisponiveis() {
         setIsLoading(true);
         try {
             const response = await request("GET", `http://localhost:9090/imovel/getAll`);
-
+            const total = response.size();
         } catch (error) {
             console.error("Erro ao buscar barra de status:", error);
         } finally {
