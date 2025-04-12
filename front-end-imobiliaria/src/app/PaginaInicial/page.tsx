@@ -1,6 +1,3 @@
-
-"use client"
-
 import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
 import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
@@ -20,13 +17,14 @@ const montserrat = Montserrat({
 });
 
 import Image from 'next/image';
+import { LoadingWrapper } from '@/components/loading/loadingServer';
 
 
 export default function PaginaInicial() {
 
 
     return (
-        <div>
+        <LoadingWrapper>
             <Header />
 
             <div className={`${montserrat.className} pt-8`}>
@@ -180,8 +178,7 @@ export default function PaginaInicial() {
                     </div>
                 </footer>
             </div>
-        </div>
+        </LoadingWrapper>
     );
 }
-
 

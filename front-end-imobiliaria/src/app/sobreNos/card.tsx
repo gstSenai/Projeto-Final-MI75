@@ -1,13 +1,15 @@
 import Image from "next/image";
+import { LoadingWrapper } from "@/components/loading/loadingServer";
 
 export default function SobreNos() {
-    return (
+  return (
+    <LoadingWrapper>
       <div className="relative bg-gray-100 min-h-screen flex justify-center p-6">
         {/* Seção Sobre Nós */}
         <div className="relative w-full max-w-5xl">
           <div className="relative rounded-lg overflow-hidden">
             <Image
-              src="/sobre-nos.jpg" 
+              src="/sobre-nos.jpg"
               alt="Sobre nós"
               className="w-full h-64 md:h-80 object-cover"
               width={100}
@@ -24,5 +26,6 @@ export default function SobreNos() {
           </div>
         </div>
       </div>
-    );
-  }
+    </LoadingWrapper>
+  );
+}

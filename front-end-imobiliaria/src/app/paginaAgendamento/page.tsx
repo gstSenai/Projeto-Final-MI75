@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Botao } from "@/components/botao"
 import request from "@/routes/request"
 import { z } from "zod"
+import { LoadingWrapper } from "@/components/loading/loadingServer"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -73,7 +74,7 @@ const AgendamentoProps = z.object({
     nome: z.string().min(1, { message: "O nome é obrigatório" }),
     sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
     cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
-    tipo_conta: z.string().min(1, {message: "Insira um Corretor"}),
+    tipo_conta: z.string().min(1, { message: "Insira um Corretor" }),
     telefone: z.string().min(10, { message: "Telefone inválido" }),
     data_nascimento: z.string(),
     email: z.string().email({ message: "E-mail inválido" }),
@@ -83,10 +84,6 @@ const AgendamentoProps = z.object({
 })
 
 type agendamentoProps = z.infer<typeof AgendamentoProps>
-
-
-
-
 
 export default function PaginaAgendamento() {
   const {
@@ -178,10 +175,8 @@ export default function PaginaAgendamento() {
 
 
   return (
-    <>
-      <header>
-        <Header />
-      </header>
+    <LoadingWrapper>
+      <Header />
       <Image
         className="absolute opacity-[7%] mt-auto xl:mt-[40%] ml-auto xl:ml-[2.5%] -z-10 invisible sm:invisible md:invisible lg:visible"
         src="/formularios/logoGrande.png"
@@ -257,10 +252,8 @@ export default function PaginaAgendamento() {
           </div>
         </section>
       </div>
-      <footer>
-        <Footer />
-      </footer>
-    </>
+      <Footer />
+    </LoadingWrapper>
   )
 }
 

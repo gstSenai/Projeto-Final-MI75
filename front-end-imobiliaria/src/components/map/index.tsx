@@ -136,13 +136,13 @@ export function ImovelMap({ markersId }: { markersId?: number }) {
     return (
         <main className="w-full min-h-screen bg-[#DFDAD0]">
             <div className="max-w-7xl mx-auto px-4 py-8">
-                <h1 className="text-3xl font-semibold mb-6 text-[#702632]">
+                <h1 className="text-3xl font-semibold mb-6 text-vermelho">
                     Imóveis em Jaraguá do Sul
                 </h1>
 
                 {isLoading && (
                     <div className="w-full h-[600px] flex items-center justify-center bg-white rounded-lg">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#702632]"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-vermelho"></div>
                     </div>
                 )}
 
@@ -177,17 +177,17 @@ export function ImovelMap({ markersId }: { markersId?: number }) {
                                 >
                                     <div
                                         className="relative group cursor-pointer"
-                                        onMouseEnter={() => setHoveredMarkerId(marker.id || null)} // ← Alterado
-                                        onMouseLeave={() => setHoveredMarkerId(null)} // ← Alterado
+                                        onMouseEnter={() => setHoveredMarkerId(marker.id || null)}
+                                        onMouseLeave={() => setHoveredMarkerId(null)}
                                         onClick={() => handleMarkerClick(marker.id!)}
                                     >
                                         <div className="relative flex flex-col items-center group cursor-pointer">
-                                            <div className="bg-[#702632] p-2 rounded-full shadow-md hover:bg-[#8a2e3d] transition-colors">
+                                            <div className="bg-vermelho p-2 rounded-full shadow-md hover:bg-[#8a2e3d] transition-colors">
                                                 <FiMapPin className="text-white w-5 h-5" />
                                             </div>
 
-                                            {hoveredMarkerId === marker.id && ( // ← Condição ajustada
-                                                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-white text-[#702632] px-4 py-2 rounded-lg shadow-lg text-sm w-52 z-10 animate-fade-in">
+                                            {hoveredMarkerId === marker.id && ( 
+                                                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-white text-vermelho px-4 py-2 rounded-lg shadow-lg text-sm w-52 z-10 animate-fade-in">
                                                     <div className="font-semibold">{marker.nome_propriedade}</div>
                                                     <div className="text-xs mt-1">
                                                         {marker.valor_venda.toLocaleString('pt-BR', {
@@ -210,7 +210,7 @@ export function ImovelMap({ markersId }: { markersId?: number }) {
                     {markers?.content.length ? (
                         <p>
                             Exibindo {markers.content.length} imóveis disponíveis
-                            <span className="ml-2 text-xs bg-[#702632] text-white px-2 py-1 rounded-full">
+                            <span className="ml-2 text-xs bg-vermelho text-white px-2 py-1 rounded-full">
                                 {new Date().toLocaleDateString('pt-BR')}
                             </span>
                         </p>

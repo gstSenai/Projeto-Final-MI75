@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { ImovelMap } from '@/components/map';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
+import { LoadingWrapper } from '@/components/loading/loadingServer';
 
 interface Imovel {
   id: number;
@@ -36,13 +37,13 @@ export default function MapPage() {
   const markerId = markers.length > 0 ? markers[0].id : 0;
 
   return (
-    <>
+    <LoadingWrapper>
       <Header />
       <div className='mt-10 mb-20'>
         <ImovelMap markersId={markerId} />
       </div>
       <Footer />
-    </>
+    </LoadingWrapper>
   );
 }
 

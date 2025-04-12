@@ -2,8 +2,9 @@ import { Montserrat } from 'next/font/google';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import BarraStatusImovel from '@/components/barraStatusImovel';
-import {Card} from '@/components/CardImovel';
+import { Card } from '@/components/cardImovel';
 import AgendarCorretor from '@/components/agendarCorretor';
+import { LoadingWrapper } from '@/components/loading/loadingServer';
 
 
 const montserrat = Montserrat({
@@ -14,7 +15,7 @@ const montserrat = Montserrat({
 
 export default function PaginaImovel() {
     return (
-        <>
+        <LoadingWrapper>
             <Header />
 
             <div className={`pt-24 px-8 max-lg:px-8 lg:px-8 xl:px-10 ${montserrat.className}`}>
@@ -47,7 +48,7 @@ export default function PaginaImovel() {
 
 
                 </section>
-                <footer>
+                <section>
                     <div className='pl-0 md:pl-0 lg:pl-20 text-center md:text-center lg:text-start flex flex-col items-center md:items-center lg:items-start'>
                         <h2 className='font-bold text-xl'>Imóveis semelhantes</h2>
                         <div className='bg-vermelho w-[110px] h-[3px]'></div>
@@ -57,9 +58,9 @@ export default function PaginaImovel() {
                         <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo={12131} />
                         <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo={12131} />
                     </div>
-                </footer>
+                </section>
             </div>
             <Footer />
-        </>
+        </LoadingWrapper>
     )
 }
