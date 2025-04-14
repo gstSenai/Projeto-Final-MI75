@@ -4,8 +4,10 @@ import "./globals.css"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Auth System",
-  description: "Authentication system with login and registration",
+  title: "HAV",
+  icons: {
+    icon: "/logos/logoLogin.png",
+  },    
 }
 
 export default function RootLayout({

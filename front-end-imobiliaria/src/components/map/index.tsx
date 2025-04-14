@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Map, Marker, NavigationControl, GeolocateControl } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { FiMapPin } from "react-icons/fi";
-import { useRouter } from "next/navigation"; // <- para redirecionar
+import { useRouter } from "next/navigation";
 
 interface Imovel {
     id?: number;
