@@ -33,9 +33,7 @@ const BotaoImageTexto: React.FC<BotaoImageTextoProps> = ({ src, texto, onClick }
           width={100}
           height={100}
         />
-        {/* Overlay escuro para melhorar a legibilidade do texto */}
         <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-          {/* Texto centralizado */}
           <span className="text-white text-2xl font-medium text-center">{texto}</span>
         </div>
       </button>

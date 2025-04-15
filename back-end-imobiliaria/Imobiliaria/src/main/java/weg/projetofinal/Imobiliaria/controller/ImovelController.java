@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import weg.projetofinal.Imobiliaria.model.dto.imovel.ImovelGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.imovel.ImovelPostRequestDTO;
@@ -42,6 +43,7 @@ public class ImovelController {
         Page<Imovel> imoveisPage = service.getAllImovel(pageable);
         return imoveisPage.map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO);
     }
+
 
     @GetMapping("/getById/{id}")
     @ResponseStatus(HttpStatus.OK)

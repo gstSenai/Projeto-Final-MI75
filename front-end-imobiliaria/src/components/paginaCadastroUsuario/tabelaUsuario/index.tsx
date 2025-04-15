@@ -91,19 +91,25 @@ export default function TabelaUsuario() {
   const getUsuario = async (searchNome?: string, searchEmail?: string, searchTipoConta?: string) => {
     setIsLoading(true)
     try {
-      const response = await fetch("http://localhost:9090/usuario/getAll");
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:9090/usuario/getAll", {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
       const data = await response.json();
-
+  
       const usuariosFiltrados = {
         content: data.content.filter((usuario: UsuarioProps) => {
           const matchNome = !searchNome || usuario.username.toLowerCase().includes(searchNome.toLowerCase());
           const matchEmail = !searchEmail || usuario.email.toLowerCase().includes(searchEmail.toLowerCase());
           const matchTipoConta = !searchTipoConta || usuario.tipo_conta.toLowerCase().includes(searchTipoConta.toLowerCase());
-
+  
           return matchNome && matchEmail && matchTipoConta;
         })
       };
-
+  
       setUsuariosFiltros(usuariosFiltrados);
     } catch (error) {
       console.error("Error fetching usuarios:", error)
@@ -112,6 +118,7 @@ export default function TabelaUsuario() {
       setIsLoading(false)
     }
   }
+  
 
   const refreshData = () => {
     setRefreshTrigger(prev => prev + 1)
