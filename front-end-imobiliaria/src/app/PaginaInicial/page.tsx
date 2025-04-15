@@ -2,21 +2,23 @@ import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDispo
 import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
 import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
 import { PesquisaPaginaInicial } from '@/components/PaginaInicial/PesquisaPaginaInicial';
-import { Montserrat } from 'next/font/google';
 import Carousel from '@/components/PaginaInicial/carrossel';
 import BotaoImageTexto from '@/components/PaginaInicial/BotaoImageTexto';
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { Card } from '@/components/cardImovel';
+import { Card } from '@/components/CardImovel/index';
 
+
+import { Montserrat } from 'next/font/google';
 const montserrat = Montserrat({
     subsets: ['latin'],
     weight: ['300', '800'],
     display: 'swap',
 });
-
 import Image from 'next/image';
+
+
 import { LoadingWrapper } from '@/components/loading/loadingServer';
 
 
