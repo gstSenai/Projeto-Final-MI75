@@ -178,6 +178,7 @@ export function DetalhesImovel() {
   }
 
   return (
+    <>
     <div className={`${montserrat.className} min-h-screen bg-cinza-claro`}>
 
       <div className="pl-10">
@@ -357,5 +358,7 @@ export function DetalhesImovel() {
         </div>
       </div>
     </div>
+    </>
   )
+  
 } 
