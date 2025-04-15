@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
+import { Card } from "../CardImovel"
 import { Card } from "@/components/CardImovel/index"
 import { Montserrat } from "next/font/google"
 import { FiltroImoveis } from "./botaoFiltro"

@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import PanZoom from "react-easy-panzoom";
 
 interface FormularioImagemProps {
   onImagesChange: (files: File[]) => void;
@@ -26,16 +25,13 @@ function ImageUpload({ imagePreview, handleFileChange, className = "", onClick, 
     >
       {imagePreview ? (
         <div className="w-full h-full">
-          {/* @ts-expect-error - Ignorando erro de tipo temporariamente */}
-          <PanZoom>
-            <Image
-              src={imagePreview}
-              alt="Pré-visualização"
-              className="w-full h-full object-cover"
-              width={100}
-              height={100}
-            />
-          </PanZoom>
+          <Image
+            src={imagePreview}
+            alt="Pré-visualização"
+            className="w-full h-full object-cover"
+            width={500}
+            height={500}
+          />
         </div>
       ) : (
         <span className="rounded-full px-3 py-1 bg-gray-400 text-white text-2xl">+</span>
@@ -56,6 +52,7 @@ export function FormularioImagem({ onImagesChange }: FormularioImagemProps) {
   const [imageFiles, setImageFiles] = useState<File[]>(Array(8).fill(null));
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [scale, setScale] = useState(1);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const file = event.target.files?.[0];
@@ -82,12 +79,24 @@ export function FormularioImagem({ onImagesChange }: FormularioImagemProps) {
     if (imagePreviews[index]) {
       setSelectedImageIndex(index);
       setIsFullscreen(true);
+      setScale(1); // Reset scale when opening fullscreen
     }
   };
 
   const handleFullscreenClick = () => {
     setIsFullscreen(false);
     setSelectedImageIndex(null);
+    setScale(1);
+  };
+
+  const handleZoomIn = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setScale(prev => Math.min(prev + 0.2, 3));
+  };
+
+  const handleZoomOut = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setScale(prev => Math.max(prev - 0.2, 0.5));
   };
 
   if (isFullscreen && selectedImageIndex !== null) {
@@ -97,16 +106,39 @@ export function FormularioImagem({ onImagesChange }: FormularioImagemProps) {
         onClick={handleFullscreenClick}
       >
         <div className="relative w-full h-full flex items-center justify-center">
-          <div className="w-full h-full">
-            {/* @ts-expect-error - Ignorando erro de tipo temporariamente */}
-            <PanZoom>
+          <div className="w-full h-full flex items-center justify-center overflow-hidden">
+            <div 
+              style={{ 
+                transform: `scale(${scale})`,
+                transition: 'transform 0.2s ease-out'
+              }}
+            >
               <Image
                 src={imagePreviews[selectedImageIndex] || ''}
                 alt="Visualização em tela cheia"
                 className="max-w-full max-h-full object-contain"
+                width={1200}
+                height={800}
               />
-            </PanZoom>
+            </div>
           </div>
+          
+          {/* Controles de zoom */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-4">
+            <button 
+              className="bg-white text-black rounded-full w-10 h-10 flex items-center justify-center text-xl"
+              onClick={handleZoomOut}
+            >
+              -
+            </button>
+            <button 
+              className="bg-white text-black rounded-full w-10 h-10 flex items-center justify-center text-xl"
+              onClick={handleZoomIn}
+            >
+              +
+            </button>
+          </div>
+
           <button 
             className="absolute top-4 right-4 text-white text-2xl bg-red-500 rounded-full w-10 h-10 flex items-center justify-center"
             onClick={handleFullscreenClick}

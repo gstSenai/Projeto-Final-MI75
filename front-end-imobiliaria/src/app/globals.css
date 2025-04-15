@@ -5,6 +5,8 @@
 :root {
   --background: #DFDAD0;
   --foreground: #171717;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -70,5 +72,80 @@ body {
 
 .mapboxgl-ctrl button:hover {
     background-color: #f3f4f6 !important;
+}
+
+@layer base {
+  .text-primary {
+    color: var(--primary);
+  }
+  
+  .bg-primary {
+    background-color: var(--primary);
+  }
+  
+  .hover\:bg-primary-dark:hover {
+    background-color: var(--primary-dark);
+  }
+}
+
+/* Estilos para o carrossel */
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.carousel-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 9999px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.carousel-button:hover {
+  background: white;
+}
+
+.carousel-button-prev {
+  left: 1rem;
+}
+
+.carousel-button-next {
+  right: 1rem;
+}
+
+.carousel-dots {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.carousel-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.5);
+  transition: background-color 0.2s;
+}
+
+.carousel-dot.active {
+  background: white;
 }
 
