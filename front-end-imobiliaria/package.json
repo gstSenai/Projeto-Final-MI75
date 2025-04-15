@@ -27,7 +27,7 @@
     "react-hook-form": "^7.55.0",
     "react-icons": "^5.5.0",
     "react-input-mask": "^2.0.4",
-    "react-map-gl": "^7.1.5",
+    "react-map-gl": "^7.1.9",
     "react-number-format": "^5.4.3",
     "recharts": "^2.15.2",
     "swiper": "^11.2.5",
