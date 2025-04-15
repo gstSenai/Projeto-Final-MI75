@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +44,7 @@ public class ImagemController {
                 .map(ImagemMapper.INSTANCE::imagemToImagemGetResponseDTO);
     }
 
-    @GetMapping("getById/{id}")
+    @GetMapping("/getById/{id}")
     public ImagemGetResponseDTO getById(@PathVariable Integer id) {
         Imagem imagem = imagemService.getByIdImagem(id);
         return ImagemMapper.INSTANCE.imagemToImagemGetResponseDTO(imagem);
@@ -59,5 +60,18 @@ public class ImagemController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
         imagemService.deleteImagem(id);
+    }
+
+    @GetMapping("/imagem/{nomeArquivo}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<byte[]> imagemImovel(@PathVariable String nomeArquivo) {
+        byte[] imagemBytes = imagemService.downloadImagem(nomeArquivo);
+        if (imagemBytes != null) {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(imagemBytes);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

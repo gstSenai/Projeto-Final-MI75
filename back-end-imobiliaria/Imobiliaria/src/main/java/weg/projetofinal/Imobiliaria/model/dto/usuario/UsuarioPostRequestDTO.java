@@ -9,14 +9,10 @@ import java.util.Date;
 
 public record UsuarioPostRequestDTO(
         Integer id,
-        @NotBlank String nome,
+        @NotBlank String username,
         @NotBlank String sobrenome,
-        @CPF @NotBlank String cpf,
         @NotBlank String tipo_conta,
-        @NotBlank String telefone,
-        Date data_nascimento,
         @Email @NotBlank String email,
-        @NotBlank @Size(min = 6) String senha,
-        String imagem_usuario,
-        Integer idEnderecoUsuario
+        @NotBlank @Size(min = 6) String password,
+        String imagem_usuario
 ) {}

@@ -4,13 +4,16 @@ import Image from "next/image"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Montserrat } from "next/font/google"
-import Calendario from "@/components/Calendario"
-import { FormularioInput } from "@/components/Calendario/selecaoData"
+import Calendario from "@/components/calendario"
+import { FormularioInput } from "@/components/calendario/selecaoHorario"
 import { useForm } from "react-hook-form"
-import { useEffect, useState } from "react"
-import request from "@/routes/request"
-import { Botao } from "@/components/botao"
+import { useEffect, useState, useCallback } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
 
+import { Botao } from "@/components/botao"
+import request from "@/routes/request"
+import { z } from "zod"
+import { LoadingWrapper } from "@/components/loading/loadingServer"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -25,19 +28,119 @@ interface UserProps {
   sobrenome: string
 }
 
-// Remova a estrutura ResponseProps porque não existe um "content"
-type ResponseProps = UserProps[]
+interface AgendamentoResponse {
+  horario: string;
+}
 
+const AgendamentoProps = z.object({
+  id: z.number().optional(),
+  data: z.date(),
+  horario: z.date(),
+  id_Imovel: z.object({
+    id: z.number().optional(),
+    codigo: z.coerce.number().optional(),
+    nome_propriedade: z.string().min(1, { message: "Nome da propriedade é obrigatório" }),
+    tipo_transacao: z.string().min(1, { message: "Tipo de transação é obrigatório" }),
+    valor_venda: z.coerce.number().min(1, { message: "Valor de venda é obrigatório" }),
+    tipo_imovel: z.string().min(1, { message: "Tipo de imóvel é obrigatório" }),
+    status_imovel: z.string().min(1, { message: "Status do imóvel é obrigatório" }),
+    valor_promocional: z.coerce.number().min(1, { message: "Valor promocional é obrigatório" }),
+    test_destaque: z.string().optional(),
+    test_visibilidade: z.string().optional(),
+    destaque: z.boolean().default(false),
+    visibilidade: z.boolean().default(false),
+    valor_iptu: z.coerce.number().min(1, { message: "Valor do IPTU é obrigatório" }),
+    condominio: z.coerce.number().min(1, { message: "Valor do condomínio é obrigatório" }),
+    area_construida: z.coerce.number().min(1, { message: "Área construída é obrigatória" }),
+    area_terreno: z.coerce.number().min(1, { message: "Área do terreno é obrigatória" }),
+    descricao: z.string().optional(),
+  }),
+  id_Usuario: z.object({
+    id: z.number().optional(),
+    nome: z.string().min(1, { message: "O nome é obrigatório" }),
+    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+    cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
+    tipo_conta: z.string().min(1, {
+      message: "Selecione um tipo de conta válido",
+    }),
+    telefone: z.string().min(10, { message: "Telefone inválido" }),
+    data_nascimento: z.string(),
+    email: z.string().email({ message: "E-mail inválido" }),
+    senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+    idEnderecoUsuario: z.number().optional(),
+  }),
+  id_Corretor: z.object({
+    id: z.number().optional(),
+    nome: z.string().min(1, { message: "O nome é obrigatório" }),
+    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+    cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
+    tipo_conta: z.string().min(1, { message: "Insira um Corretor" }),
+    telefone: z.string().min(10, { message: "Telefone inválido" }),
+    data_nascimento: z.string(),
+    email: z.string().email({ message: "E-mail inválido" }),
+    senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+    idEnderecoUsuario: z.number().optional(),
+  }),
+})
 
-
+type agendamentoProps = z.infer<typeof AgendamentoProps>
 
 export default function PaginaAgendamento() {
-  const [usuarios, setUsuarios] = useState<ResponseProps | null>(null)
+  const {
+    register, handleSubmit, watch
+  } = useForm<agendamentoProps>({
+    resolver: zodResolver(AgendamentoProps),
+  })
   const [isLoading, setIsLoading] = useState(false)
+  const [agendamentoSucesso, setAgendamentoSucesso] = useState(false);
+  const [imovelId] = useState(1);
+  const [horariosOcupados, setHorariosOcupados] = useState<string[]>([]);
+  const [usuarios, setUsuarios] = useState<UserProps[]>([]);
+  const [dataSelecionada,] = useState<Date>(new Date());
+
+  const verificarHorariosOcupados = useCallback(async (data: Date) => {
+    try {
+      const response = await request(
+        "GET",
+        `http://localhost:9090/agendamento/imovel/${imovelId}/data/${data.toISOString()}`
+      );
+      setHorariosOcupados((response as AgendamentoResponse[]).map((a) => a.horario));
+    } catch (error) {
+      console.error("Erro ao verificar horários ocupados:", error);
+    }
+  }, [imovelId]);
+
+  useEffect(() => {
+    verificarHorariosOcupados(dataSelecionada);
+  }, [verificarHorariosOcupados, dataSelecionada]);
 
 
+  const handleAgendarVisita = async () => {
+    if (!watch('id_Corretor') || !watch('horario')) {
+      alert('Por favor, selecione uma data, horário e corretor');
+      return;
+    }
 
-  const getUsuario = async () => {
+    setIsLoading(true);
+    try {
+      const agendamentoData = {
+        corretor: watch('id_Corretor'),
+        horario: watch('horario'),
+        data: new Date(),
+        imovelId: imovelId
+      };
+      await request("POST", "http://localhost:9090/agendamento", agendamentoData);
+      setAgendamentoSucesso(true);
+    } catch (error) {
+      console.error("Erro ao agendar visita:", error);
+      alert('Erro ao agendar visita. Horário pode já estar ocupado.');
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+
+  const getUsuario = useCallback(async () => {
     if (isLoading) return
 
     setIsLoading(true)
@@ -54,37 +157,26 @@ export default function PaginaAgendamento() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [isLoading]);
 
 
 
 
 
   useEffect(() => {
-    getUsuario()
-  }, []) // Executa apenas uma vez ao montar o componente
+    getUsuario();
+  }, [getUsuario]);
 
 
-
-
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm()
-
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: unknown) => {
     console.log(data)
   }
 
 
 
   return (
-    <>
-      <header>
-        <Header />
-      </header>
+    <LoadingWrapper>
+      <Header />
       <Image
         className="absolute opacity-[7%] mt-auto xl:mt-[40%] ml-auto xl:ml-[2.5%] -z-10 invisible sm:invisible md:invisible lg:visible"
         src="/formularios/logoGrande.png"
@@ -118,20 +210,9 @@ export default function PaginaAgendamento() {
                 </h2>
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center gap-8 mt-6 mx-8 lg:mx-10 xl:mx-16 2xl:mx-32">
 
-
-                  <FormularioInput
-                    placeholder="Horários:"
-                    name="Horario.dia"
-                    interName="Horário"
-                    register={register}
-                    customizacaoClass="w-full p-2 border border-gray-500 rounded"
-                    required
-                    options={["8:00", "10:00", "12:00", "14:00", "16:00", "18:00"]}
-                  />
-
                   <FormularioInput
                     placeholder="Corretores:"
-                    name="Corretores.disponivel"
+                    name="id_Corretor"
                     interName="Corretor"
                     register={register}
                     customizacaoClass="w-full p-2 border border-gray-500 rounded"
@@ -139,19 +220,54 @@ export default function PaginaAgendamento() {
                     options={usuarios?.map(({ nome, sobrenome }) => `${nome} ${sobrenome}`) || []}
                   />
 
+                  <FormularioInput
+                    placeholder="Horários:"
+                    name="horario"
+                    interName="Horário"
+                    register={register}
+                    customizacaoClass="w-full p-2 border border-gray-500 rounded"
+                    required
+                    options={["8:00", "10:00", "12:00", "14:00", "16:00", "18:00"]
+                      .filter(horario => !horariosOcupados.includes(horario))}
+                  />
 
 
-                  <Botao className=" xl:w-[60%] 2xl:w-[50%]" texto="Agendar visita"/>
+                  <Botao
+                    className="xl:w-[60%] 2xl:w-[50%]"
+                    texto="Agendar visita"
+                    onClick={handleAgendarVisita}
+                    disabled={agendamentoSucesso}
+
+                  />  {agendamentoSucesso && (
+                    <div className="text-green-600 text-center mt-4">
+                      Visita agendada com sucesso! Este horário não estará mais disponível.
+                    </div>
+                  )}
+
+
+
                 </form>
               </div>
             </div>
           </div>
         </section>
       </div>
-      <footer>
-        <Footer />
-      </footer>
-    </>
+      <Footer />
+    </LoadingWrapper>
   )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -1,19 +1,9 @@
-import { Montserrat } from 'next/font/google';
-import Link from 'next/link';
+
+import PaginaInicial from "./paginaInicial/page";
 
 
-// Carregando a fonte Inter
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['400', '800'],
-  display: 'swap',
-});
-
-export default function PaginaEditor() {
+export default function pagina() {
     return (
-        <div className={`flex gap-14 text-2xl font-montserrat`}>
-            <Link href="./login">Login</Link>
-            <Link href="./cadastro">Cadastro</Link> 
-        </div>
+            <PaginaInicial/>
     );
 }

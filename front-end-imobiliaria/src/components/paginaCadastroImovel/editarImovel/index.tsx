@@ -32,7 +32,7 @@ const ImovelProps = z.object({
     area_construida: z.coerce.number().min(1, { message: "Área construída é obrigatória" }),
     area_terreno: z.coerce.number().min(1, { message: "Área do terreno é obrigatória" }),
     descricao: z.string().optional(),
-    idEndereco: z.object({
+    id_endereco: z.object({
         id: z.number(),
         cep: z.string(),
         rua: z.string(),
@@ -42,7 +42,7 @@ const ImovelProps = z.object({
         uf: z.string(),
         complemento: z.string().nullable().optional()
     }),
-    id_caracteristicaImovel: z.object({
+    id_caracteristicasImovel: z.object({
         id: z.number(),
         numero_quartos: z.number(),
         numero_banheiros: z.number(),
@@ -94,6 +94,9 @@ interface EditarImovelProps {
 }
 
 export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps) {
+    console.log("🚀 Componente EditarImovel montado")
+    console.log("📋 Imóveis selecionados:", selectedImoveis)
+
     const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormData>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -113,7 +116,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                 area_terreno: 0,
                 nome_propriedade: "",
                 descricao: "",
-                idEndereco: {
+                id_endereco: {
                     id: 0,
                     cep: "",
                     rua: "",
@@ -123,20 +126,22 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                     uf: "",
                     complemento: undefined
                 },
-                id_caracteristicaImovel: {
+                id_caracteristicasImovel: {
+                    id: 0,
+                    numero_quartos: 0,
+                    numero_banheiros: 0,
+                    numero_suites: 0,
+                    numero_vagas: 0,
                     piscina: false,
+                    numero_salas: 0
                 }
             },
         },
     })
+    
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [showEditTrue, setShowEditTrue] = useState(false)
-    const [lastAddedImovel, setLastAddedImovel] = useState<ImovelProps | null>(null)
     const [showModal, setShowModal] = useState(true)
-    const [isEditar] = useState(false)
-    const [showEditImovel, setShowEditImovel] = useState(false)
-    const [showEditEndereco, setShowEditEndereco] = useState(false)
-    const [refreshTrigger, setRefreshTrigger] = useState(0)
+    const [editadoComSucesso, setEditadoComSucesso] = useState(false)
 
     const editarImovel = async (data: Partial<ImovelProps>) => {
         try {
@@ -144,13 +149,13 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
 
             const responses = await Promise.all(
                 selectedImoveis.map(async (imovel) => {
-                    const caracteristicasImovel = data.id_caracteristicaImovel;
+                    const caracteristicasImovel = data.id_caracteristicasImovel;
 
                     const imoveisAtualizado = {
                         ...imovel,
                         ...data,
-                        enderecoUsuario: imovel.idEndereco,
-                        id_caracteristicaImovel: caracteristicasImovel
+                        enderecoUsuario: imovel.id_endereco,
+                        id_caracteristicasImovel: caracteristicasImovel
                     }
 
                     if (caracteristicasImovel) {
@@ -159,9 +164,9 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                             `http://localhost:9090/caracteristicaImovel/create`,
                             caracteristicasImovel
                         );
-                        
+
                         if (caracteristicasResponse) {
-                            imoveisAtualizado.id_caracteristicaImovel = caracteristicasResponse;
+                            imoveisAtualizado.id_caracteristicasImovel = caracteristicasResponse;
                         }
                     }
 
@@ -175,76 +180,13 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
         }
     }
 
-    const editarCaracImovel = async (data: ImovelCaracteristicas) => {
-        try {
-            for (const imovel of selectedImoveis) {
-                if (!imovel.id_caracteristicaImovel) {
-                    console.warn("⚠️ Imóvel sem características cadastradas:", imovel)
-                    continue
-                }
-
-                const imovelCaracteristicasAtualizado = {
-                    id: imovel.id_caracteristicaImovel.id,
-                    numero_quartos: imovel.id_caracteristicaImovel.numero_quartos,
-                    numero_banheiros: imovel.id_caracteristicaImovel.numero_banheiros,
-                    numero_suites: imovel.id_caracteristicaImovel.numero_suites,
-                    numero_vagas: imovel.id_caracteristicaImovel.numero_vagas,
-                    piscina: imovel.id_caracteristicaImovel.piscina,
-                    numero_salas: imovel.id_caracteristicaImovel.numero_salas,
-                }
-
-                const response = await request(
-                    "PUT",
-                    `http://localhost:9090/imovel/update/${imovel.id_caracteristicaImovel.id}`,
-                    imovelCaracteristicasAtualizado,
-                )
-                console.log("✅ Caracteristicas do imóvel atualizado com sucesso:", response)
-                return response
-            }
-        } catch (error) {
-            console.error("Erro ao editar imóvel:", error)
-            throw error
-        }
-    }
-
-    const editarEndereco = async (data: EnderecoImovelProps) => {
-        try {
-            console.log("📤 Enviando endereço do usuário:", data)
-
-            for (const imovel of selectedImoveis) {
-                if (!imovel.idEndereco || !imovel.idEndereco.id) {
-                    console.warn("⚠️ Usuário sem endereço cadastrado:", imovel)
-                    continue
-                }
-
-                const enderecoAtualizado = {
-                    idImovel: imovel.idEndereco.id,
-                    cep: data.cep,
-                    rua: data.rua,
-                    numero: data.numero,
-                    bairro: data.bairro,
-                    cidade: data.cidade,
-                    uf: data.uf,
-                    complemento: data.complemento || "",
-                }
-
-                const response = await request(
-                    "PUT",
-                    `http://localhost:9090/endereco/update/${imovel.idEndereco.id}`,
-                    enderecoAtualizado,
-                )
-                console.log("✅ Endereço atualizado com sucesso:", response)
-                return response
-            }
-        } catch (error) {
-            console.error("❌ Erro ao editar endereço:", error)
-            throw error
-        }
-    }
-
     const onSubmitEditImovel: SubmitHandler<FormData> = async (data) => {
-        console.log("Dados recebidos no submit:", data);
-        if (isSubmitting) return
+        console.log("📝 Iniciando submissão do formulário")
+        console.log("📦 Dados recebidos:", data)
+        if (isSubmitting) {
+            console.log("⚠️ Submissão já em andamento")
+            return
+        }
 
         try {
             setIsSubmitting(true)
@@ -254,7 +196,17 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
             const { imovel, imovelCaracteristicas } = data
 
             const imovelSelecionado = selectedImoveis[0]
-            const imovelSelecionadoEndereco = selectedImoveis[0].idEndereco
+            const imovelSelecionadoEndereco = selectedImoveis[0].id_endereco
+
+            const caracteristicasAtualizadas = {
+                id: imovelSelecionado.id_caracteristicasImovel?.id || 0,
+                numero_quartos: imovelCaracteristicas.numero_quartos || 0,
+                numero_banheiros: imovelCaracteristicas.numero_banheiros || 0,
+                numero_suites: imovelCaracteristicas.numero_suites || 0,
+                numero_vagas: imovelCaracteristicas.numero_vagas || 0,
+                piscina: imovelCaracteristicas.test_piscina === "Sim",
+                numero_salas: imovelCaracteristicas.numero_salas || 0
+            }
 
             const imovelAtualizado = {
                 ...imovelSelecionado,
@@ -271,18 +223,10 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                 area_construida: imovel.area_construida || 0,
                 area_terreno: imovel.area_terreno || 0,
                 descricao: imovel.descricao || "",
-                idEndereco: {
+                id_endereco: {
                     ...imovelSelecionadoEndereco,
                 },
-                id_caracteristicaImovel: {
-                    ...imovelSelecionado.id_caracteristicaImovel,
-                    numero_quartos: imovelCaracteristicas.numero_quartos,
-                    numero_banheiros: imovelCaracteristicas.numero_banheiros,
-                    numero_suites: imovelCaracteristicas.numero_suites,
-                    numero_vagas: imovelCaracteristicas.numero_vagas,
-                    piscina: imovelCaracteristicas.test_piscina === "Sim",
-                    numero_salas: imovelCaracteristicas.numero_salas
-                }
+                id_caracteristicasImovel: caracteristicasAtualizadas
             }
 
             console.log("Dados do imóvel a serem enviados:", imovelAtualizado)
@@ -290,16 +234,17 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
             const response = await editarImovel(imovelAtualizado)
 
             if (response) {
-                setLastAddedImovel(response[0])
                 setShowModal(false)
-                setShowEditTrue(true)
+                setEditadoComSucesso(true)
+
+                setTimeout(() => {
+                    setEditadoComSucesso(false)
+                    if (onComplete) onComplete()
+                }, 5000)
             } else {
-                throw new Error("Erro ao criar imóvel, id não retornado.")
+                throw new Error("Erro ao editar imóvel, id não retornado.")
             }
 
-            if (onComplete) onComplete()
-
-            setTimeout(() => setShowEditTrue(false), 5000)
         } catch (error) {
             console.error("Erro ao editar Imóvel:", error)
             alert(`Erro ao editar imóvel: ${error instanceof Error ? error.message : "Erro desconhecido"}`)
@@ -308,83 +253,26 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
         }
     }
 
-    const onSubmitEditUsersEndereco: SubmitHandler<{ endereco: EnderecoImovelProps }> = async (data) => {
-        if (isSubmitting) return
-
-        try {
-            setIsSubmitting(true)
-
-            console.log("Dados recebidos para validação:", data)
-
-            const imovelSelecionado = selectedImoveis[0]
-
-            const endereco = {
-                ...imovelSelecionado,
-                idImovel: imovelSelecionado.id,
-                cep: data.endereco.cep,
-                rua: data.endereco.rua,
-                numero: data.endereco.numero,
-                bairro: data.endereco.bairro,
-                cidade: data.endereco.cidade,
-                uf: data.endereco.uf,
-                complemento: data.endereco.complemento,
-            }
-
-            console.log("Dados do usuário a serem enviados:", data)
-
-            const response = await editarEndereco(endereco)
-            console.log("Resposta do servidor:", response)
-            if (response) {
-                setShowModal(false)
-                setShowEditTrue(true)
-            } else {
-                console.error("Erro: Resposta inválida ao adicionar usuário.")
-            }
-
-            if (onComplete) onComplete()
-
-            setTimeout(() => setShowEditTrue(false), 5000)
-        } catch (error) {
-            console.error("Erro ao editar usuário:", error)
-            alert(`Erro ao editar usuário: ${error instanceof Error ? error.message : "Erro desconhecido"}`)
-        } finally {
-            setIsSubmitting(false)
-        }
-    }
-
-    const refreshData = () => {
-        setRefreshTrigger((atualizar) => atualizar + 1)
-    }
-
-    const handleEditarImovelDados = () => {
-        setShowEditImovel(!showEditImovel)
-        setShowEditEndereco(false)
-        if (showEditImovel) {
-            refreshData()
-        }
-    }
-
-    const handleEditarImovelEndereco = () => {
-        setShowEditEndereco(!showEditEndereco)
-        setShowEditImovel(false)
-        if (showEditEndereco) {
-            refreshData()
-        }
-    }
-
     const handleCancel = () => {
+        console.log("❌ Modal cancelado")
         setShowModal(false)
         if (onComplete) {
+            console.log("✅ Callback onComplete executado")
             onComplete()
         }
     }
 
     useEffect(() => {
-        console.log(selectedImoveis)
-        console.log(errors)
+        console.log("🔄 useEffect - selectedImoveis:", selectedImoveis)
+        console.log("❌ Erros do formulário:", errors)
+        
+        if (selectedImoveis.length > 0) {
+            console.log("🏠 Primeiro imóvel selecionado:", selectedImoveis[0])
+        }
     }, [selectedImoveis, errors])
 
     useEffect(() => {
+        console.log("🔄 useEffect - selectedImoveis:", selectedImoveis[0])
         if (selectedImoveis.length > 0) {
             const imovel = selectedImoveis[0];
 
@@ -392,28 +280,28 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                 ...imovel,
                 test_destaque: imovel.destaque ? "Sim" : "Não",
                 test_visibilidade: imovel.visibilidade ? "Pública" : "Privada",
-                id_caracteristicaImovel: imovel.id_caracteristicaImovel
+                id_caracteristicasImovel: imovel.id_caracteristicasImovel
             });
-            
+
             setValue("endereco", {
-                cep: imovel.idEndereco?.cep || "",
-                rua: imovel.idEndereco?.rua || "",
-                numero: imovel.idEndereco?.numero || "",
-                bairro: imovel.idEndereco?.bairro || "",
-                cidade: imovel.idEndereco?.cidade || "",
-                uf: imovel.idEndereco?.uf || "",
-                complemento: imovel.idEndereco?.complemento || ""
+                cep: imovel.id_endereco?.cep || "",
+                rua: imovel.id_endereco?.rua || "",
+                numero: imovel.id_endereco?.numero || "",
+                bairro: imovel.id_endereco?.bairro || "",
+                cidade: imovel.id_endereco?.cidade || "",
+                uf: imovel.id_endereco?.uf || "",
+                complemento: imovel.id_endereco?.complemento || ""
             });
-            
+
             setValue("imovelCaracteristicas", {
-                id: imovel.id_caracteristicaImovel?.id || 0,
-                numero_quartos: imovel.id_caracteristicaImovel?.numero_quartos || 0,
-                numero_banheiros: imovel.id_caracteristicaImovel?.numero_banheiros || 0,
-                numero_suites: imovel.id_caracteristicaImovel?.numero_suites || 0,
-                numero_vagas: imovel.id_caracteristicaImovel?.numero_vagas || 0,
-                test_piscina: imovel.id_caracteristicaImovel?.piscina ? "Sim" : "Não",
-                piscina: imovel.id_caracteristicaImovel?.piscina || false,
-                numero_salas: imovel.id_caracteristicaImovel?.numero_salas || 0
+                id: imovel.id_caracteristicasImovel?.id || 0,
+                numero_quartos: imovel.id_caracteristicasImovel?.numero_quartos || 0,
+                numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
+                numero_suites: imovel.id_caracteristicasImovel?.numero_suites || 0,
+                numero_vagas: imovel.id_caracteristicasImovel?.numero_vagas || 0,
+                test_piscina: imovel.id_caracteristicasImovel?.piscina ? "Sim" : "Não",
+                piscina: imovel.id_caracteristicasImovel?.piscina || false,
+                numero_salas: imovel.id_caracteristicasImovel?.numero_salas || 0
             });
         }
     }, [selectedImoveis, setValue]);
@@ -425,7 +313,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                     <div className="bg-white rounded-2xl p-8 max-w-3xl w-full">
                         <div className="flex justify-start w-1/12">
                             <button
-                                className="bg-[#DFDAD0] py-2 px-4 rounded-full text-vermelho lg:text-2xl transition-transform duration-300 hover:scale-110
+                                className="bg-[#DFDAD0] px-3 py-1 rounded-full text-vermelho lg:text-base transition-transform duration-300 hover:scale-110
                              hover:bg-vermelho hover:text-[#DFDAD0]"
                                 onClick={handleCancel}
                             >
@@ -445,7 +333,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                     </div>
                                 </div>
                                 <div>
-                                    <form className="space-y-4">
+                                    <form onSubmit={handleSubmit(onSubmitEditImovel)} className="space-y-4">
                                         {selectedImoveis.length > 0 && (
                                             <div>
                                                 {selectedImoveis.map((imovel) => (
@@ -458,6 +346,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     name="imovel.nome_propriedade"
                                                                     value={imovel.nome_propriedade}
                                                                     register={register}
+                                                                    errors={errors?.imovel?.nome_propriedade}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                 />
@@ -470,6 +359,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     name="imovel.tipo_imovel"
                                                                     value={imovel.tipo_imovel}
                                                                     register={register}
+                                                                    errors={errors?.imovel?.tipo_imovel}
                                                                     options={["Casa", "Apartamento", "Terreno"]}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
@@ -483,6 +373,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     name="imovel.tipo_transacao"
                                                                     value={imovel.tipo_transacao}
                                                                     register={register}
+                                                                    errors={errors?.imovel?.tipo_transacao}
                                                                     options={["Venda", "Locação", "Venda e Locação"]}
                                                                     required
                                                                     custumizacaoClass="w-full p-2 border border-gray-500 rounded"
@@ -496,6 +387,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     name="imovel.valor_venda"
                                                                     value={imovel.valor_venda}
                                                                     register={register}
+                                                                    errors={errors?.imovel?.valor_venda}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                 />
@@ -508,6 +400,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     name="imovel.valor_promocional"
                                                                     value={imovel.valor_promocional}
                                                                     register={register}
+                                                                    errors={errors?.imovel?.valor_promocional}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                 />
@@ -520,6 +413,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     name="imovel.test_destaque"
                                                                     value={imovel.destaque ? "Sim" : "Não"}
                                                                     register={register}
+                                                                    errors={errors?.imovel?.test_destaque}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                     options={["Sim", "Não"]}
@@ -533,6 +427,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     name="imovel.test_visibilidade"
                                                                     value={imovel.visibilidade ? "Pública" : "Privada"}
                                                                     register={register}
+                                                                    errors={errors?.imovel?.test_visibilidade}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                     options={["Pública", "Privada"]}
@@ -546,6 +441,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     name="imovel.valor_iptu"
                                                                     value={imovel.valor_promocional}
                                                                     register={register}
+                                                                    errors={errors?.imovel?.valor_iptu}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                 />
@@ -558,6 +454,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     name="imovel.condominio"
                                                                     value={imovel.condominio}
                                                                     register={register}
+                                                                    errors={errors?.imovel?.condominio}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                 />
@@ -570,6 +467,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     name="imovel.status_imovel"
                                                                     value={imovel.status_imovel}
                                                                     register={register}
+                                                                    errors={errors?.imovel?.status_imovel}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                     options={["Vendido", "Disponivel"]}
@@ -584,6 +482,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     value={imovel.area_construida}
                                                                     icon={{ type: "areaCT" }}
                                                                     register={register}
+                                                                    errors={errors?.imovel?.area_construida}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                 />
@@ -597,6 +496,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     icon={{ type: "areaCT" }}
                                                                     value={imovel.area_terreno}
                                                                     register={register}
+                                                                    errors={errors?.imovel?.area_terreno}
                                                                     required
                                                                     custumizacaoClass="w-full p-2 border border-gray-500 rounded"
                                                                 />
@@ -607,8 +507,9 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     label="Número de Quartos:"
                                                                     placeholder="Número de Quartos:"
                                                                     name="imovelCaracteristicas.numero_quartos"
-                                                                    value={imovel.id_caracteristicaImovel?.numero_quartos || 0}
+                                                                    value={imovel.id_caracteristicasImovel?.numero_quartos || 0}
                                                                     register={register}
+                                                                    errors={errors?.imovelCaracteristicas?.numero_quartos}
                                                                     icon={{ type: "dormitorio" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                 />
@@ -619,8 +520,9 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     label="Número de Suítes:"
                                                                     placeholder="Número de Suítes:"
                                                                     name="imovelCaracteristicas.numero_suites"
-                                                                    value={imovel.id_caracteristicaImovel?.numero_suites || 0}
+                                                                    value={imovel.id_caracteristicasImovel?.numero_suites || 0}
                                                                     register={register}
+                                                                    errors={errors?.imovelCaracteristicas?.numero_suites}
                                                                     icon={{ type: "suite" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                 />
@@ -631,8 +533,9 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     label="Contém Piscina:"
                                                                     placeholder="Contém Piscina:"
                                                                     name="imovelCaracteristicas.test_piscina"
-                                                                    value={imovel.id_caracteristicaImovel?.piscina ? "Sim" : "Não"}
+                                                                    value={imovel.id_caracteristicasImovel?.piscina ? "Sim" : "Não"}
                                                                     register={register}
+                                                                    errors={errors?.imovelCaracteristicas?.test_piscina}
                                                                     icon={{ type: "praia" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                     options={["Sim", "Não"]}
@@ -644,8 +547,9 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     label="Número de Banheiros:"
                                                                     placeholder="Número de Banheiros:"
                                                                     name="imovelCaracteristicas.numero_banheiros"
-                                                                    value={imovel.id_caracteristicaImovel?.numero_banheiros || 0}
+                                                                    value={imovel.id_caracteristicasImovel?.numero_banheiros || 0}
                                                                     register={register}
+                                                                    errors={errors?.imovelCaracteristicas?.numero_banheiros}
                                                                     icon={{ type: "banheiro" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                 />
@@ -656,8 +560,9 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     label="Vagas de Garagem:"
                                                                     placeholder="Vagas de Garagem:"
                                                                     name="imovelCaracteristicas.numero_vagas"
-                                                                    value={imovel.id_caracteristicaImovel?.numero_vagas || 0}
+                                                                    value={imovel.id_caracteristicasImovel?.numero_vagas || 0}
                                                                     register={register}
+                                                                    errors={errors?.imovelCaracteristicas?.numero_vagas}
                                                                     icon={{ type: "garagem" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                 />
@@ -668,8 +573,9 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     label="Número de Salas:"
                                                                     placeholder="Número de Salas:"
                                                                     name="imovelCaracteristicas.numero_salas"
-                                                                    value={imovel.id_caracteristicaImovel?.numero_salas || 0}
+                                                                    value={imovel.id_caracteristicasImovel?.numero_salas || 0}
                                                                     register={register}
+                                                                    errors={errors?.imovelCaracteristicas?.numero_salas}
                                                                     icon={{ type: "sala" }}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                 />
@@ -682,14 +588,25 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                     name="imovel.descricao"
                                                                     value={imovel.descricao || ""}
                                                                     register={register}
+                                                                    errors={errors?.imovel?.descricao}
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
                                                                 />
                                                             </div>
                                                         </div>
                                                         <div className="flex justify-end pt-6">
                                                             <div className="flex justify-around items-center gap-10 w-[50%]">
-                                                                <Botao onClick={handleCancel} texto="Cancelar" />
-                                                                <Botao onClick={handleSubmit(onSubmitEditImovel)} texto={isEditar ? "Editando..." : "Editar"} />
+                                                                <Botao 
+                                                                    type="button"
+                                                                    onClick={handleCancel} 
+                                                                    texto="Cancelar" 
+                                                                    className="bg-vermelho h-10" 
+                                                                />
+                                                                <Botao 
+                                                                    type="submit"
+                                                                    texto={isSubmitting ? "Editando..." : "Editar"} 
+                                                                    className="bg-vermelho h-10"
+                                                                    disabled={isSubmitting}
+                                                                />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -700,6 +617,14 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {editadoComSucesso && (
+                <div className="fixed bottom-10 left-0 z-50">
+                    <div className="bg-vermelho w-52 flex gap-1 p-3 rounded-tr-lg rounded-br-lg text-white shadow-lg">
+                        <p className="text-center">Editado com Sucesso!</p>
                     </div>
                 </div>
             )}

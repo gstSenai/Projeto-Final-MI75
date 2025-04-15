@@ -2,6 +2,8 @@ package weg.projetofinal.Imobiliaria.model.dto.imovel;
 
 import weg.projetofinal.Imobiliaria.model.dto.caracteriticas.CaracteristicaImovelGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.endereco.EnderecoImovelGetResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.proprietario.ProprietarioImovelResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioImovelGetResponseDTO;
 
 public record ImovelGetResponseDTO(
         Integer id,
@@ -19,8 +21,13 @@ public record ImovelGetResponseDTO(
         Double area_construida,
         Double area_terreno,
         String descricao,
+        Double lat,
+        Double lng,
         EnderecoImovelGetResponseDTO id_endereco,
-        CaracteristicaImovelGetResponseDTO id_caracteristicasImovel) {
+        CaracteristicaImovelGetResponseDTO id_caracteristicasImovel,
+        ProprietarioImovelResponseDTO id_proprietario,
+        UsuarioImovelGetResponseDTO id_usuario
+) {
 
 
 }

@@ -1,9 +1,8 @@
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { Montserrat } from 'next/font/google';
+import { LoadingWrapper } from '@/components/loading/loadingServer';  
 
-
-// Carregando a fonte Inter
 const montserrat = Montserrat({
   subsets: ['latin'],
   weight: ['400', '800'],
@@ -46,10 +45,10 @@ const equipe = [
 
 export default function Equipe() {
   return (
-    <>
+    <LoadingWrapper>
       <Header />
 
-      <div className="bg-[#DFDAD0] p-8 rounded-lg shadow-lg text-center font-montserrat">
+      <div className={`bg-[#DFDAD0] p-8 rounded-lg shadow-lg text-center ${montserrat.className}`}>
 
         <div className="p-2 max-w-5xl mx-auto">
 
@@ -59,10 +58,12 @@ export default function Equipe() {
 
 
           <div className="relative w-[100%] h-[20%] mb-4 mx-auto">
-            <img
+            <Image
               src="/iconsPaginaCorretores/corretores.png"
               alt="Equipe de corretores"
               className="rounded-lg"
+              width={100}
+              height={100}
             />
           </div>
         </div>
@@ -93,11 +94,11 @@ export default function Equipe() {
                 <h3 className="mt-4">{corretor.nome}</h3>
                 <p className="mt-2">CRECI: {corretor.creci}</p>
                 <div className='flex gap-3 mt-2'>
-                  <img src="/iconsPaginaCorretores/iconTelefone.png" alt="Telefone" className="w-5 h-5" />
+                  <Image src="/iconsPaginaCorretores/iconTelefone.png" alt="Telefone" width={20} height={20} className="w-5 h-5" />
                   <p className="">{corretor.telefone}</p>
                 </div>
                 <div className='flex gap-4 mt-2 mb-20'>
-                  <img src="/iconsPaginaCorretores/iconEmail.png" alt="Telefone" className="w-5 h-5" />
+                  <Image src="/iconsPaginaCorretores/iconEmail.png" alt="Telefone" width={20} height={20} className="w-5 h-5" />
                   <p className="">{corretor.email}</p>
                 </div>
 
@@ -108,6 +109,6 @@ export default function Equipe() {
       </div>
 
       <Footer />
-    </>
+    </LoadingWrapper>
   );
 }

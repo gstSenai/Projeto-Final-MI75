@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import weg.projetofinal.Imobiliaria.model.dto.imovel.ImovelGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.imovel.ImovelPostRequestDTO;
@@ -41,6 +43,25 @@ public class ImovelController {
         return imoveisPage.map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO);
     }
 
+    @GetMapping("/getAll/alugados")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<ImovelGetResponseDTO> listAlugados(
+            @RequestParam(required = false) String status_imoveis,
+            Pageable pageable) {
+        Page<Imovel> imoveisPage = service.imovelsAlugados(status_imoveis, pageable);
+        return imoveisPage.map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO);
+    }
+
+    // Endpoint para imóveis vendidos (paginado)
+    @GetMapping("/getAll/vendidos")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<ImovelGetResponseDTO> listVendidos(
+            @RequestParam(required = false) String status_imoveis,
+            Pageable pageable) {
+        Page<Imovel> imoveisPage = service.imovelsVendidos(status_imoveis, pageable);
+        return imoveisPage.map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO);
+    }
+
     @GetMapping("/getById/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ImovelGetResponseDTO getById(@PathVariable Integer id) {
@@ -75,4 +96,5 @@ public class ImovelController {
         List<Imovel> imovel = service.filtroImovel(tipo_imovel, valor_min, valor_max);
         return imovel.stream().map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO).toList();
     }
+
 }

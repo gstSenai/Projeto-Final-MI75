@@ -1,18 +1,18 @@
 package weg.projetofinal.Imobiliaria.model.dto.usuario;
 
-import java.util.Date;
+import weg.projetofinal.Imobiliaria.model.dto.imovel.ImovelUsuarioGetResponseDTO;
+
+import java.util.List;
 
 public record UsuarioGetResponseDTO(
         Integer id,
-        String nome,
+        String username,
         String sobrenome,
-        String cpf,
         String tipo_conta,
-        String telefone,
-        Date data_nascimento,
         String email,
-        String senha,
+        String password,
+        boolean ativo,
         String imagem_usuario,
-        UsuarioEnderecoReponseDTO endereco
+        List<ImovelUsuarioGetResponseDTO> imovel
 ) {
 }

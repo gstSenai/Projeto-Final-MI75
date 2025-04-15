@@ -164,7 +164,7 @@ export default function CustomCalendar({ locale = "pt-BR", className }: Calendar
           {monthName} {currentYear}
         </h2>
 
-        <button onClick={nextMonth} className="bg-[#F4F1EA] p-3 md:p-4 lg:p-5 xl:p-2 2xl:p-8 rounded-[10px] flex items-center justify-center shadow-md">
+        <button onClick={nextMonth} className="bg-[#F4F1EA] p-3 md:p-4 lg:p-5 xl:p-2 2xl:p-3 rounded-[10px] flex items-center justify-center shadow-md">
           <ChevronRight className="text-gray-400" /> 
         </button>
       </div>

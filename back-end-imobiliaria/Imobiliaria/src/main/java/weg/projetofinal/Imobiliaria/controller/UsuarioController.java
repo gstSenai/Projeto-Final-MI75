@@ -1,6 +1,7 @@
 package weg.projetofinal.Imobiliaria.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioCadastroPostDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioPutRequestDTO;
@@ -45,11 +47,10 @@ public class UsuarioController {
         return UsuarioMapper.INSTANCE.usuarioToUsuarioGetResponseDTO(usuarioCriado);
     }
 
-
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
     public Page<UsuarioGetResponseDTO> findAll(
-            @PageableDefault(sort = "nome", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(sort = "username", direction = Sort.Direction.ASC) Pageable pageable) {
         Page<Usuario> usuarios = service.findAll(pageable);
         return usuarios.map(UsuarioMapper.INSTANCE::usuarioToUsuarioGetResponseDTO);
     }
@@ -66,17 +67,19 @@ public class UsuarioController {
     public List<UsuarioGetResponseDTO> buscarUsuario(
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) String sobrenome,
-            @RequestParam(required = false) String cpf,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) Boolean ativo,
             @RequestParam(required = false) String tipoConta) {
-        List<Usuario> usuarios = service.buscarUsuario(nome, sobrenome, cpf, tipoConta);
+
+        List<Usuario> usuarios = service.buscarUsuario(nome, sobrenome, email, ativo, tipoConta);
         return usuarios.stream().map(UsuarioMapper.INSTANCE::usuarioToUsuarioGetResponseDTO).toList();
     }
+
 
 
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
-
         service.deleteById(id);
     }
 
