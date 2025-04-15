@@ -209,7 +209,6 @@ export function ListaImoveis() {
     return pageNumbers
   }
 
-  // Wrapper function to convert ImovelCompleto[] to Imovel[]
   const handleSetImoveis = (imoveisCompletos: ImovelCompleto[]) => {
     const imoveisFormatados = imoveisCompletos.map((imovel) => ({
       id: imovel.id || 0,
