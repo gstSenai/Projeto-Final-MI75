@@ -2,6 +2,8 @@ import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
 import TabelaProprietario from "@/components/paginaCadastroProprietario/tabelaProprietario"
 import { Montserrat } from "next/font/google"
+import { LoadingWrapper } from "@/components/loading/loadingServer"
+
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
@@ -12,7 +14,7 @@ const montserrat = Montserrat({
 
 export default function CadastroProprietario() {
     return (
-        <>
+        <LoadingWrapper>
             <Header />
             <div className="flex flex-col min-h-screen">
                 <div className={`flex-grow bg-[#DFDAD0] ${montserrat.className}`}>
@@ -28,7 +30,7 @@ export default function CadastroProprietario() {
                 </div>
             </div>
             <Footer />
-        </>
+        </LoadingWrapper>
     )
 }
 

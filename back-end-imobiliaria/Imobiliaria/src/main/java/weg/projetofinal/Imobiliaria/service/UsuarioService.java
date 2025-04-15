@@ -1,11 +1,14 @@
 package weg.projetofinal.Imobiliaria.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioCadastroPostDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 import weg.projetofinal.Imobiliaria.model.mapper.UsuarioMapper;
@@ -16,20 +19,24 @@ import weg.projetofinal.Imobiliaria.service.specification.UsuarioSpecification;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class UsuarioService {
 
     private final UsuarioRepository repository;
     private final S3Service s3Service;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UsuarioService(UsuarioRepository repository, S3Service s3Service) {
-        this.repository = repository;
-        this.s3Service = s3Service;
-    }
+
 
     public Usuario createUser(UsuarioPostRequestDTO usuarioDTO, MultipartFile imagem) {
         String imagemUrl = s3Service.uploadFile(imagem);
+
         Usuario usuario = UsuarioMapper.INSTANCE.usuarioPostRequestDTOToUsuario(usuarioDTO);
+
+        if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Senha não pode ser nula ou vazia.");
+        }
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         usuario.setImagem_usuario(imagemUrl);
         return repository.save(usuario);
     }

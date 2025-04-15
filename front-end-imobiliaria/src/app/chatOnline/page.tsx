@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { Montserrat } from 'next/font/google';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-
+import { LoadingWrapper } from '@/components/loading/loadingServer';  
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), { ssr: false });
 
 const montserrat = Montserrat({
@@ -39,7 +39,7 @@ export default function Chat() {
   };
 
   return (
-    <>
+    <LoadingWrapper>
       <Header />
       <div className={`${montserrat.className} flex h-screen bg-[#E3D5C6] p-4`}>
         <div className="w-1/4 bg-white p-4 rounded-lg shadow-lg">
@@ -116,6 +116,6 @@ export default function Chat() {
         </div>
       </div>
       <Footer />
-    </>
+    </LoadingWrapper>
   );
 }

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Montserrat } from 'next/font/google';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-
+import { LoadingWrapper } from '@/components/loading/loadingServer';
 const montserrat = Montserrat({
   subsets: ['latin'],
   weight: ['400', '800'],
@@ -19,7 +19,7 @@ export default function PoliticaPrivacidade() {
   };
 
   return (
-    <>
+    <LoadingWrapper>
       <Header />
       <div className={`flex flex-col items-center ${montserrat.className}`}>
         <div className="flex flex-col justify-center max-w-5xl">
@@ -259,6 +259,6 @@ export default function PoliticaPrivacidade() {
 
       </div>
       <Footer />
-    </>
+    </LoadingWrapper>
   );
 }

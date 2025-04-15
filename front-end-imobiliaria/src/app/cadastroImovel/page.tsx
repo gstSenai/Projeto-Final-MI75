@@ -2,17 +2,18 @@ import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
 import TabelaImovel from "@/components/paginaCadastroImovel/tabelaImovel"
 import { Montserrat } from "next/font/google"
+import { LoadingWrapper } from "@/components/loading/loadingServer"
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
-    subsets: ['latin'],
-    weight: ['400', '800'],
-    display: 'swap',
+  subsets: ['latin'],
+  weight: ['400', '800'],
+  display: 'swap',
 });
 
 export default function CadastroImovel() {
   return (
-    <>
+    <LoadingWrapper>
       <Header />
       <div className="flex flex-col min-h-screen">
         <div className={`flex-grow bg-[#DFDAD0] ${montserrat.className}`}>
@@ -29,7 +30,7 @@ export default function CadastroImovel() {
         </div>
       </div>
       <Footer />
-    </>
+    </LoadingWrapper>
   )
 }
 
