@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react"
 import { Montserrat } from "next/font/google"
 import { useParams } from "next/navigation"
-import { MapPin, Bed, Bath, Ruler, Car } from "lucide-react"
+import { Bed, Bath, Ruler, Car } from "lucide-react"
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
@@ -254,43 +254,43 @@ export function DetalhesImovel() {
               </div>
 
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="flex items-center">
-                  <Bed className="w-5 h-5 text-vermelho mr-2" />
+                <div className="flex items-center gap-4">
+                <img src="/imagePropriedades/quarto.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Quartos</p>
                     <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_quartos}</p>
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <Bed className="w-5 h-5 text-vermelho mr-2" />
+                <div className="flex items-center gap-4">
+                <img src="/imagePropriedades/suite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Suites</p>
                     <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_suites}</p>
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <Bath className="w-5 h-5 text-vermelho mr-2" />
+                <div className="flex items-center gap-4">
+                <img src="/imagePropriedades/banheiro.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Banheiros</p>
                     <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_banheiros}</p>
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <Ruler className="w-5 h-5 text-vermelho mr-2" />
+                <div className="flex items-center gap-4">
+                <img src="/imagePropriedades/carro.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Vagas</p>
                     <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_vagas_garagem}</p>
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <Car className="w-5 h-5 text-vermelho mr-2" />
+                <div className="flex items-center gap-4">
+                <img src="/imagePropriedades/regua.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Área total</p>
                     <p className="font-semibold">{imovel.id_caracteristicasImovel.area_total}m²</p>
                   </div>
                 </div>
-                <div className="flex items-center">
-                <Ruler className="w-5 h-5 text-vermelho mr-2" />
+                <div className="flex items-center gap-4">
+                <img src="/imagePropriedades/regua.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                 <div>
                     <p className="text-sm text-cinza-medio">Área Construída</p>
                     <p className="font-semibold">{imovel.id_caracteristicasImovel.area_construida}m²</p>
