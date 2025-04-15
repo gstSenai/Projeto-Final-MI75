@@ -155,7 +155,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
       if (!isCadastro) {
         localStorage.setItem("token", data.token)
         localStorage.setItem("username", formData.email.split('@')[0])
-        router.push("/PaginaInicial")
+        router.push("/paginaInicial")
       } else {
         localStorage.setItem("username", formData.nomeUsuario)
         router.push("/login")
