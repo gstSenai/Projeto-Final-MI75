@@ -20,13 +20,12 @@ const montserrat = Montserrat({
 
 const UsuarioProps = z.object({
   id: z.number().optional(),
-  nome: z.string().min(1, { message: "O nome é obrigatório" }),
-  sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+  username: z.string().min(1, { message: "O nome é obrigatório" }),
   tipo_conta: z.string().min(1, {
     message: "Selecione um tipo de conta válido",
   }),
   email: z.string().email({ message: "E-mail inválido" }),
-  senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+  password: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
   ativo: z.boolean().optional(),
 })
 
@@ -43,7 +42,7 @@ export default function TabelaUsuario() {
   const { register, watch, reset } = useForm<FormData>({
     defaultValues: {
       usuario: {
-        nome: "",
+        username: "",
         email: "",
         tipo_conta: "",
       },
@@ -97,7 +96,7 @@ export default function TabelaUsuario() {
 
       const usuariosFiltrados = {
         content: data.content.filter((usuario: UsuarioProps) => {
-          const matchNome = !searchNome || usuario.nome.toLowerCase().includes(searchNome.toLowerCase());
+          const matchNome = !searchNome || usuario.username.toLowerCase().includes(searchNome.toLowerCase());
           const matchEmail = !searchEmail || usuario.email.toLowerCase().includes(searchEmail.toLowerCase());
           const matchTipoConta = !searchTipoConta || usuario.tipo_conta.toLowerCase().includes(searchTipoConta.toLowerCase());
 
@@ -148,9 +147,6 @@ export default function TabelaUsuario() {
                     <p>Nome</p>
                   </th>
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
-                    <p>Sobrenome</p>
-                  </th>
-                  <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
                     <p>E-mail</p>
                   </th>
                   <th className="max-lg:text-sm whitespace-nowrap p-4 text-center font-bold border border-[#E0D6CE]">
@@ -179,10 +175,7 @@ export default function TabelaUsuario() {
                         onClick={() => toggleUsuarioselection(usuario)}
                       >
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
-                          {usuario.nome}
-                        </td>
-                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
-                          {usuario.sobrenome}
+                          {usuario.username}
                         </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 max-w-[20rem] truncate whitespace-nowrap overflow-hidden">
                           {usuario.email}
@@ -274,7 +267,7 @@ export default function TabelaUsuario() {
                   <div className="space-y-2">
                     <FormularioInput
                       placeholder="Nome:"
-                      name="usuario.nome"
+                      name="usuario.username"
                       interName='Ex: Caio'
                       register={register}
                       required
@@ -322,7 +315,7 @@ export default function TabelaUsuario() {
                 <Botao
                   texto="Pesquisar"
                   onClick={() => {
-                    const currentNome = watch("usuario.nome");
+                    const currentNome = watch("usuario.username");
                     const currentEmail = watch("usuario.email");
                     const currentTipoConta = watch("usuario.tipo_conta");
                     getUsuario(currentNome, currentEmail, currentTipoConta);

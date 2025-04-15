@@ -6,11 +6,10 @@ import { FormData } from "../../index"
 
 type UsuarioType = {
     id?: number
-    nome: string
-    sobrenome: string
+    username: string
     tipo_conta: string
     email: string
-    senha: string
+    password: string
     ativo: boolean
     imagem_usuario: string
 }
@@ -71,7 +70,10 @@ export function RelacaoCorretorImovel({ className = "", setValue, errors, onUsua
         onUsuarioAdicionado();
         setValue("usuario", {
             ...usuario,
-            senha: usuario.senha,
+            username: usuario.username,
+            email: usuario.email,
+            tipo_conta: usuario.tipo_conta,
+            senha: usuario.password,
             ativo: usuario.ativo !== undefined ? usuario.ativo : true
         });
         console.log("Corretor selecionado:", usuario);
@@ -145,7 +147,7 @@ export function RelacaoCorretorImovel({ className = "", setValue, errors, onUsua
                                                 </svg>
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <div className="font-semibold text-base sm:text-lg group-hover:text-white truncate">{usuario.nome}</div>
+                                                <div className="font-semibold text-base sm:text-lg group-hover:text-white truncate">{usuario.username}</div>
                                                 <div className="text-xs sm:text-sm text-gray-500 group-hover:text-gray-200 truncate">{usuario.email}</div>
                                             </div>
                                             <input
@@ -168,7 +170,7 @@ export function RelacaoCorretorImovel({ className = "", setValue, errors, onUsua
                     usuario.id === selectedCorretor && (
                         <div key={usuario.id} className="mt-4 p-3 bg-gray-50 rounded-lg">
                             <p className="text-sm text-gray-600">Corretor selecionado:</p>
-                            <p className="font-medium text-vermelho">{usuario.nome} {usuario.sobrenome}</p>
+                            <p className="font-medium text-vermelho">{usuario.username} {usuario.email}</p>
                         </div>
                     )
                 )}

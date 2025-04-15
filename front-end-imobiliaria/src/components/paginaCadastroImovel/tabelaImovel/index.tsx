@@ -7,9 +7,9 @@ import { EditarImovel } from "../editarImovel"
 import Image from "next/image"
 import { Botao } from "@/components/botao"
 import { FormularioInput } from "@/components/paginaCadastroUsuario/adicionandoUsuario/formulario/formularioInput"
-import { useForm } from "react-hook-form"
-import { FiltroImovel } from "@/components/filtroImovel"
 import { Formulario } from "../formulario"
+import { useForm } from 'react-hook-form'
+import { FiltroImovel } from "@/components/filtroImovel"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -408,7 +408,7 @@ export default function TabelaImovel() {
           </div>
         </div>
       </div>
-      
+
       {isModalOpen && <Formulario isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onComplete={refreshData} />}
       {remover && <RemoveImovel selectedImoveis={selectedImoveis} onComplete={refreshData} />}
       {editar && <EditarImovel selectedImoveis={selectedImoveis} onComplete={refreshData} />}

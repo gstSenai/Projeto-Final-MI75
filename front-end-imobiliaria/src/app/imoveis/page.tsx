@@ -1,10 +1,8 @@
-"use client"
-
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Montserrat } from "next/font/google"
 import TabelaImovel from "@/components/paginaCadastroImovel/tabelaImovel"
-
+import { LoadingWrapper } from "@/components/loading/loadingServer"
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "800"],
@@ -13,7 +11,7 @@ const montserrat = Montserrat({
 
 export default function ImoveisPage() {
   return (
-    <>
+    <LoadingWrapper>
       <Header />
       <div className={`${montserrat.className} max-lg:px-4 px-20 py-12 sm:py-12 md:py-10 lg:py-14 xl:py-20`}>
         <div>
@@ -28,6 +26,6 @@ export default function ImoveisPage() {
         </div>
       </div>
       <Footer />
-    </>
+    </LoadingWrapper>
   )
 } 

@@ -43,6 +43,25 @@ public class ImovelController {
         return imoveisPage.map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO);
     }
 
+    @GetMapping("/getAll/alugados")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<ImovelGetResponseDTO> listAlugados(
+            @RequestParam(required = false) String status_imoveis,
+            Pageable pageable) {
+        Page<Imovel> imoveisPage = service.imovelsAlugados(status_imoveis, pageable);
+        return imoveisPage.map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO);
+    }
+
+    // Endpoint para imóveis vendidos (paginado)
+    @GetMapping("/getAll/vendidos")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<ImovelGetResponseDTO> listVendidos(
+            @RequestParam(required = false) String status_imoveis,
+            Pageable pageable) {
+        Page<Imovel> imoveisPage = service.imovelsVendidos(status_imoveis, pageable);
+        return imoveisPage.map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO);
+    }
+
     @GetMapping("/getById/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ImovelGetResponseDTO getById(@PathVariable Integer id) {

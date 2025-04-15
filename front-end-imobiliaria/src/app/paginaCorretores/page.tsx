@@ -1,9 +1,8 @@
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { Montserrat } from 'next/font/google';
+import { LoadingWrapper } from '@/components/loading/loadingServer';  
 
-
-// Carregando a fonte Inter
 const montserrat = Montserrat({
   subsets: ['latin'],
   weight: ['400', '800'],
@@ -46,7 +45,7 @@ const equipe = [
 
 export default function Equipe() {
   return (
-    <>
+    <LoadingWrapper>
       <Header />
 
       <div className={`bg-[#DFDAD0] p-8 rounded-lg shadow-lg text-center ${montserrat.className}`}>
@@ -99,7 +98,7 @@ export default function Equipe() {
                   <p className="">{corretor.telefone}</p>
                 </div>
                 <div className='flex gap-4 mt-2 mb-20'>
-                  <Image src="/iconsPaginaCorretores/iconEmail.png" alt="Telefone" className="w-5 h-5" />
+                  <Image src="/iconsPaginaCorretores/iconEmail.png" alt="Telefone" width={20} height={20} className="w-5 h-5" />
                   <p className="">{corretor.email}</p>
                 </div>
 
@@ -110,6 +109,6 @@ export default function Equipe() {
       </div>
 
       <Footer />
-    </>
+    </LoadingWrapper>
   );
 }

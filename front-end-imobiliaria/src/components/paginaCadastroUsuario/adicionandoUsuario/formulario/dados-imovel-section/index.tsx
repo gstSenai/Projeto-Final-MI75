@@ -23,21 +23,12 @@ export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionPro
                 <div className="flex max-lg:flex-col max-lg:gap-4 gap-10">
                     <FormularioInput
                         placeholder="Nome:"
-                        name="usuario.nome"
+                        name="usuario.username"
                         interName='Ex: Caio'
                         register={register}
                         required
                         customizacaoClass="w-full"
-                        errors={errors?.usuario?.nome}
-                    />
-                    <FormularioInput
-                        placeholder="Sobrenome:"
-                        name="usuario.sobrenome"
-                        interName='Ex: Souza'
-                        register={register}
-                        required
-                        customizacaoClass="w-full"
-                        errors={errors?.usuario?.sobrenome}
+                        errors={errors?.usuario?.username}
                     />
                     <FormularioInput
                         placeholder="Tipo da Conta:"
@@ -62,12 +53,12 @@ export function DadosUsuarioSection({ register, errors }: DadosUsuarioSectionPro
                     />
                     <FormularioInput
                         placeholder="Senha:"
-                        name="usuario.senha"
+                        name="usuario.password"
                         interName="Ex: 123"
                         register={register}
                         required
                         customizacaoClass="w-full"
-                        errors={errors?.usuario?.senha}
+                        errors={errors?.usuario?.password}
                     />
                 </div>
             </div>

@@ -3,6 +3,7 @@ import { Botao } from '@/components/botao';
 import Image from 'next/image';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
+import { LoadingWrapper } from '@/components/loading/loadingServer';
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -12,7 +13,7 @@ const montserrat = Montserrat({
 
 export default function PaginaEditor() {
     return (
-        <>
+        <LoadingWrapper>
             <Header />
 
             <div className={`${montserrat.className} pt-3 pb-24 lg:pt-14 lg:pb-52`}>
@@ -48,7 +49,7 @@ export default function PaginaEditor() {
             </div>
 
             <Footer />
-        </>
+        </LoadingWrapper>
 
     );
 }
