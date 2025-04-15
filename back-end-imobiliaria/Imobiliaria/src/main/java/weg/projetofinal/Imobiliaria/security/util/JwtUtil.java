@@ -18,33 +18,29 @@ public class JwtUtil {
     @Value("${app.jwt.expiration-ms}")
     private int jwtExpirationMs;
 
-    // Gera a chave de assinatura a partir do secret (Base64)
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // Gera um token JWT a partir do username
     public String generateTokenFromUsername(String username) {
         return Jwts.builder()
-                .subject(username) // Define o subject (normalmente o username)
-                .issuedAt(new Date()) // Data de criação
-                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs)) // Expiração
-                .signWith(getSigningKey(), Jwts.SIG.HS256) // Algoritmo de assinatura (HS256)
-                .compact(); // Compacta e retorna como String
+                .subject(username)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(getSigningKey(), Jwts.SIG.HS256)
+                .compact();
     }
 
-    // Extrai o username do token JWT
     public String getUsernameFromToken(String token) {
         return Jwts.parser()
-                .verifyWith(getSigningKey()) // Verifica a assinatura
+                .verifyWith(getSigningKey())
                 .build()
-                .parseSignedClaims(token) // Faz o parse do token
-                .getPayload() // Pega o payload (claims)
-                .getSubject(); // Retorna o subject (username)
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
     }
 
-    // Valida o token JWT
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
