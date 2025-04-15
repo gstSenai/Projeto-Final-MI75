@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
-import { Card } from "../cardImovel"
+import { Card } from "../CardImovel"
 import { Montserrat } from "next/font/google"
 import { FiltroImoveis } from "./botaoFiltro"
 import { ChevronLeft, ChevronRight } from "lucide-react"

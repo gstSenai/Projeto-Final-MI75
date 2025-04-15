@@ -179,23 +179,20 @@ export function DetalhesImovel() {
 
   return (
     <div className={`${montserrat.className} min-h-screen bg-cinza-claro`}>
-      {/* Header */}
-      <div className="bg-white shadow-md">
-        <div className="container mx-auto px-4 py-6">
-          <h1 className="text-3xl font-bold text-cinza-escuro">{imovel.nome_propriedade}</h1>
+
+      <div className="pl-10">
+        <div className=" mx-auto px-4 py-6">
+          <h1 className="text-[1.7rem] font-bold text-cinza-escuro">{imovel.nome_propriedade}</h1>
+          <div className="w-64 h-[2px] bg-[#702632] mt-1"></div>
           <div className="flex items-center mt-2 text-cinza-medio">
-            <MapPin className="w-4 h-4 mr-1" />
-            <p>
-              {imovel.id_endereco.rua}, {imovel.id_endereco.numero} - {imovel.id_endereco.bairro}, {imovel.id_endereco.cidade} - {imovel.id_endereco.estado}
-            </p>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
+
+      <div className="container mx-auto px-4 py-3">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Images */}
+
           <div className="lg:col-span-2">
             <div className="overflow-hidden">
               {imovel.imagens && imovel.imagens.length > 0 ? (
@@ -203,7 +200,7 @@ export function DetalhesImovel() {
                   <img
                     src={imovel.imagens[currentImageIndex].url}
                     alt={imovel.nome_propriedade}
-                    className="w-full h-[500px] object-cover rounded-lg"
+                    className="w-full h-[450px] lg:h-[605px] xl:h-[535px] 2xl:h-[510px] extra:h-[490px] object-cover rounded-lg"
                   />
                   {imovel.imagens.length > 1 && (
                     <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
@@ -211,9 +208,8 @@ export function DetalhesImovel() {
                         <button
                           key={index}
                           onClick={() => setCurrentImageIndex(index)}
-                          className={`w-3 h-3 rounded-full ${
-                            currentImageIndex === index ? "bg-vermelho" : "bg-white"
-                          }`}
+                          className={`w-3 h-3 rounded-full ${currentImageIndex === index ? "bg-vermelho" : "bg-white"
+                            }`}
                         />
                       ))}
                     </div>
@@ -227,20 +223,20 @@ export function DetalhesImovel() {
               <div className="flex items-center justify-start gap-1 mt-4">
                 <button className="flex items-center justify-center w-8 h-8 text-cinza-medio hover:text-vermelho transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
                   </svg>
                 </button>
                 <button className="flex items-center justify-center w-8 h-8 text-cinza-medio hover:text-vermelho transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                   </svg>
                 </button>
                 <button className="flex items-center justify-center w-8 h-8 text-cinza-medio hover:text-vermelho transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                    <polyline points="16 6 12 2 8 6"/>
-                    <line x1="12" y1="2" x2="12" y2="15"/>
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                    <polyline points="16 6 12 2 8 6" />
+                    <line x1="12" y1="2" x2="12" y2="15" />
                   </svg>
                 </button>
               </div>
@@ -266,6 +262,13 @@ export function DetalhesImovel() {
                   </div>
                 </div>
                 <div className="flex items-center">
+                  <Bed className="w-5 h-5 text-vermelho mr-2" />
+                  <div>
+                    <p className="text-sm text-cinza-medio">Suites</p>
+                    <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_suites}</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
                   <Bath className="w-5 h-5 text-vermelho mr-2" />
                   <div>
                     <p className="text-sm text-cinza-medio">Banheiros</p>
@@ -275,47 +278,56 @@ export function DetalhesImovel() {
                 <div className="flex items-center">
                   <Ruler className="w-5 h-5 text-vermelho mr-2" />
                   <div>
-                    <p className="text-sm text-cinza-medio">Área Total</p>
-                    <p className="font-semibold">{imovel.id_caracteristicasImovel.area_total}m²</p>
+                    <p className="text-sm text-cinza-medio">Vagas</p>
+                    <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_vagas_garagem}</p>
                   </div>
                 </div>
                 <div className="flex items-center">
                   <Car className="w-5 h-5 text-vermelho mr-2" />
                   <div>
-                    <p className="text-sm text-cinza-medio">Vagas</p>
-                    <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_vagas_garagem}</p>
+                    <p className="text-sm text-cinza-medio">Área total</p>
+                    <p className="font-semibold">{imovel.id_caracteristicasImovel.area_total}m²</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                <Ruler className="w-5 h-5 text-vermelho mr-2" />
+                <div>
+                    <p className="text-sm text-cinza-medio">Área Construída</p>
+                    <p className="font-semibold">{imovel.id_caracteristicasImovel.area_construida}m²</p>
                   </div>
                 </div>
               </div>
 
               <div className="mb-6">
                 <h3 className="text-lg font-semibold mb-2">Descrição</h3>
-                <p className="text-cinza-medio">{imovel.descricao}</p>
+                <p className="text-cinza-mediom text-[1rem]">{imovel.descricao}</p>
               </div>
 
-              <button className="w-full bg-vermelho text-white py-3 rounded-lg font-semibold hover:bg-vermelho-escuro transition-colors">
+              <button className="w-full bg-vermelho text-white py-2 rounded-lg font-semibold hover:bg-vermelho-escuro transition-colors">
                 Agendar Visita
               </button>
             </div>
           </div>
         </div>
 
-        {/* Endereço e Mapa */}
-        <div className="mt-8 p-6">
-          <h3 className="text-lg font-semibold mb-4">Localização</h3>
+        <div className="mt-8 pt-8 ">
+          <div className="flex gap-2">
+            <img src="/imagePropriedades/localizacao.png" alt="localizacao" className="w-5 h-6 mt-1 " />
+            <h3 className="text-[1.4rem] font-semibold mb-4">Localização</h3>
+          </div>
           <div className="mb-4">
             <p className="text-cinza-medio">
               {imovel.id_endereco.rua}, {imovel.id_endereco.numero} - {imovel.id_endereco.bairro}, {imovel.id_endereco.cidade} - {imovel.id_endereco.estado}, CEP: {imovel.id_endereco.cep}
             </p>
           </div>
-          <div className="flex gap-6">
-            <div className="w-3/5">
+          <div className="flex max-md:flex-col gap-6">
+            <div className="w-3/5 max-md:w-full">
               <div className="h-[400px] rounded-lg overflow-hidden shadow-lg">
                 <div ref={mapContainer} className="w-full h-full" />
               </div>
             </div>
-            <div className="w-2/5">
-              <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="w-2/5 max-md:w-full">
+              <div className="bg-white rounded-lg shadow-lg p-10">
                 <h4 className="text-xl font-bold mb-4">Corretor Responsável</h4>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-16 h-16 rounded-full bg-[#702632] flex items-center justify-center">
