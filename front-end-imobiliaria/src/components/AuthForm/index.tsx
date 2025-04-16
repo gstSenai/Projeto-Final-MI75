@@ -6,7 +6,6 @@ import { Montserrat } from "next/font/google"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
 import Image from "next/image"
-
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
@@ -18,13 +17,6 @@ interface AuthFormProps {
   buttonText: string
   loginOuCadastro: string
   isCadastro?: boolean
-}
-
-type FormData = {
-  email: string
-  password: string
-  username?: string
-  confirmarSenha?: string
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro, isCadastro = false }) => {
