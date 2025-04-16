@@ -1,13 +1,13 @@
 import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
 import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
-import PesquisaPaginaInicial from '@/components/PaginaInicial/pesquisaPaginaInicial';
-import Carousel from '@/components/PaginaInicial/carrossel';
-import BotaoImageTexto from '@/components/PaginaInicial/BotaoImageTexto';
+import { PesquisaPaginaInicial } from '@/components/paginaInicial/pesquisaPaginaInicial';
+import Carousel from '@/components/paginaInicial/carrossel';
+import BotaoImageTexto from '@/components/paginaInicial/BotaoImageTexto';
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { Card } from '@/components/CardImovel/index';
+import { Card } from '@/components/cardImovel/index';
 
 
 import { Montserrat } from 'next/font/google';

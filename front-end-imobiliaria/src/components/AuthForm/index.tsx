@@ -38,7 +38,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
     nomeUsuario: "",
     email: "",
     senha: "",
-    confirmarSenha: "",
+    confirmarSenha: ""
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -123,14 +123,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
 
       const payload = isCadastro
         ? {
-            username: formData.nomeUsuario,
-            email: formData.email,
-            password: formData.senha,
-          }
+          username: formData.nomeUsuario,
+          email: formData.email,
+          password: formData.senha,
+        }
         : {
-            usernameOrEmail: formData.email,
-            password: formData.senha,
-          }
+          usernameOrEmail: formData.email,
+          password: formData.senha,
+        }
 
       const response = await fetch(`${apiUrl}${endpoint}`, {
         method: "POST",
@@ -144,18 +144,58 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
       const contentType = response.headers.get("content-type")
       if (contentType && contentType.includes("application/json")) {
         data = await response.json()
+        console.log("Resposta da API:", data)
       } else {
         data = { message: await response.text() }
       }
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("Credenciais inválidas. Verifique seu e-mail e senha.")
+        }
         throw new Error(data.message || "Erro na autenticação")
       }
 
       if (!isCadastro) {
         localStorage.setItem("token", data.token)
-        localStorage.setItem("username", formData.email.split('@')[0])
-        router.push("/paginaInicial")
+        localStorage.setItem("username", data.username)
+
+        try {
+          const userResponse = await fetch(`${apiUrl}/usuario/getAll`, {
+            headers: {
+              "Authorization": `Bearer ${data.token}`,
+              "Content-Type": "application/json"
+            }
+          })
+
+          if (!userResponse.ok) {
+            throw new Error("Erro ao buscar informações do usuário")
+          }
+
+          const userData = await userResponse.json()
+          
+          const usuario = userData.content.find((u: FormData) => u.username === data.username)
+          
+          if (usuario && usuario.tipo_conta) {
+            localStorage.setItem("tipo_conta", usuario.tipo_conta)
+            
+            if (usuario.tipo_conta === "Usuario") {
+              router.push("/paginaInicial")
+            } else if (usuario.tipo_conta === "Administrador") {
+              router.push("/paginaAdministrador")
+            } else if (usuario.tipo_conta === "Corretor") {
+              router.push("/paginaCorretor")
+            } else if (usuario.tipo_conta === "Editor") {
+              router.push("/paginaEditor")
+            } else {
+              throw new Error("Tipo de conta inválido")
+            }
+          } else {
+            throw new Error("Tipo de conta não encontrado")
+          }
+        } catch (error) {
+          throw new Error("Erro ao buscar tipo de conta do usuário")
+        }
       } else {
         localStorage.setItem("username", formData.nomeUsuario)
         router.push("/login")
@@ -287,9 +327,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
 
               <div className="flex justify-center">
                 <button
-                  className={`w-full md:w-1/2 font-bold py-3 rounded-lg transition-colors ${
-                    isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-[#702632] text-white hover:bg-[#5a1e28]"
-                  }`}
+                  className={`w-full md:w-1/2 font-bold py-3 rounded-lg transition-colors ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-[#702632] text-white hover:bg-[#5a1e28]"
+                    }`}
                   type="submit"
                   disabled={isLoading}
                 >
