@@ -1,6 +1,9 @@
+"use client"
+
 import { Montserrat } from 'next/font/google';
 import Link from 'next/link';
 import Image from 'next/image';
+import { VLibrasButton } from "@/components/VLibrasButton"
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -93,6 +96,10 @@ export function Footer() {
                     </span>
                 </p>
             </section>
+
+            <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-300">
+                <p>&copy; {new Date().getFullYear()} HAV Imóveis. Todos os direitos reservados.</p>
+            </div>
         </footer>
     );
 }
