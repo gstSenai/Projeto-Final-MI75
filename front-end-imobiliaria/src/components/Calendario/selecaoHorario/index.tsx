@@ -37,7 +37,7 @@ export function FormularioInput<T extends FieldValues = FieldValues>({
     <div className="w-full">
       {placeholder && <label className="block text-lg">{placeholder}</label>}
       <div
-        className={`relative ${customizacaoClass} p-2 flex items-center w-full rounded-lg bg-white border ${
+        className={`relative ${customizacaoClass} p-2 flex items-center w-full rounded-lg border ${
           errors ? "border-red-500" : "border-gray-500"
         }`}
       >
@@ -47,7 +47,7 @@ export function FormularioInput<T extends FieldValues = FieldValues>({
             value={value}
             onChange={onChange}
             disabled={disabled}
-            className="w-full bg-transparent outline-none text-gray-900 disabled:opacity-50"
+            className="w-full bg-transparent outline-none disabled:opacity-50"
           >
             <option value="" disabled>
               {interName} {required ? "*" : ""}
