@@ -4,8 +4,9 @@
 
 :root {
   --background: #DFDAD0;
-  --background: #DFDAD0;
   --foreground: #171717;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,5 +20,302 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Estilos do Mapbox */
+.mapboxgl-map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.mapboxgl-canvas {
+    width: 100% !important;
+    height: 100% !important;
+    outline: none !important;
+}
+
+.mapboxgl-popup {
+    max-width: 300px !important;
+    z-index: 1000 !important;
+}
+
+.mapboxgl-popup-content {
+    padding: 0 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.custom-popup .mapboxgl-popup-content {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.custom-popup .mapboxgl-popup-tip {
+    display: none !important;
+}
+
+/* Controles do mapa */
+.mapboxgl-ctrl-group {
+    border: none !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.mapboxgl-ctrl button {
+    background-color: white !important;
+}
+
+.mapboxgl-ctrl button:hover {
+    background-color: #f3f4f6 !important;
+}
+
+@layer base {
+  .text-primary {
+    color: var(--primary);
+  }
+  
+  .bg-primary {
+    background-color: var(--primary);
+  }
+  
+  .hover\:bg-primary-dark:hover {
+    background-color: var(--primary-dark);
+  }
+}
+
+/* Estilos para o carrossel */
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.carousel-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 9999px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.carousel-button:hover {
+  background: white;
+}
+
+.carousel-button-prev {
+  left: 1rem;
+}
+
+.carousel-button-next {
+  right: 1rem;
+}
+
+.carousel-dots {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.carousel-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.5);
+  transition: background-color 0.2s;
+}
+
+.carousel-dot.active {
+  background: white;
+}
+
+/* Estilos para o modo de alto contraste */
+.high-contrast {
+  --background: #3D1F23;  /* Vermelho escuro mais suave */
+  --foreground: #FFE5E8;  /* Rosa claro */
+  --primary: #702632;     /* Vermelho principal do site */
+  --primary-dark: #591F27; /* Vermelho escuro médio */
+}
+
+.high-contrast body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.high-contrast a {
+  color: var(--foreground);
+  text-decoration: underline;
+}
+
+.high-contrast button {
+  background-color: var(--primary);
+  color: var(--foreground);
+  border: 2px solid var(--foreground);
+}
+
+.high-contrast input, 
+.high-contrast textarea, 
+.high-contrast select {
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 2px solid var(--primary);
+}
+
+.high-contrast .bg-white,
+.high-contrast div[class*="bg-"],
+.high-contrast section,
+.high-contrast header,
+.high-contrast footer {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+}
+
+.high-contrast .text-black,
+.high-contrast p,
+.high-contrast h1,
+.high-contrast h2,
+.high-contrast h3,
+.high-contrast h4,
+.high-contrast h5,
+.high-contrast h6,
+.high-contrast span {
+  color: var(--foreground) !important;
+}
+
+.high-contrast .bg-gray-200,
+.high-contrast [class*="bg-gray"] {
+  background-color: var(--primary-dark) !important;
+  color: var(--foreground) !important;
+}
+
+/* Garantir que imagens e ícones permaneçam visíveis */
+.high-contrast img {
+  filter: brightness(1.2) contrast(1.2);
+}
+
+.high-contrast svg {
+  fill: #FFE5E8 !important;
+  color: #FFE5E8 !important;
+}
+
+/* Garantir que ícones dentro de botões também fiquem brancos */
+.high-contrast button svg {
+  fill: #FFE5E8 !important;
+  color: #FFE5E8 !important;
+}
+
+/* Garantir que bordas e divisores sejam visíveis */
+.high-contrast [class*="border"],
+.high-contrast hr {
+  border-color: var(--foreground) !important;
+}
+
+/* Garantir que elementos do menu sejam visíveis */
+.high-contrast [class*="menu"],
+.high-contrast [class*="dropdown"],
+.high-contrast [class*="modal"] {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--foreground) !important;
+}
+
+/* Estilos para o VLibras */
+#vlibras {
+  position: fixed !important;
+  bottom: 0;
+  right: 0;
+  width: auto !important;
+  height: auto !important;
+  z-index: 10000;
+  transition: all 0.3s ease;
+}
+
+#vlibras.enabled {
+  display: block !important;
+}
+
+#vlibras * {
+  max-width: none !important;
+  max-height: none !important;
+}
+
+div[vw-access-button] {
+  position: fixed !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  cursor: pointer !important;
+  width: 45px !important;
+  height: 45px !important;
+  z-index: 10001 !important;
+  transition: all 0.3s ease !important;
+}
+
+div[vw-plugin-wrapper] {
+  position: fixed !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  z-index: 10002 !important;
+  width: 300px !important;
+  height: 300px !important;
+  transition: all 0.3s ease !important;
+  background: transparent !important;
+}
+
+/* Garante que o widget fique visível quando ativo */
+#vlibras.enabled div[vw-access-button],
+#vlibras.enabled div[vw-plugin-wrapper] {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Estilos para o modo de alto contraste */
+.high-contrast div[vw] {
+  filter: invert(1);
+}
+
+/* Estilos específicos para os controles de fonte no modo alto contraste */
+.high-contrast .fontSizeControls,
+.high-contrast [class*="fontSizeControls"] {
+  background-color: var(--primary-dark) !important;
+  border: 1px solid var(--foreground) !important;
+  color: var(--foreground) !important;
+}
+
+.high-contrast .fontSizeControls button,
+.high-contrast [class*="fontSizeControls"] button {
+  background-color: var(--primary) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--foreground) !important;
+}
+
+.high-contrast .fontSizeControls span,
+.high-contrast [class*="fontSizeControls"] span {
+  color: var(--foreground) !important;
+}
+
+.high-contrast .fontSizeControls button:hover,
+.high-contrast [class*="fontSizeControls"] button:hover {
+  background-color: var(--background) !important;
 }
 

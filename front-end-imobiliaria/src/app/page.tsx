@@ -1,35 +1,9 @@
-import { Footer } from "@/components/footer";
 
-// Carregando a fonte Inter
-const montserrat = Montserrat({
-    subsets: ['latin'],
-    weight: ['400', '800'],
-    display: 'swap',
-});
+import PaginaInicial from "./paginaInicial/page";
 
-import Botao from '@/components/Botao';
-import Image from 'next/image';
-import Link from 'next/link'
-import Agendamento from './agendamentosUser/page'
 
-export default function PaginaEditor() {
+export default function pagina() {
     return (
-        <div>
-           <Link href="./perfilUsuario">Perfil</Link>
-           <Link href="./agendamentosUser">Agendamentos</Link>
-        </div>
-
-
+            <PaginaInicial/>
     );
-
-
-}
-
-//sm: md: lg: 2xl:
-export default function footer() {
-    return (
-        <>
-            <Footer />
-        </>
-    )
 }

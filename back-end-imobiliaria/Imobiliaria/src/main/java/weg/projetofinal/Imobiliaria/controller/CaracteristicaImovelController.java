@@ -7,19 +7,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import weg.projetofinal.Imobiliaria.model.dto.CaracteristicaImovelGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.CaracteristicaImovelPostRequestDTO;
-import weg.projetofinal.Imobiliaria.model.dto.CaracteristicasImovelPutRequestDTO;
+import weg.projetofinal.Imobiliaria.model.dto.caracteriticas.CaracteristicaImovelGetResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.caracteriticas.CaracteristicaImovelPostRequestDTO;
+import weg.projetofinal.Imobiliaria.model.dto.caracteriticas.CaracteristicasImovelPutRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.CaracteristicaImovel;
-import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.model.mapper.CaracteristicaImovelMapper;
 import weg.projetofinal.Imobiliaria.service.CaracteriscaImovelService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/caracteristicaImovel")
 @CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
-public class CaracteristicaImovelController {
+public class
+CaracteristicaImovelController {
 
     private CaracteriscaImovelService service;
 
@@ -56,5 +58,15 @@ public class CaracteristicaImovelController {
         CaracteristicaImovel caracteristicaImovel = CaracteristicaImovelMapper.INSTANCE.caracteristicaImovelPutRequestDTOToCaracteristicaImovel(caracteristicaImovelDTO);
         CaracteristicaImovel updateCaracteriscaImovel = service.updateCaracteristica(id, caracteristicaImovel);
         return CaracteristicaImovelMapper.INSTANCE.caracteristicaImovelToCaracteristicaImovelGetResponseDTO(updateCaracteriscaImovel);
+    }
+
+    @GetMapping("/filtro")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CaracteristicaImovelGetResponseDTO> getAll(
+            @RequestParam(required = false) Integer quantidade_quartos,
+            @RequestParam(required = false) Integer quantidade_banheiros
+    ) {
+        List<CaracteristicaImovel> caracteristicaImovels = service.filtrarPorCaracteristicas(quantidade_quartos,quantidade_banheiros);
+        return caracteristicaImovels.stream().map(CaracteristicaImovelMapper.INSTANCE::caracteristicaImovelToCaracteristicaImovelGetResponseDTO).toList();
     }
 }

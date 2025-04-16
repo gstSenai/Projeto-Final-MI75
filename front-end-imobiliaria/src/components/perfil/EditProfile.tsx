@@ -50,7 +50,7 @@ export default function EditProfile() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Aqui você implementará a lógica para salvar as alterações
+
         setIsEditing(false);
     };
 

@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelGetResponseDTO;
-import weg.projetofinal.Imobiliaria.model.dto.ImovelPostRequestDTO;
+import weg.projetofinal.Imobiliaria.model.dto.imovel.ImovelGetResponseDTO;
+import weg.projetofinal.Imobiliaria.model.dto.imovel.ImovelPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.model.mapper.ImovelMapper;
 import weg.projetofinal.Imobiliaria.service.ImovelService;
@@ -40,6 +43,26 @@ public class ImovelController {
         Page<Imovel> imoveisPage = service.getAllImovel(pageable);
         return imoveisPage.map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO);
     }
+
+
+    @GetMapping("/getAll/alugados")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<ImovelGetResponseDTO> listAlugados(
+            @RequestParam(required = false) String status_imoveis,
+            Pageable pageable) {
+        Page<Imovel> imoveisPage = service.imovelsAlugados(status_imoveis, pageable);
+        return imoveisPage.map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO);
+    }
+
+    @GetMapping("/getAll/vendidos")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<ImovelGetResponseDTO> listVendidos(
+            @RequestParam(required = false) String status_imoveis,
+            Pageable pageable) {
+        Page<Imovel> imoveisPage = service.imovelsVendidos(status_imoveis, pageable);
+        return imoveisPage.map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO);
+    }
+
 
     @GetMapping("/getById/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -75,4 +98,5 @@ public class ImovelController {
         List<Imovel> imovel = service.filtroImovel(tipo_imovel, valor_min, valor_max);
         return imovel.stream().map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO).toList();
     }
+
 }
