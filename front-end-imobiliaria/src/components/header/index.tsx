@@ -25,16 +25,19 @@ export function Header() {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [username, setUsername] = useState('')
     const [userRole, setUserRole] = useState('')
-
+    const [id, setId] = useState('')
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         const storedUsername = localStorage.getItem('username');
         const storedRole = localStorage.getItem('tipo_conta');
+        const storedId = localStorage.getItem('id');
+        console.log("ID armazenado:", storedId);
         if (token && storedUsername) {
             setIsLoggedIn(true);
             setUsername(storedUsername);
             setUserRole(storedRole || '');
+            setId(storedId || '');
         }
     }, []);
 
@@ -59,6 +62,8 @@ export function Header() {
         setUsername('');
         localStorage.removeItem('token');
         localStorage.removeItem('username');
+        localStorage.removeItem('tipo_conta');
+        localStorage.removeItem('id');
         setShowProfileModal(false);
         router.push('/login');
     }
@@ -199,8 +204,9 @@ export function Header() {
                                             </div>
                                             <div className="w-full h-[1px] bg-white opacity-50"></div>
                                             <Link
-                                                href="/perfilUsuario"
+                                                href={`/perfilUsuario/${id}`}
                                                 className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
+                                                onClick={() => console.log("ID ao clicar no link:", id)}
                                             >
                                                 Perfil
                                             </Link>

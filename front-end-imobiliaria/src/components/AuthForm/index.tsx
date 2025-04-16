@@ -176,8 +176,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
           
           const usuario = userData.content.find((u: FormData) => u.username === data.username)
           
-          if (usuario && usuario.tipo_conta) {
+          if (usuario) {
+            console.log("ID do usuário encontrado:", usuario.id)
             localStorage.setItem("tipo_conta", usuario.tipo_conta)
+            localStorage.setItem("id", usuario.id.toString())
             
             if (usuario.tipo_conta === "Usuario") {
               router.push("/paginaInicial")
