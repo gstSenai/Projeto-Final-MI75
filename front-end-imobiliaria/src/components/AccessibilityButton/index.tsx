@@ -1,8 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { FaWheelchair, FaFont, FaAdjust } from "react-icons/fa"
-import { VLibrasButton } from "../VLibrasButton"
+import { FaWheelchair, FaFont, FaAdjust, FaHandPointer } from "react-icons/fa"
 import styles from './styles.module.css'
 
 declare global {
@@ -18,11 +17,51 @@ export function AccessibilityButton() {
   const [isHighContrast, setIsHighContrast] = useState(false)
   const [isVLibrasActive, setIsVLibrasActive] = useState(false)
 
+  useEffect(() => {
+    // Adiciona os elementos necessários para o VLibras
+    const vLibrasDiv = document.createElement('div')
+    vLibrasDiv.setAttribute('vw', 'true')
+    
+    const vLibrasWidgetDiv = document.createElement('div')
+    vLibrasWidgetDiv.setAttribute('vw-access-button', 'true')
+    
+    const vLibrasPluginDiv = document.createElement('div')
+    vLibrasPluginDiv.setAttribute('vw-plugin-wrapper', 'true')
+    
+    vLibrasDiv.appendChild(vLibrasWidgetDiv)
+    vLibrasDiv.appendChild(vLibrasPluginDiv)
+    
+    document.body.appendChild(vLibrasDiv)
+
+    // Carrega o script do VLibras
+    const script = document.createElement('script')
+    script.src = 'https://vlibras.gov.br/app/vlibras-plugin.js'
+    script.async = true
+    script.onload = () => {
+      if (window.VLibras) {
+        new window.VLibras.Widget()
+      }
+    }
+    document.body.appendChild(script)
+
+    // Remove os elementos ao desmontar
+    return () => {
+      const scriptElement = document.querySelector('script[src*="vlibras.gov.br"]')
+      if (scriptElement) {
+        scriptElement.remove()
+      }
+      const vLibrasElement = document.querySelector('div[vw="true"]')
+      if (vLibrasElement) {
+        vLibrasElement.remove()
+      }
+    }
+  }, [])
+
   const toggleVLibras = () => {
     setIsVLibrasActive(!isVLibrasActive)
-    const vlibrasWidget = document.getElementById('vlibras-widget')
-    if (vlibrasWidget) {
-      vlibrasWidget.style.display = isVLibrasActive ? 'none' : 'block'
+    const vLibrasDiv = document.querySelector('div[vw="true"]')
+    if (vLibrasDiv) {
+      vLibrasDiv.style.display = isVLibrasActive ? 'none' : 'block'
     }
   }
 
@@ -59,7 +98,14 @@ export function AccessibilityButton() {
 
       {isMenuOpen && (
         <div className={styles.menu}>
-          <VLibrasButton isActive={isVLibrasActive} onToggle={toggleVLibras} />
+          <button
+            className={`${styles.vlibrasButton} ${isVLibrasActive ? styles.active : ''}`}
+            onClick={toggleVLibras}
+            aria-label={isVLibrasActive ? 'Desativar VLibras' : 'Ativar VLibras'}
+          >
+            <FaHandPointer size={20} />
+            <span>VLibras</span>
+          </button>
           
           <div className={styles.fontSizeControls}>
             <button
