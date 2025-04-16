@@ -13,7 +13,7 @@ export default function PaginaHistoricoUsuario() {
                     <Header />
                 </header>
                 <Image
-                    className='absolute -left-28 w-[300px] h-[320px] sm:w-[400px] sm:h-[420px] md:w-[480px] md:h-[500px]'
+                    className='absolute -left-28 w-[300px] h-[320px] sm:w-[400px] sm:h-[420px] md:w-[480px] md:h-[500px] -z-10'
                     src="/imagemFundo.png"
                     alt="Imagem logo de fundo"
                     width={558}
@@ -26,7 +26,7 @@ export default function PaginaHistoricoUsuario() {
                             <h1 className="font-bold text-lg md:text-xl lg:text-2xl">Histórico de Agendamentos</h1>
                             <div className="border-t-2 border-[#702632] w-[130px] mt-1"></div>
                         </div>
-                        <div className='px-[75px] pt-8'>
+                        <div className='px-[75px] pt-8 pb-44'>
                             <PaginaHistoricoUsuarioChamar />
                         </div>
                     </section>
