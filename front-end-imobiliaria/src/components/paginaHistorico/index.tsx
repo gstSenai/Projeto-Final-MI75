@@ -2,9 +2,10 @@
 import { FormularioInput } from "../Calendario/selecaoHorario";
 import { useForm } from "react-hook-form";
 import type React from "react";
+import { CardHorario } from "./cardHorario";
 
 interface FormData {
-    horario: string;
+    mes: string;
 }
 
 export function PaginaHistoricoUsuarioChamar() {
@@ -26,7 +27,15 @@ export function PaginaHistoricoUsuarioChamar() {
                     ]}
                 />
             </div>
+            <div>
 
-        </>                                                                                                                                          
+                <div className="border-t-2 border-[#702632] mt-1"></div>
+
+                <CardHorario tipo="pendente" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
+                <CardHorario tipo="realizado" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
+                <CardHorario tipo="cancelado" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
+
+            </div>
+        </>
     );
 }
