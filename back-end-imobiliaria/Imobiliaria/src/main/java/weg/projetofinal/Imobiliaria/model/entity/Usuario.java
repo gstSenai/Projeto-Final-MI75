@@ -47,6 +47,9 @@ public class Usuario {
     @OneToMany(mappedBy = "id_usuario")
     private List<Imovel> imovel;
 
+    @Column
+    private String provider;
+
 //    @OneToOne(cascade = CascadeType.ALL)
 //    @JoinColumn(name = "usuario_details_id", referencedColumnName = "id")
 //    private UsuarioDetails usuarioDetails;

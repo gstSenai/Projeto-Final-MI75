@@ -123,14 +123,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
 
       const payload = isCadastro
         ? {
-            username: formData.nomeUsuario,
-            email: formData.email,
-            password: formData.senha,
-          }
+          username: formData.nomeUsuario,
+          email: formData.email,
+          password: formData.senha,
+        }
         : {
-            usernameOrEmail: formData.email,
-            password: formData.senha,
-          }
+          usernameOrEmail: formData.email,
+          password: formData.senha,
+        }
 
       const response = await fetch(`${apiUrl}${endpoint}`, {
         method: "POST",
@@ -181,7 +181,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
               height={144}
               className="w-36 my-4 pr-2"
             />
-            <button className="bg-white border border-gray-300 text-[#702632] text-[14px] font-bold py-2.5 px-2 w-[240px] rounded-xl flex justify-center items-center mt-4">
+            <button
+              className="bg-white border border-gray-300 text-[#702632] text-[14px] font-bold py-2.5 px-2 w-[240px] rounded-xl flex justify-center items-center mt-4"
+              onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9090"}/oauth2/authorization/google`}
+            >
               <Image
                 src="/loginIcons/google-icon.png"
                 alt="Google"
@@ -287,9 +290,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
 
               <div className="flex justify-center">
                 <button
-                  className={`w-full md:w-1/2 font-bold py-3 rounded-lg transition-colors ${
-                    isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-[#702632] text-white hover:bg-[#5a1e28]"
-                  }`}
+                  className={`w-full md:w-1/2 font-bold py-3 rounded-lg transition-colors ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-[#702632] text-white hover:bg-[#5a1e28]"
+                    }`}
                   type="submit"
                   disabled={isLoading}
                 >

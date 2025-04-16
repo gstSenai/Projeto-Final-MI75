@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -21,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import weg.projetofinal.Imobiliaria.security.filter.AuthTokenFilter;
 import weg.projetofinal.Imobiliaria.security.service.AuthEntryPointJwt;
 import weg.projetofinal.Imobiliaria.security.service.UserDetailsServiceImpl;
+import weg.projetofinal.Imobiliaria.security.util.OAuth2SuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -30,6 +32,8 @@ public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointJwt authEntryPointJWT;
     private final AuthTokenFilter authTokenFilter;
+    private final OAuth2SuccessHandler successHandler;
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -54,26 +58,26 @@ public class SecurityConfig {
     }
 
 
+
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(authEntryPointJWT)
-                )
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll()
-
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/auth/**", "/oauth2/**", "/login**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth -> oauth
+                        .successHandler(successHandler)
                 )
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
+
 
 
 

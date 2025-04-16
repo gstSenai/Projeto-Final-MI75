@@ -11,6 +11,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioCadastroPostDTO;
@@ -41,6 +43,23 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
     private JwtUtil jwtUtils;
+
+    @GetMapping("/api/oauth2/success")
+    public ResponseEntity<JwtResponse> googleLogin(OAuth2AuthenticationToken authentication) {
+        OAuth2User user = authentication.getPrincipal();
+        String email = user.getAttribute("email");
+
+        String token = jwtUtils.generateTokenFromUsername(email);
+
+        return ResponseEntity.ok(new JwtResponse(
+                token,
+                "Bearer",
+                null, // sem ID se você não buscou do banco
+                email,
+                List.of("ROLE_USER")
+        ));
+    }
+
 
 
     @PostMapping("/signin")
