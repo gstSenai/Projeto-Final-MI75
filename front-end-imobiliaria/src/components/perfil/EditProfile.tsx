@@ -1,29 +1,58 @@
 'use client';
-import { useState, useRef } from 'react';
-import { FaPhoneAlt, FaEnvelope, FaCamera } from 'react-icons/fa';
+import { useState, useRef, useEffect } from 'react';
+import { FaCamera } from 'react-icons/fa';
 
 interface ProfileData {
-    name: string;
+    id: string;
+    username: string;
     age: number;
     biography: string;
     phone: string;
     email: string;
     twoFactorEnabled: boolean;
+    profileImage?: string;
 }
 
-export default function EditProfile() {
+interface EditProfileProps {
+    marketId: number;
+}
+
+export default function EditProfile({ marketId }: EditProfileProps) {
     const [profileData, setProfileData] = useState<ProfileData>({
-        name: 'Jéssica Vieira',
-        age: 28,
-        biography: 'Jéssica Vieira está focada em dar um passo importante para o futuro, sonhando em adquirir um terreno ou imóvel, para construir não apenas um lar, mas um espaço que reflita suas conquistas e ambições. Ela busca mais do que um simples lugar para morar: quer investir no seu próprio projeto de vida, com segurança e estabilidade para si e para sua família.',
-        phone: '+55 (47) 9469-4250',
-        email: 'jessica.vieira@gmail.com',
+        id: '',
+        username: '',
+        age: 0,
+        biography: '',
+        phone: '',
+        email: '',
         twoFactorEnabled: false
     });
 
     const [isEditing, setIsEditing] = useState(false);
     const [profileImage, setProfileImage] = useState<string>('corretora.png');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const response = await fetch(`http://localhost:9090/getById/${marketId}`);
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar perfil');
+                }
+                const data = await response.json();
+                setProfileData(data);
+                if (data.profileImage) {
+                    setProfileImage(data.profileImage);
+                }
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Erro ao carregar perfil');
+            }
+        };
+
+        fetchProfile();
+    }, [marketId]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -48,10 +77,45 @@ export default function EditProfile() {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
+        setError(null);
 
-        setIsEditing(false);
+        try {
+            const formData = new FormData();
+            formData.append('marketId', marketId.toString());
+            formData.append('name', profileData.username);
+            formData.append('age', profileData.age.toString());
+            formData.append('biography', profileData.biography);
+            formData.append('phone', profileData.phone);
+            formData.append('email', profileData.email);
+            formData.append('twoFactorEnabled', profileData.twoFactorEnabled.toString());
+            
+            if (fileInputRef.current?.files?.[0]) {
+                formData.append('profileImage', fileInputRef.current.files[0]);
+            }
+
+            const response = await fetch(`http://localhost:9090/usuario/update/${marketId}`, {
+                method: 'PUT',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao atualizar perfil');
+            }
+
+            const data = await response.json();
+            setProfileData(data);
+            if (data.profileImage) {
+                setProfileImage(data.profileImage);
+            }
+            setIsEditing(false);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Ocorreu um erro ao salvar o perfil');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -97,13 +161,13 @@ export default function EditProfile() {
                             {isEditing ? (
                                 <input
                                     type="text"
-                                    name="name"
-                                    value={profileData.name}
+                                    name="username"
+                                    value={profileData.username}
                                     onChange={handleInputChange}
                                     className="text-lg sm:text-xl font-extrabold text-black tracking-[-1] bg-transparent border-b border-black focus:outline-none text-center w-full"
                                 />
                             ) : (
-                                <h2 className='text-lg sm:text-xl font-extrabold text-black tracking-[-1]'>{profileData.name}</h2>
+                                <h2 className='text-lg sm:text-xl font-extrabold text-black tracking-[-1]'>{profileData.username}</h2>
                             )}
                             {isEditing ? (
                                 <input

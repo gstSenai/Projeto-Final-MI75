@@ -13,6 +13,8 @@ const inter = Inter({
     display: 'swap',
 });
 
+
+
 export function Header() {
     const router = useRouter()
     const [hamburguerMobile, setHambuguerMobile] = useState(false)
@@ -199,7 +201,7 @@ export function Header() {
                                             </div>
                                             <div className="w-full h-[1px] bg-white opacity-50"></div>
                                             <Link
-                                                href="/perfilUsuario"
+                                                href={`/perfilUsuario/${localStorage.getItem('id')}`}
                                                 className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
                                             >
                                                 Perfil
