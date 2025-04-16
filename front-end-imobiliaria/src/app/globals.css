@@ -149,3 +149,173 @@ body {
   background: white;
 }
 
+/* Estilos para o modo de alto contraste */
+.high-contrast {
+  --background: #3D1F23;  /* Vermelho escuro mais suave */
+  --foreground: #FFE5E8;  /* Rosa claro */
+  --primary: #702632;     /* Vermelho principal do site */
+  --primary-dark: #591F27; /* Vermelho escuro médio */
+}
+
+.high-contrast body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.high-contrast a {
+  color: var(--foreground);
+  text-decoration: underline;
+}
+
+.high-contrast button {
+  background-color: var(--primary);
+  color: var(--foreground);
+  border: 2px solid var(--foreground);
+}
+
+.high-contrast input, 
+.high-contrast textarea, 
+.high-contrast select {
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 2px solid var(--primary);
+}
+
+.high-contrast .bg-white,
+.high-contrast div[class*="bg-"],
+.high-contrast section,
+.high-contrast header,
+.high-contrast footer {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+}
+
+.high-contrast .text-black,
+.high-contrast p,
+.high-contrast h1,
+.high-contrast h2,
+.high-contrast h3,
+.high-contrast h4,
+.high-contrast h5,
+.high-contrast h6,
+.high-contrast span {
+  color: var(--foreground) !important;
+}
+
+.high-contrast .bg-gray-200,
+.high-contrast [class*="bg-gray"] {
+  background-color: var(--primary-dark) !important;
+  color: var(--foreground) !important;
+}
+
+/* Garantir que imagens e ícones permaneçam visíveis */
+.high-contrast img {
+  filter: brightness(1.2) contrast(1.2);
+}
+
+.high-contrast svg {
+  fill: #FFE5E8 !important;
+  color: #FFE5E8 !important;
+}
+
+/* Garantir que ícones dentro de botões também fiquem brancos */
+.high-contrast button svg {
+  fill: #FFE5E8 !important;
+  color: #FFE5E8 !important;
+}
+
+/* Garantir que bordas e divisores sejam visíveis */
+.high-contrast [class*="border"],
+.high-contrast hr {
+  border-color: var(--foreground) !important;
+}
+
+/* Garantir que elementos do menu sejam visíveis */
+.high-contrast [class*="menu"],
+.high-contrast [class*="dropdown"],
+.high-contrast [class*="modal"] {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--foreground) !important;
+}
+
+/* Estilos para o VLibras */
+#vlibras {
+  position: fixed !important;
+  bottom: 0;
+  right: 0;
+  width: auto !important;
+  height: auto !important;
+  z-index: 10000;
+  transition: all 0.3s ease;
+}
+
+#vlibras.enabled {
+  display: block !important;
+}
+
+#vlibras * {
+  max-width: none !important;
+  max-height: none !important;
+}
+
+div[vw-access-button] {
+  position: fixed !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  cursor: pointer !important;
+  width: 45px !important;
+  height: 45px !important;
+  z-index: 10001 !important;
+  transition: all 0.3s ease !important;
+}
+
+div[vw-plugin-wrapper] {
+  position: fixed !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  z-index: 10002 !important;
+  width: 300px !important;
+  height: 300px !important;
+  transition: all 0.3s ease !important;
+  background: transparent !important;
+}
+
+/* Garante que o widget fique visível quando ativo */
+#vlibras.enabled div[vw-access-button],
+#vlibras.enabled div[vw-plugin-wrapper] {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Estilos para o modo de alto contraste */
+.high-contrast div[vw] {
+  filter: invert(1);
+}
+
+/* Estilos específicos para os controles de fonte no modo alto contraste */
+.high-contrast .fontSizeControls,
+.high-contrast [class*="fontSizeControls"] {
+  background-color: var(--primary-dark) !important;
+  border: 1px solid var(--foreground) !important;
+  color: var(--foreground) !important;
+}
+
+.high-contrast .fontSizeControls button,
+.high-contrast [class*="fontSizeControls"] button {
+  background-color: var(--primary) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--foreground) !important;
+}
+
+.high-contrast .fontSizeControls span,
+.high-contrast [class*="fontSizeControls"] span {
+  color: var(--foreground) !important;
+}
+
+.high-contrast .fontSizeControls button:hover,
+.high-contrast [class*="fontSizeControls"] button:hover {
+  background-color: var(--background) !important;
+}
+
