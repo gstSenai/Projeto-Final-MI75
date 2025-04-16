@@ -1,9 +1,9 @@
-
+"use client"
 import Image from 'next/image';
 
 
 
-export function cardHorario() {
+export function CardHorario() {
     return (
         <>
             <div>
@@ -11,7 +11,7 @@ export function cardHorario() {
 
                 <div>
 
-
+                    <p>Código: <span>9765</span></p>
 
                     <p>Corretor: <span>João</span></p>
 

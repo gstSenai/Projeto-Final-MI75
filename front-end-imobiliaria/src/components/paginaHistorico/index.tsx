@@ -2,7 +2,7 @@
 import { FormularioInput } from "../Calendario/selecaoHorario";
 import { useForm } from "react-hook-form";
 import type React from "react";
-import { cardHorario } from "./cardHorario";
+import  {CardHorario}  from "./cardHorario";
 
 interface FormData {
     mes: string;
@@ -31,7 +31,7 @@ export function PaginaHistoricoUsuarioChamar() {
 
                 <div className="border-t-2 border-[#702632] mt-1"></div>
 
-                    
+                 <CardHorario /> 
 
 
             </div>
