@@ -151,48 +151,92 @@ body {
 
 /* Estilos para o modo de alto contraste */
 .high-contrast {
-  --background: #000000;
-  --foreground: #ffffff;
-  --primary: #ffff00;
-  --primary-dark: #cccc00;
+  --background: #3D1F23;  /* Vermelho escuro mais suave */
+  --foreground: #FFE5E8;  /* Rosa claro */
+  --primary: #702632;     /* Vermelho principal do site */
+  --primary-dark: #591F27; /* Vermelho escuro médio */
 }
 
 .high-contrast body {
-  background-color: #000000;
-  color: #ffffff;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 .high-contrast a {
-  color: #ffff00;
+  color: var(--foreground);
   text-decoration: underline;
 }
 
 .high-contrast button {
-  background-color: #ffff00;
-  color: #000000;
-  border: 2px solid #ffffff;
+  background-color: var(--primary);
+  color: var(--foreground);
+  border: 2px solid var(--foreground);
 }
 
 .high-contrast input, 
 .high-contrast textarea, 
 .high-contrast select {
-  background-color: #000000;
-  color: #ffffff;
-  border: 2px solid #ffffff;
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 2px solid var(--primary);
 }
 
-.high-contrast .bg-white {
-  background-color: #000000 !important;
-  color: #ffffff !important;
+.high-contrast .bg-white,
+.high-contrast div[class*="bg-"],
+.high-contrast section,
+.high-contrast header,
+.high-contrast footer {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
 }
 
-.high-contrast .text-black {
-  color: #ffffff !important;
+.high-contrast .text-black,
+.high-contrast p,
+.high-contrast h1,
+.high-contrast h2,
+.high-contrast h3,
+.high-contrast h4,
+.high-contrast h5,
+.high-contrast h6,
+.high-contrast span {
+  color: var(--foreground) !important;
 }
 
-.high-contrast .bg-gray-200 {
-  background-color: #333333 !important;
-  color: #ffffff !important;
+.high-contrast .bg-gray-200,
+.high-contrast [class*="bg-gray"] {
+  background-color: var(--primary-dark) !important;
+  color: var(--foreground) !important;
+}
+
+/* Garantir que imagens e ícones permaneçam visíveis */
+.high-contrast img {
+  filter: brightness(1.2) contrast(1.2);
+}
+
+.high-contrast svg {
+  fill: #FFE5E8 !important;
+  color: #FFE5E8 !important;
+}
+
+/* Garantir que ícones dentro de botões também fiquem brancos */
+.high-contrast button svg {
+  fill: #FFE5E8 !important;
+  color: #FFE5E8 !important;
+}
+
+/* Garantir que bordas e divisores sejam visíveis */
+.high-contrast [class*="border"],
+.high-contrast hr {
+  border-color: var(--foreground) !important;
+}
+
+/* Garantir que elementos do menu sejam visíveis */
+.high-contrast [class*="menu"],
+.high-contrast [class*="dropdown"],
+.high-contrast [class*="modal"] {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--foreground) !important;
 }
 
 /* Estilos para o VLibras */
@@ -248,5 +292,30 @@ div[vw-plugin-wrapper] {
 /* Estilos para o modo de alto contraste */
 .high-contrast div[vw] {
   filter: invert(1);
+}
+
+/* Estilos específicos para os controles de fonte no modo alto contraste */
+.high-contrast .fontSizeControls,
+.high-contrast [class*="fontSizeControls"] {
+  background-color: var(--primary-dark) !important;
+  border: 1px solid var(--foreground) !important;
+  color: var(--foreground) !important;
+}
+
+.high-contrast .fontSizeControls button,
+.high-contrast [class*="fontSizeControls"] button {
+  background-color: var(--primary) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--foreground) !important;
+}
+
+.high-contrast .fontSizeControls span,
+.high-contrast [class*="fontSizeControls"] span {
+  color: var(--foreground) !important;
+}
+
+.high-contrast .fontSizeControls button:hover,
+.high-contrast [class*="fontSizeControls"] button:hover {
+  background-color: var(--background) !important;
 }
 

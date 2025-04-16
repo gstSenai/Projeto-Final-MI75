@@ -16,16 +16,24 @@ export function AccessibilityButton() {
   const [fontSize, setFontSize] = useState(100)
   const [isHighContrast, setIsHighContrast] = useState(false)
   const [isVLibrasActive, setIsVLibrasActive] = useState(false)
+  const [hasMounted, setHasMounted] = useState(false)
 
   useEffect(() => {
-    // Inicializa o estado do VLibras baseado na visibilidade do widget
-    const vLibrasDiv = document.querySelector('div[vw]')
-    if (vLibrasDiv) {
-      setIsVLibrasActive(vLibrasDiv.classList.contains('enabled'))
-    }
+    setHasMounted(true)
   }, [])
 
+  useEffect(() => {
+    if (hasMounted) {
+      const vLibrasDiv = document.querySelector('div[vw]')
+      if (vLibrasDiv) {
+        setIsVLibrasActive(vLibrasDiv.classList.contains('enabled'))
+      }
+    }
+  }, [hasMounted])
+
   const toggleVLibras = () => {
+    if (!hasMounted) return
+
     const newState = !isVLibrasActive
     setIsVLibrasActive(newState)
     
@@ -34,16 +42,19 @@ export function AccessibilityButton() {
     const vLibrasWrapper = document.querySelector('div[vw-plugin-wrapper]')
     
     if (vLibrasDiv && vLibrasButton && vLibrasWrapper) {
-      if (newState) {
-        vLibrasDiv.classList.add('enabled')
-        vLibrasDiv.style.display = 'block'
-        vLibrasButton.style.display = 'block'
-        vLibrasWrapper.style.display = 'block'
-      } else {
-        vLibrasDiv.classList.remove('enabled')
-        vLibrasDiv.style.display = 'none'
-        vLibrasButton.style.display = 'none'
-        vLibrasWrapper.style.display = 'none'
+      const elements = [vLibrasDiv, vLibrasButton, vLibrasWrapper]
+      elements.forEach(el => {
+        if (el instanceof HTMLElement) {
+          el.style.display = newState ? 'block' : 'none'
+        }
+      })
+
+      if (vLibrasDiv instanceof HTMLElement) {
+        if (newState) {
+          vLibrasDiv.classList.add('enabled')
+        } else {
+          vLibrasDiv.classList.remove('enabled')
+        }
       }
     }
   }
@@ -79,7 +90,7 @@ export function AccessibilityButton() {
         <FaSignLanguage size={24} />
       </button>
 
-      {isMenuOpen && (
+      {hasMounted && isMenuOpen && (
         <div className={styles.menu}>
           <button
             className={`${styles.vlibrasButton} ${isVLibrasActive ? styles.active : ''}`}
@@ -94,6 +105,7 @@ export function AccessibilityButton() {
             <button
               onClick={decreaseFontSize}
               aria-label="Diminuir tamanho da fonte"
+              disabled={!hasMounted}
             >
               A-
             </button>
@@ -101,6 +113,7 @@ export function AccessibilityButton() {
             <button
               onClick={increaseFontSize}
               aria-label="Aumentar tamanho da fonte"
+              disabled={!hasMounted}
             >
               A+
             </button>
@@ -110,6 +123,7 @@ export function AccessibilityButton() {
             className={`${styles.highContrastButton} ${isHighContrast ? styles.active : ''}`}
             onClick={toggleHighContrast}
             aria-label={isHighContrast ? 'Desativar alto contraste' : 'Ativar alto contraste'}
+            disabled={!hasMounted}
           >
             <FaAdjust size={20} />
             <span>Alto Contraste</span>
