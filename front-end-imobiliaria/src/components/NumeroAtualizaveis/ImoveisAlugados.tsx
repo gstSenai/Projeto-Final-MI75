@@ -14,10 +14,7 @@ export function ImoveisAlugados() {
     const getImoveisAlugados = useCallback(async () => {
         setIsLoading(true);
         try {
-            // Opção 1: Se você tiver um endpoint específico para imóveis alugados
-            // const response = await request("GET", `http://localhost:9090/imovel/alugados`) as ApiResponse;
-            
-            // Opção 2: Se você puder filtrar pelo endpoint existente
+        
             const response = await request("GET", `http://localhost:9090/imovel/getAll/alugados`) as ApiResponse;
             
             if (response && typeof response === 'object') {
