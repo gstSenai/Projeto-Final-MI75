@@ -2,12 +2,17 @@
 
 import { useEffect } from 'react'
 
+declare global {
+  interface Window {
+    VLibras: any;
+  }
+}
+
 export function VLibrasScript() {
   useEffect(() => {
     const loadVLibras = () => {
       // Cria a div principal do VLibras
       const vw = document.createElement('div')
-      vw.id = 'vlibras'
       vw.setAttribute('vw', '')
       
       // Cria o botão de acesso
@@ -29,44 +34,33 @@ export function VLibrasScript() {
       script.async = true
       
       script.onload = () => {
-        // Inicializa o widget após o script carregar
-        new window.VLibras.Widget('https://vlibras.gov.br/app')
-        
-        // Configura o widget
-        const widgetConfig = {
-          opacity: 0.9,
-          position: 3, // 1-TL 2-TR 3-BR 4-BL
-          avatar: 1, // 1-Ícaro 2-Hozana 3-Guga
-          speed: 1.0, // 0.8-Normal 1.0-Rápido
-          animate: true,
-          showOnLoad: false
-        }
-        
-        if (window.VLibras?.Widget) {
-          const widget = new window.VLibras.Widget()
-          widget.configure(widgetConfig)
-        }
-        
-        // Oculta inicialmente
-        const elements = document.querySelectorAll('[vw], [vw-access-button], [vw-plugin-wrapper]')
-        elements.forEach(el => {
-          if (el instanceof HTMLElement) {
-            el.style.display = 'none'
+        try {
+          if (typeof window.VLibras !== 'undefined') {
+            const widgetInstance = new window.VLibras.Widget();
+            // Oculta inicialmente
+            const elements = document.querySelectorAll('[vw], [vw-access-button], [vw-plugin-wrapper]')
+            elements.forEach(el => {
+              if (el instanceof HTMLElement) {
+                el.style.display = 'none'
+              }
+            })
           }
-        })
+        } catch (error) {
+          console.error('Error initializing VLibras:', error)
+        }
       }
       
       document.head.appendChild(script)
     }
 
     // Carrega o VLibras apenas se ainda não estiver carregado
-    if (!document.querySelector('#vlibras')) {
+    if (!document.querySelector('[vw]')) {
       loadVLibras()
     }
 
     return () => {
       // Cleanup ao desmontar
-      const vw = document.querySelector('#vlibras')
+      const vw = document.querySelector('[vw]')
       if (vw) {
         vw.remove()
       }

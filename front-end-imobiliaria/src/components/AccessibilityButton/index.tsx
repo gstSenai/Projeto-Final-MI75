@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { FaWheelchair, FaFont, FaAdjust, FaHandPointer } from "react-icons/fa"
+import { FaWheelchair, FaFont, FaAdjust, FaHandPointer, FaSignLanguage } from "react-icons/fa"
 import styles from './styles.module.css'
 
 declare global {
@@ -76,7 +76,7 @@ export function AccessibilityButton() {
         onClick={() => setIsMenuOpen(!isMenuOpen)}
         aria-label="Menu de acessibilidade"
       >
-        <FaWheelchair size={24} />
+        <FaSignLanguage size={24} />
       </button>
 
       {isMenuOpen && (
@@ -86,7 +86,7 @@ export function AccessibilityButton() {
             onClick={toggleVLibras}
             aria-label={isVLibrasActive ? 'Desativar VLibras' : 'Ativar VLibras'}
           >
-            <FaHandPointer size={20} />
+            <FaSignLanguage size={20} />
             <span>VLibras</span>
           </button>
           
