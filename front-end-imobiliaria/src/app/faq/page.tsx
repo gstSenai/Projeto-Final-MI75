@@ -1,4 +1,5 @@
 import FAQ from "@/components/faq";
+import { LoadingWrapper } from "@/components/loading/loadingServer";
 
 export default function FAQPage() {
   const faqData = [
@@ -18,16 +19,18 @@ export default function FAQPage() {
         "Sim, a maioria dos vendedores aceita negociação, especialmente para pagamentos à vista.",
     },
     {
-        question: "Quanto tempo leva para finalizar a compra de um imóvel?",
-        answer:
-          "Geralmente de 30 a 90 dias, dependendo do financiamento e burocracia.",
-      },
-      {
-        question: "Quais são as despesas envolvidas na compra de um imóvel?",
-        answer:
-          "Além do valor do imóvel, há custos como ITBI, escritura, registro em cartório e taxas bancárias, que podem variar de acordo com o financiamento.",
-      },
+      question: "Quanto tempo leva para finalizar a compra de um imóvel?",
+      answer:
+        "Geralmente de 30 a 90 dias, dependendo do financiamento e burocracia.",
+    },
+    {
+      question: "Quais são as despesas envolvidas na compra de um imóvel?",
+      answer:
+        "Além do valor do imóvel, há custos como ITBI, escritura, registro em cartório e taxas bancárias, que podem variar de acordo com o financiamento.",
+    },
   ];
 
-  return <FAQ title="Perguntas Frequentes" faqs={faqData} />;
+  return <LoadingWrapper>
+    <FAQ title="Perguntas Frequentes" faqs={faqData} />
+  </LoadingWrapper>;
 }

@@ -1,6 +1,9 @@
+"use client"
+
 import { Montserrat } from 'next/font/google';
 import Link from 'next/link';
 import Image from 'next/image';
+import { VLibrasButton } from "@/components/VLibrasButton"
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -20,16 +23,16 @@ export function Footer() {
                     </p>
                     <div className="flex gap-4 pt-4">
                         <Link href="https://facebook.com" target="_blank">
-                            <img src="/iconFooter/facebook.png" alt="facebook" className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
+                            <Image src="/iconFooter/facebook.png" alt="facebook" width={20} height={20} className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
                         </Link>
                         <Link href="https://linkedin.com" target="_blank">
-                            <img src="/iconFooter/linkedin.png" alt="linkedin" className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
+                            <Image src="/iconFooter/linkedin.png" alt="linkedin" width={20} height={20} className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
                         </Link>
                         <Link href="https://instagram.com" target="_blank">
-                            <img src="/iconFooter/instagram.png" alt="instagram" className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
+                            <Image src="/iconFooter/instagram.png" alt="instagram" width={20} height={20} className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
                         </Link>
                         <Link href="https://whatsapp.com" target="_blank">
-                            <img src="/iconFooter/zap.png" alt="whatsapp" className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
+                            <Image src="/iconFooter/zap.png" alt="whatsapp" width={20} height={20} className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
                         </Link>
                     </div>
                 </div>
@@ -63,7 +66,7 @@ export function Footer() {
                         <div className="flex flex-col gap-2">
                             <p className="text-base xl:text-lg font-extrabold">Links Rápidos</p>
                             <div className="font-light text-xs md:text-sm flex flex-col gap-1.5">
-                                <p><a href="/paginaInicial">Página Inicial</a></p>
+                                <p><a href="/">Página Inicial</a></p>
                                 <p><a href="/sobreNos">Sobre Nós</a></p>
                                 <p><a href="#">Comprar</a></p>
                                 <p><a href="#">Vender</a></p>
@@ -86,13 +89,17 @@ export function Footer() {
             <section className="relative bg-[#2B2A28] text-white py-2.5 px-2.5 flex justify-center items-center z-20">
                 <p className="text-center text-[10px] md:text-xs">
                     <span className="hidden lg:inline">
-                        © 2024 HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. <a href="">Termos de Uso</a> | <a href="">Política de Privacidade</a> | <a href="">Política de Cookies.</a>
+                        © 2024 HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. <a href="/PoliticaPrivacidade">Termos de Uso</a> | <a href="/PoliticaPrivacidade">Política de Privacidade</a> | <a href="/PoliticaPrivacidade">Política de Cookies.</a>
                     </span>
                     <span className="lg:hidden">
                         © 2024 HAV Imobiliária. Todos os direitos reservados.
                     </span>
                 </p>
             </section>
+
+            <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-300">
+                <p>&copy; {new Date().getFullYear()} HAV Imóveis. Todos os direitos reservados.</p>
+            </div>
         </footer>
     );
 }

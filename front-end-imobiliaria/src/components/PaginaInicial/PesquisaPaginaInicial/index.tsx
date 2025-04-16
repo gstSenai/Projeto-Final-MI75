@@ -13,10 +13,6 @@ const montserrat = Montserrat({
     display: 'swap',
 });
 
-
-
-
-
 export function PesquisaPaginaInicial() {
     const [modo, setModo] = useState('comprar');
     const [mostrarAvançado, setMostrarAvançado] = useState(false);

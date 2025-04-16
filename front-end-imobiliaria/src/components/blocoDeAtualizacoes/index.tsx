@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export default function AtualizarComponents() {
     return (
-        <div className="mb-8"> {/* Adicionado margin-bottom para evitar sobreposição com o footer */}
+        <div className="sm:mb-8 md:mb-16 lg:mb-8"> {/* Adicionado margin-bottom para evitar sobreposição com o footer */}
             {/* Ícone de Email */}
             <Image
                 className="absolute invisible md:invisible lg:visible pl-4 pt-4"

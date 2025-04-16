@@ -1,25 +1,25 @@
 "use client"
 
+import Image from "next/image"
 import type React from "react"
-import type { UseFormRegister, FieldError } from "react-hook-form"
+import type { UseFormRegister, FieldError, FieldValues, Path } from "react-hook-form"
 
-interface FormularioInputProps {
+interface FormularioInputProps<T extends FieldValues = FieldValues> {
   placeholder?: string
   interName?: string
-  name: string
+  name: string | Path<T>
   value?: string
   showOptions?: boolean
   onChange?: (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
   customizacaoClass: string
   options?: string[]
-  register: UseFormRegister<any>
+  register: UseFormRegister<T>
   errors?: FieldError | undefined
   required?: boolean
   disabled?: boolean
-  iconCaneta?: boolean
 }
 
-export function FormularioInput({
+export function FormularioInput<T extends FieldValues = FieldValues>({
   placeholder,
   interName,
   name,
@@ -32,29 +32,22 @@ export function FormularioInput({
   required = false,
   disabled = false,
   onChange,
-  iconCaneta,
-}: FormularioInputProps) {
-  const getIconPath = () => {
-    // Implementation for getIconPath if needed
-    return ""
-  }
-  const iconPath = getIconPath()
-
+}: FormularioInputProps<T>) {
   return (
     <div className="w-full">
       {placeholder && <label className="block text-lg">{placeholder}</label>}
       <div
-        className={`relative ${customizacaoClass} p-2 flex items-center w-full rounded-lg bg-white border ${
+        className={`relative ${customizacaoClass} p-2 flex items-center w-full rounded-lg border ${
           errors ? "border-red-500" : "border-gray-500"
         }`}
       >
         {options ? (
           <select
-            {...register(name, { required })}
+            {...register(name as Path<T>, { required })}
             value={value}
             onChange={onChange}
             disabled={disabled}
-            className="w-full bg-transparent outline-none text-gray-900 disabled:opacity-50"
+            className="w-full bg-transparent outline-none disabled:opacity-50"
           >
             <option value="" disabled>
               {interName} {required ? "*" : ""}
@@ -69,7 +62,7 @@ export function FormularioInput({
           <input
             type="text"
             placeholder={`${interName} ${required ? "*" : ""}`}
-            {...register(name, { required })}
+            {...register(name as Path<T>, { required })}
             value={value}
             onChange={onChange}
             disabled={disabled}
@@ -77,7 +70,7 @@ export function FormularioInput({
           />
         )}
 
-        {showOptions && <img src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" className="ml-auto mr-4 lg:h-6" />}
+        {showOptions && <Image src="/iconsForms/botaoOpcoes.png" alt="Botão Opções" width={24} height={24} className="ml-auto mr-4 lg:h-6" />}
       </div>
 
       {errors && <span className="text-red-500 text-sm">{errors.message}</span>}

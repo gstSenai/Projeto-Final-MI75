@@ -1,119 +1,62 @@
 "use client"
 
-import type { UseFormRegister, UseFormSetValue } from "react-hook-form"
+import type { UseFormRegister, UseFormSetValue, FieldErrors } from "react-hook-form"
 import { useEffect, useState } from "react"
+import { FormData } from "../../index"
 
 type UsuarioType = {
     id?: number
-    nome: string
-    sobrenome: string
+    username: string
     tipo_conta: string
     email: string
-    senha: string
+    password: string
     ativo: boolean
     imagem_usuario: string
 }
 
-type FormData = {
-    imovel: {
-        nome_propriedade: string
-        tipo_transacao: string
-        valor_venda: number
-        tipo_imovel: string
-        status_imovel: string
-        valor_promocional: number
-        destaque: boolean
-        visibilidade: boolean
-        valor_iptu: number
-        condominio: number
-        area_construida: number
-        area_terreno: number
-        descricao?: string
-        usuario: UsuarioType[]
-    }
-    imovelCaracteristicas: {
-        numero_quartos: number
-        numero_banheiros: number
-        numero_suites: number
-        numero_vagas: number
-        piscina: boolean
-        numero_salas: number
-    }
-    endereco: {
-        cep: string
-        rua: string
-        numero: string
-        bairro: string
-        cidade: string
-        uf: string
-        complemento?: string
-    }
-    proprietarios: {
-        id?: number
-        nome: string
-        sobrenome: string
-        telefone: string
-        celular: string
-        data_nascimento: string
-        email: string
-        enderecoProprietario: {
-            id: number
-            cep: string
-            rua: string
-            tipo_residencia: string
-            numero_imovel: number
-            numero_apartamento: number
-            bairro: string
-            cidade: string
-            uf: string
-        }
-    }
-    usuario: {
-        id?: number
-        nome: string
-        email: string
-        senha: string
-    }
-}
-
-type FormErrors = {
-    message?: string
-    type?: string
-}
-
 interface RelacaoCorretorImovelProps {
     placeholder: string
-    name: "imovel.usuario"
-    className?: string
-    register: UseFormRegister<FormData>
+    name?: keyof FormData
+    register?: UseFormRegister<FormData>
     setValue: UseFormSetValue<FormData>
-    required?: boolean
-    errors?: FormErrors
+    className?: string
+    errors?: FieldErrors<FormData>
     onUsuarioAdicionado: () => void
 }
 
-export function RelacaoCorretorImovel({ className = "", register, name, placeholder, required, errors, onUsuarioAdicionado, setValue }: RelacaoCorretorImovelProps) {
+export function RelacaoCorretorImovel({ className = "", setValue, errors, onUsuarioAdicionado }: RelacaoCorretorImovelProps) {
     const [usuarios, setUsuarios] = useState<UsuarioType[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const [selectedCorretor, setSelectedCorretor] = useState<number | null>(null)   
 
     useEffect(() => {
         const fetchCorretores = async () => {
             try {
                 const response = await fetch("http://localhost:9090/usuario/corretores")
                 if (!response.ok) {
-                    throw new Error("Erro ao buscar corretores")
+                    throw new Error(`Erro ao buscar corretores: ${response.status}`)
                 }
                 const data = await response.json()
+                console.log("Resposta da API de corretores:", data)
+                
                 if (Array.isArray(data)) {
                     setUsuarios(data)
+                } else if (data && typeof data === 'object') {
+                    const arrayData = Object.values(data).find(value => Array.isArray(value))
+                    if (arrayData) {
+                        setUsuarios(arrayData)
+                    } else {
+                        console.error("Nenhum array encontrado na resposta:", data)
+                        setUsuarios([])
+                    }
                 } else {
-                    console.error("Resposta da API não é um array:", data)
+                    console.error("Resposta da API não é um objeto ou array:", data)
                     setUsuarios([])
                 }
             } catch (err) {
                 setError("Erro ao carregar corretores")
-                console.error(err)
+                console.error("Erro detalhado:", err)
             } finally {
                 setLoading(false)
             }
@@ -121,6 +64,25 @@ export function RelacaoCorretorImovel({ className = "", register, name, placehol
 
         fetchCorretores()
     }, [])
+
+    const handleCorretorSelect = (usuario: UsuarioType) => {
+        setSelectedCorretor(usuario.id || null);
+        onUsuarioAdicionado();
+        setValue("usuario", {
+            ...usuario,
+            username: usuario.username,
+            email: usuario.email,
+            tipo_conta: usuario.tipo_conta,
+            senha: usuario.password,
+            ativo: usuario.ativo !== undefined ? usuario.ativo : true
+        });
+        console.log("Corretor selecionado:", usuario);
+    };
+
+    const handleLimpar = () => {
+        setSelectedCorretor(null);
+        setValue("usuario", {} as UsuarioType);
+    };
 
     if (loading) {
         return (
@@ -154,25 +116,30 @@ export function RelacaoCorretorImovel({ className = "", register, name, placehol
 
     return (
         <div className="flex flex-col font-montserrat w-full h-full">
-            <div className="rounded-2xl w-full  h-full flex flex-col p-2 sm:p-4">
+            <div className="rounded-2xl w-full h-full flex flex-col p-2 sm:p-4">
                 <div className="flex flex-col items-start mb-4 sm:mb-5">
                     <label className="text-lg sm:text-xl font-medium text-black">Corretores Disponíveis</label>
+                    <div className="flex flex-row-reverse w-full gap-2 mt-2">
+                        <button
+                            onClick={handleLimpar}
+                            className="px-4 py-2 bg-vermelho text-white rounded-lg hover:bg-vermelho/80 transition-colors"
+                        >
+                            Limpar
+                        </button>
+                    </div>
                 </div>
-                <div className={`bg-white  h-full rounded-[20px] border border-black px-3 sm:px-5 py-4 sm:py-8 ${className}`}>
+                <div className={`bg-white h-full rounded-[20px] border border-black px-3 sm:px-5 py-4 sm:py-8 ${className}`}>
                     <div className="w-full h-full">
                         {!usuarios || usuarios.length === 0 ? (
-                            <p className="text-center text-gray-500">Nenhum corretor disponível</p>
+                            <p className="text-center text-gray-500">Nenhum corretor encontrado</p>
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {usuarios.map((usuario) => (
                                     usuario.tipo_conta === "Corretor" && (
                                         <div 
                                             key={usuario.id} 
-                                            className="flex items-center gap-3 p-3 sm:p-4 border-2 border-gray-200 rounded-xl hover:border-vermelho hover:bg-vermelho hover:text-white transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
-                                            onClick={() => {
-                                                onUsuarioAdicionado();
-                                                setValue("usuario", usuario);
-                                            }}
+                                            className={`flex items-center gap-3 p-3 sm:p-4 border-2 ${selectedCorretor === usuario.id ? 'border-vermelho bg-vermelho text-white' : 'border-gray-200 hover:border-vermelho hover:bg-vermelho hover:text-white'} rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md`}
+                                            onClick={() => handleCorretorSelect(usuario)}
                                         >
                                             <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 group-hover:bg-white/20">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -180,15 +147,15 @@ export function RelacaoCorretorImovel({ className = "", register, name, placehol
                                                 </svg>
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <div className="font-semibold text-base sm:text-lg group-hover:text-white truncate">{usuario.nome}</div>
+                                                <div className="font-semibold text-base sm:text-lg group-hover:text-white truncate">{usuario.username}</div>
                                                 <div className="text-xs sm:text-sm text-gray-500 group-hover:text-gray-200 truncate">{usuario.email}</div>
                                             </div>
                                             <input
                                                 type="radio"
                                                 id={`corretor-${usuario.id}`}
                                                 value={usuario.id}
-                                                {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
-                                                onChange={() => onUsuarioAdicionado()}
+                                                checked={selectedCorretor === usuario.id}
+                                                onChange={() => handleCorretorSelect(usuario)}
                                                 className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 text-vermelho border-gray-300 rounded-full focus:ring-vermelho group-hover:border-white group-hover:ring-white"
                                             />
                                         </div>
@@ -198,7 +165,15 @@ export function RelacaoCorretorImovel({ className = "", register, name, placehol
                         )}
                     </div>
                 </div>
-                {errors && <span className="text-red-500 text-sm">{errors.message}</span>}
+                {errors && !selectedCorretor && <span className="text-red-500 text-sm mt-2">Por favor, selecione um corretor</span>}
+                {selectedCorretor && usuarios.map((usuario) => 
+                    usuario.id === selectedCorretor && (
+                        <div key={usuario.id} className="mt-4 p-3 bg-gray-50 rounded-lg">
+                            <p className="text-sm text-gray-600">Corretor selecionado:</p>
+                            <p className="font-medium text-vermelho">{usuario.username} {usuario.email}</p>
+                        </div>
+                    )
+                )}
             </div>
         </div>
     )

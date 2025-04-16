@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { EnderecoSection } from "../formulario/endereco-section"
 import { DadosImovelSection } from "./dados-imovel-section"
@@ -71,7 +71,7 @@ const EnderecoImovelProps = z.object({
     bairro: z.string().min(1, { message: "Bairro é obrigatório" }),
     cidade: z.string().min(1, { message: "Cidade é obrigatória" }),
     uf: z.string().min(1, { message: "UF é obrigatória" }),
-    complemento: z.string().optional(),
+    numero_apartamento: z.string().optional(),
 })
 
 const ProprietarioProps = z.object({
@@ -109,11 +109,10 @@ const ProprietarioProps = z.object({
 
 const UsuarioProps = z.object({
     id: z.number().optional(),
-    nome: z.string().min(1, { message: "O nome é obrigatório" }),
-    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+    username: z.string().min(1, { message: "O nome é obrigatório" }),
     tipo_conta: z.string().min(1, { message: "Selecione um tipo de conta válido" }),
     email: z.string().email({ message: "E-mail inválido" }),
-    senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+    password: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
     ativo: z.boolean().optional(),
 })
 
@@ -152,17 +151,9 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                 test_destaque: "",
                 status_imovel: "",
                 test_visibilidade: "",
-                destaque: undefined,
-                visibilidade: undefined,
             },
             imovelCaracteristicas: {
                 test_piscina: "",
-                piscina: false,
-                numero_salas: 0,
-                numero_quartos: 0,
-                numero_banheiros: 0,
-                numero_suites: 0,
-                numero_vagas: 0,
             },
             endereco: {
                 uf: ""
@@ -229,12 +220,12 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
 
             const response = await request("POST", "http://localhost:9090/endereco/create", data);
 
-            if (response && response.id) {
+            if (response && (response as unknown as { id: number }).id) {
                 return response;
             }
 
             console.error("Resposta do servidor:", response);
-            throw new Error(`Falha ao criar o endereço: ${response.status}`);
+            throw new Error(`Falha ao criar o endereço: ${(response as unknown as { status: number }).status}`);
         } catch (error) {
             console.error("Erro ao adicionar endereço:", error);
             throw error;
@@ -246,7 +237,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
 
             console.log("Sending address data:", data);
 
-            const response = await request("POST", "http://localhost:9090/imovel/create", data)
+            const response = await request("POST", "http://localhost:9090/imovel/create", data) as ImovelProps
             return response
         } catch (error) {
             console.error("Erro ao adicionar imóvel:", error)
@@ -306,7 +297,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                     campos.forEach(campo => {
                         const valor = values.imovel[campo];
                         if (valor && !String(valor).includes(',')) {
-                            setValue(`imovel.${campo}`, `${valor},00`);
+                            setValue(`imovel.${campo}`, (valor + ",00"));
                         }
                     });
                 }
@@ -346,7 +337,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                 if (!proprietarioAdicionado || !usuarioAdicionado) {
                     const camposFaltantes = [];
                     if (!proprietarioAdicionado) camposFaltantes.push("proprietário");
-                    if (!usuarioAdicionado) camposFaltantes.push("usuário");
+                    if (!usuarioAdicionado) camposFaltantes.push("usuario");
                     
                     setErrorMessage(`Por favor, adicione um ${camposFaltantes.join(" e um ")} antes de salvar`);
                     setShowErrorModal(true);
@@ -374,19 +365,14 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
     };
 
 
-    const onSubmitImovel = async (data: {
-        imovel: ImovelProps; imovelCaracteristicas: ImovelCaracteristicas;
-        endereco: EnderecoImovelProps;
-        proprietarios: ProprietarioProps
-        usuario: UsuarioProps
-    }) => {
+    const onSubmitImovel = async (data: FormData) => {
         if (isSubmitting) return;
 
         try {
             if (!proprietarioAdicionado || !usuarioAdicionado) {
                 const camposFaltantes = [];
                 if (!proprietarioAdicionado) camposFaltantes.push("proprietário");
-                if (!usuarioAdicionado) camposFaltantes.push("usuário");
+                if (!usuarioAdicionado) camposFaltantes.push("corretor");
                 
                 setErrorMessage(`Por favor, adicione um ${camposFaltantes.join(" e um ")} antes de salvar`);
                 setShowErrorModal(true);
@@ -410,12 +396,6 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                     setErrorMessage("Por favor, preencha todos os campos obrigatórios");
                     setShowErrorModal(true);
                     setCurrentStep(3);
-                    return;
-                }
-                if (errors.proprietarios || errors.usuario) {
-                    setErrorMessage("Por favor, preencha todos os campos obrigatórios");
-                    setShowErrorModal(true);
-                    setCurrentStep(4);
                     return;
                 }
             }
@@ -449,6 +429,10 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                 id_usuario: usuario
             };
 
+            console.log("Dados do imóvel a serem enviados:", immobileData);
+            console.log("Proprietário selecionado:", proprietarios);
+            console.log("Corretor selecionado:", usuario);
+
             const response = await addImovel(immobileData);
 
             if (response && response.id) {
@@ -459,7 +443,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                 }
 
                 console.log("Imóvel criado com sucesso:", response);
-                setLastAddedImovel(response);
+                setLastAddedImovel(response as ImovelProps);
                 setAdicionadoComSucesso(true);
                 setAdicionarAberto(false);
 
@@ -498,12 +482,25 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
         }
     }
 
+    const handleProprietarioAdicionado = () => {
+        setProprietarioAdicionado(true)
+    }
+
+    const handleUsuarioAdicionado = () => {
+        setUsuarioAdicionado(true)
+    }
+
+    useEffect(() => { 
+        console.log(errors)
+        console.log(getValues())
+    }, [errors, getValues])
+
     if (!isOpen) return null;
 
     return (
         <>                   
          {adicionarAberto && (
-            <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50`}>
+            <div className="fixed inset-0 bg-black bg-opacity-50 px-6 flex items-center justify-center z-50">
                 <div className="bg-white rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-semibold text-vermelho">
@@ -529,7 +526,10 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                                     transition={{ duration: 0.2 }}
                                     className="space-y-4"
                                 >
-                                    <EnderecoSection register={register} errors={errors} setValue={setValue} />
+                                    <EnderecoSection 
+                                    register={register} 
+                                    errors={errors} 
+                                    setValue={setValue} />
 
                                     <div className="flex gap-10 mt-4">
                                         <Botao
@@ -613,11 +613,10 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                                     className="space-y-4"
                                 >
                                     <RelacaoImovel
-                                        register={register}
-                                        errors={errors}
                                         setValue={setValue}
-                                        onProprietarioAdicionado={() => setProprietarioAdicionado(true)}
-                                        onUsuarioAdicionado={() => setUsuarioAdicionado(true)}
+                                        errors={errors}
+                                        onProprietarioAdicionado={handleProprietarioAdicionado}
+                                        onUsuarioAdicionado={handleUsuarioAdicionado}
                                     />
                                     <div className="flex justify-end gap-4 mt-4">
                                         <Botao

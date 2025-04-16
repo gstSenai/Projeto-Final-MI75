@@ -7,9 +7,9 @@ import { EditarImovel } from "../editarImovel"
 import Image from "next/image"
 import { Botao } from "@/components/botao"
 import { FormularioInput } from "@/components/paginaCadastroUsuario/adicionandoUsuario/formulario/formularioInput"
-import { useForm } from "react-hook-form"
-import { FiltroImovel } from "@/components/filtroImovel"
 import { Formulario } from "../formulario"
+import { useForm } from 'react-hook-form'
+import { FiltroImovel } from "@/components/filtroImovel"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -66,6 +66,15 @@ interface FormValues {
   "imovel.numero_quartos": number;
   "imovel.numero_banheiros": number;
 }
+
+const formatarPreco = (valor: number) => {
+  return valor.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+};
 
 export default function TabelaImovel() {
   const { register, watch, reset } = useForm<FormValues>({
@@ -200,6 +209,9 @@ export default function TabelaImovel() {
                   <th className="p-4 text-center font-bold border border-[#E0D6CE] whitespace-nowrap">
                     <p>Status</p>
                   </th>
+                  <th className="p-4 text-center font-bold border border-[#E0D6CE] whitespace-nowrap">
+                    <p>Preço</p>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -233,6 +245,9 @@ export default function TabelaImovel() {
                         </td>
                         <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
                           {imovel.status_imovel}
+                        </td>
+                        <td className="p-4 text-center border border-[#E0D6CE] bg-opacity-50 truncate whitespace-nowrap overflow-hidden">
+                          {formatarPreco(imovel.valor_venda)}
                         </td>
                       </tr>
                     )
@@ -393,7 +408,7 @@ export default function TabelaImovel() {
           </div>
         </div>
       </div>
-      
+
       {isModalOpen && <Formulario isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onComplete={refreshData} />}
       {remover && <RemoveImovel selectedImoveis={selectedImoveis} onComplete={refreshData} />}
       {editar && <EditarImovel selectedImoveis={selectedImoveis} onComplete={refreshData} />}

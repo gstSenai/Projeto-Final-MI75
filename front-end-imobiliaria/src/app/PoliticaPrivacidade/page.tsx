@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Montserrat } from 'next/font/google';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-
+import { LoadingWrapper } from '@/components/loading/loadingServer';
 const montserrat = Montserrat({
   subsets: ['latin'],
   weight: ['400', '800'],
@@ -18,18 +18,10 @@ export default function PoliticaPrivacidade() {
     setShowMore(!showMore);
   };
 
-  const toggleContent = () => {
-    setShowContent(showContent === 'privacy' ? 'terms' : 'privacy');
-    setShowMore(false); // Resetar a visualização quando trocar de conteúdo
-  };
-
-
-
-
   return (
-    <>
+    <LoadingWrapper>
       <Header />
-      <div className="flex flex-col items-center font-montserrat">
+      <div className={`flex flex-col items-center ${montserrat.className}`}>
         <div className="flex flex-col justify-center max-w-5xl">
           <h2 className="ml-6 w-[75%] text-[26px] md:text-[25px] mt-11 text-xl  font-bold text-gray-800 mb-10 border-b-2 border-[#702632] pb-2 ">
             Política de Privacidade e Termos de Uso
@@ -89,12 +81,12 @@ export default function PoliticaPrivacidade() {
 
                   <h2 className="text-md font-bold mt-6 mb-2">Segurança e Confiança no site Imobiliária HAV</h2>
                   <p className="text-sm text-gray-200 mb-4">
-                    O site é confiável e seguro para navegação do usuário conforme informado pela Verificação. A página verifica informações do site para identificar possíveis problemas de segurança. A navegação verificada pela ferramenta segurança do Google mostra que o site é seguro.                  </p>
+                    O site é confiável e seguro para navegação do usuário conforme informado pela Verificação. A página verifica informações do site para identificar possíveis problemas de segurança. A navegação verificada pela ferramenta segurança do Google mostra que o site é seguro.                  </p>
 
                   <h2 className="text-md font-bold mt-6 mb-2">Política de Cookies Imobiliária HAV</h2>
                   <h3 className="text-sm font-semibold mb-2">O que são cookies?</h3>
                   <p className="text-sm text-gray-200 mb-4">
-                    Como é prática comum em quase todos os sites profissionais, este site usa cookies, que são pequenos arquivos baixados no seu computador, para melhorar sua experiência. Esta página descreve quais informações eles coletam, como as usamos e por que às vezes precisamos armazenar esses cookies. Também compartilharemos como você pode impedir que esses cookies sejam armazenados, no entanto, isso pode fazer o downgrade ou 'quebrar' certos elementos da funcionalidade do site.                  </p>
+                    Como é prática comum em quase todos os sites profissionais, este site usa cookies, que são pequenos arquivos baixados no seu computador, para melhorar sua experiência. Esta página descreve quais informações eles coletam, como as usamos e por que às vezes precisamos armazenar esses cookies. Também compartilharemos como você pode impedir que esses cookies sejam armazenados, no entanto, isso pode fazer o downgrade ou &apos;quebrar&apos; certos elementos da funcionalidade do site.                  </p>
 
                   <h3 className="text-sm font-semibold mb-2">Como usamos os cookies?</h3>
                   <p className="text-sm text-gray-200 mb-4">
@@ -146,7 +138,7 @@ export default function PoliticaPrivacidade() {
                       <p className="text-sm text-gray-200 mb-4">
                         Em alguns casos especiais, também usamos cookies fornecidos por terceiros confiáveis. A seção a seguir detalha quais cookies de terceiros você pode encontrar através deste site.
                       </p>
-                      <h3 className="text-sm text-gray-200 mb-4 mt-4">- Este site usa o Google Analytics, que é uma das soluções de análise mais difundidas e confiáveis ​​da Web, para nos ajudar a entender como você usa o site e como podemos melhorar sua experiência. Esses cookies podem rastrear itens como quanto tempo você gasta no site e as páginas visitadas, para que possamos continuar produzindo conteúdo atraente.</h3>
+                      <h3 className="text-sm text-gray-200 mb-4 mt-4">- Este site usa o Google Analytics, que é uma das soluções de análise mais difundidas e confiáveis ​​da Web, para nos ajudar a entender como você usa o site e como podemos melhorar sua experiência. Esses cookies podem rastrear itens como quanto tempo você gasta no site e as páginas visitadas, para que possamos continuar produzindo conteúdo atraente.</h3>
                       <p className="text-sm text-gray-200 mb-4">
                         Para mais informações sobre cookies do Google Analytics, consulte a página oficial do Google Analytics.
                       </p>
@@ -172,7 +164,7 @@ export default function PoliticaPrivacidade() {
                       <h3 className="text-sm text-gray-200 ">- Firefox</h3>
                       <h3 className="text-sm text-gray-200 ">- Microsoft Edge</h3>
                       <h3 className="text-sm text-gray-200 ">- Opera</h3>
-                      <h3 className="text-sm text-gray-200 mb-4 ">- Safari </h3>
+                      <h3 className="text-sm text-gray-200 mb-4 ">- Safari </h3>
 
 
                       <h2 className="text-md font-bold mt-6 mb-2">Mais informações</h2>
@@ -180,7 +172,7 @@ export default function PoliticaPrivacidade() {
                         Esperemos que esteja esclarecido e, como mencionado anteriormente, se houver algo que você não tem certeza se precisa ou não, geralmente é mais seguro deixar os cookies ativados, caso interaja com um dos recursos que você usa em nosso site.
                       </p>
                       <p className="text-sm text-gray-200 mb-4">
-                        Esta política é efetiva a partir de Nov/2024.
+                        Esta política é efetiva a partir de Nov/2024.
                       </p>
                     </>
                   )}
@@ -193,7 +185,7 @@ export default function PoliticaPrivacidade() {
 
                   <h2 className="text-md font-bold mt-6 mb-2">1. Termos</h2>
                   <p className="text-sm text-gray-200 mb-4">
-                    Ao acessar ao site Imobiliária HAV, concorda em cumprir estes termos de uso, todas as leis e regulamentos aplicáveis ​​e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis. Se você não concordar com algum desses termos, está proibido de usar ou acessar este site. Os materiais contidos neste site são protegidos pelas leis de direitos autorais e marcas comerciais aplicáveis.
+                    Ao acessar ao site Imobiliária HAV, concorda em cumprir estes termos de uso, todas as leis e regulamentos aplicáveis ​​e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis. Se você não concordar com algum desses termos, está proibido de usar ou acessar este site. Os materiais contidos neste site são protegidos pelas leis de direitos autorais e marcas comerciais aplicáveis.
                   </p>
 
                   <h2 className="text-md font-bold mt-6 mb-2">2. Uso de Licença</h2>
@@ -205,7 +197,7 @@ export default function PoliticaPrivacidade() {
                     <li>- Utilizar os materiais para qualquer finalidade comercial ou para exibição pública (seja comercial ou não comercial);</li>
                     <li>- Tentar descompilar ou realizar engenharia reversa de qualquer software contido no site da Imobiliária HAV;</li>
                     <li>- Remover quaisquer direitos autorais ou outras notações de propriedade dos materiais;</li>
-                    <li>- Transferir os materiais para outra pessoa ou "espelhar" os materiais em qualquer outro servidor.</li>
+                    <li>- Transferir os materiais para outra pessoa ou &quot;espelhar&quot; os materiais em qualquer outro servidor.</li>
                   </ul>
                   <p className="text-sm text-gray-200 mb-4">
                     Esta licença será automaticamente rescindida caso você viole qualquer uma dessas restrições e poderá ser cancelada pela Imobiliária HAV a qualquer momento. Ao encerrar a visualização dos materiais ou após o término da licença, você deve apagar todos os materiais baixados em sua posse, seja em formato eletrônico ou impresso.
@@ -216,7 +208,7 @@ export default function PoliticaPrivacidade() {
                     3. Isenção de responsabilidade
                   </h2>
                   <ul className="text-sm text-gray-200 mb-4 pl-5">
-                    <li>- Os materiais no site da Imobiliária HAV são fornecidos 'como estão'. A Imobiliária HAV não oferece garantias, expressas ou implícitas, e, por este meio, isenta e nega todas as outras garantias, incluindo, sem limitação, garantias implícitas ou condições de comercialização, adequação a um fim específico ou não violação de propriedade intelectual ou outra violação de direitos.</li>
+                    <li>- Os materiais no site da Imobiliária HAV são fornecidos &apos;como estão&apos;. A Imobiliária HAV não oferece garantias, expressas ou implícitas, e, por este meio, isenta e nega todas as outras garantias, incluindo, sem limitação, garantias implícitas ou condições de comercialização, adequação a um fim específico ou não violação de propriedade intelectual ou outra violação de direitos.</li>
                   </ul>
                   <ul className="text-sm text-gray-200 mb-4 pl-5">
                     <li>- Além disso, a Imobiliária HAV não garante ou faz qualquer representação relativa à precisão, aos resultados prováveis ou à confiabilidade do uso dos materiais em seu site ou de outra forma relacionada a esses materiais ou em sites vinculados a este site.</li>
@@ -267,6 +259,6 @@ export default function PoliticaPrivacidade() {
 
       </div>
       <Footer />
-    </>
+    </LoadingWrapper>
   );
 }

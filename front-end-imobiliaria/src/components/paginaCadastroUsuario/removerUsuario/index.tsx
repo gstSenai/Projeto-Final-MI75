@@ -7,13 +7,13 @@ import { motion, AnimatePresence } from "framer-motion"
 
 const UsuarioProps = z.object({
     id: z.number().optional(),
-    nome: z.string().min(1, { message: "O nome é obrigatório" }),
-    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+    username: z.string().min(1, { message: "O nome é obrigatório" }),
     tipo_conta: z.string().min(1, {
         message: "Selecione um tipo de conta válido",
     }),
     email: z.string().email({ message: "E-mail inválido" }),
-    senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+    password: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+    ativo: z.boolean().optional(),
 })
 
 type UsuarioProps = z.infer<typeof UsuarioProps>
@@ -75,7 +75,7 @@ export function RemoveUsuario({ selectedUsers, onComplete }: RemoveUsuarioProps)
                                 <ul>
                                     {selectedUsers.map((user) => (
                                         <li key={user.id} className="py-1 border-b border-gray-100 last:border-0">
-                                            {user.nome} ({user.email})
+                                            {user.username} ({user.email})
                                         </li>
                                     ))}
                                 </ul>

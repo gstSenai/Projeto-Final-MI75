@@ -4,14 +4,16 @@ import Image from "next/image"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Montserrat } from "next/font/google"
-import Calendario from "@/components/Calendario"
+import Calendario from "@/components/Calendario/index"
 import { FormularioInput } from "@/components/Calendario/selecaoHorario"
 import { useForm } from "react-hook-form"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 import { Botao } from "@/components/botao"
 import request from "@/routes/request"
 import { z } from "zod"
+import { LoadingWrapper } from "@/components/loading/loadingServer"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -24,6 +26,10 @@ interface UserProps {
   id: number
   nome: string
   sobrenome: string
+}
+
+interface AgendamentoResponse {
+  horario: string;
 }
 
 const AgendamentoProps = z.object({
@@ -68,7 +74,7 @@ const AgendamentoProps = z.object({
     nome: z.string().min(1, { message: "O nome é obrigatório" }),
     sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
     cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
-    tipo_conta: z.string().min(1, {message: "Insira um Corretor"}),
+    tipo_conta: z.string().min(1, { message: "Insira um Corretor" }),
     telefone: z.string().min(10, { message: "Telefone inválido" }),
     data_nascimento: z.string(),
     email: z.string().email({ message: "E-mail inválido" }),
@@ -79,87 +85,52 @@ const AgendamentoProps = z.object({
 
 type agendamentoProps = z.infer<typeof AgendamentoProps>
 
-
-
-
-
 export default function PaginaAgendamento() {
   const {
-    register, handleSubmit, watch, formState: { errors }, } = useForm()
+    register, handleSubmit, watch
+  } = useForm<agendamentoProps>({
+    resolver: zodResolver(AgendamentoProps),
+  })
   const [isLoading, setIsLoading] = useState(false)
   const [agendamentoSucesso, setAgendamentoSucesso] = useState(false);
   const [imovelId] = useState(1);
   const [horariosOcupados, setHorariosOcupados] = useState<string[]>([]);
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const [usuarios, setUsuarios] = useState<UserProps[]>([]);
+  const [dataSelecionada,] = useState<Date>(new Date());
 
-
-  const addAgendamento = async (data: agendamentoProps) => {
-    try {
-      console.log("Sending address data:", data);
-
-      if (!data.data || !data.horario || !data.id_Imovel || !data.id_Usuario || !data.id_Corretor) {
-        throw new Error('Todos os campos obrigatórios devem ser preenchidos');
-      }
-
-      const imovelAgendamento = {
-        ...data,
-        id_Usuario: data.id_Usuario,
-        id_Corretor: data.id_Corretor,
-        id_Imovel: data.id_Imovel,
-      }
-
-      const response = await request("POST", "http://localhost:9090/agendamento/create", imovelAgendamento);
-
-      if (response && response.id) {
-        return response;
-      }
-
-      console.error("Resposta do servidor:", response);
-      throw new Error(`Falha ao criar o endereço: ${response.status}`);
-    } catch (error) {
-      console.error("Erro ao adicionar endereço:", error);
-      throw error;
-    }
-  };
-
-  const verificarHorariosOcupados = async (data: Date) => {
+  const verificarHorariosOcupados = useCallback(async (data: Date) => {
     try {
       const response = await request(
         "GET",
         `http://localhost:9090/agendamento/imovel/${imovelId}/data/${data.toISOString()}`
       );
-      setHorariosOcupados(response.map((a: any) => a.horario));
+      setHorariosOcupados((response as AgendamentoResponse[]).map((a) => a.horario));
     } catch (error) {
       console.error("Erro ao verificar horários ocupados:", error);
     }
-  };
+  }, [imovelId]);
 
-  // Chame esta função quando a data for alterada
   useEffect(() => {
-    if (selectedDate) {
-      verificarHorariosOcupados(selectedDate);
-    }
-  }, [selectedDate]);
+    verificarHorariosOcupados(dataSelecionada);
+  }, [verificarHorariosOcupados, dataSelecionada]);
 
 
   const handleAgendarVisita = async () => {
-    if (!selectedDate || !watch('Corretores.disponivel') || !watch('Horario.dia')) {
+    if (!watch('id_Corretor') || !watch('horario')) {
       alert('Por favor, selecione uma data, horário e corretor');
       return;
     }
 
-    const agendamentoData: AgendamentoData = {
-      corretor: watch('corretores.disponivel'),
-      horario: watch('horario.dia'),
-      data: selectedDate,
-      imovelId: imovelId
-    };
-
+    setIsLoading(true);
     try {
-      setIsLoading(true);
+      const agendamentoData = {
+        corretor: watch('id_Corretor'),
+        horario: watch('horario'),
+        data: new Date(),
+        imovelId: imovelId
+      };
       await request("POST", "http://localhost:9090/agendamento", agendamentoData);
       setAgendamentoSucesso(true);
-
     } catch (error) {
       console.error("Erro ao agendar visita:", error);
       alert('Erro ao agendar visita. Horário pode já estar ocupado.');
@@ -169,13 +140,12 @@ export default function PaginaAgendamento() {
   }
 
 
-  const getUsuario = async () => {
+  const getUsuario = useCallback(async () => {
     if (isLoading) return
 
     setIsLoading(true)
     try {
       const response = await request("GET", "http://localhost:9090/usuario/corretores")
-
 
       if (Array.isArray(response)) {
         setUsuarios(response) // Agora armazenamos diretamente como um array
@@ -187,28 +157,26 @@ export default function PaginaAgendamento() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [isLoading]);
 
 
 
 
 
   useEffect(() => {
-    getUsuario()
-  }, []) // Executa apenas uma vez ao montar o componente
+    getUsuario();
+  }, [getUsuario]);
 
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: unknown) => {
     console.log(data)
   }
 
 
 
   return (
-    <>
-      <header>
-        <Header />
-      </header>
+    <LoadingWrapper>
+      <Header />
       <Image
         className="absolute opacity-[7%] mt-auto xl:mt-[40%] ml-auto xl:ml-[2.5%] -z-10 invisible sm:invisible md:invisible lg:visible"
         src="/formularios/logoGrande.png"
@@ -244,20 +212,20 @@ export default function PaginaAgendamento() {
 
                   <FormularioInput
                     placeholder="Corretores:"
-                    name="corretores.disponivel"
+                    name="id_Corretor"
                     interName="Corretor"
                     register={register}
-                    customizacaoClass="w-full p-2 border border-gray-500 rounded"
+                    customizacaoClass="w-full p-2 border bg-white text-black border-gray-500 rounded"
                     required
                     options={usuarios?.map(({ nome, sobrenome }) => `${nome} ${sobrenome}`) || []}
                   />
 
                   <FormularioInput
                     placeholder="Horários:"
-                    name="horario.dia"
+                    name="horario"
                     interName="Horário"
                     register={register}
-                    customizacaoClass="w-full p-2 border border-gray-500 rounded"
+                    customizacaoClass="w-full p-2 bg-white text-black border border-gray-500 rounded"
                     required
                     options={["8:00", "10:00", "12:00", "14:00", "16:00", "18:00"]
                       .filter(horario => !horariosOcupados.includes(horario))}
@@ -265,7 +233,7 @@ export default function PaginaAgendamento() {
 
 
                   <Botao
-                    className="xl:w-[60%] 2xl:w-[50%]"
+                    className="xl:w-[60%] 2xl:w-[50%] bg-vermelho"
                     texto="Agendar visita"
                     onClick={handleAgendarVisita}
                     disabled={agendamentoSucesso}
@@ -284,10 +252,8 @@ export default function PaginaAgendamento() {
           </div>
         </section>
       </div>
-      <footer>
-        <Footer />
-      </footer>
-    </>
+      <Footer />
+    </LoadingWrapper>
   )
 }
 

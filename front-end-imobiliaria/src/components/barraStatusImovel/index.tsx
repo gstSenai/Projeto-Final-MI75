@@ -1,15 +1,19 @@
-"use client"
+"use client";
+
+import { useEffect, useState, useCallback } from "react"
+import request from "@/routes/request"
+
+import Image from 'next/image';
 
 import { Montserrat } from 'next/font/google';
-import Image from 'next/image';
-import { useEffect, useState } from "react"
-import request from "@/routes/request"
 
 const montserrat = Montserrat({
     subsets: ['latin'],
     weight: ['400', '800'],
     display: 'swap',
 });
+
+
 
 interface BarraStatusProps {
     id: number; 
@@ -21,35 +25,33 @@ interface BarraStatusProps {
 }
 
 // Nome do componente alterado para PascalCase
-export function BarraStatusImovel({ id }: { id: number }) {
+export default function BarraStatusImovel({ id }: { id: number }) {
     const [isLoading, setIsLoading] = useState(false)
     const [barraStatus, setBarraStatus] = useState<BarraStatusProps | null>(null)
 
-
-    const getBarraStatus = async () => {
+    const getBarraStatus = useCallback(async () => {
         setIsLoading(true);
         try {
-            const response = await request("GET", `http://localhost:9090/caracteristicaImovel/getById/${id}`);
+            const response = await request("GET", `http://localhost:9090/barraStatus/getById/${id}`);
             console.log("Resposta da API:", response);
-            setBarraStatus(response);
+            setBarraStatus(response as BarraStatusProps);
         } catch (error) {
-            console.error("Erro ao buscar características do imóvel:", error);
+            console.error("Erro ao buscar barra de status:", error);
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [id]);
 
     useEffect(() => {
-        console.log("ID recebido:", id);
         getBarraStatus();
-    }, [id]);
+    }, [getBarraStatus]);
 
 
 
 
     return (
         <>
-            <div className='flex flex-row gap-[38px]'>
+            <div className={`flex flex-row gap-[38px] ${montserrat.className}`}>
                 {isLoading ? (
                     <p>Carregando...</p>
                 ) : (

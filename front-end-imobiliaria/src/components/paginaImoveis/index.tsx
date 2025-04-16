@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { Card } from "../cardImovel"
+import { useEffect, useState, useCallback } from "react"
+import { Card } from "@/components/CardImovel/index"
 import { Montserrat } from "next/font/google"
 import { FiltroImoveis } from "./botaoFiltro"
 import { ChevronLeft, ChevronRight } from "lucide-react"
@@ -11,6 +11,22 @@ const montserrat = Montserrat({
   weight: ["400", "800"],
   display: "swap",
 })
+
+interface ImovelCompleto {
+  id: number
+  nome_propriedade: string
+  id_endereco: {
+    cidade: string
+  }
+  id_caracteristicasImovel: {
+    numero_quartos: number
+    numero_suites: number
+    numero_banheiros: number
+  }
+  valor_venda: number
+  codigo: number
+  tipo_transacao: string
+}
 
 interface Imovel {
   id: number
@@ -26,10 +42,10 @@ interface Imovel {
 }
 
 interface PaginationInfo {
-  totalPages: number
-  totalElements: number
-  currentPage: number
-  size: number
+  currentPage: number;
+  totalPages: number;
+  totalElements: number;
+  size: number;
 }
 
 export function ListaImoveis() {
@@ -41,69 +57,55 @@ export function ListaImoveis() {
   const [mostrarFiltros, setMostrarFiltros] = useState<boolean>(false)
 
   const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>({
+    currentPage: 0,
     totalPages: 0,
     totalElements: 0,
-    currentPage: 0,
     size: 10,
   })
 
-  const fetchImoveis = async (page = 0) => {
+  const fetchImoveis = async (page: number) => {
     try {
-      setLoading(true)
+      setLoading(true);
+      const token = localStorage.getItem("token");
       const response = await fetch(`http://localhost:9090/imovel/getAll?page=${page}&size=${paginationInfo.size}`, {
-        cache: "no-store",
         headers: {
-          "Cache-Control": "no-cache",
-          Pragma: "no-cache",
-          Expires: "0",
-        },
-      })
-
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+      
       if (!response.ok) {
-        throw new Error(`Erro na API: ${response.status} ${response.statusText}`)
+        throw new Error('Erro ao buscar imóveis');
       }
 
-      const data = await response.json()
-      const imoveisArray = data.content || []
+      const data = await response.json();
+      
+      const imoveisFormatados = data.content.map((imovel: any) => ({
+        id: imovel.id,
+        titulo: imovel.titulo,
+        descricao: imovel.descricao,
+        preco: imovel.preco,
+        tipoImovel: imovel.tipoImovel,
+        tipoTransacao: imovel.tipoTransacao,
+        endereco: imovel.endereco,
+        caracteristicas: imovel.caracteristicas,
+        imagens: imovel.imagens,
+      }));
 
-      if (imoveisArray.length === 0) {
-        setImoveis([])
-        return
-      }
-
+      setImoveis(imoveisFormatados);
       setPaginationInfo({
-        totalPages: data.totalPages || 1,
-        totalElements: data.totalElements || 0,
-        currentPage: data.number || 0,
-        size: data.size || 12,
-      })
-
-      const maiorId = Math.max(...imoveisArray.map((imovel: any) => imovel.id))
-      if (ultimoId !== null && maiorId === ultimoId && page === paginationInfo.currentPage) {
-        return
-      }
-
-      const imoveisFormatados = imoveisArray.map((imovel: any) => ({
-        id: imovel.id || 0,
-        titulo: imovel.nome_propriedade || "Sem título",
-        cidade: imovel.id_endereco?.cidade || "Cidade não informada",
-        qtdDormitorios: imovel.id_caracteristicasImovel?.numero_quartos || 0,
-        qtdSuite: imovel.id_caracteristicasImovel?.numero_suites || 0,
-        qtdBanheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
-        preco: imovel.valor_venda || 0,
-        codigo: imovel.codigo || 0,
-        tipo_transacao: imovel.tipo_transacao || "Indefinido",
-      }))
-
-      setImoveis(imoveisFormatados)
-      setUltimoId(maiorId)
+        currentPage: data.number,
+        totalPages: data.totalPages,
+        totalElements: data.totalElements,
+        size: data.size,
+      });
     } catch (error) {
-      console.error("Erro ao buscar imóveis:", error)
-      setError("Erro ao carregar imóveis. Por favor, tente novamente.")
+      console.error('Erro ao buscar imóveis:', error);
+      setImoveis([]);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const refreshData = async () => {
     try {
@@ -113,19 +115,19 @@ export function ListaImoveis() {
       setMostrarFiltros(false);
       setUltimoId(null);
       setPaginationInfo({
+        currentPage: 0,
         totalPages: 0,
         totalElements: 0,
-        currentPage: 0,
-        size: 12,
+        size: 10,
       });
       
+      const token = localStorage.getItem("token");
       const response = await fetch(`http://localhost:9090/imovel/getAll?page=0&size=10`, {
-        cache: "no-store",
         headers: {
-          "Cache-Control": "no-cache",
-          "Pragma": "no-cache",
-          "Expires": "0",
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
         },
+        cache: "no-store",
       });
 
       if (!response.ok) {
@@ -144,10 +146,11 @@ export function ListaImoveis() {
         totalPages: data.totalPages || 1,
         totalElements: data.totalElements || 0,
         currentPage: data.number || 0,
-        size: data.size || 12,
+        size: data.size || 10,
       });
 
-      const imoveisFormatados = imoveisArray.map((imovel: any) => ({
+
+      const imoveisFormatados = imoveisArray.map((imovel: ImovelCompleto) => ({
         id: imovel.id || 0,
         titulo: imovel.nome_propriedade || "Sem título",
         cidade: imovel.id_endereco?.cidade || "Cidade não informada",
@@ -169,20 +172,20 @@ export function ListaImoveis() {
   };
 
   useEffect(() => {
-    refreshData()
-  }, [])
+    fetchImoveis(0);
+  }, []);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && newPage < paginationInfo.totalPages) {
-      fetchImoveis(newPage)
+      fetchImoveis(newPage);
     }
-  }
+  };
 
   useEffect(() => {
     if (imoveis.length > 0) {
-      fetchImoveis(0)
+      fetchImoveis(0);
     }
-  }, [tipoTransacao])
+  }, [tipoTransacao]);
 
   const imoveisFiltrados =
     tipoTransacao === "Todos" ? imoveis : imoveis.filter((imovel) => imovel.tipo_transacao === tipoTransacao)
@@ -205,6 +208,21 @@ export function ListaImoveis() {
 
     return pageNumbers
   }
+
+  const handleSetImoveis = (imoveisCompletos: ImovelCompleto[]) => {
+    const imoveisFormatados = imoveisCompletos.map((imovel) => ({
+      id: imovel.id || 0,
+      titulo: imovel.nome_propriedade || "Sem título",
+      cidade: imovel.id_endereco?.cidade || "Cidade não informada",
+      qtdDormitorios: imovel.id_caracteristicasImovel?.numero_quartos || 0,
+      qtdSuite: imovel.id_caracteristicasImovel?.numero_suites || 0,
+      qtdBanheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
+      preco: imovel.valor_venda || 0,
+      codigo: imovel.codigo || 0,
+      tipo_transacao: imovel.tipo_transacao || "Indefinido"
+    }));
+    setImoveis(imoveisFormatados);
+  };
 
   return (
     <>
@@ -233,19 +251,22 @@ export function ListaImoveis() {
             className="bg-vermelho text-white px-6 py-2 rounded-lg transition duration-300 hover:opacity-80"
             onClick={() => setMostrarFiltros(!mostrarFiltros)}
           >
-            {mostrarFiltros ? "Filtrar" : "Filtrar"}
+            {mostrarFiltros ? "Fechar Filtros" : "Filtrar"}
           </button>
-          <button className="underline decoration-vermelho px-4 py-2 rounded-lg" onClick={refreshData}>
+          <button 
+            className="underline decoration-vermelho px-4 py-2 rounded-lg" 
+            onClick={() => refreshData()}
+          >
             <p className="text-vermelho font-bold">Restaurar Padrão</p>
           </button>
         </div>
 
         {mostrarFiltros && (
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center">
             <FiltroImoveis
               mostrarFiltros={mostrarFiltros}
               setMostrarFiltros={setMostrarFiltros}
-              setImoveis={setImoveis}
+              setImoveis={handleSetImoveis}
             />
           </div>
         )}
@@ -262,7 +283,7 @@ export function ListaImoveis() {
           </div>
         ) : (
           <>
-            <div className="flex flex-wrap justify-center gap-6 mt-6">
+            <div className="flex flex-wrap justify-center items-start gap-6 mt-6">
               {imoveisFiltrados.length > 0 ? (
                 imoveisFiltrados.map((imovel) => (
                   <Card
@@ -320,11 +341,6 @@ export function ListaImoveis() {
                 </nav>
               </div>
             )}
-
-            <div className="flex justify-center mb-10 text-sm text-gray-500 mt-10">
-              Mostrando {imoveisFiltrados.length} de {paginationInfo.totalElements} imóveis • Página{" "}
-              {paginationInfo.currentPage + 1} de {paginationInfo.totalPages}
-            </div>
           </>
         )}
       </div>

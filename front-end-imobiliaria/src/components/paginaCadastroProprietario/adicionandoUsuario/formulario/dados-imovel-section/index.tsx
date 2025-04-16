@@ -1,7 +1,8 @@
 "use client"
 import { FormularioInput } from "../formularioInput"
 import { Montserrat } from "next/font/google"
-import { UseFormRegister } from "react-hook-form"
+import { UseFormRegister, FieldErrors } from "react-hook-form"
+import { FormData } from "../index"
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -10,8 +11,8 @@ const montserrat = Montserrat({
 });
 
 interface DadosProprietarioSectionProps {
-    register: UseFormRegister<any>
-    errors: any
+    register: UseFormRegister<FormData>
+    errors: FieldErrors<FormData>
 }
 
 const formatarCPF = (value: string) => {
@@ -49,7 +50,7 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                         register={register}
                         required
                         customizacaoClass="w-full p-2 border border-gray-500 rounded"
-                        errors={errors?.nome}
+                        errors={errors?.proprietario?.nome}
                     />
                     <FormularioInput
                         placeholder="Sobrenome:"
@@ -59,7 +60,7 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                         register={register}
                         required
                         customizacaoClass="w-full p-2 border border-gray-500 rounded"
-                        errors={errors?.sobrenome}
+                        errors={errors?.proprietario?.sobrenome}
                     />
                     <FormularioInput
                         placeholder="CPF:"
@@ -73,7 +74,7 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                         onChange={(e) => {
                             e.target.value = formatarCPF(e.target.value);
                         }}
-                        errors={errors?.cpf}
+                        errors={errors?.proprietario?.cpf}
                     />
                 </div>
 
@@ -90,7 +91,7 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                         onChange={(e) => {
                             e.target.value = formatarData(e.target.value);
                         }}
-                        errors={errors?.data_nascimento}
+                        errors={errors?.proprietario?.data_nascimento}
                     />
                     <FormularioInput
                         placeholder="Telefone"
@@ -100,11 +101,11 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                         register={register}
                         required
                         customizacaoClass="w-full p-2 border border-gray-500 rounded"
-                        maxLength={14}
+                        maxLength={15}
                         onChange={(e) => {
                             e.target.value = formatarTelefone(e.target.value);
                         }}
-                        errors={errors?.telefone}
+                        errors={errors?.proprietario?.telefone}
                     />
                     <FormularioInput
                         placeholder="Celular"
@@ -118,7 +119,7 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                         onChange={(e) => {
                             e.target.value = formatarTelefone(e.target.value);
                         }}
-                        errors={errors?.celular}
+                        errors={errors?.proprietario?.celular}
                     />
                 </div>
 
@@ -131,7 +132,7 @@ export function DadosProprietarioSection({ register, errors }: DadosProprietario
                         register={register}
                         required
                         customizacaoClass="w-full p-2 border border-gray-500 rounded"
-                        errors={errors?.email}
+                        errors={errors?.proprietario?.email}
                     />
                 </div>
             </div>

@@ -41,7 +41,6 @@ public class ImovelService {
 
 
     public Page<Imovel> getAllImovel(Pageable pageable) {
-
         return repository.findAll(pageable);
     }
 
@@ -64,7 +63,20 @@ public class ImovelService {
                         .and(ImovelSpecification.hasPrecoMinimo(valor_min))
                         .and(ImovelSpecification.hasPrecoMaximo(valor_max));
         return repository.findAll(imovelSpecification);
+    }
 
+
+    public Page<Imovel> imovelsAlugados(String status_imoveis, Pageable pageable) {
+        Specification<Imovel> spec = Specification
+                .where(ImovelSpecification.haStatusImovelAlugado(status_imoveis));
+        return repository.findAll(spec, pageable);
+    }
+
+
+    public Page<Imovel> imovelsVendidos(String status_imoveis, Pageable pageable) {
+        Specification<Imovel> spec = Specification
+                .where(ImovelSpecification.haStatusImovelVendido(status_imoveis));
+        return repository.findAll(spec, pageable);
     }
 
 

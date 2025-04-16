@@ -2,7 +2,7 @@ import { Header } from "@/components/header";
 import { Montserrat } from "next/font/google";
 import TabelaUsuario from "@/components/paginaCadastroUsuario/tabelaUsuario";
 import { Footer } from "@/components/footer";
-
+import { LoadingWrapper } from "@/components/loading/loadingServer";
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -12,7 +12,7 @@ const montserrat = Montserrat({
 
 export default function CadastroUsuario() {
     return (
-        <>
+        <LoadingWrapper>
             <Header />
 
             <div className="flex flex-col min-h-screen">
@@ -30,6 +30,6 @@ export default function CadastroUsuario() {
             </div>
 
             <Footer />
-        </>
+        </LoadingWrapper>
     );
 }

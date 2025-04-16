@@ -21,14 +21,12 @@ const montserrat = Montserrat({
 
 const UsuarioProps = z.object({
     id: z.number().optional(),
-    nome: z.string().min(1, { message: "O nome é obrigatório" }),
-    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+    username: z.string().min(1, { message: "O nome é obrigatório" }),
     tipo_conta: z.string().min(1, {
         message: "Selecione um tipo de conta válido",
     }),
-    telefone: z.string().min(1, { message: "O telefone é obrigatório" }),
     email: z.string().email({ message: "E-mail inválido" }),
-    senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+    password: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
 })
 
 const FormSchema = z.object({
@@ -37,6 +35,8 @@ const FormSchema = z.object({
 
 type UsuarioData = z.infer<typeof UsuarioProps>
 type FormData = z.infer<typeof FormSchema>
+
+export type { FormData }
 
 interface InputDadosUsuarioProps {
     onComplete?: () => void
@@ -163,7 +163,7 @@ export function Formulario({ onComplete }: InputDadosUsuarioProps) {
                     </div>
 
                     <div className="space-y-4 mb-4">
-                        <DadosUsuarioSection register={register} errors={errors.usuario} />
+                        <DadosUsuarioSection register={register} errors={errors} />
                     </div>
 
                     <div className="flex justify-end gap-4 mt-4">

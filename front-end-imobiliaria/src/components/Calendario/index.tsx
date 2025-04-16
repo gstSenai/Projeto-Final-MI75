@@ -2,8 +2,7 @@
 
 import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { cn } from "./cn"
-
+import { cn } from "@/components/Calendario/cn"
 type CalendarProps = {
   locale?: string
   className?: string

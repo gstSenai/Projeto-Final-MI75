@@ -1,8 +1,10 @@
 "use client"
 
 import { Inter } from 'next/font/google';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from "next/navigation"
 
 // Carregando a fonte Inter
 const inter = Inter({
@@ -12,6 +14,7 @@ const inter = Inter({
 });
 
 export function Header() {
+    const router = useRouter()
     const [hamburguerMobile, setHambuguerMobile] = useState(false)
     const [showProfileModal, setShowProfileModal] = useState(false)
     const [showLanguageModal, setShowLanguageModal] = useState(false)
@@ -20,15 +23,49 @@ export function Header() {
     const [currentImageEUA, setCurrentImageEUA] = useState('/imagensHeader/eua.png')
     const [currentImageEspanhol, setCurrentImageEspanhol] = useState('/imagensHeader/Espanha.png')
     const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [username, setUsername] = useState('')
+    const [userRole, setUserRole] = useState('')
+    const [id, setId] = useState('')
 
-    const handleLogin = () => {
-        setIsLoggedIn(true)
-        setShowProfileModal(false)
-    }
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const storedUsername = localStorage.getItem('username');
+        const storedRole = localStorage.getItem('tipo_conta');
+        const storedId = localStorage.getItem('id');
+        console.log("ID armazenado:", storedId);
+        if (token && storedUsername) {
+            setIsLoggedIn(true);
+            setUsername(storedUsername);
+            setUserRole(storedRole || '');
+            setId(storedId || '');
+        }
+    }, []);
+
+    const handleLogoClick = () => {
+        if (userRole === 'Administrador') {
+            router.push('/paginaAdministrador');
+        } else if (userRole === 'Corretor') {
+            router.push('/paginaCorretores');
+        } else if (userRole === 'Proprietario') {
+            router.push('/paginaProprietarios');
+        } else if (userRole === 'Editor') {
+            router.push('/paginaEditor');
+        } else if (userRole === 'Usuario') {
+            router.push('/paginaInicial');
+        } else {
+            router.push('/paginaInicial');
+        }
+    };
 
     const handleLogout = () => {
-        setIsLoggedIn(false)
-        setShowProfileModal(false)
+        setIsLoggedIn(false);
+        setUsername('');
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('tipo_conta');
+        localStorage.removeItem('id');
+        setShowProfileModal(false);
+        router.push('/login');
     }
 
     return (
@@ -37,16 +74,32 @@ export function Header() {
                 <section className="flex flex-row justify-between">
                     <div className="flex flex-row items-center md:gap-8 lg:gap-12 xl:gap-20">
                         <div className="flex items-center md:gap-3 gap-4">
-                            <Image src="/imagensHeader/Logo HAV.png" alt="Logo HAV" width={45} height={45} className="max-h-full lg:w-[45px] w-[35px] mt-[-0.3rem]" />
-                            <p className="md:text-lg text-xl xl:text-2xl font-bold text-vermelho">HAV</p>
+                            <Image
+                                src="/imagensHeader/Logo HAV.png"
+                                alt="Logo HAV"
+                                width={45}
+                                height={45}
+                                className="max-h-full lg:w-[45px] w-[35px] mt-[-0.3rem] cursor-pointer"
+                                onClick={handleLogoClick}
+                            />
+                            <p
+                                className="md:text-lg text-xl xl:text-2xl font-bold text-vermelho cursor-pointer"
+                                onClick={handleLogoClick}
+                            >
+                                HAV
+                            </p>
                         </div>
                         <div>
                             <nav>
-                                <ul className="flex flex-row max-lg:text-base text-lg whitespace-nowrap md:gap-3 lg:gap-4 text-[#303030] max-md:hidden">
-                                    <li><a href="/PaginaInicial">Início</a></li>
-                                    <li><a href="/">Propriedades</a></li>
-                                    <li><a href="/paginaCorretores">Corretores</a></li>
-                                    <li><a href="/sobreNos">Sobre nós</a></li>
+                                <ul className="flex flex-row max-lg:text-base text-xl whitespace-nowrap md:gap-4 lg:gap-6 text-[#303030] max-md:hidden">
+                                    <li><Link href={userRole === 'Administrador' ? '/paginaAdministrador' : 
+                                                  userRole === 'Corretor' ? '/paginaCorretores' : 
+                                                  userRole === 'Proprietario' ? '/paginaProprietarios' : 
+                                                  userRole === 'Editor' ? '/paginaEditor' : 
+                                                  '/paginaInicial'}>Início</Link></li>
+                                    <li><Link href="/paginaImoveis">Propriedades</Link></li>
+                                    <li><Link href="/paginaCorretores">Corretores</Link></li>
+                                    <li><Link href="/sobreNos">Sobre nós</Link></li>
                                 </ul>
                             </nav>
                         </div>
@@ -59,26 +112,27 @@ export function Header() {
                             </div>
                         </div>
                         <div className="flex flex-row items-center md:gap-1 lg:gap-2 md:px-3 lg:px-6 max-md:hidden relative">
-                            <Image 
-                                src={currentLanguage === 'Português' ? currentImageBrasil : 
-                                     currentLanguage === 'English' ? currentImageEUA : 
-                                     currentImageEspanhol} 
-                                alt="Idioma" 
-                                width={20} 
-                                height={20} 
-                            />
-                            <p className="text-lg max-lg:text-base">{currentLanguage}</p>
-                            <Image 
-                                onClick={() => setShowLanguageModal(!showLanguageModal)}
-                                src="/imagensHeader/seta-para-baixo 2.png" 
-                                alt="Abrir opções" 
-                                width={20} 
-                                height={20}
-                                className="cursor-pointer"
-                            />
+                            <div className='flex flex-row items-center gap-2 cursor-pointer' onClick={() => setShowLanguageModal(!showLanguageModal)}>
+                                <Image
+                                    src={currentLanguage === 'Português' ? currentImageBrasil :
+                                        currentLanguage === 'English' ? currentImageEUA :
+                                            currentImageEspanhol}
+                                    alt="Idioma"
+                                    width={20}
+                                    height={20}
+                                />
+                                <p className="text-lg max-lg:text-base">{currentLanguage}</p>
+                                <Image
+                                    src="/imagensHeader/seta-para-baixo 2.png"
+                                    alt="Abrir opções"
+                                    width={20}
+                                    height={20}
+                                    className="cursor-pointer"
+                                />
+                            </div>
                             {showLanguageModal && (
                                 <div className="absolute top-[calc(100%+0.5rem)] w-40 bg-[#702632] rounded-lg shadow-lg py-1 z-50">
-                                    <div 
+                                    <div
                                         onClick={() => {
                                             setCurrentLanguage('Português');
                                             setCurrentImageBrasil('/imagensHeader/Brasil.png');
@@ -90,7 +144,7 @@ export function Header() {
                                         <span>Português</span>
                                     </div>
                                     <div className="w-full h-[1px] bg-white opacity-50"></div>
-                                    <div 
+                                    <div
                                         onClick={() => {
                                             setCurrentLanguage('English');
                                             setCurrentImageEUA('/imagensHeader/eua.png');
@@ -102,7 +156,7 @@ export function Header() {
                                         <span>English</span>
                                     </div>
                                     <div className="w-full h-[1px] bg-white opacity-50"></div>
-                                    <div 
+                                    <div
                                         onClick={() => {
                                             setCurrentLanguage('Español');
                                             setCurrentImageEspanhol('/imagensHeader/Espanha.png');
@@ -117,42 +171,47 @@ export function Header() {
                             )}
                         </div>
                         <div className="flex flex-row items-center max-md:hidden relative">
-                            <Image 
+                            <Image
                                 onClick={() => setShowProfileModal(!showProfileModal)}
-                                src="/imagensHeader/PERFIL SEM LOGIN.png" 
-                                alt="Perfil sem login" 
-                                width={50} 
-                                height={50} 
-                                className="w-12 md:w-[40px] lg:w-[50px] cursor-pointer" 
+                                src={isLoggedIn ? "/imagensHeader/PERFIL SEM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"}
+                                alt={isLoggedIn ? "Perfil com login" : "Perfil sem login"}
+                                width={50}
+                                height={50}
+                                className="w-12 md:w-[40px] lg:w-[50px] cursor-pointer"
                             />
                             {showProfileModal && (
                                 <div className="absolute top-[calc(100%+0.5rem)] right-0 w-40 bg-[#702632] rounded-lg shadow-lg py-1 z-50">
                                     {!isLoggedIn ? (
                                         <>
-                                            <a 
-                                                href="/login" 
+                                            <Link
+                                                href="/login"
                                                 className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
                                             >
                                                 Fazer login
-                                            </a>
+                                            </Link>
                                             <div className="w-full h-[1px] bg-white opacity-50"></div>
-                                            <a 
-                                                href="/cadastro" 
+                                            <Link
+                                                href="/cadastro"
                                                 className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
                                             >
                                                 Cadastrar-se
-                                            </a>
+                                            </Link>
                                         </>
                                     ) : (
                                         <>
-                                            <a 
-                                                href="/perfil" 
+                                            <div className="px-4 py-2 text-white text-center">
+                                                {username}
+                                            </div>
+                                            <div className="w-full h-[1px] bg-white opacity-50"></div>
+                                            <Link
+                                                href={`/perfilUsuario/${id}`}
                                                 className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
+                                                onClick={() => console.log("ID ao clicar no link:", id)}
                                             >
                                                 Perfil
-                                            </a>
+                                            </Link>
                                             <div className="w-full h-[1px] bg-white opacity-50"></div>
-                                            <button 
+                                            <button
                                                 onClick={handleLogout}
                                                 className="w-full px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
                                             >
@@ -183,14 +242,18 @@ export function Header() {
                         <div className="flex flex-col min-h-full px-6 py-4">
                             <div className="flex justify-between items-center mb-4">
                                 <div className="flex items-center gap-3">
-                                    <Image 
-                                        src="/imagensHeader/PERFIL SEM LOGIN.png" 
-                                        alt="Perfil" 
-                                        width={40} 
-                                        height={40} 
+                                    <Image
+                                        src={isLoggedIn ? "/imagensHeader/PERFIL COM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"}
+                                        alt="Perfil"
+                                        width={40}
+                                        height={40}
                                         className="rounded-full cursor-pointer"
                                     />
-                                    <a href="/perfil" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Nome do Usuário</a>
+                                    {isLoggedIn ? (
+                                        <span className="text-xl text-[#303030]">{username}</span>
+                                    ) : (
+                                        <Link href="/login" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Fazer login</Link>
+                                    )}
                                 </div>
                                 <Image
                                     onClick={() => setHambuguerMobile(false)}
@@ -204,34 +267,34 @@ export function Header() {
                             <div className='bg-black p-[0.2px] w-full'></div>
                             <ul className="space-y-3 text-start my-3">
                                 <li className='flex gap-3 items-center'>
-                                    <Image src="/imagensHeader/logoMinuscula.png" alt="simbolo HAV" width={20}  height={20} className='h-full'/>
-                                    <a  href="/paginaInicial" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Início</a>
+                                    <Image src="/imagensHeader/logoMinuscula.png" alt="simbolo HAV" width={20} height={20} className='h-full' />
+                                    <Link href="/paginaInicial" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Início</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
-                                    <Image src="/imagensHeader/casa.png" alt="simbolo casas" width={20}  height={20} className='h-full'/>
-                                    <a href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Propriedades</a>
+                                    <Image src="/imagensHeader/casa.png" alt="simbolo casas" width={20} height={20} className='h-full' />
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Propriedades</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
-                                    <Image src="/imagensHeader/corretores.png" alt="simbolo corretores" width={20}  height={20} className='h-full'/>
-                                    <a href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Corretores</a>
+                                    <Image src="/imagensHeader/corretores.png" alt="simbolo corretores" width={20} height={20} className='h-full' />
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Corretores</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
-                                    <Image src="/imagensHeader/informacao.png" alt="simbolo Sobre nos" width={20}  height={20} className='h-full'/>
-                                    <a href="/sobreNos" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Sobre nós</a>
+                                    <Image src="/imagensHeader/informacao.png" alt="simbolo Sobre nos" width={20} height={20} className='h-full' />
+                                    <Link href="/sobreNos" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Sobre nós</Link>
                                 </li>
                             </ul>
                             <div className='bg-black p-[0.2px] w-full'></div>
                             <ul className="space-y-3 text-start mt-3">
                                 <li className='flex gap-3 items-center'>
-                                    <Image src="/imagensHeader/sino.png" alt="chat corretores" width={20}  height={20} className='h-full'/>
-                                    <a href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Chat corretores</a>
+                                    <Image src="/imagensHeader/sino.png" alt="chat corretores" width={20} height={20} className='h-full' />
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Chat corretores</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
-                                    <Image src="/imagensHeader/configuracoes.png" alt="configurações" width={20}  height={20} className='h-full'/>
-                                    <a href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Configurações</a>
+                                    <Image src="/imagensHeader/configuracoes.png" alt="configurações" width={20} height={20} className='h-full' />
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Configurações</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
-                                    <Image src="/imagensHeader/logout.png" alt="logout" width={20}  height={20} className='h-full'/>
+                                    <Image src="/imagensHeader/logout.png" alt="logout" width={20} height={20} className='h-full' />
                                     <button onClick={handleLogout} className="text-xl text-[#303030] hover:text-vermelho transition-colors">Logout</button>
                                 </li>
                             </ul>

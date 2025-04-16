@@ -3,8 +3,9 @@
 import type React from "react"
 import type { UseFormRegister, FieldError } from "react-hook-form"
 import Image from "next/image"
+import { FormData } from "../index"
 
-interface FormularioInputProps {
+interface FormularioInputProps{
   placeholder?: string
   interName?: string
   name: string
@@ -13,7 +14,7 @@ interface FormularioInputProps {
   onChange?: (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
   customizacaoClass: string
   options?: string[]
-  register: UseFormRegister<any>
+  register: UseFormRegister<FormData>
   errors?: FieldError | undefined
   required?: boolean
   disabled?: boolean
@@ -22,6 +23,7 @@ interface FormularioInputProps {
   }
   iconCaneta?: boolean
   label?: string
+  maxLength?: number
 }
 
 export function FormularioInput({
@@ -39,6 +41,7 @@ export function FormularioInput({
   onChange,
   iconCaneta,
   label,
+  maxLength,
 }: FormularioInputProps) {
   const getIconPath = () => {
     switch (icon?.type) {
@@ -76,7 +79,7 @@ export function FormularioInput({
 
         {options ? (
           <select
-            {...register(name, { required })}
+            {...register(name as keyof FormData, { required })}
             value={value}
             onChange={onChange}
             disabled={disabled}
@@ -95,11 +98,12 @@ export function FormularioInput({
           <input
             type="text"
             placeholder={`${interName} ${required ? "*" : ""}`}
-            {...register(name, { required })}
+            {...register(name as keyof FormData, { required })}
             value={value}
             onChange={onChange}
             disabled={disabled}
             className="w-full outline-none text-gray-900 disabled:opacity-50"
+            maxLength={maxLength}
           />
         )}
 

@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioCadastroPostDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioPutRequestDTO;
@@ -19,4 +20,6 @@ public interface UsuarioMapper {
     Usuario usuarioPostRequestDTOToUsuario(UsuarioPostRequestDTO usuarioPostRequestDTO);
 
     Usuario usuarioPutRequestDTOToUsuario(UsuarioPutRequestDTO usuarioPutRequestDTO);
+
+    Usuario usuarioCadastroRequestDTOToUsuario(UsuarioCadastroPostDTO usuarioRequestDTO);
 }

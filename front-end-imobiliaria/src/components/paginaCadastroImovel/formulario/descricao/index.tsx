@@ -1,16 +1,16 @@
 "use client"
 
-import type { UseFormRegister } from "react-hook-form"
+import type { UseFormRegister, FieldValues, Path } from "react-hook-form"
 
-interface DescricaoProps {
+interface DescricaoProps<T extends FieldValues = FieldValues> {
     placeholder: string
-    name: string
+    name: Path<T>
     className?: string
-    register: UseFormRegister<any>
+    register: UseFormRegister<T>
     required?: boolean
 }
 
-export function Descricao({ className = "", register, name, placeholder, required }: DescricaoProps) {
+export function Descricao<T extends FieldValues = FieldValues>({ className = "", register, name, placeholder, required }: DescricaoProps<T>) {
     return (
         <div className="flex flex-col font-montserrat w-full">
             <div className="rounded-2xl w-full flex flex-col p-2 sm:p-4">
@@ -20,7 +20,7 @@ export function Descricao({ className = "", register, name, placeholder, require
                 <div className={`bg-white rounded-[20px] border border-black px-3 sm:px-5 py-4 sm:py-8 ${className}`}>
                     <div className="w-full h-full flex flex-col">
                         <textarea
-                            {...register(name, { required: required ? `${placeholder} é obrigatório` : false })}
+                            {...register(name as Path<T>, { required: required ? `${placeholder} é obrigatório` : false })}
                             className="text-sm sm:text-base md:text-lg h-full text-black outline-none w-full resize-none overflow-auto font-montserrat"
                             placeholder="Digite aqui a descrição detalhada do imóvel..."
                         />

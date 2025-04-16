@@ -6,11 +6,11 @@ import java.util.List;
 
 public record UsuarioGetResponseDTO(
         Integer id,
-        String nome,
-        String sobrenome,
+        String username,
+        String biografia,
         String tipo_conta,
         String email,
-        String senha,
+        String password,
         boolean ativo,
         String imagem_usuario,
         List<ImovelUsuarioGetResponseDTO> imovel

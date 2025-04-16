@@ -11,13 +11,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const UsuarioProps = z.object({
     id: z.number().optional(),
-    nome: z.string().min(1, { message: "O nome é obrigatório" }),
-    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
+    username: z.string().min(1, { message: "O nome é obrigatório" }),
     tipo_conta: z.string().min(1, {
         message: "Selecione um tipo de conta válido",
     }),
     email: z.string().email({ message: "E-mail inválido" }),
-    senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+    password: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
     imagem_usuario: z.string().optional(),
 })
 
@@ -42,11 +41,10 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
         resolver: zodResolver(FormSchema),
         defaultValues: selectedUsuarios?.[0] ? {
             usuario: {
-                nome: selectedUsuarios[0].nome,
-                sobrenome: selectedUsuarios[0].sobrenome,
+                username: selectedUsuarios[0].username,
                 tipo_conta: selectedUsuarios[0].tipo_conta,
                 email: selectedUsuarios[0].email,
-                senha: selectedUsuarios[0].senha,
+                password: selectedUsuarios[0].password,
             },
         } : undefined
     })
@@ -105,11 +103,10 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
             const usuarioAtualizado = {
                 ...usuario,
                 id: usuarioSelecionadoId,
-                nome: usuario.nome,
-                sobrenome: usuario.sobrenome,
+                username: usuario.username,
                 tipo_conta: usuario.tipo_conta,
                 email: usuario.email,
-                senha: usuario.senha,
+                password: usuario.password,
                 imagem_usuario: selectedUsuarios[0].imagem_usuario,
             }
 
@@ -190,40 +187,22 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                         <div className="space-y-4 pt-10">
                                                             <div className="flex flex-col gap-4">
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`nome_${usuario.id}`} className="block text-lg">
-                                                                        Nome:
-                                                                    </label>
                                                                     <FormularioEditarInput
+                                                                        label="Nome"
                                                                         placeholder="Ex: Caio"
-                                                                        name="usuario.nome"
-                                                                        value={usuario.nome}
+                                                                        name="usuario.username"
+                                                                        value={usuario.username}
                                                                         register={register}
                                                                         required
                                                                         custumizacaoClass="w-full p-2 border border-gray-500 rounded"
-                                                                        errors={errors?.usuario?.nome}
+                                                                        errors={errors?.usuario?.username}
                                                                     />
                                                                 </div>
+                                                               
 
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`sobrenome_${usuario.id}`} className="block text-lg">
-                                                                        Sobrenome:
-                                                                    </label>
                                                                     <FormularioEditarInput
-                                                                        placeholder="Ex: Souza"
-                                                                        name="usuario.sobrenome"
-                                                                        value={usuario.sobrenome}
-                                                                        register={register}
-                                                                        required
-                                                                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
-                                                                        errors={errors?.usuario?.sobrenome}
-                                                                    />
-                                                                </div>
-
-                                                                <div className="w-full">
-                                                                    <label htmlFor={`tipo_conta_${usuario.id}`} className="block text-lg">
-                                                                        Tipo da Conta:
-                                                                    </label>
-                                                                    <FormularioEditarInput
+                                                                        label="Tipo da Conta"
                                                                         placeholder=""
                                                                         name="usuario.tipo_conta"
                                                                         value={usuario.tipo_conta}
@@ -236,10 +215,8 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                 </div>
 
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`email_${usuario.id}`} className="block text-lg">
-                                                                        E-mail:
-                                                                    </label>
                                                                     <FormularioEditarInput
+                                                                        label="E-mail"
                                                                         placeholder="Ex: caio@gmail.com"
                                                                         name="usuario.email"
                                                                         value={usuario.email}
@@ -251,19 +228,18 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                 </div>
 
                                                                 <div className="w-full">
-                                                                    <label htmlFor={`senha_${usuario.id}`} className="block text-lg">
-                                                                        Senha:
-                                                                    </label>
                                                                     <FormularioEditarInput
+                                                                        label="Senha"
                                                                         placeholder=""
-                                                                        name="usuario.senha"
-                                                                        value={usuario.senha}
+                                                                        name="usuario.password"
+                                                                        value={usuario.password}
                                                                         register={register}
                                                                         required
                                                                         custumizacaoClass="w-full p-2 border border-gray-500 rounded"
-                                                                        errors={errors?.usuario?.senha}
+                                                                        errors={errors?.usuario?.password}
                                                                     />
                                                                 </div>
+
                                                             </div>
                                                         </div>
                                                     </React.Fragment>

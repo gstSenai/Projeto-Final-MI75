@@ -1,14 +1,8 @@
-import { Montserrat } from 'next/font/google';
-import PaginaInicial from './PaginaInicial/page';
+
+import PaginaInicial from "./paginaInicial/page";
 
 
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['400', '800'],
-  display: 'swap',
-});
-
-export default function PaginaEditor() {
+export default function pagina() {
     return (
             <PaginaInicial/>
     );
