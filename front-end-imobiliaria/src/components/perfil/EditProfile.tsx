@@ -1,37 +1,129 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { FaPhoneAlt, FaEnvelope, FaCamera } from 'react-icons/fa';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-interface ProfileData {
-    name: string;
-    age: number;
-    biography: string;
-    phone: string;
-    email: string;
-    twoFactorEnabled: boolean;
+const UsuarioProps = z.object({
+    id: z.number().optional(),
+    username: z.string().min(1, { message: "O nome é obrigatório" }),
+    tipo_conta: z.string().min(1, {
+        message: "Selecione um tipo de conta válido",
+    }),
+    email: z.string().email({ message: "E-mail inválido" }),
+    password: z.string().min(1, { message: "A senha é obrigatória" }),
+    imagem_usuario: z.string().optional(),
+    biografia: z.string().optional(),
+    twoFactorEnabled: z.boolean().optional(),
+})
+
+type UsuarioData = z.infer<typeof UsuarioProps>
+
+interface EditProfileProps {
+    id: number;
 }
 
-export default function EditProfile() {
-    const [profileData, setProfileData] = useState<ProfileData>({
-        name: 'Jéssica Vieira',
-        age: 28,
-        biography: 'Jéssica Vieira está focada em dar um passo importante para o futuro, sonhando em adquirir um terreno ou imóvel, para construir não apenas um lar, mas um espaço que reflita suas conquistas e ambições. Ela busca mais do que um simples lugar para morar: quer investir no seu próprio projeto de vida, com segurança e estabilidade para si e para sua família.',
-        phone: '+55 (47) 9469-4250',
-        email: 'jessica.vieira@gmail.com',
+export default function EditProfile({ id }: EditProfileProps) {
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm<UsuarioData>({
+        resolver: zodResolver(UsuarioProps)
+    });
+
+    const [profileData, setProfileData] = useState<UsuarioData>({
+        username: '',
+        tipo_conta: '',
+        biografia: '',
+        email: '',
+        password: '',
+        imagem_usuario: '',
         twoFactorEnabled: false
     });
 
     const [isEditing, setIsEditing] = useState(false);
     const [profileImage, setProfileImage] = useState<string>('corretora.png');
+    const [imagem, setImagem] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [editadoComSucesso, setEditadoComSucesso] = useState(false);
+    const [erroAoEditar, setErroAoEditar] = useState(false);
+    const [mensagemErro, setMensagemErro] = useState('');
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setProfileData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+    const getUserPorId = async (id: number) => {
+        try {
+            const response = await fetch(`http://localhost:9090/usuario/getById/${id}`)
+            const data = await response.json()
+            
+            const dadosFormatados = {
+                username: data.username || '',
+                tipo_conta: data.tipo_conta || '',
+                biografia: data.biografia || '',
+                email: data.email || '',
+                password: data.password || '',
+                imagem_usuario: data.imagem_usuario || '',
+                twoFactorEnabled: data.twoFactorEnabled || false
+            }
+            
+            setProfileData(dadosFormatados)
+            // Preenche os valores do formulário
+            Object.entries(dadosFormatados).forEach(([key, value]) => {
+                setValue(key as keyof UsuarioData, value);
+            });
+            
+            if (data.imagem_usuario) {
+                setProfileImage(data.imagem_usuario)
+            }
+        } catch (error) {
+            console.error("Erro ao buscar usuário:", error)
+        }
+    }
+
+    const onSubmit = async (data: UsuarioData) => {
+        try {
+            const formData = new FormData();
+            const usuarioData = {
+                ...data,
+                id: id,
+                ativo: true,
+                password: data.password
+            };
+
+            formData.append("usuario", JSON.stringify(usuarioData));
+
+            if (imagem) {
+                formData.append("imagem", imagem);
+            }
+
+            const response = await fetch(`http://localhost:9090/usuario/update/${id}`, {
+                method: "PUT",
+                body: formData,
+                headers: {
+                    'Accept': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro na requisição: ${response.status}`);
+            }
+
+            const responseData = await response.json();
+            console.log("✅ Usuário atualizado com sucesso:", responseData);
+            setIsEditing(false);
+            setEditadoComSucesso(true);
+            setTimeout(() => {
+                setEditadoComSucesso(false);
+            }, 5000);
+        } catch (error) {
+            console.error("Erro ao editar usuário:", error);
+            setErroAoEditar(true);
+            setMensagemErro("Erro ao editar perfil. Tente novamente.");
+            setTimeout(() => {
+                setErroAoEditar(false);
+            }, 5000);
+        }
     };
+
+    useEffect(() => {
+        getUserPorId(id)
+    }, [id])
 
     const handleImageClick = () => {
         fileInputRef.current?.click();
@@ -40,6 +132,7 @@ export default function EditProfile() {
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            setImagem(file);
             const reader = new FileReader();
             reader.onloadend = () => {
                 setProfileImage(reader.result as string);
@@ -48,15 +141,9 @@ export default function EditProfile() {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Aqui você implementará a lógica para salvar as alterações
-        setIsEditing(false);
-    };
-
     return (
         <div className="flex font-montserrat bg-[#E5E1DB] p-4 sm:p-6 rounded-2xl min-h-[400px] shadow-lg mx-auto w-[98%] sm:w-[95%] max-w-5xl">
-            <form onSubmit={handleSubmit} className="w-full relative">
+            <form onSubmit={handleSubmit(onSubmit)} className="w-full relative">
                 {!isEditing && (
                     <button
                         type="button"
@@ -97,24 +184,20 @@ export default function EditProfile() {
                             {isEditing ? (
                                 <input
                                     type="text"
-                                    name="name"
-                                    value={profileData.name}
-                                    onChange={handleInputChange}
+                                    {...register("username")}
                                     className="text-lg sm:text-xl font-extrabold text-black tracking-[-1] bg-transparent border-b border-black focus:outline-none text-center w-full"
                                 />
                             ) : (
-                                <h2 className='text-lg sm:text-xl font-extrabold text-black tracking-[-1]'>{profileData.name}</h2>
+                                <h2 className='text-lg sm:text-xl font-extrabold text-black tracking-[-1]'>{profileData.username}</h2>
                             )}
                             {isEditing ? (
                                 <input
-                                    type="number"
-                                    name="age"
-                                    value={profileData.age}
-                                    onChange={handleInputChange}
+                                    type="text"
+                                    {...register("tipo_conta")}
                                     className="text-sm sm:text-base text-black bg-transparent border-b border-black focus:outline-none text-center w-full mt-1"
                                 />
                             ) : (
-                                <p className='text-sm sm:text-base text-black mt-1'>{profileData.age} anos</p>
+                                <p className='text-sm sm:text-base text-black mt-1'>{profileData.tipo_conta}</p>
                             )}
                         </div>
                     </div>
@@ -135,14 +218,12 @@ export default function EditProfile() {
                         
                         {isEditing ? (
                             <textarea
-                                name="biography"
-                                value={profileData.biography}
-                                onChange={handleInputChange}
+                                {...register("biografia")}
                                 className="text-sm sm:text-[15px] w-full bg-transparent border border-gray-300 rounded p-2 focus:outline-none focus:border-black min-h-[100px]"
                                 rows={4}
                             />
                         ) : (
-                            <p className='text-sm sm:text-[15px] w-full sm:w-[90%]'>{profileData.biography}</p>
+                            <p className='text-sm sm:text-[15px] w-full sm:w-[90%]'>{profileData.biografia}</p>
                         )}
 
                         <div className='mt-4 sm:mt-3'>
@@ -150,26 +231,13 @@ export default function EditProfile() {
                             {isEditing ? (
                                 <>
                                     <input
-                                        type="tel"
-                                        name="phone"
-                                        value={profileData.phone}
-                                        onChange={handleInputChange}
-                                        className="text-sm sm:text-base flex items-center w-full bg-transparent border-b border-black focus:outline-none mb-3"
-                                    />
-                                    <input
                                         type="email"
-                                        name="email"
-                                        value={profileData.email}
-                                        onChange={handleInputChange}
+                                        {...register("email")}
                                         className="text-sm sm:text-base flex items-center w-full bg-transparent border-b border-black focus:outline-none"
                                     />
                                 </>
                             ) : (
                                 <>
-                                    <p className='flex items-center text-sm sm:text-base'>
-                                        <img src="/iconsSociais/whatsapp.png" alt="whatsapp" className="mr-2 w-4 sm:w-5" />
-                                        {profileData.phone}
-                                    </p>
                                     <p className="flex text-sm sm:text-base mt-2">
                                         <img src="/iconsSociais/Email.png" alt="email" className="mr-2 w-4 sm:w-5 h-3 sm:h-4 mt-1" />
                                         <a href={`mailto:${profileData.email}`} className="text-blue-600 underline">
@@ -185,11 +253,7 @@ export default function EditProfile() {
                             <label className="flex items-center text-sm sm:text-base">
                                 <input
                                     type="checkbox"
-                                    checked={profileData.twoFactorEnabled}
-                                    onChange={(e) => setProfileData(prev => ({
-                                        ...prev,
-                                        twoFactorEnabled: e.target.checked
-                                    }))}
+                                    {...register("twoFactorEnabled")}
                                     className="mr-2"
                                 />
                                 Autenticação de 2FA

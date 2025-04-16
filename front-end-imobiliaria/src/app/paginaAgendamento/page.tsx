@@ -4,8 +4,8 @@ import Image from "next/image"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Montserrat } from "next/font/google"
-import Calendario from "@/components/calendario"
-import { FormularioInput } from "@/components/calendario/selecaoHorario"
+import Calendario from "@/components/Calendario/index"
+import { FormularioInput } from "@/components/Calendario/selecaoHorario"
 import { useForm } from "react-hook-form"
 import { useEffect, useState, useCallback } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -215,7 +215,7 @@ export default function PaginaAgendamento() {
                     name="id_Corretor"
                     interName="Corretor"
                     register={register}
-                    customizacaoClass="w-full p-2 border border-gray-500 rounded"
+                    customizacaoClass="w-full p-2 border bg-white text-black border-gray-500 rounded"
                     required
                     options={usuarios?.map(({ nome, sobrenome }) => `${nome} ${sobrenome}`) || []}
                   />
@@ -225,7 +225,7 @@ export default function PaginaAgendamento() {
                     name="horario"
                     interName="Horário"
                     register={register}
-                    customizacaoClass="w-full p-2 border border-gray-500 rounded"
+                    customizacaoClass="w-full p-2 bg-white text-black border border-gray-500 rounded"
                     required
                     options={["8:00", "10:00", "12:00", "14:00", "16:00", "18:00"]
                       .filter(horario => !horariosOcupados.includes(horario))}
@@ -233,7 +233,7 @@ export default function PaginaAgendamento() {
 
 
                   <Botao
-                    className="xl:w-[60%] 2xl:w-[50%]"
+                    className="xl:w-[60%] 2xl:w-[50%] bg-vermelho"
                     texto="Agendar visita"
                     onClick={handleAgendarVisita}
                     disabled={agendamentoSucesso}

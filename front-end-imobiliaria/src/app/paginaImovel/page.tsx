@@ -2,7 +2,7 @@ import { Montserrat } from 'next/font/google';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import BarraStatusImovel from '@/components/barraStatusImovel';
-import { Card } from '@/components/cardImovel';
+import { Card } from '@/components/CardImovel';
 import AgendarCorretor from '@/components/agendarCorretor';
 import { LoadingWrapper } from '@/components/loading/loadingServer';
 
@@ -64,3 +64,4 @@ export default function PaginaImovel() {
         </LoadingWrapper>
     )
 }
+

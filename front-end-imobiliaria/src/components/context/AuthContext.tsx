@@ -5,13 +5,15 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from "
 interface AuthContextType {
   isAuthenticated: boolean
   token: string | null
-  login: (token: string) => void
+  role: string | null
+  login: (token: string, role: string) => void
   logout: () => void
 }
 
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   token: null,
+  role: null,
   login: () => {},
   logout: () => {},
 })
@@ -24,27 +26,39 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null)
+  const [role, setRole] = useState<string | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token")
-    if (storedToken) {
+    const storedRole = localStorage.getItem("role")
+
+    if (storedToken && storedRole) {
       setToken(storedToken)
+      setRole(storedRole)
       setIsAuthenticated(true)
     }
   }, [])
 
-  const login = (newToken: string) => {
+  const login = (newToken: string, newRole: string) => {
     localStorage.setItem("token", newToken)
+    localStorage.setItem("role", newRole)
     setToken(newToken)
+    setRole(newRole)
     setIsAuthenticated(true)
   }
 
   const logout = () => {
     localStorage.removeItem("token")
+    localStorage.removeItem("role")
     setToken(null)
+    setRole(null)
     setIsAuthenticated(false)
   }
 
-  return <AuthContext.Provider value={{ isAuthenticated, token, login, logout }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, token, role, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
