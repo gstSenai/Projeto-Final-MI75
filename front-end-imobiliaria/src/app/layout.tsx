@@ -1,5 +1,7 @@
 import "./globals.css"
 import { AuthProvider } from "@/components/context/AuthContext"
+import { LanguageProvider } from "@/components/context/LanguageContext"
+import { TranslationWrapper } from "@/components/TranslationWrapper"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { AccessibilityButton } from "@/components/AccessibilityButton"
@@ -39,10 +41,14 @@ export default function RootLayout({
         </div>
 
         <AuthProvider>
-          <div className="fixed bottom-4 right-4 z-50">
-            <AccessibilityButton />
-          </div>
-          {children}
+          <LanguageProvider>
+            <TranslationWrapper>
+              <div className="fixed bottom-4 right-4 z-50">
+                <AccessibilityButton />
+              </div>
+              {children}
+            </TranslationWrapper>
+          </LanguageProvider>
         </AuthProvider>
       </body>
     </html>
