@@ -175,7 +175,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
             <h1 className="text-[34px] font-bold text-[#280202] tracking-[2px]">BEM VINDO</h1>
             <h2 className="text-3xl font-semibold text-[#280202] tracking-[6px]">HAV</h2>
             <Image
-              src="/paginaInicial/ImagensCidade/jaragua.png"
+              src="/logos/logoLogin.png"
               alt="Logo"
               width={144}
               height={144}
