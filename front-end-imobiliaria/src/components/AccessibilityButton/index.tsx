@@ -18,50 +18,33 @@ export function AccessibilityButton() {
   const [isVLibrasActive, setIsVLibrasActive] = useState(false)
 
   useEffect(() => {
-    // Adiciona os elementos necessários para o VLibras
-    const vLibrasDiv = document.createElement('div')
-    vLibrasDiv.setAttribute('vw', 'true')
-    
-    const vLibrasWidgetDiv = document.createElement('div')
-    vLibrasWidgetDiv.setAttribute('vw-access-button', 'true')
-    
-    const vLibrasPluginDiv = document.createElement('div')
-    vLibrasPluginDiv.setAttribute('vw-plugin-wrapper', 'true')
-    
-    vLibrasDiv.appendChild(vLibrasWidgetDiv)
-    vLibrasDiv.appendChild(vLibrasPluginDiv)
-    
-    document.body.appendChild(vLibrasDiv)
-
-    // Carrega o script do VLibras
-    const script = document.createElement('script')
-    script.src = 'https://vlibras.gov.br/app/vlibras-plugin.js'
-    script.async = true
-    script.onload = () => {
-      if (window.VLibras) {
-        new window.VLibras.Widget()
-      }
-    }
-    document.body.appendChild(script)
-
-    // Remove os elementos ao desmontar
-    return () => {
-      const scriptElement = document.querySelector('script[src*="vlibras.gov.br"]')
-      if (scriptElement) {
-        scriptElement.remove()
-      }
-      const vLibrasElement = document.querySelector('div[vw="true"]')
-      if (vLibrasElement) {
-        vLibrasElement.remove()
-      }
+    // Inicializa o estado do VLibras baseado na visibilidade do widget
+    const vLibrasDiv = document.querySelector('div[vw]')
+    if (vLibrasDiv) {
+      setIsVLibrasActive(vLibrasDiv.classList.contains('enabled'))
     }
   }, [])
 
   const toggleVLibras = () => {
-    setIsVLibrasActive(!isVLibrasActive)
-    const vLibrasDiv = document.querySelector('div[vw="true"]')
-    if (vLibrasDiv) {
-      vLibrasDiv.style.display = isVLibrasActive ? 'none' : 'block'
+    const newState = !isVLibrasActive
+    setIsVLibrasActive(newState)
+    
+    const vLibrasDiv = document.querySelector('div[vw]')
+    const vLibrasButton = document.querySelector('div[vw-access-button]')
+    const vLibrasWrapper = document.querySelector('div[vw-plugin-wrapper]')
+    
+    if (vLibrasDiv && vLibrasButton && vLibrasWrapper) {
+      if (newState) {
+        vLibrasDiv.classList.add('enabled')
+        vLibrasDiv.style.display = 'block'
+        vLibrasButton.style.display = 'block'
+        vLibrasWrapper.style.display = 'block'
+      } else {
+        vLibrasDiv.classList.remove('enabled')
+        vLibrasDiv.style.display = 'none'
+        vLibrasButton.style.display = 'none'
+        vLibrasWrapper.style.display = 'none'
+      }
     }
   }
 

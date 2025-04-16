@@ -196,32 +196,53 @@ body {
 }
 
 /* Estilos para o VLibras */
-div[vw] {
-  position: fixed;
+#vlibras {
+  position: fixed !important;
   bottom: 0;
   right: 0;
-  top: auto;
-  left: auto;
+  width: auto !important;
+  height: auto !important;
+  z-index: 10000;
+  transition: all 0.3s ease;
 }
 
-div[vw] * {
-  max-width: none;
-  max-height: none;
+#vlibras.enabled {
+  display: block !important;
+}
+
+#vlibras * {
+  max-width: none !important;
+  max-height: none !important;
 }
 
 div[vw-access-button] {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  cursor: pointer;
-  transition: all 0.2s linear;
+  position: fixed !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  cursor: pointer !important;
+  width: 45px !important;
+  height: 45px !important;
+  z-index: 10001 !important;
+  transition: all 0.3s ease !important;
 }
 
 div[vw-plugin-wrapper] {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  z-index: 999999;
+  position: fixed !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  z-index: 10002 !important;
+  width: 300px !important;
+  height: 300px !important;
+  transition: all 0.3s ease !important;
+  background: transparent !important;
+}
+
+/* Garante que o widget fique visível quando ativo */
+#vlibras.enabled div[vw-access-button],
+#vlibras.enabled div[vw-plugin-wrapper] {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* Estilos para o modo de alto contraste */
