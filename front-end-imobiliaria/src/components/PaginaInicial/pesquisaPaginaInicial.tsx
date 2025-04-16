@@ -69,7 +69,7 @@ export const PesquisaPaginaInicial = () => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="bg-primary text-white px-8 py-2 rounded-md hover:bg-primary-dark transition-colors"
+            className="bg-primary hover:bg-primary-dark text-white px-8 py-2 rounded-md  transition-colors"
           >
             Buscar Imóveis
           </button>
