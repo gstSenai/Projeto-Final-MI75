@@ -1,10 +1,10 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { FaPhoneAlt, FaEnvelope, FaCamera } from 'react-icons/fa';
+import { useForm } from 'react-hook-form';
+import { FaCamera } from 'react-icons/fa';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import Image from 'next/image';
 const UsuarioProps = z.object({
     id: z.number().optional(),
     username: z.string().min(1, { message: "O nome é obrigatório" }),
@@ -25,7 +25,7 @@ interface EditProfileProps {
 }
 
 export default function EditProfile({ id }: EditProfileProps) {
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm<UsuarioData>({
+    const { register, handleSubmit, setValue } = useForm<UsuarioData>({
         resolver: zodResolver(UsuarioProps)
     });
 
@@ -43,9 +43,9 @@ export default function EditProfile({ id }: EditProfileProps) {
     const [profileImage, setProfileImage] = useState<string>('corretora.png');
     const [imagem, setImagem] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [editadoComSucesso, setEditadoComSucesso] = useState(false);
-    const [erroAoEditar, setErroAoEditar] = useState(false);
-    const [mensagemErro, setMensagemErro] = useState('');
+    const [, setEditadoComSucesso] = useState(false);
+    const [, setErroAoEditar] = useState(false);
+    const [, setMensagemErro] = useState('');
 
     const getUserPorId = async (id: number) => {
         try {
@@ -63,7 +63,6 @@ export default function EditProfile({ id }: EditProfileProps) {
             }
             
             setProfileData(dadosFormatados)
-            // Preenche os valores do formulário
             Object.entries(dadosFormatados).forEach(([key, value]) => {
                 setValue(key as keyof UsuarioData, value);
             });
@@ -123,7 +122,7 @@ export default function EditProfile({ id }: EditProfileProps) {
 
     useEffect(() => {
         getUserPorId(id)
-    }, [id])
+    })
 
     const handleImageClick = () => {
         fileInputRef.current?.click();
@@ -156,10 +155,12 @@ export default function EditProfile({ id }: EditProfileProps) {
                 <div className='flex flex-col md:flex-row items-start md:items-center justify-around gap-6 md:gap-4'>
                     <div className='flex flex-col items-center text-center w-full md:w-[30%] mb-6 md:mb-0 mt-8 sm:mt-0'>
                         <div className="relative cursor-pointer group" onClick={handleImageClick}>
-                            <img
+                            <Image
                                 src={profileImage}
                                 alt="Foto do usuário"
                                 className='w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-2 border-black transition-opacity group-hover:opacity-80'
+                                width={100}
+                                height={100}
                             />
                             <button
                                 type="button"
@@ -239,7 +240,7 @@ export default function EditProfile({ id }: EditProfileProps) {
                             ) : (
                                 <>
                                     <p className="flex text-sm sm:text-base mt-2">
-                                        <img src="/iconsSociais/Email.png" alt="email" className="mr-2 w-4 sm:w-5 h-3 sm:h-4 mt-1" />
+                                        <Image src="/iconsSociais/Email.png" alt="email" className="mr-2 w-4 sm:w-5 h-3 sm:h-4 mt-1" width={100} height={100} />
                                         <a href={`mailto:${profileData.email}`} className="text-blue-600 underline">
                                             {profileData.email}
                                         </a>

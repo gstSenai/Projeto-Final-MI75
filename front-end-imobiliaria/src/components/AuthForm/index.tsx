@@ -188,6 +188,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
             throw new Error("Tipo de conta não encontrado")
           }
         } catch (error) {
+          console.error("Erro ao buscar tipo de conta do usuário:", error)
           throw new Error("Erro ao buscar tipo de conta do usuário")
         }
       } else {

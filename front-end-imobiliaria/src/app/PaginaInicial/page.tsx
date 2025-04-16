@@ -1,14 +1,14 @@
 import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
 import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
-import { PesquisaPaginaInicial } from '@/components/PaginaInicial/PesquisaPaginaInicial/index';
+import { PesquisaPaginaInicial } from '@/components/paginaInicial/pesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
-import Carousel from '@/components/PaginaInicial/carrossel';
-import BotaoImageTexto from '@/components/PaginaInicial/BotaoImageTexto';
+import Carousel from '@/components/paginaInicial/carrossel';
+import BotaoImageTexto from '@/components/paginaInicial/botaoImageTexto';
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { Card } from '@/components/CardImovel/index';
+import { Card } from '@/components/cardImovel';
 
 const montserrat = Montserrat({
     subsets: ['latin'],
