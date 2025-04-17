@@ -6,9 +6,6 @@ import { Montserrat } from "next/font/google"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
 import Image from "next/image"
-import { useTranslation } from 'next-i18next'
-import LanguageSwitcher from '@/components/LanguageSwitcher'
-
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
@@ -20,13 +17,6 @@ interface AuthFormProps {
   buttonText: string
   loginOuCadastro: string
   isCadastro?: boolean
-}
-
-type FormData = {
-  email: string
-  password: string
-  username?: string
-  confirmarSenha?: string
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro, isCadastro = false }) => {
@@ -44,8 +34,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
-
-  const { t } = useTranslation('common')
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -180,8 +168,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
           
           const usuario = userData.content.find((u: FormData) => u.username === data.username)
           
-          if (usuario && usuario.tipo_conta) {
+          if (usuario) {
+            console.log("ID do usuário encontrado:", usuario.id)
             localStorage.setItem("tipo_conta", usuario.tipo_conta)
+            localStorage.setItem("id", usuario.id.toString())
             
             if (usuario.tipo_conta === "Usuario") {
               router.push("/paginaInicial")
@@ -198,6 +188,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
             throw new Error("Tipo de conta não encontrado")
           }
         } catch (error) {
+          console.error("Erro ao buscar tipo de conta do usuário:", error)
           throw new Error("Erro ao buscar tipo de conta do usuário")
         }
       } else {
@@ -216,7 +207,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
       <div className="absolute inset-0 flex items-center justify-center bg-[url('/logos/simboloHAVLogin.png')] max-md:bg-[url('/')] bg-no-repeat bg-[right_-300px_top_-100px]">
         <div className="shadow-md rounded-lg flex flex-col md:flex-row w-4/5 max-w-5xl bg-[#EBE8DE]">
           <div className="w-full md:w-[40%] flex flex-col py-16 items-center justify-center bg-gradient-to-b from-[rgba(223,218,208,1)] to-[rgba(115,115,115,0.3)] rounded-l-lg">
-            <h1 className="text-[34px] font-bold text-[#280202] tracking-[2px]">{t('welcome')}</h1>
+            <h1 className="text-[34px] font-bold text-[#280202] tracking-[2px]">BEM VINDO</h1>
             <h2 className="text-3xl font-semibold text-[#280202] tracking-[6px]">HAV</h2>
             <Image
               src="/logos/logoLogin.png"
@@ -349,7 +340,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
           </div>
         </div>
       </div>
-      <LanguageSwitcher />
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { Montserrat } from 'next/font/google';
 import Link from 'next/link';
 import Image from 'next/image';
 import { VLibrasButton } from "@/components/VLibrasButton"
+import { useLanguage } from '@/components/context/LanguageContext';
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -12,14 +13,16 @@ const montserrat = Montserrat({
 });
 
 export function Footer() {
+    const { translate } = useLanguage();
+    
     return (
         <footer className={`${montserrat.className} bg-[#1D1D1D] relative text-white overflow-hidden`}>
             <section className="flex flex-col xl:flex-row p-4 md:p-5 lg:p-7 xl:p-10 pt-10 md:pt-10 lg:pt-14 xl:pt-18 gap-5 xl:gap-10 relative z-10">
                 {/* Bloco de Informações */}
                 <div className="flex flex-col items-start z-20">
-                    <p className="text-base xl:text-lg font-extrabold">Informações</p>
+                    <p className="text-base xl:text-lg font-extrabold">{translate('footer.informacoes')}</p>
                     <p className="font-light text-xs md:text-sm xl:max-w-[320px]">
-                        Nosso objetivo é fornecer soluções imobiliárias de alta qualidade, garantindo satisfação e confiança em cada transação.
+                        {translate('footer.objetivo')}
                     </p>
                     <div className="flex gap-4 pt-4">
                         <Link href="https://facebook.com" target="_blank">
@@ -42,34 +45,34 @@ export function Footer() {
                     <div className="flex flex-wrap gap-14 md:gap-12 xl:gap-20">
                         {/* Serviços */}
                         <div className="flex flex-col gap-2">
-                            <p className="text-base xl:text-lg font-extrabold">Serviços</p>
+                            <p className="text-base xl:text-lg font-extrabold">{translate('footer.servicos')}</p>
                             <div className="font-light text-xs md:text-sm flex flex-col gap-1.5">
-                                <p><a href="#">Avaliações</a></p>
-                                <p><a href="#">Consultoria</a></p>
-                                <p><a href="#">Regularização</a></p>
-                                <p><a href="#">Investimentos</a></p>
+                                <p><a href="#">{translate('footer.avaliacoes')}</a></p>
+                                <p><a href="#">{translate('footer.consultoria')}</a></p>
+                                <p><a href="#">{translate('footer.regularizacao')}</a></p>
+                                <p><a href="#">{translate('footer.investimentos')}</a></p>
                             </div>
                         </div>
 
                         {/* Contato */}
                         <div className="flex flex-col gap-2">
-                            <p className="text-base xl:text-lg font-extrabold">Contato</p>
+                            <p className="text-base xl:text-lg font-extrabold">{translate('footer.contato')}</p>
                             <div className="font-light text-xs md:text-sm flex flex-col gap-1.5">
-                                <p><a href="#">Suporte</a></p>
-                                <p><a href="#">Atendimento</a></p>
-                                <p><a href="#">FAQ</a></p>
-                                <p><a href="#">Reclame Aqui</a></p>
+                                <p><a href="#">{translate('footer.suporte')}</a></p>
+                                <p><a href="#">{translate('footer.atendimento')}</a></p>
+                                <p><a href="#">{translate('footer.faq')}</a></p>
+                                <p><a href="#">{translate('footer.reclameAqui')}</a></p>
                             </div>
                         </div>
 
                         {/* Links Rápidos */}
                         <div className="flex flex-col gap-2">
-                            <p className="text-base xl:text-lg font-extrabold">Links Rápidos</p>
+                            <p className="text-base xl:text-lg font-extrabold">{translate('footer.linksRapidos')}</p>
                             <div className="font-light text-xs md:text-sm flex flex-col gap-1.5">
-                                <p><a href="/">Página Inicial</a></p>
-                                <p><a href="/sobreNos">Sobre Nós</a></p>
-                                <p><a href="#">Comprar</a></p>
-                                <p><a href="#">Vender</a></p>
+                                <p><a href="/">{translate('footer.paginaInicial')}</a></p>
+                                <p><a href="/sobreNos">{translate('footer.sobreNos')}</a></p>
+                                <p><a href="#">{translate('footer.comprar')}</a></p>
+                                <p><a href="#">{translate('footer.vender')}</a></p>
                             </div>
                         </div>
                     </div>
@@ -89,17 +92,13 @@ export function Footer() {
             <section className="relative bg-[#2B2A28] text-white py-2.5 px-2.5 flex justify-center items-center z-20">
                 <p className="text-center text-[10px] md:text-xs">
                     <span className="hidden lg:inline">
-                        © 2024 HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. <a href="/PoliticaPrivacidade">Termos de Uso</a> | <a href="/PoliticaPrivacidade">Política de Privacidade</a> | <a href="/PoliticaPrivacidade">Política de Cookies.</a>
+                        © 2025 HAV Imobiliária. {translate('footer.direitosReservados')} <a href="/PoliticaPrivacidade">{translate('footer.termosUso')}</a> | <a href="/PoliticaPrivacidade">{translate('footer.politicaPrivacidade')}</a> | <a href="/PoliticaPrivacidade">{translate('footer.politicaCookies')}</a>   ''
                     </span>
                     <span className="lg:hidden">
-                        © 2024 HAV Imobiliária. Todos os direitos reservados.
+                        © 2025 HAV Imobiliária. {translate('footer.direitosReservados')}
                     </span>
                 </p>
             </section>
-
-            <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-300">
-                <p>&copy; {new Date().getFullYear()} HAV Imóveis. Todos os direitos reservados.</p>
-            </div>
         </footer>
     );
 }

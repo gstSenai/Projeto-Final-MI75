@@ -1,7 +1,6 @@
-import "./globals.css"
+import "./globals.css";
 import { AuthProvider } from "@/components/context/AuthContext"
 import { LanguageProvider } from "@/components/context/LanguageContext"
-import { TranslationWrapper } from "@/components/TranslationWrapper"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { AccessibilityButton } from "@/components/AccessibilityButton"
@@ -40,17 +39,20 @@ export default function RootLayout({
           </div>
         </div>
 
+        {/* 
+          O AuthProvider e o LanguageProvider estão envolvendo o conteúdo da aplicação.
+          Isso permite que o contexto de autenticação e idioma esteja disponível em toda a aplicação.
+          A mudança de idioma não deve afetar o layout, apenas traduzir os textos.
+        */}
         <AuthProvider>
           <LanguageProvider>
-            <TranslationWrapper>
-              <div className="fixed bottom-4 right-4 z-50">
-                <AccessibilityButton />
-              </div>
-              {children}
-            </TranslationWrapper>
+            {children}
+            <div className="fixed bottom-4 right-4 z-50">
+              <AccessibilityButton />
+            </div>
           </LanguageProvider>
         </AuthProvider>
       </body>
     </html>
-  )
+  );
 }
