@@ -7,17 +7,27 @@ import { PesquisaPaginaInicial } from '@/components/PaginaInicial/pesquisaPagina
 import { Montserrat } from 'next/font/google';
 import Carrossel from '@/components/PaginaInicial/carrossel';
 import BotaoImagemTexto from '@/components/PaginaInicial/BotaoImageTexto/index';
+import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
+import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
+import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
+import { PesquisaPaginaInicial } from '@/components/PaginaInicial/pesquisaPaginaInicial';
+import { Montserrat } from 'next/font/google';
+import Carousel from '@/components/paginaInicial/carrossel';
+import BotaoImageTexto from '@/components/paginaInicial/BotaoImageTexto';
+import Carousel from '@/components/PaginaInicial/carrossel/index';
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Card } from '@/components/CardImovel';
 import { useLanguage } from '@/components/context/LanguageContext';
 
+
 const montserrat = Montserrat({
     subsets: ['latin'],
     weight: ['300', '800'],
     display: 'swap',
 });
+
 
 import Image from 'next/image';
 import { LoadingWrapper } from '@/components/loading/loadingServer';

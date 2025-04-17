@@ -1,41 +1,57 @@
-"use client"
-import { FormularioInput } from "../Calendario/selecaoHorario";
+"use client";
+
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import type React from "react";
+import { FormularioInput } from "../Calendario/selecaoHorario";
 import { CardHorario } from "./cardHorario";
+import { DayCarousel } from "@/components/PaginaInicial/carrossel/dayCarousel/index"; // ajuste esse path se necessário
 
 interface FormData {
-    mes: string;
+  mes: string;
 }
 
 export function PaginaHistoricoUsuarioChamar() {
-    const { register } = useForm<FormData>();
-
+    const { register, watch } = useForm<FormData>();
+    const selectedMonthName = watch("mes");
+    const [selectedDay, setSelectedDay] = useState<number | null>(null);
+  
+    const handleDaySelect = (day: number) => {
+      setSelectedDay(day);
+    };
+  
+    // Convertendo o nome do mês para número (0-11)
+    const monthNames = [
+      "Janeiro", "Fevereiro", "Março", "Abril",
+      "Maio", "Junho", "Julho", "Agosto",
+      "Setembro", "Outubro", "Novembro", "Dezembro"
+    ];
+    const selectedMonth = monthNames.indexOf(selectedMonthName || "Janeiro");
+  
     return (
-        <>
-            <div className="flex w-[115px]">
-                <FormularioInput
-                    name="Més"
-                    interName="Més"
-                    register={register}
-                    customizacaoClass="w-[300px] p-2 rounded rounded-full text-white border border-[#702632] bg-[#702632]"
-                    required
-                    options={[
-                        "Janeiro", "Fevereiro", "Março", "Abril",
-                        "Maio", "Junho", "Julho", "Agosto",
-                        "Setembro", "Outubro", "Novembro", "Dezembro"
-                    ]}
-                />
-            </div>
-            <div>
+      <>
 
-                <div className="border-t-2 border-[#702632] mt-1"></div>
-
-                <CardHorario tipo="pendente" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
-                <CardHorario tipo="realizado" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
-                <CardHorario tipo="cancelado" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
-
-            </div>
-        </>
+        <div className="mb-6">
+          <DayCarousel
+            onDaySelect={handleDaySelect}
+            externalMonth={selectedMonth}
+          />
+        </div>
+  
+        <div className="border-t-2 border-[#702632] mt-1 mb-4"></div>
+  
+        {selectedDay ? (
+          <div>
+            <p className="text-gray-700 font-semibold mb-2">
+              Chamados do dia {selectedDay}
+            </p>
+            <CardHorario tipo="pendente" horario="8:00 - 9:00" codigo="9978" corretor="Kaua" />
+            <CardHorario tipo="realizado" horario="10:00 - 11:00" codigo="2234" corretor="Kaua" />
+            <CardHorario tipo="cancelado" horario="14:00 - 15:00" codigo="3345" corretor="Kaua" />
+          </div>
+        ) : (
+          <p className="text-gray-400">Selecione um dia para ver os horários.</p>
+        )}
+      </>
     );
-}
+  }
+  

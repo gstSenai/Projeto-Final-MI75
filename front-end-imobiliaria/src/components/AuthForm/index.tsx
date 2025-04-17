@@ -19,6 +19,13 @@ interface AuthFormProps {
   isCadastro?: boolean
 }
 
+
+interface UsuarioData {
+  id: number;
+  username: string;
+  tipo_conta: string;
+}
+
 const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro, isCadastro = false }) => {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
@@ -166,7 +173,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
 
           const userData = await userResponse.json()
           
-          const usuario = userData.content.find((u: FormData) => u.username === data.username)
+          const usuario = userData.content.find((u: UsuarioData) => u.username === data.username)
           
           if (usuario) {
             console.log("ID do usuário encontrado:", usuario.id)

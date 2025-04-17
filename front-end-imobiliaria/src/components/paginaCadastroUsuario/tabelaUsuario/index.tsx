@@ -121,7 +121,8 @@ export default function TabelaUsuario() {
   
 
   const refreshData = () => {
-    setRefreshTrigger(prev => prev + 1)
+    setRefreshTrigger((atualizar) => atualizar + 1)
+    setSelectedUsuarios([])
   }
 
   const toggleUsuarioselection = (usuario: UsuarioProps) => {

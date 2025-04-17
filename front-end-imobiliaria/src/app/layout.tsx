@@ -5,8 +5,14 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { AccessibilityButton } from "@/components/AccessibilityButton"
 import { VLibrasScript } from "@/components/VLibrasScript"
+import Chatbot from "@/components/Chatbot";
+import { AuthProvider } from "@/components/context/AuthContext";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { AccessibilityButton } from "@/components/AccessibilityButton";
+import { VLibrasScript } from "@/components/VLibrasScript";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 declare global {
   interface Window {
@@ -21,12 +27,12 @@ export const metadata: Metadata = {
   icons: {
     icon: "/logos/logoLogin.png",
   },
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="pt-BR">
@@ -51,8 +57,14 @@ export default function RootLayout({
               <AccessibilityButton />
             </div>
           </LanguageProvider>
+          <div className="fixed bottom-4 right-4 z-50">
+            <AccessibilityButton />
+          </div>
+          {children}
+          <Chatbot />
         </AuthProvider>
       </body>
     </html>
   );
+}
 }

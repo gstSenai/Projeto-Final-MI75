@@ -150,6 +150,9 @@ export default function Carousel({ type, children }: CarouselProps) {
     setCurrentSlide((prev) => (prev >= totalSlides - itemsPerView ? 0 : prev + 1));
   };
 
+
+
+
   if (type === "ajusteTriplo") {
     return (
       <div className="relative w-full mx-auto my-8 overflow-hidden">
@@ -212,6 +215,8 @@ export default function Carousel({ type, children }: CarouselProps) {
   }
 
   
+
+
   if (type = "ajusteNormal") {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isMobile, setIsMobile] = useState(false); // Estado para armazenar se é mobile
@@ -312,6 +317,7 @@ export default function Carousel({ type, children }: CarouselProps) {
   }
 
 
-  // Default return if type doesn't match
-  return null;
+
+
+
 }
