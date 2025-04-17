@@ -3,6 +3,7 @@ import { Header } from "@/components/header"
 import TabelaProprietario from "@/components/paginaCadastroProprietario/tabelaProprietario"
 import { Montserrat } from "next/font/google"
 import { LoadingWrapper } from "@/components/loading/loadingServer"
+import RotaPrivada from "@/components/RotaPrivada"
 
 
 // Carregando a fonte Montserrat
@@ -15,9 +16,10 @@ const montserrat = Montserrat({
 export default function CadastroProprietario() {
     return (
         <LoadingWrapper>
-            <Header />
-            <div className="flex flex-col min-h-screen">
-                <div className={`flex-grow bg-[#DFDAD0] ${montserrat.className}`}>
+            <RotaPrivada userAutorizado={['Administrador', 'Editor']}>
+                <Header />
+                <div className="flex flex-col min-h-screen">
+                    <div className={`flex-grow bg-[#DFDAD0] ${montserrat.className}`}>
                     <div className="2xl:px-20 xl:px-20 lg:px-10 px-10 pt-14">
                         <div className="font-inter">
                             <div className="flex flex-col">
@@ -29,7 +31,8 @@ export default function CadastroProprietario() {
                     </div>
                 </div>
             </div>
-            <Footer />
+                <Footer />
+            </RotaPrivada>
         </LoadingWrapper>
     )
 }
