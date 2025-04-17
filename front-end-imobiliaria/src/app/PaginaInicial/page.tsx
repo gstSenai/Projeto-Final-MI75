@@ -5,6 +5,9 @@ import { PesquisaPaginaInicial } from '@/components/PaginaInicial/pesquisaPagina
 import { Montserrat } from 'next/font/google';
 import Carousel from '@/components/paginaInicial/carrossel';
 import BotaoImageTexto from '@/components/paginaInicial/BotaoImageTexto';
+import Carousel from '@/components/PaginaInicial/carrossel/index';
+import BotaoImageTexto from '@/components/PaginaInicial/BotaoImageTexto';
+>>>>>>> 211a83d934e271cd188ab59150dce0f6855d758a
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
