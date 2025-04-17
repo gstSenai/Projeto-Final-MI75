@@ -1,10 +1,10 @@
-import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
-import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
-import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
+import { ImoveisDisponiveis } from '@/components/NumeroAtualizaveis/ImoveisDisponiveis';
+import { ImoveisAlugados } from '@/components/NumeroAtualizaveis/ImoveisAlugados';
+import { ImoveisVendidos } from '@/components/NumeroAtualizaveis/ImoveisVendidos';
 import { PesquisaPaginaInicial } from '@/components/PaginaInicial/pesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
-import Carousel from '@/components/PaginaInicial/Carrossel';
-import BotaoImageTexto from '@/components/PaginaInicial/BotaoImageTexto';
+import Carrossel from '@/components/PaginaInicial/carrossel';
+import BotaoImagemTexto from '@/components/PaginaInicial/BotaoImageTexto';
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
@@ -83,11 +83,11 @@ export default function PaginaInicial() {
                             </div>
                         </div>
                         <div className='flex flex-col lg:flex-row justify-center pt-36 xl:pt-16 pb-12'>
-                            <Carousel type='ajusteTriplo'>
+                            <Carrossel type='ajusteTriplo'>
                                 <Card titulo="Casa com 3 quartos" cidade="Jaraguá Do Sul" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={6545644} codigo={455445} />
                                 <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={3443423} codigo={2331212} />
                                 <Card titulo="Casa com 3 quartos" cidade="Corupa" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={2121321} codigo={3323} />
-                            </Carousel>
+                            </Carrossel>
                         </div>
                     </section>
                     <section>
@@ -125,57 +125,57 @@ export default function PaginaInicial() {
                         </div>
                     </div>
 
-                    <Carousel type={"ajusteNormal"}>
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/Jaragua.png" texto="Jaraguá do Sul" />
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/Jaragua.png" texto="Jaraguá do Sul" />
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
-                    </Carousel>
+                    <Carrossel type={"ajusteNormal"}>
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/Jaragua.png" texto="Jaraguá do Sul" />
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/Jaragua.png" texto="Jaraguá do Sul" />
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
+                    </Carrossel>
                 </section>
                 <footer className='bg-[#6d2431]'>
-                    <div className="relative flex h-[945.95px] sm:h-[945.95px] md:h-[945.95px] lg:h-[600px] xl:h-[600px] w-full mx-auto overflow-hidden pb-44 pt-0 lg:pt-14 lg:pb-44">
+                    <div className="relative flex h-[400px] sm:h-[400px] md:h-[400px] lg:h-[300px] xl:h-[300px] w-full mx-auto overflow-hidden pb-44 pt-0 lg:pt-14 lg:pb-44">
                         <Image src="/paginaInicial/fotosDamainEfotter/PreFotterInicial.png" alt="Fundo Vermelho" layout="fill" objectFit="cover" quality={100} className="absolute top-[-50px] lg:top-[-30px]" />
-                        <div className="relative inset-0 flex flex-col lg:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around self-center 2xl:items-start text-white p-8 mx-auto gap-20 lg:gap-20 xl:gap-32">
+                        <div className="relative inset-0 flex flex-col lg:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around self-center 2xl:items-start text-white p-8 mx-auto gap-10 lg:gap-20 xl:gap-32">
                             <div className='flex text-center items-center gap-7'>
                                 <Image
                                     src="/paginaInicial/inconeImoveisACV/imoveisCadastros.png"
                                     alt="imoveis Cadastrados" objectFit="cover"
-                                    width={90} height={94} quality={100} />
+                                    width={70} height={74} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisDisponiveis />
-                                    <p>Imoveis Cadastrados</p>
+                                    <p>Imóveis Cadastrados</p>
                                 </div>
                             </div>
 
                             <div className='flex text-center items-center gap-7'>
                                 <Image src="/paginaInicial/inconeImoveisACV/imoveisVendidos.png"
                                     alt="Imoveis Vendidos" objectFit="cover"
-                                    width={90} height={94} quality={100} />
+                                    width={70} height={74} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisVendidos />
-                                    <p>Imoveis Vendidos</p>
+                                    <p>Imóveis Vendidos</p>
                                 </div>
                             </div>
 
                             <div className='flex text-center items-center gap-7'>
                                 <Image src="/paginaInicial/inconeImoveisACV/imoveisAlugados.png"
                                     alt="Imoveis Alugados" objectFit="cover"
-                                    width={90} height={94} quality={100} />
+                                    width={70} height={74} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisAlugados />
-                                    <p>Imoveis Alugados</p>
+                                    <p>Imóveis Alugados</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="relative flex justify-center -mt-[17.2rem] lg:mt-[-12.5rem] xl:mt-[-10rem] z-20 max-lg:px-4 px-20">
+                    <div className="relative flex justify-center -mt-[8rem] lg:mt-[-6rem] xl:mt-[-6rem] z-20 max-lg:px-4 px-20">
                         <AtualizarComponents />
                     </div>
-                    <div className='relative md:-mt-[110.5px] lg:-mt-[85.5px] xl:-mt-[70px]'>
+                    <div className='relative md:-mt-[80px] lg:-mt-[60px] xl:-mt-[50px]'>
                         <Footer />
                     </div>
                 </footer>
