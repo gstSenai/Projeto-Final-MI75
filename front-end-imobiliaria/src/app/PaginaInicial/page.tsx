@@ -10,11 +10,13 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Card } from '@/components/CardImovel/index';
 
+
 const montserrat = Montserrat({
     subsets: ['latin'],
     weight: ['300', '800'],
     display: 'swap',
 });
+
 
 import Image from 'next/image';
 import { LoadingWrapper } from '@/components/loading/loadingServer';

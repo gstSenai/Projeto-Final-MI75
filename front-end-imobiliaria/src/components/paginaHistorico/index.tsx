@@ -13,7 +13,7 @@ export function PaginaHistoricoUsuarioChamar() {
 
     return (
         <>
-            <div className="flex w-[115px]">
+            <div className="flex mx-auto md:mx-auto lg:mx-0 w-[115px]">
                 <FormularioInput
                     name="Més"
                     interName="Més"
@@ -34,7 +34,15 @@ export function PaginaHistoricoUsuarioChamar() {
                 <CardHorario tipo="pendente" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
                 <CardHorario tipo="realizado" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
                 <CardHorario tipo="cancelado" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
-
+                <CardHorario tipo="pendente" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
+                <CardHorario tipo="realizado" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
+                <CardHorario tipo="cancelado" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
+                <CardHorario tipo="pendente" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
+                <CardHorario tipo="realizado" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
+                <CardHorario tipo="cancelado" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
+                <CardHorario tipo="pendente" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
+                <CardHorario tipo="realizado" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
+                <CardHorario tipo="cancelado" horario="8:00 - 9:00" codigo="9978" corretor="kaua" />
             </div>
         </>
     );
