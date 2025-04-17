@@ -7,7 +7,7 @@ import java.util.List;
 public record UsuarioGetResponseDTO(
         Integer id,
         String username,
-        String sobrenome,
+        String biografia,
         String tipo_conta,
         String email,
         String password,

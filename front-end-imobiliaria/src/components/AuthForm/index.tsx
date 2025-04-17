@@ -6,7 +6,6 @@ import { Montserrat } from "next/font/google"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
 import Image from "next/image"
-
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
@@ -20,11 +19,10 @@ interface AuthFormProps {
   isCadastro?: boolean
 }
 
-type FormData = {
-  email: string
-  password: string
-  username?: string
-  confirmarSenha?: string
+interface UsuarioData {
+  id: number;
+  username: string;
+  tipo_conta: string;
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro, isCadastro = false }) => {
@@ -174,10 +172,12 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
 
           const userData = await userResponse.json()
           
-          const usuario = userData.content.find((u: FormData) => u.username === data.username)
+          const usuario = userData.content.find((u: UsuarioData) => u.username === data.username)
           
-          if (usuario && usuario.tipo_conta) {
+          if (usuario) {
+            console.log("ID do usuário encontrado:", usuario.id)
             localStorage.setItem("tipo_conta", usuario.tipo_conta)
+            localStorage.setItem("id", usuario.id.toString())
             
             if (usuario.tipo_conta === "Usuario") {
               router.push("/paginaInicial")
@@ -194,6 +194,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
             throw new Error("Tipo de conta não encontrado")
           }
         } catch (error) {
+          console.error("Erro ao buscar tipo de conta do usuário:", error)
           throw new Error("Erro ao buscar tipo de conta do usuário")
         }
       } else {

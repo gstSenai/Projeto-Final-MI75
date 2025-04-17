@@ -138,7 +138,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
             },
         },
     })
-    
+
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [showModal, setShowModal] = useState(true)
     const [editadoComSucesso, setEditadoComSucesso] = useState(false)
@@ -166,7 +166,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                         );
 
                         if (caracteristicasResponse) {
-                            imoveisAtualizado.id_caracteristicasImovel = caracteristicasResponse;
+                            imoveisAtualizado.id_caracteristicasImovel = caracteristicasResponse as ImovelCaracteristicas;
                         }
                     }
 
@@ -265,7 +265,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
     useEffect(() => {
         console.log("🔄 useEffect - selectedImoveis:", selectedImoveis)
         console.log("❌ Erros do formulário:", errors)
-        
+
         if (selectedImoveis.length > 0) {
             console.log("🏠 Primeiro imóvel selecionado:", selectedImoveis[0])
         }
@@ -595,15 +595,15 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                         </div>
                                                         <div className="flex justify-end pt-6">
                                                             <div className="flex justify-around items-center gap-10 w-[50%]">
-                                                                <Botao 
+                                                                <Botao
                                                                     type="button"
-                                                                    onClick={handleCancel} 
-                                                                    texto="Cancelar" 
-                                                                    className="bg-vermelho h-10" 
+                                                                    onClick={handleCancel}
+                                                                    texto="Cancelar"
+                                                                    className="bg-vermelho h-10"
                                                                 />
-                                                                <Botao 
+                                                                <Botao
                                                                     type="submit"
-                                                                    texto={isSubmitting ? "Editando..." : "Editar"} 
+                                                                    texto={isSubmitting ? "Editando..." : "Editar"}
                                                                     className="bg-vermelho h-10"
                                                                     disabled={isSubmitting}
                                                                 />
