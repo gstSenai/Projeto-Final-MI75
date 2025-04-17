@@ -4,7 +4,7 @@ import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos
 import { PesquisaPaginaInicial } from '@/components/paginaInicial/pesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
 import Carousel from '@/components/paginaInicial/carrossel';
-import BotaoImageTexto from '@/components/paginaInicial/botaoImageTexto';
+import BotaoImageTexto from '@/components/paginaInicial/BotaoImageTexto';
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
