@@ -147,7 +147,6 @@ export default function PaginaInicial() {
                                     width={90} height={94} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisDisponiveis />
-                                    <p>{translate('imoveis_cadastrados')}</p>
                                 </div>
                             </div>
 
@@ -157,7 +156,6 @@ export default function PaginaInicial() {
                                     width={90} height={94} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisVendidos />
-                                    <p>{translate('imoveis_vendidos')}</p>
                                 </div>
                             </div>
 
@@ -167,7 +165,6 @@ export default function PaginaInicial() {
                                     width={90} height={94} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisAlugados />
-                                    <p>{translate('imoveis_alugados')}</p>
                                 </div>
                             </div>
                         </div>
