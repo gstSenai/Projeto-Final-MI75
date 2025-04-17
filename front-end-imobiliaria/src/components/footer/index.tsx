@@ -23,16 +23,16 @@ export function Footer() {
                     </p>
                     <div className="flex gap-4 pt-4">
                         <Link href="https://facebook.com" target="_blank">
-                            <Image src="/iconFooter/facebook.png" alt="facebook" width={20} height={20} className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
+                            <Image src="/iconFooter/facebook.png" alt="facebook" width={20} height={20} className='w-5 h-5 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
                         </Link>
                         <Link href="https://linkedin.com" target="_blank">
-                            <Image src="/iconFooter/linkedin.png" alt="linkedin" width={20} height={20} className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
+                            <Image src="/iconFooter/linkedin.png" alt="linkedin" width={20} height={20} className='w-5 h-5 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
                         </Link>
                         <Link href="https://instagram.com" target="_blank">
-                            <Image src="/iconFooter/instagram.png" alt="instagram" width={20} height={20} className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
+                            <Image src="/iconFooter/instagram.png" alt="instagram" width={20} height={20} className='w-5 h-5 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
                         </Link>
                         <Link href="https://whatsapp.com" target="_blank">
-                            <Image src="/iconFooter/zap.png" alt="whatsapp" width={20} height={20} className='w-4 h-4 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
+                            <Image src="/iconFooter/zap.png" alt="whatsapp" width={20} height={20} className='w-5 h-5 md:w-5 md:h-5 lg:h-6 lg:w-6 xl:h-7 xl:w-7' />
                         </Link>
                     </div>
                 </div>
@@ -44,10 +44,10 @@ export function Footer() {
                         <div className="flex flex-col gap-2">
                             <p className="text-base xl:text-lg font-extrabold">Serviços</p>
                             <div className="font-light text-xs md:text-sm flex flex-col gap-1.5">
-                                <p><a href="#">Avaliações</a></p>
-                                <p><a href="#">Consultoria</a></p>
-                                <p><a href="#">Regularização</a></p>
-                                <p><a href="#">Investimentos</a></p>
+                                <Link href="#">Avaliações</Link>
+                                <Link href="#">Consultoria</Link>
+                                <Link href="#">Regularização</Link>
+                                <Link href="#">Investimentos</Link>
                             </div>
                         </div>
 
@@ -55,10 +55,10 @@ export function Footer() {
                         <div className="flex flex-col gap-2">
                             <p className="text-base xl:text-lg font-extrabold">Contato</p>
                             <div className="font-light text-xs md:text-sm flex flex-col gap-1.5">
-                                <p><a href="#">Suporte</a></p>
-                                <p><a href="#">Atendimento</a></p>
-                                <p><a href="#">FAQ</a></p>
-                                <p><a href="#">Reclame Aqui</a></p>
+                                <Link href="#">Suporte</Link>
+                                <Link href="#">Atendimento</Link>
+                                <Link href="#">FAQ</Link>
+                                <Link href="#">Reclame Aqui</Link>
                             </div>
                         </div>
 
@@ -66,10 +66,10 @@ export function Footer() {
                         <div className="flex flex-col gap-2">
                             <p className="text-base xl:text-lg font-extrabold">Links Rápidos</p>
                             <div className="font-light text-xs md:text-sm flex flex-col gap-1.5">
-                                <p><a href="/">Página Inicial</a></p>
-                                <p><a href="/sobreNos">Sobre Nós</a></p>
-                                <p><a href="#">Comprar</a></p>
-                                <p><a href="#">Vender</a></p>
+                                <Link href="/">Página Inicial</Link>
+                                <Link href="/sobreNos">Sobre Nós</Link>
+                                <Link href="#">Comprar</Link>
+                                <Link href="#">Vender</Link>
                             </div>
                         </div>
                     </div>
@@ -89,7 +89,7 @@ export function Footer() {
             <section className="relative bg-[#2B2A28] text-white py-2.5 px-2.5 flex justify-center items-center z-20">
                 <p className="text-center text-[10px] md:text-xs">
                     <span className="hidden lg:inline">
-                         &copy; {new Date().getFullYear()} HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. <a href="/PoliticaPrivacidade">Termos de Uso</a> | <a href="/PoliticaPrivacidade">Política de Privacidade</a> | <a href="/PoliticaPrivacidade">Política de Cookies.</a>
+                        &copy; {new Date().getFullYear()} HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. <Link href="/PoliticaPrivacidade">Termos de Uso</Link> | <Link href="/PoliticaPrivacidade">Política de Privacidade</Link> | <Link href="/PoliticaPrivacidade">Política de Cookies</Link>.
                     </span>
                     <span className="lg:hidden">
                     <p>&copy; {new Date().getFullYear()} HAV Imóveis. Todos os direitos reservados.</p>
