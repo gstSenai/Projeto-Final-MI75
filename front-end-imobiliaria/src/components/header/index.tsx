@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from "next/navigation"
+import { useLanguage } from '@/components/context/LanguageContext';
 
 // Carregando a fonte Inter
 const inter = Inter({
@@ -18,10 +19,10 @@ export function Header() {
     const [hamburguerMobile, setHambuguerMobile] = useState(false)
     const [showProfileModal, setShowProfileModal] = useState(false)
     const [showLanguageModal, setShowLanguageModal] = useState(false)
-    const [currentLanguage, setCurrentLanguage] = useState('Português')
+    const { translate, currentLanguage, setCurrentLanguage } = useLanguage();
     const [currentImageBrasil, setCurrentImageBrasil] = useState('/imagensHeader/Brasil.png')
     const [currentImageEUA, setCurrentImageEUA] = useState('/imagensHeader/eua.png')
-    const [currentImageEspanhol, setCurrentImageEspanhol] = useState('/imagensHeader/Espanha.png')
+    const [currentImageEspanha, setCurrentImageEspanha] = useState('/imagensHeader/espanha.png')
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [username, setUsername] = useState('')
     const [userRole, setUserRole] = useState('')
@@ -68,6 +69,12 @@ export function Header() {
         router.push('/login');
     }
 
+    const handleLanguageChange = (lang: 'Português' | 'English' | 'Español') => {
+        console.log('Mudando idioma para:', lang);
+        setCurrentLanguage(lang);
+        setShowLanguageModal(false);
+    };
+
     return (
         <>
             <header className={`${inter.className} bg-[#DFDAD0] px-6 pt-4 max-lg:px-6 lg:px-20 xl:px-16 font-medium`}>
@@ -96,10 +103,10 @@ export function Header() {
                                                   userRole === 'Corretor' ? '/paginaCorretores' : 
                                                   userRole === 'Proprietario' ? '/paginaProprietarios' : 
                                                   userRole === 'Editor' ? '/paginaEditor' : 
-                                                  '/paginaInicial'}>Início</Link></li>
-                                    <li><Link href="/paginaImoveis">Propriedades</Link></li>
-                                    <li><Link href="/paginaCorretores">Corretores</Link></li>
-                                    <li><Link href="/sobreNos">Sobre nós</Link></li>
+                                                  '/paginaInicial'}>{translate('inicio')}</Link></li>
+                                    <li><Link href="/paginaImoveis">{translate('imoveis')}</Link></li>
+                                    <li><Link href="/paginaCorretores">{translate('corretores')}</Link></li>
+                                    <li><Link href="/sobreNos">{translate('sobre')}</Link></li>
                                 </ul>
                             </nav>
                         </div>
@@ -116,7 +123,7 @@ export function Header() {
                                 <Image
                                     src={currentLanguage === 'Português' ? currentImageBrasil :
                                         currentLanguage === 'English' ? currentImageEUA :
-                                            currentImageEspanhol}
+                                            currentImageEspanha}
                                     alt="Idioma"
                                     width={20}
                                     height={20}
@@ -133,11 +140,7 @@ export function Header() {
                             {showLanguageModal && (
                                 <div className="absolute top-[calc(100%+0.5rem)] w-40 bg-[#702632] rounded-lg shadow-lg py-1 z-50">
                                     <div
-                                        onClick={() => {
-                                            setCurrentLanguage('Português');
-                                            setCurrentImageBrasil('/imagensHeader/Brasil.png');
-                                            setShowLanguageModal(false);
-                                        }}
+                                        onClick={() => handleLanguageChange('Português')}
                                         className="flex items-center gap-2 px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center cursor-pointer"
                                     >
                                         <Image src="/imagensHeader/Brasil.png" alt="Português" width={20} height={20} />
@@ -145,11 +148,7 @@ export function Header() {
                                     </div>
                                     <div className="w-full h-[1px] bg-white opacity-50"></div>
                                     <div
-                                        onClick={() => {
-                                            setCurrentLanguage('English');
-                                            setCurrentImageEUA('/imagensHeader/eua.png');
-                                            setShowLanguageModal(false);
-                                        }}
+                                        onClick={() => handleLanguageChange('English')}
                                         className="flex items-center gap-2 px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center cursor-pointer"
                                     >
                                         <Image src="/imagensHeader/eua.png" alt="English" width={20} height={20} />
@@ -157,14 +156,10 @@ export function Header() {
                                     </div>
                                     <div className="w-full h-[1px] bg-white opacity-50"></div>
                                     <div
-                                        onClick={() => {
-                                            setCurrentLanguage('Español');
-                                            setCurrentImageEspanhol('/imagensHeader/Espanha.png');
-                                            setShowLanguageModal(false);
-                                        }}
+                                        onClick={() => handleLanguageChange('Español')}
                                         className="flex items-center gap-2 px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center cursor-pointer"
                                     >
-                                        <Image src="/imagensHeader/Espanha.png" alt="Español" width={20} height={20} />
+                                        <Image src="/imagensHeader/espanha.png" alt="Español" width={20} height={20} />
                                         <span>Español</span>
                                     </div>
                                 </div>
@@ -187,14 +182,14 @@ export function Header() {
                                                 href="/login"
                                                 className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
                                             >
-                                                Fazer login
+                                                {translate('login')}
                                             </Link>
                                             <div className="w-full h-[1px] bg-white opacity-50"></div>
                                             <Link
                                                 href="/cadastro"
                                                 className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
                                             >
-                                                Cadastrar-se
+                                                {translate('cadastro')}
                                             </Link>
                                         </>
                                     ) : (
@@ -252,7 +247,7 @@ export function Header() {
                                     {isLoggedIn ? (
                                         <span className="text-xl text-[#303030]">{username}</span>
                                     ) : (
-                                        <Link href="/login" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Fazer login</Link>
+                                        <Link href="/login" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('login')}</Link>
                                     )}
                                 </div>
                                 <Image
@@ -268,34 +263,34 @@ export function Header() {
                             <ul className="space-y-3 text-start my-3">
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/logoMinuscula.png" alt="simbolo HAV" width={20} height={20} className='h-full' />
-                                    <Link href="/paginaInicial" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Início</Link>
+                                    <Link href="/paginaInicial" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('inicio')}</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/casa.png" alt="simbolo casas" width={20} height={20} className='h-full' />
-                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Propriedades</Link>
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('imoveis')}</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/corretores.png" alt="simbolo corretores" width={20} height={20} className='h-full' />
-                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Corretores</Link>
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('corretores')}</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/informacao.png" alt="simbolo Sobre nos" width={20} height={20} className='h-full' />
-                                    <Link href="/sobreNos" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Sobre nós</Link>
+                                    <Link href="/sobreNos" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('sobre')}</Link>
                                 </li>
                             </ul>
                             <div className='bg-black p-[0.2px] w-full'></div>
                             <ul className="space-y-3 text-start mt-3">
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/sino.png" alt="chat corretores" width={20} height={20} className='h-full' />
-                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Chat corretores</Link>
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('chat')}</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/configuracoes.png" alt="configurações" width={20} height={20} className='h-full' />
-                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">Configurações</Link>
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('configuracoes')}</Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/logout.png" alt="logout" width={20} height={20} className='h-full' />
-                                    <button onClick={handleLogout} className="text-xl text-[#303030] hover:text-vermelho transition-colors">Logout</button>
+                                    <button onClick={handleLogout} className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('logout')}</button>
                                 </li>
                             </ul>
                         </div>

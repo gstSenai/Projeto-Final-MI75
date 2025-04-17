@@ -1,3 +1,12 @@
+"use client"
+
+import { ImoveisDisponiveis } from '@/components/NumeroAtualizaveis/ImoveisDisponiveis';
+import { ImoveisAlugados } from '@/components/NumeroAtualizaveis/ImoveisAlugados';
+import { ImoveisVendidos } from '@/components/NumeroAtualizaveis/ImoveisVendidos';
+import { PesquisaPaginaInicial } from '@/components/PaginaInicial/pesquisaPaginaInicial';
+import { Montserrat } from 'next/font/google';
+import Carrossel from '@/components/PaginaInicial/carrossel';
+import BotaoImagemTexto from '@/components/PaginaInicial/BotaoImageTexto/index';
 import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
 import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
@@ -10,6 +19,7 @@ import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Card } from '@/components/CardImovel';
+import { useLanguage } from '@/components/context/LanguageContext';
 
 
 const montserrat = Montserrat({
@@ -22,9 +32,8 @@ const montserrat = Montserrat({
 import Image from 'next/image';
 import { LoadingWrapper } from '@/components/loading/loadingServer';
 
-
 export default function PaginaInicial() {
-
+    const { translate } = useLanguage();
 
     return (
         <LoadingWrapper>
@@ -38,11 +47,11 @@ export default function PaginaInicial() {
                         />
                         <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32 gap-11">
                             <h1 className="text-[2.5rem] lg:text-[3.125rem] xl:text-[2.8rem] text-center 2xl:text-start font-normal max-w-[800px]">
-                                Nós vamos ajudá-lo a encontrar sua
-                                <span className='text-[2.5rem] lg:text-[4.375rem] xl:text-[3.5rem] text-center 2xl:text-start font-bold'> Maravilhosa</span> casa
+                                {translate('encontre_sua_casa')}
+                                <span className='text-[2.5rem] lg:text-[4.375rem] xl:text-[3.5rem] text-center 2xl:text-start font-bold'> {translate('casa_maravilhosa')}</span> {translate('casa')}
                             </h1>
                             <p className="text-xl xl:text-lg font-normal text-center 2xl:text-start max-w-3xl">
-                                Uma ótima plataforma para comprar, vender e alugar seus imóveis sem nenhum agente ou comissões.
+                                {translate('plataforma_descricao')}
                             </p>
                         </div>
                     </div>
@@ -54,48 +63,48 @@ export default function PaginaInicial() {
                     <section>
                         <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-40 xl:pt-32 2xl:pt-56'>
                             <div className='w-[1000px] xl:w-[800px]'>
-                                <h2 className='flex justify-center text-center text-2xl lg:text-4xl xl:text-3xl font-medium pb-2 opacity-75'>Como Funciona</h2>
-                                <p className='flex justify-center text-center text-xl lg:text-3xl xl:text-2xl font-medium p-3 opacity-75'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
+                                <h2 className='flex justify-center text-center text-2xl lg:text-4xl xl:text-3xl font-medium pb-2 opacity-75'>{translate('como_funciona')}</h2>
+                                <p className='flex justify-center text-center text-xl lg:text-3xl xl:text-2xl font-medium p-3 opacity-75'>{translate('plataforma_funciona')}</p>
                             </div>
                         </div>
                         <div className='flex flex-col lg:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around pt-36 xl:pt-24 gap-3'>
                             <div className='flex flex-col items-center w-80 lg:w-[500px] xl:w-[350px] py-10 md:py-10 2xl:py-0'>
                                 <Image src="/paginaInicial/simobolosCCS/sistemaDeCompra.png" alt="Sistema de compra" width={110} height={123} />
-                                <h2 className='text-2xl lg:text-3xl xl:text-2xl font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>Sistema de Compra</h2>
-                                <p className='text-lg xl:text-base font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
+                                <h2 className='text-2xl lg:text-3xl xl:text-2xl font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>{translate('sistema_compra')}</h2>
+                                <p className='text-lg xl:text-base font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>{translate('sistema_compra_desc')}</p>
                             </div>
                             <div className='flex flex-col items-center  w-80 lg:w-[500px] xl:w-[350px] py-10 md:py-10 2xl:py-0'>
                                 <Image src="/paginaInicial/simobolosCCS/sistemaChat.png" alt="Sistema de chat" width={110} height={123} />
-                                <h2 className='text-2xl lg:text-3xl xl:text-2xl font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>Sistema de Chat</h2>
-                                <p className='text-lg xl:text-base font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
+                                <h2 className='text-2xl lg:text-3xl xl:text-2xl font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>{translate('sistema_chat')}</h2>
+                                <p className='text-lg xl:text-base font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>{translate('sistema_chat_desc')}</p>
                             </div>
                             <div className='flex flex-col items-center  w-80 lg:w-[550px] xl:w-[350px] py-10 md:py-10 2xl:py-0'>
                                 <Image src="/paginaInicial/simobolosCCS/segurançaDosClientes.png" alt="Sistema de compra" width={110} height={123} />
-                                <h2 className='text-2xl lg:text-3xl xl:text-2xl font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>Segurança dos Clientes</h2>
-                                <p className='text-lg xl:text-base font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
+                                <h2 className='text-2xl lg:text-3xl xl:text-2xl font-medium opacity-75 text-center leading-tight pt-16 pb-3 min-h-[120px]'>{translate('seguranca_clientes')}</h2>
+                                <p className='text-lg xl:text-base font-medium opacity-75 text-center leading-tight pt-1 pb-3 min-h-[120px]'>{translate('seguranca_desc')}</p>
                             </div>
                         </div>
                     </section>
                     <section>
                         <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-28 xl:pt-32 2xl:pt-40'>
                             <div className='w-[1000px] xl:w-[800px]'>
-                                <h2 className='flex justify-center text-center text-2xl lg:text-3xl xl:text-2xl font-medium pb-2 opacity-75'>Imóveis em Destaque</h2>
-                                <p className='flex justify-center text-center text-xl lg:text-3xl xl:text-2xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
+                                <h2 className='flex justify-center text-center text-2xl lg:text-3xl xl:text-2xl font-medium pb-2 opacity-75'>{translate('imoveis_destaque')}</h2>
+                                <p className='flex justify-center text-center text-xl lg:text-3xl xl:text-2xl font-medium p-3 opacity-75'>{translate('propriedades_localizacao')}</p>
                             </div>
                         </div>
                         <div className='flex flex-col lg:flex-row justify-center pt-36 xl:pt-16 pb-12'>
-                            <Carousel type='ajusteTriplo'>
+                            <Carrossel type='ajusteTriplo'>
                                 <Card titulo="Casa com 3 quartos" cidade="Jaraguá Do Sul" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={6545644} codigo={455445} />
                                 <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={3443423} codigo={2331212} />
                                 <Card titulo="Casa com 3 quartos" cidade="Corupa" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={2121321} codigo={3323} />
-                            </Carousel>
+                            </Carrossel>
                         </div>
                     </section>
                     <section>
                         <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-28 xl:pt-32 2xl:pt-40'>
                             <div className='w-[1000px] xl:w-[800px]'>
-                                <h2 className='flex justify-center text-center text-2xl lg:text-3xl xl:text-2xl font-medium pb-2 opacity-75'>Imóveis Adcionados Recentemente</h2>
-                                <p className='flex justify-center text-center text-xl lg:text-3xl xl:text-2xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
+                                <h2 className='flex justify-center text-center text-2xl lg:text-3xl xl:text-2xl font-medium pb-2 opacity-75'>{translate('imoveis_recentes')}</h2>
+                                <p className='flex justify-center text-center text-xl lg:text-3xl xl:text-2xl font-medium p-3 opacity-75'>{translate('propriedades_localizacao')}</p>
                             </div>
                         </div>
                         <div className='flex flex-col lg:flex-row justify-evenly pt-36 xl:pt-24 pb-12'>
@@ -107,8 +116,8 @@ export default function PaginaInicial() {
                     <section>
                         <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-28 xl:pt-32 2xl:pt-40'>
                             <div className='w-[1000px] xl:w-[800px]'>
-                                <h2 className='flex justify-center text-center text-2xl lg:text-3xl xl:text-2xl font-medium pb-2 opacity-75'>Imóveis em Promoção</h2>
-                                <p className='flex justify-center text-center text-xl lg:text-3xl xl:text-2xl font-medium p-3 opacity-75'>Propriedades por localização e Bairro</p>
+                                <h2 className='flex justify-center text-center text-2xl lg:text-3xl xl:text-2xl font-medium pb-2 opacity-75'>{translate('imoveis_promocao')}</h2>
+                                <p className='flex justify-center text-center text-xl lg:text-3xl xl:text-2xl font-medium p-3 opacity-75'>{translate('propriedades_localizacao')}</p>
                             </div>
                         </div>
                         <div className='flex flex-col lg:flex-row justify-evenly pt-36 xl:pt-24 pb-12'>
@@ -121,21 +130,21 @@ export default function PaginaInicial() {
                 <section>
                     <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-28 xl:pt-32 2xl:pt-40'>
                         <div className='w-[1000px] xl:w-[800px]'>
-                            <h2 className='flex justify-center text-center text-2xl lg:text-3xl xl:text-2xl font-medium pb-2 opacity-75'>Localidades</h2>
-                            <p className='flex justify-center text-center text-xl lg:text-2xl xl:text-xl font-medium p-3 opacity-75'>Uma ótima plataforma para comprar e alugar seus imóveis com agentes e comissões muito bem preparadas.</p>
+                            <h2 className='flex justify-center text-center text-2xl lg:text-3xl xl:text-2xl font-medium pb-2 opacity-75'>{translate('localidades')}</h2>
+                            <p className='flex justify-center text-center text-xl lg:text-2xl xl:text-xl font-medium p-3 opacity-75'>{translate('plataforma_funciona')}</p>
                         </div>
                     </div>
 
-                    <Carousel type={"ajusteNormal"}>
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/Jaragua.png" texto="Jaraguá do Sul" />
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/Jaragua.png" texto="Jaraguá do Sul" />
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
-                        <BotaoImageTexto src="/paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
-                    </Carousel>
+                    <Carrossel type={"ajusteNormal"}>
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/Jaragua.png" texto="Jaraguá do Sul" />
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/Jaragua.png" texto="Jaraguá do Sul" />
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
+                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
+                    </Carrossel>
                 </section>
                 <footer className='bg-[#6d2431]'>
                     <div className="relative flex h-[945.95px] sm:h-[945.95px] md:h-[945.95px] lg:h-[600px] xl:h-[600px] w-full mx-auto overflow-hidden pb-44 pt-0 lg:pt-14 lg:pb-44">
@@ -148,7 +157,6 @@ export default function PaginaInicial() {
                                     width={90} height={94} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisDisponiveis />
-                                    <p>Imoveis Cadastrados</p>
                                 </div>
                             </div>
 
@@ -158,7 +166,6 @@ export default function PaginaInicial() {
                                     width={90} height={94} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisVendidos />
-                                    <p>Imoveis Vendidos</p>
                                 </div>
                             </div>
 
@@ -168,7 +175,6 @@ export default function PaginaInicial() {
                                     width={90} height={94} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisAlugados />
-                                    <p>Imoveis Alugados</p>
                                 </div>
                             </div>
                         </div>

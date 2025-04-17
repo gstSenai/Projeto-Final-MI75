@@ -19,6 +19,7 @@ interface AuthFormProps {
   isCadastro?: boolean
 }
 
+
 interface UsuarioData {
   id: number;
   username: string;

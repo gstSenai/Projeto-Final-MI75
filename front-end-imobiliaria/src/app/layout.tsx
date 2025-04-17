@@ -1,4 +1,10 @@
 import "./globals.css";
+import { AuthProvider } from "@/components/context/AuthContext"
+import { LanguageProvider } from "@/components/context/LanguageContext"
+import type { Metadata } from "next"
+import { Inter } from "next/font/google"
+import { AccessibilityButton } from "@/components/AccessibilityButton"
+import { VLibrasScript } from "@/components/VLibrasScript"
 import Chatbot from "@/components/Chatbot";
 import { AuthProvider } from "@/components/context/AuthContext";
 import type { Metadata } from "next";
@@ -39,7 +45,18 @@ export default function RootLayout({
           </div>
         </div>
 
+        {/* 
+          O AuthProvider e o LanguageProvider estão envolvendo o conteúdo da aplicação.
+          Isso permite que o contexto de autenticação e idioma esteja disponível em toda a aplicação.
+          A mudança de idioma não deve afetar o layout, apenas traduzir os textos.
+        */}
         <AuthProvider>
+          <LanguageProvider>
+            {children}
+            <div className="fixed bottom-4 right-4 z-50">
+              <AccessibilityButton />
+            </div>
+          </LanguageProvider>
           <div className="fixed bottom-4 right-4 z-50">
             <AccessibilityButton />
           </div>
@@ -49,4 +66,5 @@ export default function RootLayout({
       </body>
     </html>
   );
+}
 }
