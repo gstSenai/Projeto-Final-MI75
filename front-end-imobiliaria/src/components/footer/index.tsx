@@ -89,17 +89,13 @@ export function Footer() {
             <section className="relative bg-[#2B2A28] text-white py-2.5 px-2.5 flex justify-center items-center z-20">
                 <p className="text-center text-[10px] md:text-xs">
                     <span className="hidden lg:inline">
-                        © 2024 HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. <a href="/PoliticaPrivacidade">Termos de Uso</a> | <a href="/PoliticaPrivacidade">Política de Privacidade</a> | <a href="/PoliticaPrivacidade">Política de Cookies.</a>
+                         &copy; {new Date().getFullYear()} HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida. <a href="/PoliticaPrivacidade">Termos de Uso</a> | <a href="/PoliticaPrivacidade">Política de Privacidade</a> | <a href="/PoliticaPrivacidade">Política de Cookies.</a>
                     </span>
                     <span className="lg:hidden">
-                        © 2024 HAV Imobiliária. Todos os direitos reservados.
+                    <p>&copy; {new Date().getFullYear()} HAV Imóveis. Todos os direitos reservados.</p>
                     </span>
                 </p>
             </section>
-
-            <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-300">
-                <p>&copy; {new Date().getFullYear()} HAV Imóveis. Todos os direitos reservados.</p>
-            </div>
         </footer>
     );
 }
