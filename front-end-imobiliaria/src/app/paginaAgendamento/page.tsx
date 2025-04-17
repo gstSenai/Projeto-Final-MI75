@@ -5,14 +5,11 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Montserrat } from "next/font/google"
 import Calendario from "@/components/Calendario/index"
-import { FormularioInput } from "@/components/Calendario/selecaoHorario"
 import { useForm } from "react-hook-form"
 import { useEffect, useState, useCallback } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
 
 import { Botao } from "@/components/botao"
 import request from "@/routes/request"
-import { z } from "zod"
 import { LoadingWrapper } from "@/components/loading/loadingServer"
 
 const montserrat = Montserrat({
@@ -21,76 +18,82 @@ const montserrat = Montserrat({
   display: "swap",
 })
 
-
 interface UserProps {
   id: number
-  nome: string
-  sobrenome: string
+  username: string
 }
 
-interface AgendamentoResponse {
+interface AgendamentoPostRequestDTO {
+  data: string;
   horario: string;
+  idImovel: number;
+  idCorretor: number;
+  idUsuario: number;
 }
 
-const AgendamentoProps = z.object({
-  id: z.number().optional(),
-  data: z.date(),
-  horario: z.date(),
-  id_Imovel: z.object({
-    id: z.number().optional(),
-    codigo: z.coerce.number().optional(),
-    nome_propriedade: z.string().min(1, { message: "Nome da propriedade é obrigatório" }),
-    tipo_transacao: z.string().min(1, { message: "Tipo de transação é obrigatório" }),
-    valor_venda: z.coerce.number().min(1, { message: "Valor de venda é obrigatório" }),
-    tipo_imovel: z.string().min(1, { message: "Tipo de imóvel é obrigatório" }),
-    status_imovel: z.string().min(1, { message: "Status do imóvel é obrigatório" }),
-    valor_promocional: z.coerce.number().min(1, { message: "Valor promocional é obrigatório" }),
-    test_destaque: z.string().optional(),
-    test_visibilidade: z.string().optional(),
-    destaque: z.boolean().default(false),
-    visibilidade: z.boolean().default(false),
-    valor_iptu: z.coerce.number().min(1, { message: "Valor do IPTU é obrigatório" }),
-    condominio: z.coerce.number().min(1, { message: "Valor do condomínio é obrigatório" }),
-    area_construida: z.coerce.number().min(1, { message: "Área construída é obrigatória" }),
-    area_terreno: z.coerce.number().min(1, { message: "Área do terreno é obrigatória" }),
-    descricao: z.string().optional(),
-  }),
-  id_Usuario: z.object({
-    id: z.number().optional(),
-    nome: z.string().min(1, { message: "O nome é obrigatório" }),
-    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
-    cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
-    tipo_conta: z.string().min(1, {
-      message: "Selecione um tipo de conta válido",
-    }),
-    telefone: z.string().min(10, { message: "Telefone inválido" }),
-    data_nascimento: z.string(),
-    email: z.string().email({ message: "E-mail inválido" }),
-    senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
-    idEnderecoUsuario: z.number().optional(),
-  }),
-  id_Corretor: z.object({
-    id: z.number().optional(),
-    nome: z.string().min(1, { message: "O nome é obrigatório" }),
-    sobrenome: z.string().min(1, { message: "O sobrenome é obrigatório" }),
-    cpf: z.string().min(11, { message: "CPF inválido (formato: 123.456.789-00)" }).max(11),
-    tipo_conta: z.string().min(1, { message: "Insira um Corretor" }),
-    telefone: z.string().min(10, { message: "Telefone inválido" }),
-    data_nascimento: z.string(),
-    email: z.string().email({ message: "E-mail inválido" }),
-    senha: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
-    idEnderecoUsuario: z.number().optional(),
-  }),
-})
+interface AgendamentoGetResponseDTO {
+  id: number;
+  data: string;
+  horario: string;
+  idImovel: number;
+  idCorretor: number;
+  idUsuario: number;
+}
 
-type agendamentoProps = z.infer<typeof AgendamentoProps>
+interface UserResponseDTO {
+  id: number;
+  username: string;
+  cpf: string;
+  tipo_conta: string;
+  telefone: string;
+  data_nascimento: string;
+  email: string;
+  senha: string;
+  idEnderecoUsuario?: number;
+}
+
+interface FormularioInputProps {
+  placeholder: string;
+  name: string;
+  interName: string;
+  register: any;
+  customizacaoClass: string;
+  required?: boolean;
+  options: Array<string | { id: number; username: string; tipo_conta?: string }>;
+}
+
+const FormularioInput = ({ 
+  placeholder, 
+  name, 
+  interName, 
+  register, 
+  customizacaoClass, 
+  required, 
+  options 
+}: FormularioInputProps) => {
+  return (
+    <select
+      {...register(name)}
+      className={customizacaoClass}
+      required={required}
+    >
+      <option value="">{placeholder}</option>
+      {options.map((option, index) => (
+        <option 
+          key={index} 
+          value={typeof option === 'string' ? option : option.id}
+        >
+          {typeof option === 'string' ? option : option.username}
+        </option>
+      ))}
+    </select>
+  );
+};
 
 export default function PaginaAgendamento() {
   const {
-    register, handleSubmit, watch
-  } = useForm<agendamentoProps>({
-    resolver: zodResolver(AgendamentoProps),
-  })
+    register, handleSubmit, watch, setValue
+  } = useForm()
   const [isLoading, setIsLoading] = useState(false)
   const [agendamentoSucesso, setAgendamentoSucesso] = useState(false);
   const [imovelId] = useState(1);
@@ -100,11 +103,20 @@ export default function PaginaAgendamento() {
 
   const verificarHorariosOcupados = useCallback(async (data: Date) => {
     try {
+      const formattedDate = data.toISOString().split('T')[0];
       const response = await request(
         "GET",
-        `http://localhost:9090/agendamento/imovel/${imovelId}/data/${data.toISOString()}`
-      );
-      setHorariosOcupados((response as AgendamentoResponse[]).map((a) => a.horario));
+        `http://localhost:9090/agendamento/getAll`
+      ) as AgendamentoGetResponseDTO[];
+
+      const ocupados = response
+        .filter(agendamento => 
+          agendamento.data === formattedDate &&
+          agendamento.idImovel === imovelId
+        )
+        .map(agendamento => agendamento.horario);
+
+      setHorariosOcupados(ocupados);
     } catch (error) {
       console.error("Erro ao verificar horários ocupados:", error);
     }
@@ -114,65 +126,74 @@ export default function PaginaAgendamento() {
     verificarHorariosOcupados(dataSelecionada);
   }, [verificarHorariosOcupados, dataSelecionada]);
 
-
   const handleAgendarVisita = async () => {
-    if (!watch('id_Corretor') || !watch('horario')) {
+    const corretorId = watch('id_Corretor');
+    const horario = watch('horario');
+    
+    if (!corretorId || !horario) {
       alert('Por favor, selecione uma data, horário e corretor');
       return;
     }
 
     setIsLoading(true);
     try {
-      const agendamentoData = {
-        corretor: watch('id_Corretor'),
-        horario: watch('horario'),
-        data: new Date(),
-        imovelId: imovelId
+      const selectedDate = new Date();
+      const agendamentoData: AgendamentoPostRequestDTO = {
+        data: selectedDate.toISOString().split('T')[0],
+        horario: horario,
+        idImovel: imovelId,
+        idCorretor: parseInt(corretorId),
+        idUsuario: 1
       };
-      await request("POST", "http://localhost:9090/agendamento", agendamentoData);
-      setAgendamentoSucesso(true);
+
+      const response = await request(
+        "POST", 
+        "http://localhost:9090/agendamento/create", 
+        agendamentoData
+      );
+
+      if (response) {
+        setAgendamentoSucesso(true);
+        await verificarHorariosOcupados(selectedDate);
+      }
     } catch (error) {
       console.error("Erro ao agendar visita:", error);
-      alert('Erro ao agendar visita. Horário pode já estar ocupado.');
+      alert('Erro ao agendar visita. Por favor, tente novamente.');
     } finally {
       setIsLoading(false);
     }
   }
 
-
   const getUsuario = useCallback(async () => {
-    if (isLoading) return
+    if (isLoading) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const response = await request("GET", "http://localhost:9090/usuario/corretores")
+      const response = await request("GET", "http://localhost:9090/usuario/corretores") as UserResponseDTO[];
 
       if (Array.isArray(response)) {
-        setUsuarios(response) // Agora armazenamos diretamente como um array
+        setUsuarios(response.map(user => ({
+          id: user.id,
+          username: user.username,
+          tipo_conta: user.tipo_conta
+        })));
       } else {
-        console.error("Resposta da API inesperada:", response)
+        console.error("Resposta da API inesperada:", response);
       }
     } catch (error) {
-      console.error("Erro ao buscar usuários:", error)
+      console.error("Erro ao buscar usuários:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }, [isLoading]);
-
-
-
-
 
   useEffect(() => {
     getUsuario();
   }, [getUsuario]);
 
-
   const onSubmit = (data: unknown) => {
     console.log(data)
   }
-
-
 
   return (
     <LoadingWrapper>
@@ -209,7 +230,6 @@ export default function PaginaAgendamento() {
                   Escolha a data, o horário e o corretor para agendar sua visita!
                 </h2>
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center gap-8 mt-6 mx-8 lg:mx-10 xl:mx-16 2xl:mx-32">
-
                   <FormularioInput
                     placeholder="Corretores:"
                     name="id_Corretor"
@@ -217,7 +237,7 @@ export default function PaginaAgendamento() {
                     register={register}
                     customizacaoClass="w-full p-2 border bg-white text-black border-gray-500 rounded"
                     required
-                    options={usuarios?.map(({ nome, sobrenome }) => `${nome} ${sobrenome}`) || []}
+                    options={usuarios}
                   />
 
                   <FormularioInput
@@ -231,21 +251,17 @@ export default function PaginaAgendamento() {
                       .filter(horario => !horariosOcupados.includes(horario))}
                   />
 
-
                   <Botao
                     className="xl:w-[60%] 2xl:w-[50%] bg-vermelho"
                     texto="Agendar visita"
                     onClick={handleAgendarVisita}
                     disabled={agendamentoSucesso}
-
-                  />  {agendamentoSucesso && (
+                  />
+                  {agendamentoSucesso && (
                     <div className="text-green-600 text-center mt-4">
                       Visita agendada com sucesso! Este horário não estará mais disponível.
                     </div>
                   )}
-
-
-
                 </form>
               </div>
             </div>
