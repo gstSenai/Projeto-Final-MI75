@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react"
 import request from "@/routes/request"
+import { useLanguage } from '@/components/context/LanguageContext';
 
 interface ApiResponse {
     content?: any[];
@@ -8,41 +9,28 @@ interface ApiResponse {
 }
 
 export function ImoveisAlugados() {
-    const [isLoading, setIsLoading] = useState(false)
-    const [totalImoveisAlugados, setTotalImoveisAlugados] = useState(0)
+    const [totalImoveis, setTotalImoveis] = useState<number>(0);
+    const { translate } = useLanguage();
 
-    const getImoveisAlugados = useCallback(async () => {
-        setIsLoading(true);
+    const fetchTotalImoveis = useCallback(async () => {
         try {
-        
-            const response = await request("GET", `http://localhost:9090/imovel/getAll/alugados`) as ApiResponse;
-            
-            if (response && typeof response === 'object') {
-                if ('content' in response && Array.isArray(response.content)) {
-                    setTotalImoveisAlugados(response.content.length);
-                }
-                else if ('totalElements' in response && typeof response.totalElements === 'number') {
-                    setTotalImoveisAlugados(response.totalElements);
-                }
+            const response = await request.get<ApiResponse>('/imoveis/alugados');
+            if (response.data && response.data.totalElements !== undefined) {
+                setTotalImoveis(response.data.totalElements);
             }
         } catch (error) {
-            console.error("Erro ao buscar imóveis alugados:", error);
-        } finally {
-            setIsLoading(false);
+            console.error('Erro ao buscar total de imóveis alugados:', error);
         }
     }, []);
 
     useEffect(() => {
-        getImoveisAlugados();
-    }, [getImoveisAlugados]);
+        fetchTotalImoveis();
+    }, [fetchTotalImoveis]);
 
     return (
-        <div className="font-semibold tracking-[7%] text-3xl">
-            {isLoading ? (
-                <p>Carregando...</p>
-            ) : (
-                <p>{totalImoveisAlugados.toString().padStart(5, '0')}</p>
-            )}
+        <div className="text-white">
+            <h3 className="text-2xl font-bold">{totalImoveis}</h3>
+            <p className="text-sm">{translate('imoveis_alugados')}</p>
         </div>
     );
 }
