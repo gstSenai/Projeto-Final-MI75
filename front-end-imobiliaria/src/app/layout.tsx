@@ -1,3 +1,5 @@
+import "./globals.css";
+import Chatbot from "@/components/Chatbot";
 import "./globals.css"
 import { AuthProvider } from "@/components/context/AuthContext"
 import type { Metadata } from "next"
@@ -28,6 +30,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
+    <html lang="en">
+      <body>
+        {children}
+        <Chatbot />
     <html lang="pt-BR">
       <body className={inter.className}>
         <VLibrasScript />
