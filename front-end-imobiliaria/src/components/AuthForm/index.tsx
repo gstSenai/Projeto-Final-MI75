@@ -298,6 +298,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                   </button>
                 </div>
                 {errors.senha && <p className="mt-1 text-sm text-red-600">{errors.senha}</p>}
+                {!isCadastro && (
+                  <a
+                    href="/recuperar-senha"
+                    className="text-[12px] text-[#702632] hover:underline mt-1 block text-right"
+                  >
+                    Esqueceu a senha?
+                  </a>
+                )}
               </div>
 
               {isCadastro && (
