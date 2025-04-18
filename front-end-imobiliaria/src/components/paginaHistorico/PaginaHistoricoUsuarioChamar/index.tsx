@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FormularioInput } from "../Calendario/selecaoHorario";
-import { CardHorario } from "./cardHorario";
-import { DayCarousel } from "@/components/PaginaInicial/carrossel/dayCarousel/index"; // ajuste esse path se necessário
+import { FormularioInput } from "../../Calendario/selecaoHorario";
+import { CardHorario } from "../cardHorario";
+import DayCarousel from "../../PaginaInicial/carrossel/dayCarousel/index"; // ajuste esse path se necessário
 
 interface FormData {
   mes: string;
@@ -42,7 +42,6 @@ export function PaginaHistoricoUsuarioChamar() {
         {selectedDay ? (
           <div>
             <p className="text-gray-700 font-semibold mb-2">
-              Chamados do dia {selectedDay}
             </p>
             <CardHorario tipo="pendente" horario="8:00 - 9:00" codigo="9978" corretor="Kaua" />
             <CardHorario tipo="realizado" horario="10:00 - 11:00" codigo="2234" corretor="Kaua" />

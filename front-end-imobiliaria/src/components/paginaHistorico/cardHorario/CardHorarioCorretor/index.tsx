@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import Image from 'next/image';
-import { CardCasa } from '../cardCasa';
+import { CardCasa } from '../../cardCasa';
 
 interface CardHorarioProps {
     tipo: 'realizado' | 'cancelado' | 'pendente';
     horario: string;
     codigo: string;
-    corretor: string;
+    cliente: string;
 }
 
-export function CardHorario({ tipo, horario, codigo, corretor }: CardHorarioProps) {
+export function CardHorario({ tipo, horario, codigo, cliente }: CardHorarioProps) {
     const [mostrarCardCasa, setMostrarCardCasa] = useState(false);
 
     return (
@@ -19,7 +19,7 @@ export function CardHorario({ tipo, horario, codigo, corretor }: CardHorarioProp
 
                 <div className='flex flex-col md:flex-col lg:flex-row items-center gap-7 md:gap-7 lg:gap-14 text-sm md:text-base lg:text-lg'>
                     <p>Código: <span>{codigo}</span></p>
-                    <p>Corretor: <span>{corretor}</span></p>
+                    <p>Cliente: <span>{cliente}</span></p>
 
                     <div className='flex items-center gap-4  text-sm md:text-base lg:text-lg'>
                         {tipo === 'realizado' && (

@@ -1,115 +1,195 @@
-import { useState, useCallback, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+"use client"
+
+import type React from "react"
+import { useState, useRef, useEffect } from "react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 interface DayCarouselProps {
-  onDaySelect: (day: number) => void;
-  externalMonth?: number; // <- nova prop
+  onDaySelect: (day: number) => void
+  externalMonth?: number
+  visibleDays?: number
 }
 
-export function DayCarousel({ onDaySelect, externalMonth }: DayCarouselProps) {
-  const today = new Date();
-  const [currentYear, setCurrentYear] = useState(today.getFullYear());
-  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-  const [selectedDay, setSelectedDay] = useState<number | null>(today.getDate());
-  const carouselRef = useRef<HTMLDivElement>(null);
-
-  const daysInMonth = useCallback((month: number, year: number) => {
-    return new Date(year, month + 1, 0).getDate();
-  }, []);
+const DayCarousel: React.FC<DayCarouselProps> = ({
+  onDaySelect,
+  externalMonth,
+  visibleDays = 7,
+}) => {
+  const today = new Date()
+  const [currentYear, setCurrentYear] = useState(today.getFullYear())
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth())
+  const [selectedDay, setSelectedDay] = useState<number | null>(today.getDate())
+  const [startIndex, setStartIndex] = useState(0)
+  const carouselRef = useRef<HTMLDivElement>(null)
+  const [containerWidth, setContainerWidth] = useState(0)
+  const [dynamicVisibleDays, setDynamicVisibleDays] = useState(visibleDays)
 
   useEffect(() => {
-    if (externalMonth !== undefined && externalMonth !== currentMonth) {
-      setCurrentMonth(externalMonth);
-      setSelectedDay(null); // limpa seleção ao trocar mês
+    const handleResize = () => {
+      if (carouselRef.current) {
+        setContainerWidth(carouselRef.current.offsetWidth)
+      }
     }
-  }, [externalMonth]);
 
-  const getWeekDay = (day: number, month: number, year: number) => {
-    const date = new Date(year, month, day);
-    return date.toLocaleDateString("pt-BR", { weekday: "short" }).replace(".", "");
-  };
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
-  const monthName = useCallback((month: number) => {
-    const formatter = new Intl.DateTimeFormat('pt-BR', { month: 'long' });
-    return formatter.format(new Date(currentYear, month));
-  }, [currentYear]);
+  useEffect(() => {
+    // Ajusta a quantidade de dias visíveis dinamicamente com base na largura do container
+    const calculateVisibleDays = () => {
+      if (containerWidth >= 640) {
+        return 7; // Telas grandes
+      } else if (containerWidth >= 480) {
+        return 5; // Telas médias
+      } else if (containerWidth >= 360) {
+        return 3; // Telas pequenas
+      } else {
+        return 2; // Telas muito pequenas
+      }
+    };
+    setDynamicVisibleDays(calculateVisibleDays());
+    setStartIndex(0); // Resetar o índice ao mudar a quantidade de dias visíveis
+  }, [containerWidth]);
 
-  const daysArray = Array.from({ length: daysInMonth(currentMonth, currentYear) }, (_, i) => i + 1);
+  // Sincroniza com o externalMonth quando ele muda
+  useEffect(() => {
+    if (externalMonth !== undefined) {
+      const newMonth = externalMonth
+      const newYear =
+        externalMonth < currentMonth && currentMonth === 11
+          ? currentYear + 1
+          : externalMonth > currentMonth && currentMonth === 0
+          ? currentYear - 1
+          : currentYear
+  
+      setCurrentMonth(newMonth)
+      setCurrentYear(newYear)
+      setSelectedDay(null)
+      setStartIndex(0)
+    }
+  }, [externalMonth])
+  
+
+  const daysInMonth = (month: number, year: number) => {
+    return new Date(year, month + 1, 0).getDate()
+  }
+
+  const totalDays = daysInMonth(currentMonth, currentYear)
+  const daysArray = Array.from({ length: totalDays }, (_, i) => i + 1)
+  const visibleDaysArray = daysArray.slice(startIndex, startIndex + dynamicVisibleDays)
+
+  const monthName = (month: number) => {
+    const formatter = new Intl.DateTimeFormat("pt-BR", { month: "long" })
+    return formatter.format(new Date(currentYear, month))
+  }
 
   const handlePrevMonth = () => {
     setCurrentMonth((prevMonth) => {
-      const newMonth = prevMonth - 1;
+      const newMonth = prevMonth - 1
       if (newMonth < 0) {
-        setCurrentYear(currentYear - 1);
-        return 11;
+        setCurrentYear(currentYear - 1)
+        return 11
       }
-      return newMonth;
-    });
-    setSelectedDay(null);
-  };
+      return newMonth
+    })
+    setSelectedDay(null)
+    setStartIndex(0)
+  }
 
   const handleNextMonth = () => {
     setCurrentMonth((prevMonth) => {
-      const newMonth = prevMonth + 1;
+      const newMonth = prevMonth + 1
       if (newMonth > 11) {
-        setCurrentYear(currentYear + 1);
-        return 0;
+        setCurrentYear(currentYear + 1)
+        return 0
       }
-      return newMonth;
-    });
-    setSelectedDay(null);
-  };
+      return newMonth
+    })
+    setSelectedDay(null)
+    setStartIndex(0)
+  }
+
+  const handlePrevDays = () => {
+    setStartIndex((prev) => Math.max(0, prev - dynamicVisibleDays))
+  }
+
+  const handleNextDays = () => {
+    setStartIndex((prev) => Math.min(totalDays - dynamicVisibleDays, prev + dynamicVisibleDays))
+  }
+
+  const getWeekDay = (day: number, month: number, year: number) => {
+    const date = new Date(year, month, day)
+    const weekday = date.toLocaleDateString("pt-BR", { weekday: "short" }).replace(".", "")
+    return weekday.charAt(0).toUpperCase() + weekday.slice(1, 3)
+  }
 
   const handleDayClick = (day: number) => {
-    setSelectedDay(day);
-    onDaySelect(day);
-  };
+    setSelectedDay(day)
+    onDaySelect(day)
+  }
 
-  useEffect(() => {
-    if (carouselRef.current && selectedDay) {
-      const selectedElement = carouselRef.current.querySelector(`[data-day="${selectedDay}"]`);
-      if (selectedElement) {
-        selectedElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
-    }
-  }, [selectedDay]);
+  const canGoBack = startIndex > 0
+  const canGoForward = startIndex + dynamicVisibleDays < totalDays
 
   return (
     <div className="flex flex-col items-center mb-4">
-      <div className="flex items-center gap-2 mb-2">
-        <button onClick={handlePrevMonth} className="p-1 rounded-full hover:bg-gray-200">
+      <div className="flex items-center justify-center w-full px-2 sm:px-4 mb-2">
+        <button onClick={handlePrevMonth} className="p-1 text-gray-700">
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <span className="font-semibold capitalize">{monthName(currentMonth)} {currentYear}</span>
-        <button onClick={handleNextMonth} className="p-1 rounded-full hover:bg-gray-200">
+        <span className="font-semibold capitalize text-center px-10">
+          {monthName(currentMonth)} {currentYear}
+        </span>
+        <button onClick={handleNextMonth} className="p-1 text-gray-700">
           <ChevronRight className="w-5 h-5" />
         </button>
       </div>
 
-      <div
-        ref={carouselRef}
-        className="flex overflow-x-auto scroll-smooth gap-4 p-2 items-center"
-      >
-        {daysArray.map((day) => {
-          const weekDay = getWeekDay(day, currentMonth, currentYear);
-          const isSelected = selectedDay === day;
-          return (
-            <button
-              key={day}
-              data-day={day}
-              onClick={() => handleDayClick(day)}
-              className={`flex flex-col items-center justify-center rounded-md w-14 h-14 transition-colors ${
-                isSelected ? 'bg-[#702632] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              <span className="text-xs font-semibold text-center mb-1 text-[#702632] dark:text-gray-400 ${isSelected ? 'text-white' : ''}">
-                {weekDay.charAt(0).toUpperCase() + weekDay.slice(1)}
-              </span>
-              <span className="text-sm font-medium">{day < 10 ? `0${day}` : day}</span>
-            </button>
-          );
-        })}
+      <div className="flex items-center w-full">
+        <button
+          onClick={handlePrevDays}
+          disabled={!canGoBack}
+          className={`p-1 ${canGoBack ? "text-gray-700" : "text-gray-300"}`}
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+
+        <div ref={carouselRef} className="flex flex-1 pt-8 justify-between gap-1 px-1 sm:px-2 overflow-hidden">
+          {visibleDaysArray.map((day) => {
+            const weekDay = getWeekDay(day, currentMonth, currentYear)
+            const isSelected = selectedDay === day
+
+            return (
+              <button
+                key={day}
+                data-day={day}
+                onClick={() => handleDayClick(day)}
+                className={`flex flex-col items-center justify-center rounded-md min-w-[55px] h-14  md:min-w-[60px] md:h-16  transition-colors ${isSelected ? "bg-white text-[#702632] border-2 border-[#702632]" : "bg-[#702632] text-white"
+                  }`}
+              >
+                <span className={`text-xs font-medium text-center ${isSelected ? "text-[#702632]" : "text-white"}`}>
+                  {weekDay}
+                </span>
+                <span className={`text-sm font-bold ${isSelected ? "text-[#702632]" : "text-white"}`}>
+                  {day < 10 ? `0${day}` : day}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+
+        <button
+          onClick={handleNextDays}
+          disabled={!canGoForward}
+          className={`p-1 ${canGoForward ? "text-gray-700" : "text-gray-300"}`}
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
       </div>
     </div>
-  );
+  )
 }
+
+export default DayCarousel

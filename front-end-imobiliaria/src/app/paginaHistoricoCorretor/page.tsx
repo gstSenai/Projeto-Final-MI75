@@ -2,7 +2,7 @@
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { LoadingWrapper } from '@/components/loading/loadingServer';
-import { PaginaHistoricoUsuarioChamar } from '@/components/paginaHistorico/PaginaHistoricoUsuarioChamar';
+import { PaginaHistoricoCorretorChamar } from '@/components/paginaHistorico/PaginaHistoricoCorretorChamar';
 import Image from 'next/image';
 
 export default function PaginaHistoricoUsuario() {
@@ -19,7 +19,7 @@ export default function PaginaHistoricoUsuario() {
                             <div className="border-t-2 border-[#702632] w-[130px] mt-1"></div>
                         </div>
                         <div className='px-[75px] pt-8 pb-44'>
-                            <PaginaHistoricoUsuarioChamar />
+                            <PaginaHistoricoCorretorChamar />
                         </div>
                     </section>
                 </div>
