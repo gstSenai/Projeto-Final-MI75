@@ -66,6 +66,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
         newErrors.senha = "A senha é obrigatória."
       } else if (formData.senha.length < 8) {
         newErrors.senha = "A senha deve ter no mínimo 8 caracteres."
+      } else if (!/(?=.*[a-z])/.test(formData.senha)) {
+        newErrors.senha = "A senha deve conter pelo menos uma letra minúscula."
+      } else if (!/(?=.*[A-Z])/.test(formData.senha)) {
+        newErrors.senha = "A senha deve conter pelo menos uma letra maiúscula."
+      } else if (!/(?=.*\d)/.test(formData.senha)) {
+        newErrors.senha = "A senha deve conter pelo menos um número."
+      } else if (!/(?=.*[!@#$%^&*(),.?":{}|<>])/.test(formData.senha)) {
+        newErrors.senha = "A senha deve conter pelo menos um caractere especial."
       }
 
       if (!formData.confirmarSenha) {

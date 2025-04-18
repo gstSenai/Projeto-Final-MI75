@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Montserrat } from "next/font/google"
 import { useRouter } from "next/navigation"
+import { Eye, EyeOff } from "lucide-react"
 import Image from "next/image"
 
 const montserrat = Montserrat({
@@ -23,6 +24,9 @@ const RecuperarSenha = () => {
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [timeLeft, setTimeLeft] = useState(300) // 5 minutos em segundos
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -106,14 +110,40 @@ const RecuperarSenha = () => {
     }
   }
 
+  const validatePassword = () => {
+    const newErrors: Record<string, string> = {}
+
+    if (!newPassword) {
+      newErrors.newPassword = "A senha é obrigatória."
+    } else if (newPassword.length < 8) {
+      newErrors.newPassword = "A senha deve ter no mínimo 8 caracteres."
+    } else if (!/(?=.*[a-z])/.test(newPassword)) {
+      newErrors.newPassword = "A senha deve conter pelo menos uma letra minúscula."
+    } else if (!/(?=.*[A-Z])/.test(newPassword)) {
+      newErrors.newPassword = "A senha deve conter pelo menos uma letra maiúscula."
+    } else if (!/(?=.*\d)/.test(newPassword)) {
+      newErrors.newPassword = "A senha deve conter pelo menos um número."
+    } else if (!/(?=.*[!@#$%^&*(),.?":{}|<>])/.test(newPassword)) {
+      newErrors.newPassword = "A senha deve conter pelo menos um caractere especial."
+    }
+
+    if (!confirmPassword) {
+      newErrors.confirmPassword = "Confirme sua senha."
+    } else if (newPassword !== confirmPassword) {
+      newErrors.confirmPassword = "As senhas não coincidem."
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setApiError("")
     setSuccessMessage("")
 
-    if (newPassword !== confirmPassword) {
-      setApiError("As senhas não coincidem")
+    if (!validatePassword()) {
       setIsLoading(false)
       return
     }
@@ -146,6 +176,14 @@ const RecuperarSenha = () => {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev)
+  }
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prev) => !prev)
   }
 
   return (
@@ -253,28 +291,50 @@ const RecuperarSenha = () => {
               <form onSubmit={handleResetPassword} className="w-full max-w-md">
                 <div className="mb-4">
                   <label className="block text-gray-700 mb-2">Nova Senha</label>
-                  <input
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className="block w-full px-4 py-2 border border-gray-300 rounded-lg"
-                    placeholder="Digite sua nova senha"
-                    required
-                    disabled={isLoading}
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className={`block w-full px-4 py-2 border rounded-lg ${errors.newPassword ? "border-red-500" : "border-gray-300"}`}
+                      placeholder="Digite sua nova senha"
+                      required
+                      disabled={isLoading}
+                    />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      disabled={isLoading}
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
+                  {errors.newPassword && <p className="mt-1 text-sm text-red-600">{errors.newPassword}</p>}
                 </div>
 
                 <div className="mb-4">
                   <label className="block text-gray-700 mb-2">Confirmar Nova Senha</label>
-                  <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="block w-full px-4 py-2 border border-gray-300 rounded-lg"
-                    placeholder="Confirme sua nova senha"
-                    required
-                    disabled={isLoading}
-                  />
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className={`block w-full px-4 py-2 border rounded-lg ${errors.confirmPassword ? "border-red-500" : "border-gray-300"}`}
+                      placeholder="Confirme sua nova senha"
+                      required
+                      disabled={isLoading}
+                    />
+                    <button
+                      type="button"
+                      onClick={toggleConfirmPasswordVisibility}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      disabled={isLoading}
+                    >
+                      {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
+                  {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
                 </div>
 
                 {apiError && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">{apiError}</div>}
