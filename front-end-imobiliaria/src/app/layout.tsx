@@ -40,26 +40,16 @@ export default function RootLayout({
           </div>
         </div>
 
-        {/* 
-          O AuthProvider e o LanguageProvider estão envolvendo o conteúdo da aplicação.
-          Isso permite que o contexto de autenticação e idioma esteja disponível em toda a aplicação.
-          A mudança de idioma não deve afetar o layout, apenas traduzir os textos.
-        */}
         <AuthProvider>
           <LanguageProvider>
             {children}
             <div className="fixed bottom-4 right-4 z-50">
               <AccessibilityButton />
             </div>
+            <Chatbot />
           </LanguageProvider>
-          <div className="fixed bottom-4 right-4 z-50">
-            <AccessibilityButton />
-          </div>
-          {children}
-          <Chatbot />
         </AuthProvider>
       </body>
     </html>
   );
 }
-

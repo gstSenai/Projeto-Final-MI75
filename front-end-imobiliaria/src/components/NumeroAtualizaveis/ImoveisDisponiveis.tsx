@@ -15,9 +15,9 @@ export function ImoveisDisponiveis() {
 
     const fetchTotalImoveis = useCallback(async () => {
         try {
-            const response = await request.get<ApiResponse>('/imoveis');
-            if (response.data && response.data.totalElements !== undefined) {
-                setTotalImoveis(response.data.totalElements);
+            const response = await request("GET", "http://localhost:9090/imovel/getAll");
+            if (response && response.totalElements !== undefined) {
+                setTotalImoveis(response.totalElements);
             }
         } catch (error) {
             console.error('Erro ao buscar total de imóveis:', error);

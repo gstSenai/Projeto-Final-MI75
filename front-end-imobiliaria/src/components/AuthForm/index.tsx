@@ -181,7 +181,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
             localStorage.setItem("id", usuario.id.toString())
             
             if (usuario.tipo_conta === "Usuario") {
-              router.push("/paginaInicial")
+              router.push("/PaginaInicial")
             } else if (usuario.tipo_conta === "Administrador") {
               router.push("/paginaAdministrador")
             } else if (usuario.tipo_conta === "Corretor") {

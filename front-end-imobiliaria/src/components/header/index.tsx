@@ -52,9 +52,9 @@ export function Header() {
         } else if (userRole === 'Editor') {
             router.push('/paginaEditor');
         } else if (userRole === 'Usuario') {
-            router.push('/paginaInicial');
+            router.push('/PaginaInicial');
         } else {
-            router.push('/paginaInicial');
+            router.push('/PaginaInicial');
         }
     };
 
@@ -105,7 +105,7 @@ export function Header() {
                                             userRole === 'Corretor' ? '/paginaCorretores' : 
                                             userRole === 'Proprietario' ? '/paginaProprietarios' : 
                                             userRole === 'Editor' ? '/paginaEditor' : 
-                                            '/paginaInicial'
+                                            '/PaginaInicial'
                                         }>
                                             {translate('inicio')}
                                         </Link>
@@ -182,7 +182,7 @@ export function Header() {
                         <div className="flex flex-row items-center max-md:hidden relative">
                             <Image
                                 onClick={() => setShowProfileModal(!showProfileModal)}
-                                src={isLoggedIn ? "/imagensHeader/PERFIL COM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"}
+                                src={isLoggedIn ? "/imagensHeader/PERFIL SEM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"}
                                 alt={isLoggedIn ? "Perfil com login" : "Perfil sem login"}
                                 width={50}
                                 height={50}
@@ -284,7 +284,7 @@ export function Header() {
                                             userRole === 'Corretor' ? '/paginaCorretores' : 
                                             userRole === 'Proprietario' ? '/paginaProprietarios' : 
                                             userRole === 'Editor' ? '/paginaEditor' : 
-                                            '/paginaInicial'
+                                            '/PaginaInicial'
                                         } 
                                         className="text-xl text-[#303030] hover:text-vermelho transition-colors"
                                     >
