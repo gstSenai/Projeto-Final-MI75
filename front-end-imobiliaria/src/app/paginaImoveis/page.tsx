@@ -7,7 +7,7 @@ export default function PaginaImoveis() {
     return (
         <LoadingWrapper>
             <Header />
-            <div className='my-20'>
+            <div className='min-h-screen'>
                 <PaginaImovel />
             </div>
             <Footer />
