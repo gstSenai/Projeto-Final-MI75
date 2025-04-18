@@ -52,9 +52,9 @@ export function Header() {
         } else if (userRole === 'Editor') {
             router.push('/paginaEditor');
         } else if (userRole === 'Usuario') {
-            router.push('/PaginaInicial');
+            router.push('/paginaInicial');
         } else {
-            router.push('/PaginaInicial');
+            router.push('/paginaInicial');
         }
     };
 
@@ -105,7 +105,7 @@ export function Header() {
                                             userRole === 'Corretor' ? '/paginaCorretores' : 
                                             userRole === 'Proprietario' ? '/paginaProprietarios' : 
                                             userRole === 'Editor' ? '/paginaEditor' : 
-                                            '/PaginaInicial'
+                                            '/paginaInicial'
                                         }>
                                             {translate('inicio')}
                                         </Link>
