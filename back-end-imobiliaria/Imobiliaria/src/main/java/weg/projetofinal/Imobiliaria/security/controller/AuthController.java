@@ -21,13 +21,11 @@ import weg.projetofinal.Imobiliaria.security.model.dto.LoginDto;
 import weg.projetofinal.Imobiliaria.security.model.entity.ERole;
 import weg.projetofinal.Imobiliaria.security.model.entity.Role;
 import weg.projetofinal.Imobiliaria.security.repository.RoleRepository;
+import weg.projetofinal.Imobiliaria.security.service.PasswordResetService;
 import weg.projetofinal.Imobiliaria.security.service.UserDetailsImpl;
 import weg.projetofinal.Imobiliaria.security.util.JwtUtil;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -41,6 +39,7 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
     private JwtUtil jwtUtils;
+    private PasswordResetService passwordResetService;
 
 
     @PostMapping("/signin")
@@ -94,5 +93,102 @@ public class AuthController {
         usuarioDetailsRepository.save(user);
         return ResponseEntity.ok("User registered sucess");
 
+    }
+
+    @PostMapping("/esqueci-senha")
+    public ResponseEntity<?> enviarCodigo(@RequestBody Map<String, String> body) {
+        try {
+            String email = body.get("email");
+            if (email == null || email.trim().isEmpty()) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(new HashMap<String, String>() {{
+                            put("message", "Email não fornecido");
+                        }});
+            }
+
+            String token = passwordResetService.enviarCodigoRedefinicao(email);
+            return ResponseEntity.ok(new HashMap<String, String>() {{
+                put("message", "Código enviado para o e-mail com sucesso");
+                put("token", token); // Opcional: remover em produção
+            }});
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new HashMap<String, String>() {{
+                        put("message", "Erro ao enviar código: " + e.getMessage());
+                    }});
+        }
+    }
+
+    @PostMapping("/redefinirSenha")
+    public ResponseEntity<?> redefinirSenha(@RequestBody Map<String, String> body) {
+        try {
+            String token = body.get("token");
+            String novaSenha = body.get("novaSenha");
+
+            // Validações
+            if (token == null || token.trim().isEmpty()) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(new HashMap<String, String>() {{
+                            put("message", "Token não fornecido");
+                        }});
+            }
+
+            if (novaSenha == null || novaSenha.trim().isEmpty()) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(new HashMap<String, String>() {{
+                            put("message", "Nova senha não fornecida");
+                        }});
+            }
+
+            if (novaSenha.length() < 6) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(new HashMap<String, String>() {{
+                            put("message", "A senha deve ter no mínimo 6 caracteres");
+                        }});
+            }
+
+            passwordResetService.redefinirSenha(token, novaSenha);
+            return ResponseEntity.ok(new HashMap<String, String>() {{
+                put("message", "Senha redefinida com sucesso");
+            }});
+
+        } catch (RuntimeException e) {
+            HttpStatus status = e.getMessage().contains("Token inválido") ||
+                    e.getMessage().contains("Token expirado") ?
+                    HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR;
+
+            return ResponseEntity
+                    .status(status)
+                    .body(new HashMap<String, String>() {{
+                        put("message", e.getMessage());
+                    }});
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new HashMap<String, String>() {{
+                        put("message", "Erro ao redefinir senha: " + e.getMessage());
+                    }});
+        }
+    }
+
+    @GetMapping("/verificar-token")
+    public ResponseEntity<?> verificarToken(@RequestParam String token) {
+        try {
+            boolean isValid = passwordResetService.isTokenValid(token);
+            return ResponseEntity.ok(new HashMap<String, Object>() {{
+                put("valid", isValid);
+            }});
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new HashMap<String, String>() {{
+                        put("message", "Erro ao verificar token: " + e.getMessage());
+                    }});
+        }
     }
 }

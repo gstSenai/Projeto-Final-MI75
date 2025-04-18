@@ -67,9 +67,11 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/**").permitAll()
-
                         .anyRequest().permitAll()
                 )
+
+
+
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

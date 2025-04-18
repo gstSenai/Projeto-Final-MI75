@@ -173,12 +173,12 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
           }
 
           const userData = await userResponse.json()
-          
+
           const usuario = userData.content.find((u: FormData) => u.username === data.username)
-          
+
           if (usuario && usuario.tipo_conta) {
             localStorage.setItem("tipo_conta", usuario.tipo_conta)
-            
+
             if (usuario.tipo_conta === "Usuario") {
               router.push("/PaginaInicial")
             } else if (usuario.tipo_conta === "Administrador") {
@@ -341,6 +341,32 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                   )}
                 </button>
               </div>
+              <div className="flex justify-center">
+                <button
+                  className={`w-full md:w-1/2 font-bold py-3 rounded-lg transition-colors ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-[#702632] text-white hover:bg-[#5a1e28]"}`
+                  }
+                  type="submit"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <div className="flex justify-center">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                    </div>
+                  ) : (
+                    buttonText
+                  )}
+                </button>
+              </div>
+
+              <div className="mt-4 text-center">
+                <a
+                  href="/recuperar-senha" 
+                  className="text-sm text-blue-600 hover:underline"
+                >
+                  Esqueceu a senha?
+                </a>
+              </div>
+
             </form>
           </div>
         </div>
