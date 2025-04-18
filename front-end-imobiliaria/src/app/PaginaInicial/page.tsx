@@ -1,7 +1,7 @@
 "use client"
-import { ImoveisDisponiveis } from '@/components/NumeroAtualizaveis/ImoveisDisponiveis';
-import { ImoveisAlugados } from '@/components/NumeroAtualizaveis/ImoveisAlugados';
-import { ImoveisVendidos } from '@/components/NumeroAtualizaveis/ImoveisVendidos';
+import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
+import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
+import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
 import { PesquisaPaginaInicial } from '@/components/PaginaInicial/pesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
 import Carrossel from '@/components/PaginaInicial/carrossel';

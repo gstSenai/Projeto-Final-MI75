@@ -1,5 +1,5 @@
 import "./globals.css";
-import { AuthProvider } from "@/components/context/AuthContext"
+import { AuthProvider } from "@/components/context/AuthContext";
 import { LanguageProvider } from "@/components/context/LanguageContext"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
@@ -67,4 +67,4 @@ export default function RootLayout({
     </html>
   );
 }
-}
+
