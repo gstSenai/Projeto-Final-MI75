@@ -1,6 +1,9 @@
+"use client"
+
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import Favoritar from '@/components/favoritar/index'
+import { useLanguage } from '@/components/context/LanguageContext';
 
 const inter = Inter({
     subsets: ['latin'],
@@ -27,6 +30,17 @@ interface Usuario {
 }
 
 export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, preco, codigo }: CardProps) {
+    const { translate } = useLanguage();
+    
+    // Traduzir os textos
+    const dormitoriosText = translate('quartos');
+    const suiteText = translate('suites');
+    const banheirosText = translate('banheiros');
+    const codigoText = translate('codigo');
+    
+    // Verificar se o preço é válido antes de formatar
+    const formattedPrice = preco ? preco.toLocaleString('pt-BR') : '0';
+
     return (
         <>
             <div className={`${inter.className} flex justify-center pt-12 lg:pt-0`}>
@@ -46,24 +60,24 @@ export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, p
                         </div>
                         <div className="flex justify-center max-sm:gap-4 gap-10 items-center pt-2 2xl:gap-4">
                             <div className="flex flex-col items-center">
-                                <p className="text-[#5C5C5C] text-xs 2xl:text-base">Dormitórios</p>
+                                <p className="text-[#5C5C5C] text-xs 2xl:text-base">{dormitoriosText}</p>
                                 <Image src="/imagensImovel/imagemDormitorio.png" alt="Imagem Imovel" className='min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]' width={25} height={25} />
                                 <p className="text-vermelho font-black 2xl:text-base lg:text-xs">{qtdDormitorios}</p>
                             </div>
                             <div className="flex flex-col items-center">
-                                <p className="text-[#5C5C5C] text-xs 2xl:text-base">Suíte</p>
+                                <p className="text-[#5C5C5C] text-xs 2xl:text-base">{suiteText}</p>
                                 <Image src="/imagensImovel/imagemSuite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                                 <p className="text-vermelho font-black 2xl:text-base lg:text-xs">{qtdSuite}</p>
                             </div>
                             <div className="flex flex-col items-center">
-                                <p className="text-[#5C5C5C] text-xs 2xl:text-base">Banheiros</p>
+                                <p className="text-[#5C5C5C] text-xs 2xl:text-base">{banheirosText}</p>
                                 <Image src="/imagensImovel/imagemBanheiro.png" alt="Imagem Banheiro" className='min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]' width={25} height={25} />
                                 <p className="text-vermelho font-black 2xl:text-base lg:text-xs">{qtdBanheiros}</p>
                             </div>
                         </div>
                         <div className="flex flex-col items-center justify-center pt-2">
-                            <p className="text-vermelho text-lg 2xl:text-2xl font-black [text-shadow:1px_1px_1px_#702632]">R${preco},00</p>
-                            <p className="text-[#5C5C5C] text-xs font-black">Cód: {codigo}</p>
+                            <p className="text-vermelho text-lg 2xl:text-2xl font-black [text-shadow:1px_1px_1px_#702632]">R${formattedPrice},00</p>
+                            <p className="text-[#5C5C5C] text-xs font-black">{codigoText}: {codigo}</p>
                         </div>
                     </div>
                 </div>
@@ -71,4 +85,3 @@ export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, p
         </>
     );
 }
-

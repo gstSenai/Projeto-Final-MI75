@@ -1,6 +1,8 @@
+"use client"
+
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
-
+import { useLanguage } from '@/components/context/LanguageContext';
 
 // Carregando a fonte Inter
 const inter = Inter({
@@ -20,6 +22,14 @@ interface CardProps {
 }
 
 export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, preco, codigo }: CardProps) {
+    const { translate } = useLanguage();
+    
+    // Traduzir os textos
+    const dormitoriosText = translate('quartos');
+    const suiteText = translate('suites');
+    const banheirosText = translate('banheiros');
+    const codigoText = translate('codigo');
+    
     return (
         <>
             <div className={`${inter.className} flex justify-center gap-14 lg:gap-4 py-10 2xl:gap-8 min-h-screen flex-col lg:flex-row bg-[#DFDAD0] px-10`}>
@@ -41,24 +51,24 @@ export default function CardBeta({ titulo, cidade, qtdDormitorios, qtdSuite, qtd
                                 </div>
                                 <div className="flex justify-center gap-10 lg:gap-10 items-center pt-2">
                                     <div className="flex flex-col items-center pl-2">
-                                        <p className="text-[#5C5C5C] text-sm 2xl:text-xl">Dormitórios</p>
+                                        <p className="text-[#5C5C5C] text-sm 2xl:text-xl">{dormitoriosText}</p>
                                         <Image src="/imagensImovel/imagemDormitorio.png" alt="Imagem Imovel" width={40} height={40} className='2xl:min-w-[60px] lg:min-w-[35px]' />
                                         <p className="text-[#702632] font-black lg:text-lg">{qtdDormitorios}</p>
                                     </div>
                                     <div className="flex flex-col items-center">
-                                        <p className="text-[#5C5C5C] text-sm 2xl:text-xl">Suíte</p>
+                                        <p className="text-[#5C5C5C] text-sm 2xl:text-xl">{suiteText}</p>
                                         <Image src="/imagensImovel/imagemSuite.png" alt="Imagem Suite" width={40} height={40} className="min-w-[20px] max-w-[40px] lg:min-w-[35px] 2xl:min-w-[60px]" />
                                         <p className="text-[#702632] font-black lg:text-lg">{qtdSuite}</p>
                                     </div>
                                     <div className="flex flex-col items-center pr-2">
-                                        <p className="text-[#5C5C5C] text-sm 2xl:text-xl">Banheiros</p>
+                                        <p className="text-[#5C5C5C] text-sm 2xl:text-xl">{banheirosText}</p>
                                         <Image src="/imagensImovel/imagemBanheiro.png" alt="Imagem Banheiro" width={40} height={40} className='2xl:min-w-[60px] lg:min-w-[35px]' />
                                         <p className="text-[#702632] font-black lg:text-lg">{qtdBanheiros}</p>
                                     </div>
                                 </div>
                                 <div className="flex flex-col items-center justify-center pt-2">
                                     <p className="text-[#702632] text-2xl 2xl:text-4xl font-black [text-shadow:1px_1px_1px_#702632]">{preco}</p>
-                                    <p className="text-[#5C5C5C] text-sm font-black">Cód: {codigo}</p>
+                                    <p className="text-[#5C5C5C] text-sm font-black">{codigoText}: {codigo}</p>
                                 </div>
                             </div>
                         </div>

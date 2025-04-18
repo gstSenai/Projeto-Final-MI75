@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react"
 import request from "@/routes/request"
+import { useLanguage } from '@/components/context/LanguageContext';
 
 interface ApiResponse {
     content?: any[];
@@ -8,44 +9,28 @@ interface ApiResponse {
 }
 
 export function ImoveisVendidos() {
-    const [isLoading, setIsLoading] = useState(false)
-    const [totalImoveisVendidos, setTotalImoveisVendidos] = useState(0)
+    const [totalImoveis, setTotalImoveis] = useState<number>(0);
+    const { translate } = useLanguage();
 
-    const getImoveisVendidos = useCallback(async () => {
-        setIsLoading(true);
+    const fetchTotalImoveis = useCallback(async () => {
         try {
-            // Opção 1: Se você tiver um endpoint específico para imóveis alugados
-            // const response = await request("GET", `http://localhost:9090/imovel/alugados`) as ApiResponse;
-            
-            // Opção 2: Se você puder filtrar pelo endpoint existente
-            const response = await request("GET", `http://localhost:9090/imovel/getAll/vendidos`) as ApiResponse;
-            
-            if (response && typeof response === 'object') {
-                if ('content' in response && Array.isArray(response.content)) {
-                    setTotalImoveisVendidos(response.content.length);
-                }
-                else if ('totalElements' in response && typeof response.totalElements === 'number') {
-                    setTotalImoveisVendidos(response.totalElements);
-                }
+            const response = await request.get<ApiResponse>('/imoveis/vendidos');
+            if (response.data && response.data.totalElements !== undefined) {
+                setTotalImoveis(response.data.totalElements);
             }
         } catch (error) {
-            console.error("Erro ao buscar imóveis alugados:", error);
-        } finally {
-            setIsLoading(false);
+            console.error('Erro ao buscar total de imóveis vendidos:', error);
         }
     }, []);
 
     useEffect(() => {
-        getImoveisVendidos();
-    }, [getImoveisVendidos]);
+        fetchTotalImoveis();
+    }, [fetchTotalImoveis]);
 
     return (
-        <div className="font-semibold tracking-[7%] text-3xl">
-            {isLoading ? (
-                <p>Carregando...</p>
-            ) : (
-                <p>{totalImoveisVendidos.toString().padStart(5, '0')}</p>
-            )}
+        <div className="text-white">
+            <h3 className="text-2xl font-bold">{totalImoveis}</h3>
+            <p className="text-sm">{translate('imoveis_vendidos')}</p>
         </div>
     );
 }
