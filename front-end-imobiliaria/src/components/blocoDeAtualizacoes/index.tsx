@@ -23,10 +23,10 @@ export default function AtualizarComponents() {
                 <div className="bg-white flex flex-col md:flex-row items-center justify-between w-full md:max-w-[800px] h-auto md:h-[120px] rounded-[12px] p-2 md:p-3 shadow-lg">
                     {/* Texto */}
                     <div className="text-left flex-1">
-                        <h2 className="font-semibold opacity-75 text-[20px] sm:text-[24px] md:text-[28px] lg:text-[34px] xl:text-[40px]">
+                        <h2 className="font-semibold opacity-75 text-[20px] sm:text-[24px] md:text-[28px] lg:text-[34px] xl:text-[24px]">
                             {translate('receba_atualizacoes.titulo')}
                         </h2>
-                        <p className="font-light text-base sm:text-lg md:text-xl lg:text-2xl">
+                        <p className="font-light text-base sm:text-lg md:text-xl lg:text-lg">
                             {translate('receba_atualizacoes.subtitulo')}
                         </p>
                     </div>

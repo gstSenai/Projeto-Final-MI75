@@ -12,6 +12,7 @@ import { Footer } from '@/components/footer';
 import { Card } from '@/components/CardImovel';
 import Image from 'next/image';
 import { LoadingWrapper } from '@/components/loading/loadingServer';
+import AtualizarComponents from '@/components/blocoDeAtualizacoes';
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -171,7 +172,7 @@ export default function PaginaInicial() {
                         </div>
                     </div>
                     <div className="relative flex justify-center -mt-[8rem] lg:mt-[-6rem] xl:mt-[-6rem] z-20 max-lg:px-4 px-20">
-                        {/* AtualizarComponents removed */}
+                        <AtualizarComponents />
                     </div>
                     <div className='relative md:-mt-[80px] lg:-mt-[60px] xl:-mt-[50px]'>
                         <Footer />
