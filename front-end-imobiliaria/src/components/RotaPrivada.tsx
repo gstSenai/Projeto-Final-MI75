@@ -11,11 +11,12 @@ const montserrat = Montserrat({
 interface RotaPrivadaProps {
   children: ReactNode;
   userAutorizado: string[];
-  tipoContaUsuario?: string;
 }
 
-export default function RotaPrivada({ children, userAutorizado, tipoContaUsuario }: RotaPrivadaProps) {
-  if (tipoContaUsuario && userAutorizado.includes(tipoContaUsuario)) {
+export default function RotaPrivada({ children, userAutorizado }: RotaPrivadaProps) {
+  const tipoConta = localStorage.getItem('tipo_conta');
+
+  if (tipoConta && userAutorizado.includes(tipoConta)) {
     return <>{children}</>;
   }
 

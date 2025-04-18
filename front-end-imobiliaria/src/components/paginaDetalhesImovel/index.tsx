@@ -2,10 +2,11 @@
 
 import { useEffect, useState, useRef } from "react"
 import { Montserrat } from "next/font/google"
-import { useParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Bed, Bath, Ruler, Car } from "lucide-react"
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import { MapImovelById } from "@/components/map/mapImovelById"
 
 // Configurar a chave de acesso do Mapbox
 mapboxgl.accessToken = 'pk.eyJ1IjoibHVhbmFuaWNoZWxhdHRpIiwiYSI6ImNtOWFqcDY3ZDA2eTkyaXE0b3Z4eW40eDUifQ.gYlUt6PtfGgkap3L2KEiow'
@@ -23,6 +24,8 @@ interface ImovelDetalhes {
   valor_venda: number
   codigo: number
   tipo_transacao: string
+  area_construida: number
+  area_terreno: number
   id_endereco: {
     rua: string
     numero: string
@@ -35,9 +38,7 @@ interface ImovelDetalhes {
     numero_quartos: number
     numero_suites: number
     numero_banheiros: number
-    area_total: number
-    area_construida: number
-    numero_vagas_garagem: number
+    numero_vagas: number
   }
   imagens: {
     id: number
@@ -46,67 +47,63 @@ interface ImovelDetalhes {
   }[]
 }
 
-// Dados mockados para teste
-const mockImovel: ImovelDetalhes = {
-  id: 1,
-  nome_propriedade: "Casa Moderna com Piscina",
-  descricao: "Excelente casa moderna com 3 quartos, sendo 1 suíte, sala ampla, cozinha planejada, área de serviço, garagem para 2 carros e piscina. Localizada em bairro nobre, próximo a escolas, shoppings e com fácil acesso às principais vias da cidade.",
-  valor_venda: 850000,
-  codigo: 1234,
-  tipo_transacao: "Venda",
-  id_endereco: {
-    rua: "Rua das Flores",
-    numero: "123",
-    bairro: "Jardim América",
-    cidade: "São Paulo",
-    estado: "SP",
-    cep: "01234-567"
-  },
-  id_caracteristicasImovel: {
-    numero_quartos: 3,
-    numero_suites: 1,
-    numero_banheiros: 2,
-    area_total: 250,
-    area_construida: 180,
-    numero_vagas_garagem: 2
-  },
-  imagens: [
-    {
-      id: 1,
-      nome: "fachada",
-      url: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-    },
-    {
-      id: 2,
-      nome: "sala",
-      url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1453&q=80"
-    },
-    {
-      id: 3,
-      nome: "cozinha",
-      url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-    }
-  ]
+interface DetalhesImovelProps {
+  imovelId: number;
 }
 
-export function DetalhesImovel() {
+export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
   const mapContainer = useRef(null);
+  const router = useRouter();
   const [imovel, setImovel] = useState<ImovelDetalhes | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
-  const params = useParams()
+
+  const getImovelDetalhes = async () => {
+    try {
+      if (typeof window === 'undefined') return;
+      
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
+      const response = await fetch(`http://localhost:9090/imovel/getById/${imovelId}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (response.status === 404) {
+        router.push('/paginaImoveis');
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error('Erro ao buscar detalhes do imóvel');
+      }
+
+      const data = await response.json();
+      setImovel(data);
+    } catch (error) {
+      console.error("Erro ao buscar detalhes do imóvel:", error);
+      setError("Erro ao carregar detalhes do imóvel. Por favor, tente novamente.");
+      router.push('/paginaImoveis');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Simulando um delay de carregamento
-    const timer = setTimeout(() => {
-      setImovel(mockImovel)
-      setLoading(false)
-    }, 1000)
-
-    return () => clearTimeout(timer)
-  }, [])
+    if (!imovelId) {
+      router.push('/paginaImoveis');
+      return;
+    }
+    getImovelDetalhes();
+  }, [imovelId]);
 
   useEffect(() => {
     if (!map && imovel && mapContainer.current) {
@@ -255,45 +252,45 @@ export function DetalhesImovel() {
 
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="flex items-center gap-4">
-                <img src="/imagePropriedades/quarto.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
+                  <img src="/imagePropriedades/quarto.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Quartos</p>
                     <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_quartos}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                <img src="/imagePropriedades/suite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
+                  <img src="/imagePropriedades/suite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Suites</p>
                     <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_suites}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                <img src="/imagePropriedades/banheiro.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
+                  <img src="/imagePropriedades/banheiro.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Banheiros</p>
                     <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_banheiros}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                <img src="/imagePropriedades/carro.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
+                  <img src="/imagePropriedades/carro.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Vagas</p>
-                    <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_vagas_garagem}</p>
+                    <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_vagas}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                <img src="/imagePropriedades/regua.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
+                  <img src="/imagePropriedades/regua.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Área total</p>
-                    <p className="font-semibold">{imovel.id_caracteristicasImovel.area_total}m²</p>
+                    <p className="font-semibold">{imovel.area_terreno}m²</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                <img src="/imagePropriedades/regua.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
-                <div>
+                  <img src="/imagePropriedades/regua.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
+                  <div>
                     <p className="text-sm text-cinza-medio">Área Construída</p>
-                    <p className="font-semibold">{imovel.id_caracteristicasImovel.area_construida}m²</p>
+                    <p className="font-semibold">{imovel.area_construida}m²</p>
                   </div>
                 </div>
               </div>
@@ -323,7 +320,7 @@ export function DetalhesImovel() {
           <div className="flex max-md:flex-col gap-6">
             <div className="w-3/5 max-md:w-full">
               <div className="h-[400px] rounded-lg overflow-hidden shadow-lg">
-                <div ref={mapContainer} className="w-full h-full" />
+                <MapImovelById markersId={imovelId} />
               </div>
             </div>
             <div className="w-2/5 max-md:w-full">

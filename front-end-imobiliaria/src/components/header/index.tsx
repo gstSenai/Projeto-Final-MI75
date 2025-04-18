@@ -199,9 +199,8 @@ export function Header() {
                                             </div>
                                             <div className="w-full h-[1px] bg-white opacity-50"></div>
                                             <Link
-                                                href={`/perfilUsuario/${id}`}
+                                                href="/perfilUsuario/meu-perfil"
                                                 className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
-                                                onClick={() => console.log("ID ao clicar no link:", id)}
                                             >
                                                 Perfil
                                             </Link>
