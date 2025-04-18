@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt">
       <body className={inter.className}>
         <VLibrasScript />
         <div data-vw="true">

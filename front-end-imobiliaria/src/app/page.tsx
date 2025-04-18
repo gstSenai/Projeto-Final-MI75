@@ -1,5 +1,5 @@
 
-import PaginaInicial from "./paginaInicial/page";
+import PaginaInicial from "./PaginaInicial/page";
 
 
 export default function pagina() {
