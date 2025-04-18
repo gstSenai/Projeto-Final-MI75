@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
 import { Inter } from 'next/font/google';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
 import { useLanguage } from '@/components/context/LanguageContext';
+import { LanguageProvider } from '@/components/context/LanguageContext';
 
-// Carregando a fonte Inter
 const inter = Inter({
     subsets: ['latin'],
     weight: ['400', '600'],
@@ -15,18 +15,18 @@ const inter = Inter({
 });
 
 export function Header() {
-    const router = useRouter()
-    const [hamburguerMobile, setHambuguerMobile] = useState(false)
-    const [showProfileModal, setShowProfileModal] = useState(false)
-    const [showLanguageModal, setShowLanguageModal] = useState(false)
+    const router = useRouter();
+    const [hamburguerMobile, setHamburguerMobile] = useState(false);
+    const [showProfileModal, setShowProfileModal] = useState(false);
+    const [showLanguageModal, setShowLanguageModal] = useState(false);
     const { translate, currentLanguage, setCurrentLanguage } = useLanguage();
-    const [currentImageBrasil, setCurrentImageBrasil] = useState('/imagensHeader/Brasil.png')
-    const [currentImageEUA, setCurrentImageEUA] = useState('/imagensHeader/eua.png')
-    const [currentImageEspanha, setCurrentImageEspanha] = useState('/imagensHeader/espanha.png')
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
-    const [username, setUsername] = useState('')
-    const [userRole, setUserRole] = useState('')
-    const [id, setId] = useState('')
+    const [currentImageBrasil] = useState('/imagensHeader/Brasil.png');
+    const [currentImageEUA] = useState('/imagensHeader/eua.png');
+    const [currentImageEspanha] = useState('/imagensHeader/espanha.png');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [username, setUsername] = useState('');
+    const [userRole, setUserRole] = useState('');
+    const [id, setId] = useState('');
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -67,7 +67,7 @@ export function Header() {
         localStorage.removeItem('id');
         setShowProfileModal(false);
         router.push('/login');
-    }
+    };
 
     const handleLanguageChange = (lang: 'Português' | 'English' | 'Español') => {
         console.log('Mudando idioma para:', lang);
@@ -99,11 +99,17 @@ export function Header() {
                         <div>
                             <nav>
                                 <ul className="flex flex-row max-lg:text-base text-xl whitespace-nowrap md:gap-4 lg:gap-6 text-[#303030] max-md:hidden">
-                                    <li><Link href={userRole === 'Administrador' ? '/paginaAdministrador' : 
-                                                  userRole === 'Corretor' ? '/paginaCorretores' : 
-                                                  userRole === 'Proprietario' ? '/paginaProprietarios' : 
-                                                  userRole === 'Editor' ? '/paginaEditor' : 
-                                                  '/paginaInicial'}>{translate('inicio')}</Link></li>
+                                    <li>
+                                        <Link href={
+                                            userRole === 'Administrador' ? '/paginaAdministrador' : 
+                                            userRole === 'Corretor' ? '/paginaCorretores' : 
+                                            userRole === 'Proprietario' ? '/paginaProprietarios' : 
+                                            userRole === 'Editor' ? '/paginaEditor' : 
+                                            '/paginaInicial'
+                                        }>
+                                            {translate('inicio')}
+                                        </Link>
+                                    </li>
                                     <li><Link href="/paginaImoveis">{translate('imoveis')}</Link></li>
                                     <li><Link href="/paginaCorretores">{translate('corretores')}</Link></li>
                                     <li><Link href="/sobreNos">{translate('sobre')}</Link></li>
@@ -115,15 +121,23 @@ export function Header() {
                     <div className="flex flex-row items-center font-medium">
                         <div className="flex flex-row items-center gap-4 max-md:hidden">
                             <div className="flex flex-row items-center md:pl-2 lg:pl-12">
-                                <Image src="/imagensHeader/token_chat.png" alt="Tema" width={30} height={2} onClick={}/>
+                                <Image 
+                                    src="/imagensHeader/token_chat.png" 
+                                    alt="Tema" 
+                                    width={30} 
+                                    height={20} 
+                                    onClick={() => {}} 
+                                />
                             </div>
                         </div>
                         <div className="flex flex-row items-center md:gap-1 lg:gap-2 md:px-3 lg:px-6 max-md:hidden relative">
                             <div className='flex flex-row items-center gap-2 cursor-pointer' onClick={() => setShowLanguageModal(!showLanguageModal)}>
                                 <Image
-                                    src={currentLanguage === 'Português' ? currentImageBrasil :
+                                    src={
+                                        currentLanguage === 'Português' ? currentImageBrasil :
                                         currentLanguage === 'English' ? currentImageEUA :
-                                            currentImageEspanha}
+                                        currentImageEspanha
+                                    }
                                     alt="Idioma"
                                     width={20}
                                     height={20}
@@ -168,7 +182,7 @@ export function Header() {
                         <div className="flex flex-row items-center max-md:hidden relative">
                             <Image
                                 onClick={() => setShowProfileModal(!showProfileModal)}
-                                src={isLoggedIn ? "/imagensHeader/PERFIL SEM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"}
+                                src={isLoggedIn ? "/imagensHeader/PERFIL COM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"}
                                 alt={isLoggedIn ? "Perfil com login" : "Perfil sem login"}
                                 width={50}
                                 height={50}
@@ -218,8 +232,8 @@ export function Header() {
                         </div>
                         <div className="flex flex-row items-center md:hidden">
                             <Image
-                                onClick={() => setHambuguerMobile(!hamburguerMobile)}
-                                src={hamburguerMobile ? "/imagensHeader/HAMBURGUER.png" : "/imagensHeader/HAMBURGUER.png"}
+                                onClick={() => setHamburguerMobile(!hamburguerMobile)}
+                                src={hamburguerMobile ? "/imagensHeader/HAMBURGUER-ABERTO.png" : "/imagensHeader/HAMBURGUER.png"}
                                 alt={hamburguerMobile ? "Fechar menu" : "Abrir menu"}
                                 width={30}
                                 height={30}
@@ -227,7 +241,7 @@ export function Header() {
                             />
                         </div>
                     </div>
-                </section >
+                </section>
             </header>
 
             {hamburguerMobile && (
@@ -246,12 +260,14 @@ export function Header() {
                                     {isLoggedIn ? (
                                         <span className="text-xl text-[#303030]">{username}</span>
                                     ) : (
-                                        <Link href="/login" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('login')}</Link>
+                                        <Link href="/login" className="text-xl text-[#303030] hover:text-vermelho transition-colors">
+                                            {translate('login')}
+                                        </Link>
                                     )}
                                 </div>
                                 <Image
-                                    onClick={() => setHambuguerMobile(false)}
-                                    src="/imagensHeader/HAMBURGUER.png"
+                                    onClick={() => setHamburguerMobile(false)}
+                                    src="/imagensHeader/HAMBURGUER-FECHAR.png"
                                     alt="Fechar menu"
                                     width={30}
                                     height={30}
@@ -262,35 +278,63 @@ export function Header() {
                             <ul className="space-y-3 text-start my-3">
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/logoMinuscula.png" alt="simbolo HAV" width={20} height={20} className='h-full' />
-                                    <Link href="/paginaInicial" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('inicio')}</Link>
+                                    <Link 
+                                        href={
+                                            userRole === 'Administrador' ? '/paginaAdministrador' : 
+                                            userRole === 'Corretor' ? '/paginaCorretores' : 
+                                            userRole === 'Proprietario' ? '/paginaProprietarios' : 
+                                            userRole === 'Editor' ? '/paginaEditor' : 
+                                            '/paginaInicial'
+                                        } 
+                                        className="text-xl text-[#303030] hover:text-vermelho transition-colors"
+                                    >
+                                        {translate('inicio')}
+                                    </Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/casa.png" alt="simbolo casas" width={20} height={20} className='h-full' />
-                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('imoveis')}</Link>
+                                    <Link href="/paginaImoveis" className="text-xl text-[#303030] hover:text-vermelho transition-colors">
+                                        {translate('imoveis')}
+                                    </Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/corretores.png" alt="simbolo corretores" width={20} height={20} className='h-full' />
-                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('corretores')}</Link>
+                                    <Link href="/paginaCorretores" className="text-xl text-[#303030] hover:text-vermelho transition-colors">
+                                        {translate('corretores')}
+                                    </Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/informacao.png" alt="simbolo Sobre nos" width={20} height={20} className='h-full' />
-                                    <Link href="/sobreNos" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('sobre')}</Link>
+                                    <Link href="/sobreNos" className="text-xl text-[#303030] hover:text-vermelho transition-colors">
+                                        {translate('sobre')}
+                                    </Link>
                                 </li>
                             </ul>
                             <div className='bg-black p-[0.2px] w-full'></div>
                             <ul className="space-y-3 text-start mt-3">
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/sino.png" alt="chat corretores" width={20} height={20} className='h-full' />
-                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('chat')}</Link>
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">
+                                        {translate('chat')}
+                                    </Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/configuracoes.png" alt="configurações" width={20} height={20} className='h-full' />
-                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('configuracoes')}</Link>
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">
+                                        {translate('configuracoes')}
+                                    </Link>
                                 </li>
-                                <li className='flex gap-3 items-center'>
-                                    <Image src="/imagensHeader/logout.png" alt="logout" width={20} height={20} className='h-full' />
-                                    <button onClick={handleLogout} className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('logout')}</button>
-                                </li>
+                                {isLoggedIn && (
+                                    <li className='flex gap-3 items-center'>
+                                        <Image src="/imagensHeader/logout.png" alt="logout" width={20} height={20} className='h-full' />
+                                        <button 
+                                            onClick={handleLogout} 
+                                            className="text-xl text-[#303030] hover:text-vermelho transition-colors"
+                                        >
+                                            {translate('logout')}
+                                        </button>
+                                    </li>
+                                )}
                             </ul>
                         </div>
                     </div>
