@@ -3,11 +3,8 @@
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import Favoritar from '@/components/favoritar/index'
-<<<<<<< Updated upstream
 import { useLanguage } from '@/components/context/LanguageContext';
-=======
 import { useRouter } from 'next/navigation';
->>>>>>> Stashed changes
 
 const inter = Inter({
     subsets: ['latin'],
@@ -23,22 +20,20 @@ interface CardProps {
     qtdBanheiros: number,
     preco: number,
     codigo: number,
-    imovelId: number
+    imovelId?: number
 }
 
 export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, preco, codigo, imovelId }: CardProps) {
     const router = useRouter();
 
     const handleClick = () => {
-        localStorage.setItem('currentImovelId', imovelId.toString());
-        router.push('/paginaImoveis/imovelDetalhes');
+        if (imovelId) {
+            localStorage.setItem('currentImovelId', imovelId.toString());
+            router.push('/paginaImoveis/imovelDetalhes');
+        }
     };
 
-<<<<<<< Updated upstream
-export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, preco, codigo }: CardProps) {
     const { translate } = useLanguage();
-    
-    // Traduzir os textos
     const dormitoriosText = translate('quartos');
     const suiteText = translate('suites');
     const banheirosText = translate('banheiros');
@@ -47,8 +42,6 @@ export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, p
     // Verificar se o preço é válido antes de formatar
     const formattedPrice = preco ? preco.toLocaleString('pt-BR') : '0';
 
-=======
->>>>>>> Stashed changes
     return (
         <div className={`${inter.className} flex justify-center pt-12 lg:pt-0`}>
             <div className="flex flex-col lg:w-full lg:max-w-[320px] 2xl:max-w-[400px] cursor-pointer" onClick={handleClick}>
@@ -82,7 +75,6 @@ export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, p
                             <p className="text-vermelho font-black 2xl:text-base lg:text-xs">{qtdBanheiros}</p>
                         </div>
                     </div>
-<<<<<<< Updated upstream
                     <div className="w-full max-md:max-w-[350px] max-sm:max-w-[200px] max-w-[400px] lg:max-w-[350px] 2xl:max-w-[400px] bg-white shadow-[5px_20px_100px_rgb(0,0,0,0.1)] rounded-b-[20px] py-2">
                         <div className="flex flex-col justify-center items-center">
                             <p className="text-lg 2xl:text-2xl font-black text-[#5C5C5C] [text-shadow:1px_1px_1px_#5C5C5C]">{titulo}</p>
@@ -109,11 +101,6 @@ export function Card({ titulo, cidade, qtdDormitorios, qtdSuite, qtdBanheiros, p
                             <p className="text-vermelho text-lg 2xl:text-2xl font-black [text-shadow:1px_1px_1px_#702632]">R${formattedPrice},00</p>
                             <p className="text-[#5C5C5C] text-xs font-black">{codigoText}: {codigo}</p>
                         </div>
-=======
-                    <div className="flex flex-col items-center justify-center pt-2">
-                        <p className="text-vermelho text-lg 2xl:text-2xl font-black [text-shadow:1px_1px_1px_#702632]">R${preco},00</p>
-                        <p className="text-[#5C5C5C] text-xs font-black">Cód: {codigo}</p>
->>>>>>> Stashed changes
                     </div>
                 </div>
             </div>
