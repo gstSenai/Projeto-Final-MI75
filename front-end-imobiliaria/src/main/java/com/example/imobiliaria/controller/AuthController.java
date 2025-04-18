@@ -18,8 +18,21 @@ public class AuthController {
     public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
         try {
             String email = request.get("email");
-            authService.generateResetCode(email);
+            authService.generateVerificationCode(email);
             return ResponseEntity.ok().body(Map.of("message", "Código de verificação enviado com sucesso"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/verify-code")
+    public ResponseEntity<?> verifyCode(@RequestBody Map<String, String> request) {
+        try {
+            String email = request.get("email");
+            String code = request.get("code");
+            
+            authService.verifyCode(email, code);
+            return ResponseEntity.ok().body(Map.of("message", "Código verificado com sucesso"));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }

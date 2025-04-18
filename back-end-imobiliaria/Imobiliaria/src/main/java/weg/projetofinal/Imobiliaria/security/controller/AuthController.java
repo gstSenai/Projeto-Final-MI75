@@ -95,26 +95,28 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
         try {
-            System.out.println("=== RECEBENDO SOLICITAÇÃO DE RECUPERAÇÃO DE SENHA ===");
-            System.out.println("Email recebido: " + request.getEmail());
-
-            String code = authService.generateVerificationCode(request.getEmail());
-
-            return ResponseEntity.ok().body(Map.of(
-                    "message", "Código de verificação enviado com sucesso",
-                    "code", code // Em produção, não envie o código na resposta
-            ));
-
+            String email = request.get("email");
+            authService.generateVerificationCode(email);
+            return ResponseEntity.ok().body(Map.of("message", "Código de verificação enviado com sucesso"));
         } catch (RuntimeException e) {
-            System.out.println("=== ERRO NA RECUPERAÇÃO DE SENHA ===");
-            System.out.println("Erro: " + e.getMessage());
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
 
+    @PostMapping("/verify-code")
+    public ResponseEntity<?> verifyCode(@RequestBody Map<String, String> request) {
+        try {
+            String email = request.get("email");
+            String code = request.get("code");
+
+            authService.verifyCode(email, code);
+            return ResponseEntity.ok().body(Map.of("message", "Código verificado com sucesso"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {

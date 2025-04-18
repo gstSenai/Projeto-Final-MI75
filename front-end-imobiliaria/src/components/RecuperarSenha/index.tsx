@@ -18,6 +18,7 @@ const RecuperarSenha = () => {
   const [apiError, setApiError] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
   const [showCodeInput, setShowCodeInput] = useState(false)
+  const [showPasswordInput, setShowPasswordInput] = useState(false)
   const [code, setCode] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -65,6 +66,39 @@ const RecuperarSenha = () => {
 
       setSuccessMessage("Código de verificação enviado com sucesso!")
       setShowCodeInput(true)
+    } catch (error) {
+      setApiError((error as Error).message || "Ocorreu um erro ao processar sua solicitação")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleVerifyCode = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setApiError("")
+    setSuccessMessage("")
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:9090"
+      const response = await fetch(`${apiUrl}/api/auth/verify-code`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ 
+          email,
+          code
+        }),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.message || "Erro ao verificar código")
+      }
+
+      setSuccessMessage("Código verificado com sucesso!")
+      setShowPasswordInput(true)
     } catch (error) {
       setApiError((error as Error).message || "Ocorreu um erro ao processar sua solicitação")
     } finally {
@@ -174,8 +208,8 @@ const RecuperarSenha = () => {
                   </button>
                 </div>
               </form>
-            ) : (
-              <form onSubmit={handleResetPassword} className="w-full max-w-md">
+            ) : !showPasswordInput ? (
+              <form onSubmit={handleVerifyCode} className="w-full max-w-md">
                 <div className="mb-4">
                   <label className="block text-gray-700 mb-2">Código de Verificação</label>
                   <div className="flex items-center gap-2">
@@ -194,6 +228,29 @@ const RecuperarSenha = () => {
                   </div>
                 </div>
 
+                {apiError && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">{apiError}</div>}
+                {successMessage && <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg">{successMessage}</div>}
+
+                <div className="flex justify-center">
+                  <button
+                    className={`w-full md:w-1/2 font-bold py-3 rounded-lg transition-colors ${
+                      isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-[#702632] text-white hover:bg-[#5a1e28]"
+                    }`}
+                    type="submit"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <div className="flex justify-center">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                      </div>
+                    ) : (
+                      "Verificar Código"
+                    )}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <form onSubmit={handleResetPassword} className="w-full max-w-md">
                 <div className="mb-4">
                   <label className="block text-gray-700 mb-2">Nova Senha</label>
                   <input

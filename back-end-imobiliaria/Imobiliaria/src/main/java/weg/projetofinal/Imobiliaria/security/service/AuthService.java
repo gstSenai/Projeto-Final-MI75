@@ -57,4 +57,19 @@ public class AuthService {
     }
 
 
+    public void verifyCode(String email, String code) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (!usuario.getResetPasswordCode().equals(code)) {
+            throw new RuntimeException("Código de verificação inválido");
+        }
+
+        if (usuario.getResetPasswordCodeExpiry() == null || usuario.getResetPasswordCodeExpiry().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Código de verificação expirado");
+        }
+    }
+
+
+
 }
