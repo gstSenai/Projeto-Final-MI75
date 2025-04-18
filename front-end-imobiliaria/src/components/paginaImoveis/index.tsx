@@ -5,6 +5,7 @@ import { Card } from "@/components/CardImovel/index"
 import { Montserrat } from "next/font/google"
 import { FiltroImoveis } from "./botaoFiltro"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -55,6 +56,9 @@ export function ListaImoveis() {
   const [ultimoId, setUltimoId] = useState<number | null>(null)
   const [tipoTransacao, setTipoTransacao] = useState<string>("Todos")
   const [mostrarFiltros, setMostrarFiltros] = useState<boolean>(false)
+  const [imovelId, setImovelId] = useState<number | null>(null);
+  const router = useRouter();
+
 
   const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>({
     currentPage: 0,
@@ -173,6 +177,14 @@ export function ListaImoveis() {
 
   useEffect(() => {
     fetchImoveis(0);
+    const id = localStorage.getItem('id');
+    if (!id) {
+        router.push('/');
+        return;
+    }
+    
+    setImovelId(Number(id));
+    setLoading(false);
   }, []);
 
   const handlePageChange = (newPage: number) => {
@@ -284,7 +296,7 @@ export function ListaImoveis() {
         ) : (
           <>
             <div className="flex flex-wrap justify-center items-start gap-6 mt-6">
-              {imoveisFiltrados.length > 0 ? (
+              {imoveisFiltrados.length > 0 && imovelId ? (
                 imoveisFiltrados.map((imovel) => (
                   <Card
                     key={imovel.id}
@@ -295,6 +307,7 @@ export function ListaImoveis() {
                     qtdBanheiros={imovel.qtdBanheiros}
                     preco={imovel.preco}
                     codigo={imovel.codigo}
+                    imovelId={imovelId}
                   />
                 ))
               ) : (

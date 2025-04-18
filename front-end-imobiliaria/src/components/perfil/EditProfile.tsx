@@ -40,7 +40,6 @@ export default function EditProfile({ id }: EditProfileProps) {
     });
 
     const [isEditing, setIsEditing] = useState(false);
-    const [profileImage, setProfileImage] = useState<string>('corretora.png');
     const [imagem, setImagem] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [, setEditadoComSucesso] = useState(false);
@@ -68,7 +67,7 @@ export default function EditProfile({ id }: EditProfileProps) {
             });
             
             if (data.imagem_usuario) {
-                setProfileImage(data.imagem_usuario)
+                setImagem(data.imagem_usuario)
             }
         } catch (error) {
             console.error("Erro ao buscar usuário:", error)
@@ -134,7 +133,6 @@ export default function EditProfile({ id }: EditProfileProps) {
             setImagem(file);
             const reader = new FileReader();
             reader.onloadend = () => {
-                setProfileImage(reader.result as string);
             };
             reader.readAsDataURL(file);
         }
@@ -155,13 +153,7 @@ export default function EditProfile({ id }: EditProfileProps) {
                 <div className='flex flex-col md:flex-row items-start md:items-center justify-around gap-6 md:gap-4'>
                     <div className='flex flex-col items-center text-center w-full md:w-[30%] mb-6 md:mb-0 mt-8 sm:mt-0'>
                         <div className="relative cursor-pointer group" onClick={handleImageClick}>
-                            <Image
-                                src={profileImage}
-                                alt="Foto do usuário"
-                                className='w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-2 border-black transition-opacity group-hover:opacity-80'
-                                width={100}
-                                height={100}
-                            />
+                           
                             <button
                                 type="button"
                                 className="absolute bottom-0 right-0 bg-white rounded-full p-1.5 sm:p-2 shadow-md hover:bg-gray-100 transition-colors"

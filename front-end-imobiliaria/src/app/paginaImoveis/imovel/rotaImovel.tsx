@@ -3,13 +3,13 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function PerfilUsuarioRedirect() {
+export default function RotaImovel() {
     const router = useRouter();
 
     useEffect(() => {
         const id = localStorage.getItem('id');
         if (id) {
-            router.push(`/perfilUsuario/${id}`);
+            router.push('/paginaImoveis/imovel');
         } else {
             router.push('/');
         }

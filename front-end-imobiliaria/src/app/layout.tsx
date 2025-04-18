@@ -9,7 +9,7 @@ import Chatbot from "@/components/Chatbot";
 import { AuthProvider } from "@/components/context/AuthContext";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { AccessibilityButton } from "@/components/AccessibilityButton";
+import { AccessibilityButton } from "@/components/accessibilityButton";
 import { VLibrasScript } from "@/components/VLibrasScript";
 
 const inter = Inter({ subsets: ["latin"] });
