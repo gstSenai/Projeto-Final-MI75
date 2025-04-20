@@ -26,6 +26,7 @@ interface ImovelDetalhes {
   tipo_transacao: string
   area_construida: number
   area_terreno: number
+  id_corretor: number
   id_endereco: {
     rua: string
     numero: string
@@ -47,6 +48,14 @@ interface ImovelDetalhes {
   }[]
 }
 
+interface Corretor {
+  id: number
+  username: string
+  email: string
+  telefone: string
+  cpf: string
+}
+
 interface DetalhesImovelProps {
   imovelId: number;
 }
@@ -59,11 +68,12 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
   const [error, setError] = useState<string | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
+  const [corretor, setCorretor] = useState<Corretor | null>(null)
 
   const getImovelDetalhes = async () => {
     try {
       if (typeof window === 'undefined') return;
-      
+
       const token = localStorage.getItem("token");
       if (!token) {
         router.push('/login');
@@ -88,6 +98,10 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
 
       const data = await response.json();
       setImovel(data);
+      
+      if (data.id_usuario && data.id_usuario.id) {
+        getCorretor(data.id_usuario.id);
+      }
     } catch (error) {
       console.error("Erro ao buscar detalhes do imóvel:", error);
       setError("Erro ao carregar detalhes do imóvel. Por favor, tente novamente.");
@@ -96,6 +110,32 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
       setLoading(false);
     }
   };
+
+  const getCorretor = async (corretorId: number) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
+      const response = await fetch(`http://localhost:9090/usuario/getById/${corretorId}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao buscar informações do corretor');
+      }
+
+      const data = await response.json();
+      setCorretor(data);
+    } catch (error) {
+      console.error("Erro ao buscar informações do corretor:", error);
+    }
+  }
 
   useEffect(() => {
     if (!imovelId) {
@@ -317,38 +357,30 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
               {imovel.id_endereco.rua}, {imovel.id_endereco.numero} - {imovel.id_endereco.bairro}, {imovel.id_endereco.cidade} - {imovel.id_endereco.estado}, CEP: {imovel.id_endereco.cep}
             </p>
           </div>
-          <div className="flex max-md:flex-col gap-6">
+          <div className="flex max-md:flex-col gap-6 items-center">
             <div className="w-3/5 max-md:w-full">
               <div className="h-[400px] rounded-lg overflow-hidden shadow-lg">
                 <MapImovelById markersId={imovelId} />
               </div>
             </div>
             <div className="w-2/5 max-md:w-full">
-              <div className="bg-white rounded-lg shadow-lg p-10">
-                <h4 className="text-xl font-bold mb-4">Corretor Responsável</h4>
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 rounded-full bg-[#702632] flex items-center justify-center">
-                    <span className="text-white text-2xl font-bold">JV</span>
+                <div className="bg-white rounded-lg shadow-lg p-10">
+                  <h4 className="text-xl font-bold mb-1">Corretor Responsável</h4>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div>
+                      <p className="text-xl font-medium">{corretor?.username}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xl font-bold">Jessica Vieira</p>
-                    <p className="text-gray-600">CRECI: 123456-SP</p>
+                  <div className="space-y-2">
+                    <div>
+                      <p className="font-bold mb-1">Email:</p>
+                      <p className="text-gray-600">{corretor?.email}</p>
+                    </div>
                   </div>
+                  <button className="w-full mt-6 bg-vermelho text-white py-3 rounded font-bold hover:bg-opacity-90 transition-colors">
+                    Falar com Corretor
+                  </button>
                 </div>
-                <div className="space-y-2">
-                  <div>
-                    <p className="font-bold mb-1">Email:</p>
-                    <p className="text-gray-600">jessica.vieira@gmail.com</p>
-                  </div>
-                  <div>
-                    <p className="font-bold mb-1">Telefone:</p>
-                    <p className="text-gray-600">(11) 98765-4321</p>
-                  </div>
-                </div>
-                <button className="w-full mt-6 bg-[#702632] text-white py-3 rounded font-bold hover:bg-opacity-90 transition-colors">
-                  Falar com Corretor
-                </button>
-              </div>
             </div>
           </div>
         </div>

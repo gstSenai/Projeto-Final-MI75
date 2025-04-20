@@ -120,13 +120,12 @@ export function Header() {
 
                     <div className="flex flex-row items-center font-medium">
                         <div className="flex flex-row items-center gap-4 max-md:hidden">
-                            <div className="flex flex-row items-center md:pl-2 lg:pl-12">
+                            <div className="flex flex-row items-center md:pl-2 lg:pl-12 cursor-pointer" onClick={() => router.push('/chatOnline')} >
                                 <Image 
                                     src="/imagensHeader/token_chat.png" 
                                     alt="Tema" 
                                     width={30} 
                                     height={20} 
-                                    onClick={() => {}} 
                                 />
                             </div>
                         </div>
