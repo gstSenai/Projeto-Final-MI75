@@ -19,6 +19,8 @@ interface FormularioInputProps<T extends FieldValues = FieldValues> {
   disabled?: boolean
 }
 
+
+
 export function FormularioInput<T extends FieldValues = FieldValues>({
   placeholder,
   interName,
