@@ -13,6 +13,18 @@ const montserrat = Montserrat({
   display: "swap",
 })
 
+interface ImovelProps {
+  id: number
+  titulo: string
+  descricao: string
+  preco: number 
+  tipoImovel: string
+  tipoTransacao: string
+  endereco: string
+  caracteristicas: string
+  imagens: string[]
+}
+
 interface ImovelCompleto {
   id: number
   nome_propriedade: string
@@ -33,9 +45,9 @@ interface Imovel {
   id: number
   titulo: string
   cidade: string
-  qtdDormitorios: number
-  qtdSuite: number
-  qtdBanheiros: number
+  numero_quartos: number
+  numero_suites: number
+  numero_banheiros: number
   preco: number
   codigo: number
   imagemNome?: string
@@ -85,15 +97,15 @@ export function ListaImoveis() {
       const data = await response.json();
       
       const imoveisFormatados = data.content.map((imovel: any) => ({
-        id: imovel.id,
-        titulo: imovel.titulo,
-        descricao: imovel.descricao,
-        preco: imovel.preco,
-        tipoImovel: imovel.tipoImovel,
-        tipoTransacao: imovel.tipoTransacao,
-        endereco: imovel.endereco,
-        caracteristicas: imovel.caracteristicas,
-        imagens: imovel.imagens,
+        id: imovel.id || 0,
+        titulo: imovel.nome_propriedade || "Sem título",
+        cidade: imovel.id_endereco?.cidade || "Cidade não informada",
+        numero_quartos: imovel.id_caracteristicasImovel?.numero_quartos || 0,
+        numero_suites: imovel.id_caracteristicasImovel?.numero_suites || 0,
+        numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
+        preco: imovel.valor_venda || 0,
+        codigo: imovel.codigo || 0,
+        tipo_transacao: imovel.tipo_transacao || "Indefinido"
       }));
 
       setImoveis(imoveisFormatados);
@@ -158,9 +170,9 @@ export function ListaImoveis() {
         id: imovel.id || 0,
         titulo: imovel.nome_propriedade || "Sem título",
         cidade: imovel.id_endereco?.cidade || "Cidade não informada",
-        qtdDormitorios: imovel.id_caracteristicasImovel?.numero_quartos || 0,
-        qtdSuite: imovel.id_caracteristicasImovel?.numero_suites || 0,
-        qtdBanheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
+        numero_quartos: imovel.id_caracteristicasImovel?.numero_quartos || 0,
+        numero_suites: imovel.id_caracteristicasImovel?.numero_suites || 0,
+        numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
         preco: imovel.valor_venda || 0,
         codigo: imovel.codigo || 0,
         tipo_transacao: imovel.tipo_transacao || "Indefinido",
@@ -196,6 +208,7 @@ export function ListaImoveis() {
   useEffect(() => {
     if (imoveis.length > 0) {
       fetchImoveis(0);
+      console.log(imoveis);
     }
   }, [tipoTransacao]);
 
@@ -226,9 +239,9 @@ export function ListaImoveis() {
       id: imovel.id || 0,
       titulo: imovel.nome_propriedade || "Sem título",
       cidade: imovel.id_endereco?.cidade || "Cidade não informada",
-      qtdDormitorios: imovel.id_caracteristicasImovel?.numero_quartos || 0,
-      qtdSuite: imovel.id_caracteristicasImovel?.numero_suites || 0,
-      qtdBanheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
+      numero_quartos: imovel.id_caracteristicasImovel?.numero_quartos || 0,
+      numero_suites: imovel.id_caracteristicasImovel?.numero_suites || 0,
+      numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
       preco: imovel.valor_venda || 0,
       codigo: imovel.codigo || 0,
       tipo_transacao: imovel.tipo_transacao || "Indefinido"
@@ -296,18 +309,18 @@ export function ListaImoveis() {
         ) : (
           <>
             <div className="flex flex-wrap justify-center items-start gap-6 mt-6">
-              {imoveisFiltrados.length > 0 && imovelId ? (
+              {imoveisFiltrados.length > 0 ? (
                 imoveisFiltrados.map((imovel) => (
                   <Card
                     key={imovel.id}
                     titulo={imovel.titulo}
                     cidade={imovel.cidade}
-                    qtdDormitorios={imovel.qtdDormitorios}
-                    qtdSuite={imovel.qtdSuite}
-                    qtdBanheiros={imovel.qtdBanheiros}
+                    numero_quartos={imovel.numero_quartos}
+                    numero_suites={imovel.numero_suites}
+                    numero_banheiros={imovel.numero_banheiros}
                     preco={imovel.preco}
                     codigo={imovel.codigo}
-                    imovelId={imovelId}
+                    imovelId={imovel.id}
                   />
                 ))
               ) : (

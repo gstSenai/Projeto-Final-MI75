@@ -9,7 +9,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import { MapImovelById } from "@/components/map/mapImovelById"
 
 // Configurar a chave de acesso do Mapbox
-mapboxgl.accessToken = 'pk.eyJ1IjoibHVhbmFuaWNoZWxhdHRpIiwiYSI6ImNtOWFqcDY3ZDA2eTkyaXE0b3Z4eW40eDUifQ.gYlUt6PtfGgkap3L2KEiow'
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 
 const montserrat = Montserrat({
   subsets: ["latin"],

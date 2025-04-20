@@ -46,7 +46,7 @@ export function Header() {
         if (userRole === 'Administrador') {
             router.push('/paginaAdministrador');
         } else if (userRole === 'Corretor') {
-            router.push('/paginaCorretores');
+            router.push('/paginaCorretor');
         } else if (userRole === 'Proprietario') {
             router.push('/paginaProprietarios');
         } else if (userRole === 'Editor') {
@@ -102,7 +102,7 @@ export function Header() {
                                     <li>
                                         <Link href={
                                             userRole === 'Administrador' ? '/paginaAdministrador' : 
-                                            userRole === 'Corretor' ? '/paginaCorretores' : 
+                                            userRole === 'Corretor' ? '/paginaCorretor' : 
                                             userRole === 'Proprietario' ? '/paginaProprietarios' : 
                                             userRole === 'Editor' ? '/paginaEditor' : 
                                             '/paginaInicial'
@@ -111,7 +111,7 @@ export function Header() {
                                         </Link>
                                     </li>
                                     <li><Link href="/paginaImoveis">{translate('imoveis')}</Link></li>
-                                    <li><Link href="/paginaCorretores">{translate('corretores')}</Link></li>
+                                    <li><Link href="/paginaCorretor">{translate('corretores')}</Link></li>
                                     <li><Link href="/sobreNos">{translate('sobre')}</Link></li>
                                 </ul>
                             </nav>

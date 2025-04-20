@@ -9,7 +9,7 @@ export default function RotaImovel() {
     useEffect(() => {
         const id = localStorage.getItem('id');
         if (id) {
-            router.push('/paginaImoveis/imovel');
+            router.push('/paginaImoveis/DetalhesImovel');
         } else {
             router.push('/');
         }

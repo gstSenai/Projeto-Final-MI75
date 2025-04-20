@@ -19,7 +19,9 @@ export default function Carousel({ type, children }: CarouselProps) {
   let isDragging = false;
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);  
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -36,26 +38,22 @@ export default function Carousel({ type, children }: CarouselProps) {
       return newIndex;
     });
 
-    // Reseta a animação após a transição
     setTimeout(() => {
       setIsAnimating(false);
     }, 500);
   }, [isAnimating, totalSlides]);
 
   useEffect(() => {
-    // Limpa o intervalo anterior se existir
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
 
-    // Configura um novo intervalo
     intervalRef.current = setInterval(() => {
       if (!isAnimating && !isDragging) {
-        handleSlideChange(1); // Avança para o próximo slide
+        handleSlideChange(1);
       }
-    }, 5000); // 5 segundos
+    }, 5000);
 
-    // Limpa o intervalo ao desmontar
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -63,13 +61,9 @@ export default function Carousel({ type, children }: CarouselProps) {
     };
   }, [currentSlide, totalSlides, isAnimating, isDragging, handleSlideChange]);
 
-  const prevSlide = () => handleSlideChange(-1);
-  const nextSlide = () => handleSlideChange(1);
-
   const handleTouchStart = (e: React.TouchEvent) => {
     startX = e.touches[0].clientX;
     isDragging = true;
-    // Pausa o intervalo durante o arrasto
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
@@ -79,17 +73,16 @@ export default function Carousel({ type, children }: CarouselProps) {
     if (!isDragging || isAnimating) return;
     const deltaX = e.touches[0].clientX - startX;
     if (deltaX > 50) {
-      prevSlide();
+      handleSlideChange(-1);
       isDragging = false;
     } else if (deltaX < -50) {
-      nextSlide();
+      handleSlideChange(1);
       isDragging = false;
     }
   };
 
   const handleTouchEnd = () => {
     isDragging = false;
-    // Reinicia o intervalo após o arrasto
     intervalRef.current = setInterval(() => {
       if (!isAnimating) {
         handleSlideChange(1);
@@ -105,8 +98,9 @@ export default function Carousel({ type, children }: CarouselProps) {
     slides.push(
       <div
         key="prev"
-        className={`w-full md:w-1/3 flex-shrink-0 px-3 transition-all duration-500 ease-in-out ${isAnimating ? 'opacity-30 scale-90' : 'opacity-50 scale-90'
-          }`}
+        className={`w-full sm:w-1/2 md:w-1/6 flex-shrink-0 px-2 sm:px-3 transition-all duration-500 ease-in-out ${
+          isAnimating ? 'opacity-30 scale-90' : 'opacity-50 scale-90'
+        }`}
       >
         {childrenArray[prev]}
       </div>
@@ -115,8 +109,9 @@ export default function Carousel({ type, children }: CarouselProps) {
     slides.push(
       <div
         key="current"
-        className={`w-full md:w-1/3 flex-shrink-0 px-3 z-10 transition-all duration-500 ease-in-out ${isAnimating ? 'opacity-70 scale-95' : 'opacity-100 scale-100'
-          }`}
+        className={`w-full sm:w-1/2 md:w-1/6 flex-shrink-0 px-2 sm:px-3 z-10 transition-all duration-500 ease-in-out ${
+          isAnimating ? 'opacity-70 scale-95' : 'opacity-100 scale-100'
+        }`}
       >
         {childrenArray[currentSlide]}
       </div>
@@ -125,8 +120,9 @@ export default function Carousel({ type, children }: CarouselProps) {
     slides.push(
       <div
         key="next"
-        className={`w-full md:w-1/3 flex-shrink-0 px-3 transition-all duration-500 ease-in-out ${isAnimating ? 'opacity-30 scale-90' : 'opacity-50 scale-90'
-          }`}
+        className={`w-full sm:w-1/2 md:w-1/6 flex-shrink-0 px-2 sm:px-3 transition-all duration-500 ease-in-out ${
+          isAnimating ? 'opacity-30 scale-90' : 'opacity-50 scale-90'
+        }`}
       >
         {childrenArray[next]}
       </div>
@@ -134,24 +130,6 @@ export default function Carousel({ type, children }: CarouselProps) {
 
     return slides;
   };
-
-  // Define o número de itens por visualização com base no tamanho da tela
-  const getItemsPerView = () => {
-    return isMobile ? 1 : 4; // 1 item no mobile, 4 no desktop
-  };
-
-  const itemsPerView = getItemsPerView();
-
-  const normalPrevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? totalSlides - itemsPerView : prev - 1));
-  };
-
-  const normalNextSlide = () => {
-    setCurrentSlide((prev) => (prev >= totalSlides - itemsPerView ? 0 : prev + 1));
-  };
-
-
-
 
   if (type === "ajusteTriplo") {
     return (
@@ -163,11 +141,12 @@ export default function Carousel({ type, children }: CarouselProps) {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center w-full">
             {isMobile ? (
               <div
-                className={`w-full px-4 transition-opacity duration-500 ${isAnimating ? 'opacity-70' : 'opacity-100'
-                  }`}
+                className={`w-full px-4 transition-opacity duration-500 ${
+                  isAnimating ? 'opacity-70' : 'opacity-100'
+                }`}
               >
                 {childrenArray[currentSlide]}
               </div>
@@ -177,24 +156,24 @@ export default function Carousel({ type, children }: CarouselProps) {
           </div>
 
           <button
-            onClick={prevSlide}
+            onClick={() => handleSlideChange(-1)}
             disabled={isAnimating}
-            className="absolute left-2 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg text-sm invisible lg:visible hover:scale-110 transition-transform"
+            className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg hover:scale-110 transition-transform duration-300 hidden sm:block"
             aria-label="Previous slide"
           >
             <ChevronLeft size={24} />
           </button>
           <button
-            onClick={nextSlide}
+            onClick={() => handleSlideChange(1)}
             disabled={isAnimating}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg text-sm invisible lg:visible hover:scale-110 transition-transform"
+            className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg hover:scale-110 transition-transform duration-300 hidden sm:block"
             aria-label="Next slide"
           >
             <ChevronRight size={24} />
           </button>
         </div>
 
-        <div className="flex justify-center mt-16 gap-8">
+        <div className="flex justify-center mt-8 gap-4">
           {childrenArray.map((_, index) => (
             <button
               key={index}
@@ -203,10 +182,11 @@ export default function Carousel({ type, children }: CarouselProps) {
                   handleSlideChange(index - currentSlide);
                 }
               }}
-              className={`h-1 rounded-full transition-all duration-300 ${index === currentSlide
-                  ? "w-12 md:w-12 lg:w-24 bg-vermelho"
-                  : "w-12 md:w-12 lg:w-24 bg-white hover:bg-gray-300"
-                }`}
+              className={`h-1 rounded-full transition-all duration-300 ${
+                index === currentSlide
+                  ? "w-8 sm:w-12 bg-vermelho"
+                  : "w-8 sm:w-12 bg-white hover:bg-gray-300"
+              }`}
             />
           ))}
         </div>
@@ -214,37 +194,29 @@ export default function Carousel({ type, children }: CarouselProps) {
     );
   }
 
-  
-
-
-  if (type = "ajusteNormal") {
+  if (type === "ajusteNormal") {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [isMobile, setIsMobile] = useState(false); // Estado para armazenar se é mobile
-    const childrenArray = Children.toArray(children); // Transforma children em um array
+    const [isMobile, setIsMobile] = useState(false);
+    const childrenArray = Children.toArray(children);
     const totalSlides = childrenArray.length;
     const carouselRef = useRef<HTMLDivElement>(null);
     let startX = 0;
     let isDragging = false;
 
-    // Efeito para verificar o tamanho da tela apenas no lado do cliente
     useEffect(() => {
       const handleResize = () => {
         setIsMobile(window.innerWidth < 768);
       };
-
-      // Verifica o tamanho da tela ao montar o componente
       handleResize();
-
-      // Adiciona um listener para redimensionamento da tela
       window.addEventListener("resize", handleResize);
-
-      // Remove o listener ao desmontar o componente
       return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    // Define o número de itens por visualização com base no tamanho da tela
     const getItemsPerView = () => {
-      return isMobile ? 1 : 4; // 1 item no mobile, 4 no desktop
+      if (window.innerWidth < 640) return 1;
+      if (window.innerWidth < 768) return 2;
+      if (window.innerWidth < 1024) return 3;
+      return 4;
     };
 
     const itemsPerView = getItemsPerView();
@@ -280,7 +252,7 @@ export default function Carousel({ type, children }: CarouselProps) {
 
     return (
       <div
-        className="relative w-full mx-auto mt-16 mb-32 overflow-hidden p-6"
+        className="relative w-full mx-auto mt-16 mb-32 overflow-hidden p-4 sm:p-6"
         ref={carouselRef}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -293,7 +265,15 @@ export default function Carousel({ type, children }: CarouselProps) {
           {childrenArray.map((child, index) => (
             <div
               key={index}
-              className={`${isMobile ? "w-full" : "w-1/4"} flex-shrink-0 px-3`}
+              className={`${
+                isMobile 
+                  ? "w-full" 
+                  : window.innerWidth < 768 
+                    ? "w-1/2" 
+                    : window.innerWidth < 1024 
+                      ? "w-1/3" 
+                      : "w-1/4"
+              } flex-shrink-0 px-2 sm:px-3`}
             >
               {child}
             </div>
@@ -301,23 +281,19 @@ export default function Carousel({ type, children }: CarouselProps) {
         </div>
         <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg text-sm invisible md:invisible lg:visible"
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg hover:scale-110 transition-transform duration-300 hidden sm:block"
         >
           <ChevronLeft size={24} />
         </button>
         <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg text-sm invisible md:invisible lg:visible"
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-gray-800 rounded-full shadow-lg hover:scale-110 transition-transform duration-300 hidden sm:block"
         >
           <ChevronRight size={24} />
         </button>
       </div>
-
     );
   }
 
-
-
-
-
+  return null;
 }

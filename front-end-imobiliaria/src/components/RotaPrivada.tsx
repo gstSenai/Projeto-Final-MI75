@@ -1,3 +1,6 @@
+'use client';
+
+import { LoadingWrapper } from './loading/loadingServer';
 import { ReactNode } from 'react';
 import { Montserrat } from 'next/font/google';
 import Image from 'next/image';
@@ -17,7 +20,7 @@ export default function RotaPrivada({ children, userAutorizado }: RotaPrivadaPro
   const tipoConta = localStorage.getItem('tipo_conta');
 
   if (tipoConta && userAutorizado.includes(tipoConta)) {
-    return <>{children}</>;
+    return <LoadingWrapper>{children}</LoadingWrapper>;
   }
 
   return (

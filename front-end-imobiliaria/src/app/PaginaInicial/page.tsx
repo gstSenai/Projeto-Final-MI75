@@ -2,10 +2,10 @@
 import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
 import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
-import { PesquisaPaginaInicial } from '@/components/PaginaInicial/PesquisaPaginaInicial';
+import { PesquisaPaginaInicial } from '@/components/paginaInicial/pesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
-import Carrossel from '@/components/PaginaInicial/carrossel';
-import BotaoImagemTexto from '@/components/PaginaInicial/botaoImageTexto'
+import Carrossel from '@/components/paginaInicial/carrossel';
+import BotaoImagemTexto from '@/components/paginaInicial/botaoImageTexto'
 import { useLanguage } from '@/components/context/LanguageContext';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
@@ -28,7 +28,7 @@ export default function PaginaInicial() {
             <Header />
 
             <div className={`${montserrat.className} pt-8`}>
-                <main className='max-lg:px-4 px-20'>
+                <main className='max-lg:px-2 px-20'>
                     <div className="relative flex h-[881px] xl:h-[700px] w-full rounded-[20px] mx-auto overflow-hidden pb-24 lg:pt-14 lg:pb-52">
                         <Image
                             className='' src="/paginaInicial/fotosDamainEfotter/PaginaCasaPaginaInicial.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100}
@@ -44,7 +44,7 @@ export default function PaginaInicial() {
                         </div>
                     </div>
                 </main>
-                <div className="relative flex justify-center xl:-ml-[700px] mt-[5rem] lg:-mt-[10rem] z-10">
+                <div className="relative flex justify-center lg:-ml-[500px] xl:-ml-[700px] -mt-[10rem] max-sm:px-10 lg:-mt-[10rem] z-10">
                     <PesquisaPaginaInicial />
                 </div>
                 <section className='px-4 sm:px-8 md:px-10 lg:px-14 xl:px-16'>
@@ -80,11 +80,11 @@ export default function PaginaInicial() {
                                 <p className='flex justify-center text-center text-xl lg:text-3xl xl:text-2xl font-medium p-3 opacity-75'>{translate('propriedades_localizacao')}</p>
                             </div>
                         </div>
-                        <div className='flex flex-col lg:flex-row justify-center pt-36 xl:pt-16 pb-12'>
+                        <div className='flex flex-col lg:flex-row justify-center pt-4 xl:pt-16 pb-12'>
                             <Carrossel type='ajusteTriplo'>
-                                <Card titulo="Casa com 3 quartos" cidade="Jaraguá Do Sul" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={6545644} codigo={455445} />
-                                <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={3443423} codigo={2331212} />
-                                <Card titulo="Casa com 3 quartos" cidade="Corupa" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={2121321} codigo={3323} />
+                                <Card titulo="Casa com 3 quartos" cidade="Jaraguá Do Sul" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={6545644} codigo={455445} />
+                                <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={3443423} codigo={2331212} />
+                                <Card titulo="Casa com 3 quartos" cidade="Corupa" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={2121321} codigo={3323} />
                             </Carrossel>
                         </div>
                     </section>
@@ -95,10 +95,10 @@ export default function PaginaInicial() {
                                 <p className='flex justify-center text-center text-xl lg:text-3xl xl:text-2xl font-medium p-3 opacity-75'>{translate('propriedades_localizacao')}</p>
                             </div>
                         </div>
-                        <div className='flex flex-col lg:flex-row justify-evenly pt-36 xl:pt-24 pb-12'>
-                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo={12131} />
-                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo={12131} />
-                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo={12131} />
+                        <div className='flex flex-col lg:flex-row justify-center gap-10 pt-4 xl:pt-24 pb-12'>
+                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
+                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
+                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
                         </div>
                     </section>
                     <section>
@@ -108,10 +108,10 @@ export default function PaginaInicial() {
                                 <p className='flex justify-center text-center text-xl lg:text-3xl xl:text-2xl font-medium p-3 opacity-75'>{translate('propriedades_localizacao')}</p>
                             </div>
                         </div>
-                        <div className='flex flex-col lg:flex-row justify-evenly pt-36 xl:pt-24 pb-12'>
-                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo={12131} />
-                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo={12131} />
-                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo={12131} />
+                        <div className='flex flex-col lg:flex-row justify-center gap-10 pt-4 xl:pt-24 pb-12'>
+                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
+                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
+                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
                         </div>
                     </section>
                 </section>
@@ -135,9 +135,9 @@ export default function PaginaInicial() {
                     </Carrossel>
                 </section>
                 <footer className='bg-[#6d2431]'>
-                    <div className="relative flex h-[400px] sm:h-[400px] md:h-[400px] lg:h-[300px] xl:h-[300px] w-full mx-auto overflow-hidden pb-44 pt-0 lg:pt-14 lg:pb-44">
+                    <div className="relative flex h-[600px] md:h-[400px] lg:h-[300px] xl:h-[300px] w-full mx-auto overflow-hidden pb-44 pt-0 lg:pt-14 lg:pb-44">
                         <Image src="/paginaInicial/fotosDamainEfotter/PreFotterInicial.png" alt="Fundo Vermelho" layout="fill" objectFit="cover" quality={100} className="absolute top-[-50px] lg:top-[-30px]" />
-                        <div className="relative inset-0 flex flex-col lg:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around self-center 2xl:items-start text-white p-8 mx-auto gap-10 lg:gap-20 xl:gap-32">
+                        <div className="relative inset-0 flex flex-col md:flex-row 2xl:flex-row items-center justify-center sm:items-center sm:justify-center md:justify-around self-center 2xl:items-start text-white p-8 mx-auto gap-10 lg:gap-20 xl:gap-32">
                             <div className='flex text-center items-center gap-7'>
                                 <Image
                                     src="/paginaInicial/inconeImoveisACV/imoveisCadastros.png"
@@ -145,7 +145,6 @@ export default function PaginaInicial() {
                                     width={70} height={74} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisDisponiveis />
-                                    <p>Imóveis Cadastrados</p>
                                 </div>
                             </div>
 
@@ -155,7 +154,6 @@ export default function PaginaInicial() {
                                     width={70} height={74} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisVendidos />
-                                    <p>Imóveis Vendidos</p>
                                 </div>
                             </div>
 
@@ -165,8 +163,6 @@ export default function PaginaInicial() {
                                     width={70} height={74} quality={100} />
                                 <div className='flex flex-col text-start'>
                                     <ImoveisAlugados />
-                                    <p>Imóveis Alugados</p>
-
                                 </div>
                             </div>
                         </div>

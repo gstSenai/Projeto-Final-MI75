@@ -47,7 +47,6 @@ const equipe = [
 export default function Equipe() {
   return (
     <LoadingWrapper>
-      <RotaPrivada userAutorizado={['Administrador', 'Corretor']} >
         <Header />
 
         <div className={`bg-[#DFDAD0] p-8 rounded-lg shadow-lg text-center ${montserrat.className}`}>
@@ -59,13 +58,14 @@ export default function Equipe() {
             </h2>
 
 
-            <div className="relative w-[100%] h-[20%] mb-4 mx-auto">
+            <div className="flex justify-center items-center">
               <Image
                 src="/iconsPaginaCorretores/corretores.png"
                 alt="Equipe de corretores"
-                className="rounded-lg"
-                width={100}
-                height={100}
+                className="rounded-lg w-[40rem] h-full"
+                width={1920}
+                height={1080}
+                quality={100}
               />
             </div>
           </div>
@@ -111,7 +111,6 @@ export default function Equipe() {
         </div>
 
         <Footer />
-      </RotaPrivada>
     </LoadingWrapper>
   );
 }
