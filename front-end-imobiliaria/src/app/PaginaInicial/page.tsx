@@ -4,12 +4,12 @@ import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados
 import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
 import { PesquisaPaginaInicial } from '@/components/paginaInicial/pesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
-import Carrossel from '@/components/paginaInicial/carrossel';
-import BotaoImagemTexto from '@/components/paginaInicial/botaoImageTexto'
+import Carrossel from '@/components/paginaInicial/carrossel/index';
+import BotaoImagemTexto from '@/components/paginaInicial/BotaoImageTexto';
 import { useLanguage } from '@/components/context/LanguageContext';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { Card } from '@/components/cardImovel';
+import { Card } from '@/components/cardImovel/index';
 import Image from 'next/image';
 import { LoadingWrapper } from '@/components/loading/loadingServer';
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';

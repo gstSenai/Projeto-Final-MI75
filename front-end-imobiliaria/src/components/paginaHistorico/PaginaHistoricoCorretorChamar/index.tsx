@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { CardHorario } from "../cardHorario/CardHorarioCorretor/index";
-import DayCarousel from "../../PaginaInicial/carrossel/dayCarousel/index"; // ajuste esse path se necessário
+import DayCarousel from "../../paginaInicial/carrossel/dayCarousel/index"; // ajuste esse path se necessário
 
 interface FormData {
   mes: string;

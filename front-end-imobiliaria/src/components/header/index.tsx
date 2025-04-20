@@ -54,7 +54,7 @@ export function Header() {
         } else if (userRole === 'Usuario') {
             router.push('/paginaInicial');
         } else {
-            router.push('/paginaInicial');
+            router.push('/');
         }
     };
 
