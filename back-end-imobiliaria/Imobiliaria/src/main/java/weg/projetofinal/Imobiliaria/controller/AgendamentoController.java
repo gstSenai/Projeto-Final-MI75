@@ -12,6 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 import weg.projetofinal.Imobiliaria.model.dto.agendamento.AgendamentoPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.dto.agendamento.AgendamentoGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Agendamento;
+import weg.projetofinal.Imobiliaria.model.entity.Imovel;
+import weg.projetofinal.Imobiliaria.model.entity.Usuario;
 import weg.projetofinal.Imobiliaria.model.mapper.AgendamentoMapper;
 import weg.projetofinal.Imobiliaria.service.AgendamentoService;
 
@@ -33,16 +35,37 @@ public class AgendamentoController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public AgendamentoGetResponseDTO create(@RequestBody @Valid AgendamentoPostRequestDTO agendamento) {
+    public AgendamentoGetResponseDTO create(@RequestBody @Valid AgendamentoPostRequestDTO agendamentoDTO) {
         try {
-            // Validação adicional
-            if (agendamento.data() == null || agendamento.horario() == null ||
-                    agendamento.id_Corretor() == null || agendamento.id_Imovel() == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dados incompletos");
+            // Validação básica
+            if (agendamentoDTO.data() == null || agendamentoDTO.horario() == null ||
+                    agendamentoDTO.id_Imovel() == null || agendamentoDTO.id_Corretor() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Todos os campos são obrigatórios");
             }
 
-            Agendamento agendamentoEntity = AgendamentoMapper.INSTANCE.agendamentoPostRequestDtoToAgendamento(agendamento);
-            Agendamento savedAgendamento = agendamentoService.save(agendamentoEntity);
+            // Cria entidade Agendamento
+            Agendamento agendamento = new Agendamento();
+            agendamento.setData(agendamentoDTO.data());
+            agendamento.setHorario(agendamentoDTO.horario());
+
+            // Cria objetos mínimos com apenas IDs
+            Imovel imovel = new Imovel();
+            imovel.setId(agendamentoDTO.id_Imovel().getId());
+
+            Usuario corretor = new Usuario();
+            corretor.setId(agendamentoDTO.id_Corretor().getId());
+
+            agendamento.setImovel(imovel);
+            agendamento.setCorretor(corretor);
+
+            // Se houver usuário (opcional)
+            if (agendamentoDTO.id_Usuario() != null) {
+                Usuario usuario = new Usuario();
+                usuario.setId(agendamentoDTO.id_Usuario().getId());
+                agendamento.setUsuario(usuario);
+            }
+
+            Agendamento savedAgendamento = agendamentoService.save(agendamento);
             return AgendamentoMapper.INSTANCE.agendamentoToAgendamentoGetResponseDTO(savedAgendamento);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro ao criar agendamento: " + e.getMessage());

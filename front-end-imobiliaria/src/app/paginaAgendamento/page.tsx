@@ -45,7 +45,11 @@ type AgendamentoFormData = z.infer<typeof AgendamentoSchema>
 
 interface PaginaAgendamentoProps {
   imovelId: number
+
+  
 }
+
+
 
 export default function PaginaAgendamento({ imovelId }: PaginaAgendamentoProps) {
   const router = useRouter()
@@ -106,58 +110,56 @@ export default function PaginaAgendamento({ imovelId }: PaginaAgendamentoProps) 
       verificarHorariosOcupados(dataSelecionada)
     }
   }, [dataSelecionada, verificarHorariosOcupados])
+
+
   const handleAgendarVisita = async (data: AgendamentoFormData) => {
-
-    const formattedTime = data.horario.padStart(5, '0');
-    const agendamentoData = {
-      corretor: data.corretor,
-      horario: formattedTime,
-      data: dataSelecionada,
-      imovel: { id: imovelId },
-    };
-    setIsLoading(true)
-    setError(null) // Clear previous errors
-
+    if (!dataSelecionada || !data.horario || !data.corretor.id) {
+      setError("Preencha todos os campos obrigatórios");
+      setIsLoading(false);
+      return;
+    }
+  
+    setIsLoading(true);
+    setError(null);
+  
     try {
-      // Validate data before sending
-      if (!data.corretor || !data.horario || !dataSelecionada) {
-        setError("Por favor, preencha todos os campos obrigatórios")
-        setIsLoading(false)
-        return
-      }
-
+      // Converter data de "17 Abril" para formato ISO (yyyy-MM-dd)
+      const [day, monthName] = dataSelecionada.split(' ');
+      const monthMap: Record<string, string> = {
+        'Janeiro': '01', 'Fevereiro': '02', 'Março': '03', 'Abril': '04',
+        'Maio': '05', 'Junho': '06', 'Julho': '07', 'Agosto': '08',
+        'Setembro': '09', 'Outubro': '10', 'Novembro': '11', 'Dezembro': '12'
+      };
+      const month = monthMap[monthName];
+      const year = new Date().getFullYear();
+      const formattedDate = `${year}-${month}-${day.padStart(2, '0')}`;
+  
+      // Criar payload no formato esperado pelo backend
       const agendamentoData = {
-        corretor: data.corretor,
-        horario: data.horario,
-        data: dataSelecionada,
-        imovel: { id: imovelId },
-      }
-
-      const response = await request("POST", "http://localhost:9090/agendamento/create", agendamentoData)
-
+        data: formattedDate,
+        horario: data.horario + ":00", // Adiciona segundos
+        id_Imovel: { id: imovelId },
+        id_Corretor: { id: data.corretor.id }
+      };
+  
+      const response = await request("POST", "http://localhost:9090/agendamento/create", agendamentoData);
+  
       if (response && response.id) {
-        setAgendamentoSucesso(true)
-        // Refresh available times after successful booking
-        verificarHorariosOcupados(dataSelecionada)
+        setAgendamentoSucesso(true);
+        verificarHorariosOcupados(dataSelecionada);
       } else {
-        setError("Erro ao processar o agendamento. Verifique os dados e tente novamente.")
+        setError("Erro ao processar o agendamento.");
       }
     } catch (error: any) {
-      console.error("Erro ao agendar visita:", error)
-
-      // More specific error messages based on error response
-      if (error.response && error.response.status === 409) {
-        setError("Este horário já está ocupado. Por favor, escolha outro horário.")
-      } else if (error.message && error.message.includes("Network Error")) {
-        setError("Erro de conexão. Verifique sua internet e tente novamente.")
-      } else {
-        setError("Não foi possível agendar a visita. Por favor, tente novamente mais tarde.")
-      }
+      console.error("Erro ao agendar visita:", error);
+      setError(error.response?.data?.message || "Não foi possível agendar a visita. Tente novamente.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
+
+  
   const getCorretores = useCallback(async () => {
     setIsLoading(true);
     try {

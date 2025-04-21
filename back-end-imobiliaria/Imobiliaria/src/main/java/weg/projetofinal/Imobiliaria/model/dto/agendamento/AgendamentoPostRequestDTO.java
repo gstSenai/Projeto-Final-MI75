@@ -15,4 +15,5 @@ public record AgendamentoPostRequestDTO(
         Imovel id_Imovel,
         Usuario id_Usuario,
         Usuario id_Corretor
-) {}
+) {
+}
