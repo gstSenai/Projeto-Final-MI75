@@ -24,7 +24,7 @@ export default function PaginaAgenda() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:8080/agendamento/getAll")
+    fetch("http://localhost:9090/agendamento/getAll")
       .then((res) => res.json())
       .then((data) => {
         const compromissosFormatados = data.map((item: any) => ({

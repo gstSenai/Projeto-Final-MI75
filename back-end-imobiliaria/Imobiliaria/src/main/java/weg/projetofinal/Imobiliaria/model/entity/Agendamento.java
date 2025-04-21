@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import weg.projetofinal.Imobiliaria.model.entity.enums.StatusAgendamento;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -25,6 +26,10 @@ public class Agendamento {
     @Column(nullable = false)
     private LocalTime horario;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'PENDENTE'")
+    private StatusAgendamento status = StatusAgendamento.PENDENTE;
+
     @ManyToOne
     private Usuario usuario;
 
@@ -34,4 +39,10 @@ public class Agendamento {
     @ManyToOne
     private Imovel imovel;
 
+    @PrePersist
+    public void prePersist() {
+        if (status == null) {
+            status = StatusAgendamento.PENDENTE;
+        }
+    }
 }

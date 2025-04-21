@@ -3,10 +3,10 @@ package weg.projetofinal.Imobiliaria.model.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-
 import weg.projetofinal.Imobiliaria.model.dto.agendamento.AgendamentoGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.agendamento.AgendamentoPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Agendamento;
+import weg.projetofinal.Imobiliaria.model.entity.enums.StatusAgendamento;
 
 @Mapper(componentModel = "spring")
 public interface AgendamentoMapper {
@@ -21,5 +21,6 @@ public interface AgendamentoMapper {
     @Mapping(source = "id_Imovel", target = "imovel")
     @Mapping(source = "id_Usuario", target = "usuario")
     @Mapping(source = "id_Corretor", target = "corretor")
-    Agendamento agendamentoPostRequestDtoToAgendamento(AgendamentoPostRequestDTO agendamentoPostRequestDTO);
+    @Mapping(target = "status", expression = "java(dto.status() != null ? dto.status() : weg.projetofinal.Imobiliaria.model.entity.enums.StatusAgendamento.PENDENTE)")
+    Agendamento agendamentoPostRequestDtoToAgendamento(AgendamentoPostRequestDTO dto);
 }
