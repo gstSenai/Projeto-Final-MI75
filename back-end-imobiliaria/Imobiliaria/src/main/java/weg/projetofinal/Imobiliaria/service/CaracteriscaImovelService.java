@@ -48,7 +48,7 @@ public class CaracteriscaImovelService {
         return repository.save(caracteristica);
     }
 
-    public List<CaracteristicaImovel> filtrarPorCaracteristicas(Integer numeroQuartos, Integer numeroBanheiros) {
+    public List<CaracteristicaImovel> filtrarPorCaracteristicas(Integer numeroQuartos, Integer numeroBanheiros, Integer  numerooVagas) {
         Specification<CaracteristicaImovel> spec = Specification.where(null);
 
         if (numeroQuartos != null) {
@@ -57,6 +57,10 @@ public class CaracteriscaImovelService {
 
         if (numeroBanheiros != null) {
             spec = spec.and(CaracteristicasImovelSpecification.hasNumero_Banheiros(numeroBanheiros));
+        }
+
+        if (numerooVagas != null) {
+            spec = spec.and(CaracteristicasImovelSpecification.hasNumero_Vagas(numerooVagas));
         }
 
         return repository.findAll(spec);

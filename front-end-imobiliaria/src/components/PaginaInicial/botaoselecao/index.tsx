@@ -3,11 +3,12 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 interface PlaceFilterProps {
-    texto: string;
     tipo: string;
+    texto: string;
+    onSelect?: (value: string) => void;
 }
 
-const PlaceFilter = ({ texto, tipo }: PlaceFilterProps) => {
+export default function PlaceFilter({ tipo, texto, onSelect }: PlaceFilterProps) {
     const [selected, setSelected] = useState<(number | string)[]>([]);
 
     const handleSelection = (value: number | string) => {
@@ -16,6 +17,7 @@ const PlaceFilter = ({ texto, tipo }: PlaceFilterProps) => {
         } else {
             setSelected([...selected, value]);
         }
+        onSelect?.(value.toString());
     };
 
     if (tipo === "NumLocal") {
@@ -75,6 +77,4 @@ const PlaceFilter = ({ texto, tipo }: PlaceFilterProps) => {
     }
 
     return null;
-};
-
-export default PlaceFilter;
+}

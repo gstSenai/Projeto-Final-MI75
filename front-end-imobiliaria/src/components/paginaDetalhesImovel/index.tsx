@@ -7,7 +7,7 @@ import { Bed, Bath, Ruler, Car } from "lucide-react"
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { MapImovelById } from "@/components/map/mapImovelById"
-
+import { Card } from "../cardImovel"
 // Configurar a chave de acesso do Mapbox
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 
@@ -383,7 +383,10 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
                     <p className="text-gray-600">{corretor?.email}</p>
                   </div>
                 </div>
-                <button className="w-full mt-6 bg-vermelho text-white py-3 rounded font-bold hover:bg-opacity-90 transition-colors">
+                <button className="w-full mt-6 bg-vermelho text-white py-3 rounded font-bold hover:bg-opacity-90 transition-colors" onClick={() => {
+                  localStorage.setItem('currentImovelId', imovel.id.toString());
+                  router.push(`/paginaAgendamento?imovelId=${imovel.id}`);
+                }}>
                   Falar com Corretor
                 </button>
               </div>
