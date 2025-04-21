@@ -15,8 +15,12 @@ import weg.projetofinal.Imobiliaria.model.entity.Imagem;
 import weg.projetofinal.Imobiliaria.service.ImagemService;
 import weg.projetofinal.Imobiliaria.model.mapper.ImagemMapper;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/imagens")
@@ -74,4 +78,20 @@ public class ImagemController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/download/imovel/{idImovel}/imagem/{index}")
+    public ResponseEntity<byte[]> downloadImagemPorIndice(@PathVariable Integer idImovel, @PathVariable int index) {
+        List<byte[]> imagens = imagemService.downloadImagensPorImovel(idImovel);
+
+        if (imagens.isEmpty() || index < 0 || index >= imagens.size()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(imagens.get(index));
+    }
+
+
+
 }

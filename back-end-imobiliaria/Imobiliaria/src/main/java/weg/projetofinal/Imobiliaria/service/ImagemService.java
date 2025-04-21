@@ -6,7 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import weg.projetofinal.Imobiliaria.model.entity.Imagem;
+import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.repository.ImagemRepository;
+import weg.projetofinal.Imobiliaria.repository.ImovelRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +18,14 @@ public class ImagemService {
 
     private final ImagemRepository repository;
     private final ImovelService imovelService;
+    private final ImovelRepository imovelRepository;
     private final S3Service s3Service;
 
     @Autowired
-    public ImagemService(ImagemRepository repository, ImovelService imovelService, S3Service s3Service) {
+    public ImagemService(ImagemRepository repository, ImovelService imovelService, ImovelRepository imovelRepository, S3Service s3Service) {
         this.repository = repository;
         this.imovelService = imovelService;
+        this.imovelRepository = imovelRepository;
         this.s3Service = s3Service;
     }
 
@@ -69,4 +73,21 @@ public class ImagemService {
     public byte[] downloadImagem(String nomeArquivo) {
         return s3Service.downloadFile(nomeArquivo);
     }
+
+    public List<byte[]> downloadImagensPorImovel(Integer idImovel) {
+        List<Imagem> imagens = repository.findByImovelId(idImovel);
+
+        List<byte[]> conteudos = new ArrayList<>();
+        for (Imagem imagem : imagens) {
+            byte[] arquivo = s3Service.downloadFile(imagem.getCaminho_foto());
+            conteudos.add(arquivo);
+        }
+
+        return conteudos;
+    }
+
+
+
+
+
 }
