@@ -8,12 +8,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record AgendamentoPostRequestDTO(
-        Integer id,
         LocalDate data,
         LocalTime horario,
-        StatusAgendamento status,
-        Imovel id_Imovel,
-        Usuario id_Usuario,
-        Usuario id_Corretor
-) {
-}
+        Integer idImovel,
+        Integer idUsuario,  // Opcional
+        Integer idCorretor
+) {}

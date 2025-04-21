@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,34 +40,32 @@ public class AgendamentoController {
         try {
             // Validação básica
             if (agendamentoDTO.data() == null || agendamentoDTO.horario() == null ||
-                    agendamentoDTO.id_Imovel() == null || agendamentoDTO.id_Corretor() == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Todos os campos são obrigatórios");
+                    agendamentoDTO.idImovel() == null || agendamentoDTO.idCorretor() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Campos obrigatórios faltando");
             }
 
-            // Cria entidade Agendamento
             Agendamento agendamento = new Agendamento();
             agendamento.setData(agendamentoDTO.data());
             agendamento.setHorario(agendamentoDTO.horario());
 
-            // Cria objetos mínimos com apenas IDs
+            // Cria objetos com apenas IDs
             Imovel imovel = new Imovel();
-            imovel.setId(agendamentoDTO.id_Imovel().getId());
+            imovel.setId(agendamentoDTO.idImovel());
+            agendamento.setImovel(imovel);
 
             Usuario corretor = new Usuario();
-            corretor.setId(agendamentoDTO.id_Corretor().getId());
-
-            agendamento.setImovel(imovel);
+            corretor.setId(agendamentoDTO.idCorretor());
             agendamento.setCorretor(corretor);
 
-            // Se houver usuário (opcional)
-            if (agendamentoDTO.id_Usuario() != null) {
+            // Usuário opcional
+            if (agendamentoDTO.idUsuario() != null) {
                 Usuario usuario = new Usuario();
-                usuario.setId(agendamentoDTO.id_Usuario().getId());
+                usuario.setId(agendamentoDTO.idUsuario());
                 agendamento.setUsuario(usuario);
             }
 
             Agendamento savedAgendamento = agendamentoService.save(agendamento);
-            return AgendamentoMapper.INSTANCE.agendamentoToAgendamentoGetResponseDTO(savedAgendamento);
+            return agendamentoMapper.agendamentoToAgendamentoGetResponseDTO(savedAgendamento);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro ao criar agendamento: " + e.getMessage());
         }
@@ -76,30 +75,14 @@ public class AgendamentoController {
     @GetMapping("/imovel/{idImovel}/data/{data}")
     public List<AgendamentoGetResponseDTO> getByImovelAndDate(
             @PathVariable Integer idImovel,
-            @PathVariable String data) {
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
 
-        try {
-            // Parse Portuguese month names
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM", new Locale("pt", "BR"));
-            LocalDate localDate = LocalDate.parse(data, formatter);
-
-            List<Agendamento> agendamentos = agendamentoService.findByImovelAndDate(idImovel, localDate);
-            return agendamentos.stream()
-                    .map(AgendamentoMapper.INSTANCE::agendamentoToAgendamentoGetResponseDTO)
-                    .collect(Collectors.toList());
-        } catch (DateTimeParseException e) {
-            // Fallback to ISO format if Portuguese format fails
-            try {
-                LocalDate localDate = LocalDate.parse(data);
-                List<Agendamento> agendamentos = agendamentoService.findByImovelAndDate(idImovel, localDate);
-                return agendamentos.stream()
-                        .map(AgendamentoMapper.INSTANCE::agendamentoToAgendamentoGetResponseDTO)
-                        .collect(Collectors.toList());
-            } catch (DateTimeParseException ex) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato de data inválido. Use o formato '17 Abril' ou '2025-04-17'");
-            }
-        }
+        List<Agendamento> agendamentos = agendamentoService.findByImovelAndDate(idImovel, data);
+        return agendamentos.stream()
+                .map(AgendamentoMapper.INSTANCE::agendamentoToAgendamentoGetResponseDTO)
+                .collect(Collectors.toList());
     }
+
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)

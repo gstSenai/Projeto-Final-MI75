@@ -79,13 +79,9 @@ export default function CustomCalendar({ locale = "pt-BR", className, onDateChan
   
     if (newDate >= new Date(new Date().setHours(0, 0, 0, 0))) {
       setSelectedDate(newDate);
-  
-      // 🔽 Formatação: "17 Janeiro"
-      const day = newDate.getDate();
-      const monthName = newDate.toLocaleString("pt-BR", { month: "long" });
-      const formatted = `${day} ${monthName.charAt(0).toUpperCase() + monthName.slice(1)}`;
-  
-      onDateChange?.(formatted);
+      
+      // Enviar no formato ISO (YYYY-MM-DD)
+      onDateChange?.(newDate.toISOString().split('T')[0]);
     }
   };
   

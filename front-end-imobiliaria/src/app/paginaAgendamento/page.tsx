@@ -112,52 +112,52 @@ export default function PaginaAgendamento({ imovelId }: PaginaAgendamentoProps) 
   }, [dataSelecionada, verificarHorariosOcupados])
 
 
-  const handleAgendarVisita = async (data: AgendamentoFormData) => {
-    if (!dataSelecionada || !data.horario || !data.corretor.id) {
-      setError("Preencha todos os campos obrigatórios");
-      setIsLoading(false);
-      return;
-    }
-  
-    setIsLoading(true);
-    setError(null);
-  
-    try {
-      // Converter data de "17 Abril" para formato ISO (yyyy-MM-dd)
-      const [day, monthName] = dataSelecionada.split(' ');
-      const monthMap: Record<string, string> = {
-        'Janeiro': '01', 'Fevereiro': '02', 'Março': '03', 'Abril': '04',
-        'Maio': '05', 'Junho': '06', 'Julho': '07', 'Agosto': '08',
-        'Setembro': '09', 'Outubro': '10', 'Novembro': '11', 'Dezembro': '12'
-      };
-      const month = monthMap[monthName];
-      const year = new Date().getFullYear();
-      const formattedDate = `${year}-${month}-${day.padStart(2, '0')}`;
-  
-      // Criar payload no formato esperado pelo backend
-      const agendamentoData = {
-        data: formattedDate,
-        horario: data.horario + ":00", // Adiciona segundos
-        id_Imovel: { id: imovelId },
-        id_Corretor: { id: data.corretor.id }
-      };
-  
-      const response = await request("POST", "http://localhost:9090/agendamento/create", agendamentoData);
-  
-      if (response && response.id) {
-        setAgendamentoSucesso(true);
-        verificarHorariosOcupados(dataSelecionada);
-      } else {
-        setError("Erro ao processar o agendamento.");
-      }
-    } catch (error: any) {
-      console.error("Erro ao agendar visita:", error);
-      setError(error.response?.data?.message || "Não foi possível agendar a visita. Tente novamente.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+ // Modifique a função handleAgendarVisita:
+const handleAgendarVisita = async (data: AgendamentoFormData) => {
+  if (!dataSelecionada || !data.horario || !data.corretor.id) {
+    setError("Preencha todos os campos obrigatórios");
+    setIsLoading(false);
+    return;
+  }
 
+  setIsLoading(true);
+  setError(null);
+
+  try {
+    // Converter data de "17 Abril" para formato ISO (yyyy-MM-dd)
+    const [day, monthName] = dataSelecionada.split(' ');
+    const monthMap: Record<string, string> = {
+      'Janeiro': '01', 'Fevereiro': '02', 'Março': '03', 'Abril': '04',
+      'Maio': '05', 'Junho': '06', 'Julho': '07', 'Agosto': '08',
+      'Setembro': '09', 'Outubro': '10', 'Novembro': '11', 'Dezembro': '12'
+    };
+    const month = monthMap[monthName];
+    const year = new Date().getFullYear();
+    const formattedDate = `${year}-${month}-${day.padStart(2, '0')}`;
+
+    // Criar payload no formato esperado pelo backend
+    const agendamentoData = {
+      data: formattedDate,
+      horario: data.horario + ":00", // Adiciona segundos
+      id_Imovel: { id: imovelId },
+      id_Corretor: { id: data.corretor.id }
+    };
+
+    const response = await request("POST", "http://localhost:9090/agendamento/create", agendamentoData);
+
+    if (response && response.id) {
+      setAgendamentoSucesso(true);
+      verificarHorariosOcupados(dataSelecionada);
+    } else {
+      setError("Erro ao processar o agendamento.");
+    }
+  } catch (error: any) {
+    console.error("Erro ao agendar visita:", error);
+    setError(error.response?.data?.message || "Não foi possível agendar a visita. Tente novamente.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   
   const getCorretores = useCallback(async () => {
