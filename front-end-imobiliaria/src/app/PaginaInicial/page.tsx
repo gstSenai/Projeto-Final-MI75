@@ -4,8 +4,8 @@ import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados
 import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
 import { PesquisaPaginaInicial } from '@/components/paginaInicial/pesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
-import Carrossel from '@/components/PaginaInicial/carrossel';
-import BotaoImagemTexto from '@/components/PaginaInicial/botaoImageTexto';
+import Carrossel from '@/components/paginaInicial/carrossel';
+import BotaoImagemTexto from '@/components/paginaInicial/botaoImageTexto';
 import { useLanguage } from '@/components/context/LanguageContext';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';

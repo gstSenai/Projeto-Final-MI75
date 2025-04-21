@@ -54,9 +54,9 @@ export default function PaginaImovel() {
                         <div className='bg-vermelho w-[110px] h-[3px]'></div>
                     </div>
                     <div className='flex flex-col lg:flex-row justify-evenly pt-12 xl:pt-12 pb-36'>
-                        <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo={12131} />
-                        <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo={12131} />
-                        <Card titulo="Casa com 3 quartos" cidade="São Paulo" qtdDormitorios={3} qtdSuite={1} qtdBanheiros={2} preco={750000} codigo={12131} />
+                        <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
+                        <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
+                        <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
                     </div>
                 </section>
             </div>
