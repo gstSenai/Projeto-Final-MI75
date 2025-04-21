@@ -16,4 +16,5 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
     Page<Agendamento> findByCorretorUsername(String username, Pageable pageable);
     List<Agendamento> findByCorretorUsernameAndData(String username, LocalDate data);
     List<Agendamento> findByUsuarioUsernameAndData(String username, LocalDate data);
+    List<Agendamento> findByImovelIdAndData(Integer imovelId, LocalDate data);
 }

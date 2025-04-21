@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
-import { Botao } from "@/components/botao"
+import { Botao } from "@/components/botao/index"
 import request from "@/routes/request"
 import { FormularioEditarInput } from "../editarImovel/formularioEditarInput"
 import { type SubmitHandler, useForm } from "react-hook-form"

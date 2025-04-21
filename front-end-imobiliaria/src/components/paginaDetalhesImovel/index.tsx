@@ -98,7 +98,7 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
 
       const data = await response.json();
       setImovel(data);
-      
+
       if (data.id_usuario && data.id_usuario.id) {
         getCorretor(data.id_usuario.id);
       }
@@ -340,8 +340,14 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
                 <p className="text-cinza-mediom text-[1rem]">{imovel.descricao}</p>
               </div>
 
-              <button className="w-full bg-vermelho text-white py-2 rounded-lg font-semibold hover:bg-vermelho-escuro transition-colors">
-                Agendar Visita
+              <button
+                className="w-full mt-6 bg-vermelho text-white py-3 rounded font-bold hover:bg-opacity-90 transition-colors"
+                onClick={() => {
+                  localStorage.setItem('currentImovelId', imovel.id.toString());
+                  router.push(`/paginaAgendamento?imovelId=${imovel.id}`);
+                }}
+              >
+                Falar com Corretor
               </button>
             </div>
           </div>
@@ -364,23 +370,23 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
               </div>
             </div>
             <div className="w-2/5 max-md:w-full">
-                <div className="bg-white rounded-lg shadow-lg p-10">
-                  <h4 className="text-xl font-bold mb-1">Corretor Responsável</h4>
-                  <div className="flex items-center gap-4 mb-4">
-                    <div>
-                      <p className="text-xl font-medium">{corretor?.username}</p>
-                    </div>
+              <div className="bg-white rounded-lg shadow-lg p-10">
+                <h4 className="text-xl font-bold mb-1">Corretor Responsável</h4>
+                <div className="flex items-center gap-4 mb-4">
+                  <div>
+                    <p className="text-xl font-medium">{corretor?.username}</p>
                   </div>
-                  <div className="space-y-2">
-                    <div>
-                      <p className="font-bold mb-1">Email:</p>
-                      <p className="text-gray-600">{corretor?.email}</p>
-                    </div>
-                  </div>
-                  <button className="w-full mt-6 bg-vermelho text-white py-3 rounded font-bold hover:bg-opacity-90 transition-colors">
-                    Falar com Corretor
-                  </button>
                 </div>
+                <div className="space-y-2">
+                  <div>
+                    <p className="font-bold mb-1">Email:</p>
+                    <p className="text-gray-600">{corretor?.email}</p>
+                  </div>
+                </div>
+                <button className="w-full mt-6 bg-vermelho text-white py-3 rounded font-bold hover:bg-opacity-90 transition-colors">
+                  Falar com Corretor
+                </button>
+              </div>
             </div>
           </div>
         </div>

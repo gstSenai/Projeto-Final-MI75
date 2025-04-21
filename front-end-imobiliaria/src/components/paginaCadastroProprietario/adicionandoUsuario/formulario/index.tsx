@@ -2,9 +2,8 @@
 import { useState, useEffect } from "react"
 import type React from "react"
 import { motion, AnimatePresence } from "framer-motion"
-
 import { DadosProprietarioSection } from "./dados-imovel-section"
-import { Botao } from "@/components/botao"
+import { Botao } from "@/components/botao/index"
 import request from "@/routes/request"
 import { FormularioImagem } from "./formularioImagem"
 import { useForm } from 'react-hook-form';

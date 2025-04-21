@@ -5,7 +5,7 @@ import { Montserrat } from 'next/font/google'
 import { RemoveImovel } from "../removerImovel"
 import { EditarImovel } from "../editarImovel"
 import Image from "next/image"
-import { Botao } from "@/components/botao"
+import { Botao } from "@/components/botao/index"
 import { FormularioInput } from "@/components/paginaCadastroUsuario/adicionandoUsuario/formulario/formularioInput"
 import { Formulario } from "../formulario"
 import { useForm } from 'react-hook-form'

@@ -13,6 +13,7 @@ import { Botao } from "@/components/botao/index"
 import request from "@/routes/request"
 import { z } from "zod"
 import { LoadingWrapper } from "@/components/loading/loadingServer"
+import { useRouter } from "next/navigation"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -31,7 +32,7 @@ interface AgendamentoResponse {
 }
 
 const AgendamentoSchema = z.object({
-  id_Corretor: z.object({
+  corretor: z.object({
     id: z.number(),
     nome: z.string(),
     sobrenome: z.string(),
@@ -42,84 +43,153 @@ const AgendamentoSchema = z.object({
 
 type AgendamentoFormData = z.infer<typeof AgendamentoSchema>
 
-export default function PaginaAgendamento() {
+interface PaginaAgendamentoProps {
+  imovelId: number
+}
+
+export default function PaginaAgendamento({ imovelId }: PaginaAgendamentoProps) {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
     watch,
     setValue,
     formState: { errors },
+    control,
   } = useForm<AgendamentoFormData>({
     resolver: zodResolver(AgendamentoSchema),
   })
 
   const [isLoading, setIsLoading] = useState(false)
   const [agendamentoSucesso, setAgendamentoSucesso] = useState(false)
-  const [imovelId] = useState(1)
   const [horariosOcupados, setHorariosOcupados] = useState<string[]>([])
-  const [usuarios, setUsuarios] = useState<UserProps[]>([])
+  const [corretores, setCorretores] = useState<UserProps[]>([])
   const [dataSelecionada, setDataSelecionada] = useState<string>("")
+  const [error, setError] = useState<string | null>(null)
 
-  const verificarHorariosOcupados = useCallback(async (data: string) => {
-    try {
-      const response = await request(
-        "GET",
-        `http://localhost:9090/agendamento/imovel/${imovelId}/data/${data}`
-      )
-      setHorariosOcupados((response as AgendamentoResponse[]).map((a) => a.horario))
-    } catch (error) {
-      console.error("Erro ao verificar horários ocupados:", error)
-    }
-  }, [imovelId])
+  const verificarHorariosOcupados = useCallback(
+    async (data: string) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const response = await request(
+                "GET", 
+                `http://localhost:9090/agendamento/imovel/${imovelId}/data/${data}`
+            );
+            
+            if (!response) {
+                throw new Error("Resposta vazia do servidor");
+            }
+            
+            if (Array.isArray(response)) {
+                const horariosOcupados = response.map((a: any) => a.horario);
+                setHorariosOcupados(horariosOcupados);
+                
+                if (horariosOcupados.length === 6) {
+                    setError("Todos os horários estão ocupados nesta data. Por favor, selecione outra data.");
+                }
+            } else {
+                throw new Error("Formato de resposta inesperado");
+            }
+        } catch (error: any) {
+            console.error("Erro ao verificar horários:", error);
+            setError(error.message || "Não foi possível carregar os horários. Tente novamente.");
+        } finally {
+            setIsLoading(false);
+        }
+    },
+    [imovelId]
+);
 
   useEffect(() => {
     if (dataSelecionada) {
       verificarHorariosOcupados(dataSelecionada)
     }
   }, [dataSelecionada, verificarHorariosOcupados])
-
   const handleAgendarVisita = async (data: AgendamentoFormData) => {
+
+    const formattedTime = data.horario.padStart(5, '0');
+    const agendamentoData = {
+      corretor: data.corretor,
+      horario: formattedTime,
+      data: dataSelecionada,
+      imovel: { id: imovelId },
+    };
     setIsLoading(true)
+    setError(null) // Clear previous errors
+
     try {
+      // Validate data before sending
+      if (!data.corretor || !data.horario || !dataSelecionada) {
+        setError("Por favor, preencha todos os campos obrigatórios")
+        setIsLoading(false)
+        return
+      }
+
       const agendamentoData = {
-        id_Corretor: data.id_Corretor,
+        corretor: data.corretor,
         horario: data.horario,
         data: dataSelecionada,
-        id_Imovel: imovelId
+        imovel: { id: imovelId },
       }
-      await request("POST", "http://localhost:9090/agendamento", agendamentoData)
-      setAgendamentoSucesso(true)
-      // Atualiza lista de horários ocupados
-      verificarHorariosOcupados(dataSelecionada)
-    } catch (error) {
+
+      const response = await request("POST", "http://localhost:9090/agendamento/create", agendamentoData)
+
+      if (response && response.id) {
+        setAgendamentoSucesso(true)
+        // Refresh available times after successful booking
+        verificarHorariosOcupados(dataSelecionada)
+      } else {
+        setError("Erro ao processar o agendamento. Verifique os dados e tente novamente.")
+      }
+    } catch (error: any) {
       console.error("Erro ao agendar visita:", error)
-      alert('Erro ao agendar visita. Horário pode já estar ocupado.')
+
+      // More specific error messages based on error response
+      if (error.response && error.response.status === 409) {
+        setError("Este horário já está ocupado. Por favor, escolha outro horário.")
+      } else if (error.message && error.message.includes("Network Error")) {
+        setError("Erro de conexão. Verifique sua internet e tente novamente.")
+      } else {
+        setError("Não foi possível agendar a visita. Por favor, tente novamente mais tarde.")
+      }
     } finally {
       setIsLoading(false)
     }
   }
 
-  const getUsuario = useCallback(async () => {
-    setIsLoading(true)
+  const getCorretores = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const response = await request("GET", "http://localhost:9090/usuario/corretores")
+      const response = await request("GET", "http://localhost:9090/usuario/corretores");
       if (Array.isArray(response)) {
-        setUsuarios(response)
+        setCorretores(
+          response.map((user: any) => ({
+            id: user.id,
+            nome: user.nome || user.username || "",
+            sobrenome: user.sobrenome || "",
+          })),
+        );
+      } else {
+        setError("Formato de resposta inesperado ao buscar corretores");
       }
     } catch (error) {
-      console.error("Erro ao buscar usuários:", error)
+      console.error("Erro ao buscar corretores:", error);
+      setError("Erro ao carregar lista de corretores. Tente recarregar a página.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    getUsuario()
-  }, [getUsuario])
+    getCorretores()
+  }, [getCorretores])
 
   const handleDateChange = (date: string) => {
-    setDataSelecionada(date)
-    setValue("data", date)
+    if (!isLoading) {
+      setDataSelecionada(date)
+      setValue("data", date)
+    }
   }
 
   return (
@@ -156,20 +226,23 @@ export default function PaginaAgendamento() {
                 <h2 className="center md:text-lg lg:text-xl xl:text-3xl 2xl:text-5xl font-bold text-center text-[#702632]">
                   Escolha a data, o horário e o corretor para agendar sua visita!
                 </h2>
-                <form onSubmit={handleSubmit(handleAgendarVisita)} className="flex flex-col items-center gap-8 mt-6 mx-8 lg:mx-10 xl:mx-16 2xl:mx-32">
+                <form
+                  onSubmit={handleSubmit(handleAgendarVisita)}
+                  className="flex flex-col items-center gap-8 mt-6 mx-8 lg:mx-10 xl:mx-16 2xl:mx-32"
+                >
                   <div className="w-full">
                     <FormularioInput
                       placeholder="Corretores:"
-                      name="id_Corretor"
+                      name="corretor"
                       interName="Corretor"
-                      register={register}
+                      control={control}
                       customizacaoClass="w-full p-2 border bg-white text-black border-gray-500 rounded"
                       required
-                      options={usuarios.map(user => `${user.nome} ${user.sobrenome}`)}
+                      options={corretores}
+                      optionLabel={(corretor) => `${corretor.nome} ${corretor.sobrenome}`}
+                      optionValue={(corretor) => corretor.id.toString()}
                     />
-                    {errors.id_Corretor && (
-                      <p className="text-red-500 text-sm mt-1">{'O corretor não foi achado'}</p>
-                    )}
+                    {errors.corretor && <p className="text-red-500 text-sm mt-1">Selecione um corretor</p>}
                   </div>
 
                   <div className="w-full">
@@ -181,21 +254,30 @@ export default function PaginaAgendamento() {
                       customizacaoClass="w-full p-2 bg-white text-black border border-gray-500 rounded"
                       required
                       disabled={!dataSelecionada}
-                      options={["8:00", "10:00", "12:00", "14:00", "16:00", "18:00"]
-                        .filter(horario => !horariosOcupados.includes(horario))}
+                      options={["8:00", "10:00", "12:00", "14:00", "16:00", "18:00"].filter(
+                        (horario) => !horariosOcupados.includes(horario),
+                      )}
                     />
-                    {errors.horario && (
-                      <p className="text-red-500 text-sm mt-1">{'O Horário não foi achado'}</p>
-                    )}
+                    {errors.horario && <p className="text-red-500 text-sm mt-1">Selecione um horário</p>}
+                    {dataSelecionada &&
+                      ["8:00", "10:00", "12:00", "14:00", "16:00", "18:00"].filter(
+                        (horario) => !horariosOcupados.includes(horario),
+                      ).length === 0 && (
+                        <p className="text-amber-600 text-sm mt-1">
+                          Não há horários disponíveis nesta data. Por favor, selecione outra data.
+                        </p>
+                      )}
                   </div>
 
                   <input type="hidden" {...register("data")} />
 
+                  {error && <div className="text-red-500 text-center mt-4">{error}</div>}
+
                   <Botao
-                    className="xl:w-[60%] 2xl:w-[50%] bg-vermelho"
-                    texto="Agendar visita"
+                    className="xl:w-[60%] 2xl:w-[50%] h-14 bg-vermelho"
+                    texto={isLoading ? "Processando..." : "Agendar visita"}
                     type="submit"
-                    disabled={agendamentoSucesso || isLoading}
+                    disabled={agendamentoSucesso || isLoading || !dataSelecionada}
                   />
 
                   {agendamentoSucesso && (

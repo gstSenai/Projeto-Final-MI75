@@ -23,7 +23,9 @@ public class AgendamentoService {
     }
 
 
-
+    public List<Agendamento> findByImovelAndDate(Integer idImovel, LocalDate data) {
+        return agendamentoRepository.findByImovelIdAndData(idImovel, data);
+    }
 
     public Agendamento procurarPorId(int id) {
         return agendamentoRepository.findById(id)

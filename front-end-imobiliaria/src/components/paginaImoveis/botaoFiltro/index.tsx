@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { Montserrat } from "next/font/google"
 import PlaceFilter from "@/components/paginaImoveis/botaoSelecaoFiltro"
-import { Botao } from "@/components/botao"
+import { Botao } from "@/components/botao/index"
 
 const montserrat = Montserrat({
     subsets: ["latin"],

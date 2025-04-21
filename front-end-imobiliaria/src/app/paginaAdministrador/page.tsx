@@ -9,7 +9,7 @@ const montserrat = Montserrat({
     display: 'swap',
 });
 
-import { Botao } from '@/components/botao';
+import { Botao } from '@/components/botao/index';
 import Image from 'next/image';
 import { Header } from '@/components/header';
 import { useRouter } from 'next/navigation';
@@ -23,10 +23,10 @@ export default function PaginaAdministrador() {
                 <Header />
 
                 <div className={`${montserrat.className} pt-3 pb-24 lg:pt-14 lg:pb-52`}>
-                    <main className="relative flex h-[500px] xl:h-[400px] w-full rounded-[20px] mx-auto overflow-hidden pb-24 lg:pt-14 lg:pb-52 w-11/12 shadow-lg transition-all duration-300 hover:shadow-xl">
+                    <main className="relative flex h-[500px] xl:h-[450px]  rounded-[20px] mx-auto overflow-hidden pb-24 lg:pt-14 lg:pb-52 w-11/12 shadow-lg transition-all duration-300 hover:shadow-xl">
                         <Image src="/imagensPaginaEditor-Adm/montanhaPaginaAdministrador.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100} className="transition-transform duration-700 hover:scale-105" />
 
-                        <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32 bg-gradient-to-r from-black/70 to-transparent">
+                        <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32 bg-gradient-to-r from-black/20 to-transparent">
                             <h1 className="text-xl lg:text-2xl text-center 2xl:text-start font-bold mb-4">Bem-vindo à Área do Administrador!</h1>
 
                             <div className="border-t-4 border-vermelho w-[265px] md:w-[405px] 2xl:w-[405px] my-6 transform transition-all duration-300 hover:w-[300px] md:hover:w-[450px]"></div>

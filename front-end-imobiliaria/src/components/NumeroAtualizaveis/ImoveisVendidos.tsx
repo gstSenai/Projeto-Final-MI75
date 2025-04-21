@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState, useCallback } from "react"
-import request from "@/routes/request"
+import { useEffect, useState, useCallback } from "react";
+import request from "@/routes/request";
 import { useLanguage } from '@/components/context/LanguageContext';
 
 interface ApiResponse {
@@ -14,12 +14,12 @@ export function ImoveisVendidos() {
 
     const fetchTotalImoveis = useCallback(async () => {
         try {
-            const response = await request("GET", "http://localhost:9090/imovel/getAll");
+            const response = await request("GET", "http://localhost:9090/imovel/getAll/vendidos");
             if (response && response.totalElements !== undefined) {
                 setTotalImoveis(response.totalElements);
             }
         } catch (error) {
-            console.error('Erro ao buscar total de imóveis:', error);
+            console.error('Erro ao buscar total de imóveis vendidos:', error);
         }
     }, []);
 

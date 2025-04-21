@@ -1,5 +1,6 @@
 package weg.projetofinal.Imobiliaria.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import weg.projetofinal.Imobiliaria.model.dto.agendamento.AgendamentoPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.dto.agendamento.AgendamentoGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Agendamento;
@@ -14,7 +16,10 @@ import weg.projetofinal.Imobiliaria.model.mapper.AgendamentoMapper;
 import weg.projetofinal.Imobiliaria.service.AgendamentoService;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,13 +32,51 @@ public class AgendamentoController {
     private final AgendamentoMapper agendamentoMapper;
 
     @PostMapping("/create")
-        @ResponseStatus(HttpStatus.CREATED)
-        public AgendamentoGetResponseDTO create(@RequestBody AgendamentoPostRequestDTO agendamento) {
-            Agendamento agendamento1 = AgendamentoMapper.INSTANCE.agendamentoPostRequestDtoToAgendamento(agendamento);
-            Agendamento agendamento2 = agendamentoService.save(agendamento1);
-            return AgendamentoMapper.INSTANCE.agendamentoToAgendamentoGetResponseDTO(agendamento2);
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public AgendamentoGetResponseDTO create(@RequestBody @Valid AgendamentoPostRequestDTO agendamento) {
+        try {
+            // Validação adicional
+            if (agendamento.data() == null || agendamento.horario() == null ||
+                    agendamento.id_Corretor() == null || agendamento.id_Imovel() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dados incompletos");
+            }
 
+            Agendamento agendamentoEntity = AgendamentoMapper.INSTANCE.agendamentoPostRequestDtoToAgendamento(agendamento);
+            Agendamento savedAgendamento = agendamentoService.save(agendamentoEntity);
+            return AgendamentoMapper.INSTANCE.agendamentoToAgendamentoGetResponseDTO(savedAgendamento);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro ao criar agendamento: " + e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/imovel/{idImovel}/data/{data}")
+    public List<AgendamentoGetResponseDTO> getByImovelAndDate(
+            @PathVariable Integer idImovel,
+            @PathVariable String data) {
+
+        try {
+            // Parse Portuguese month names
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM", new Locale("pt", "BR"));
+            LocalDate localDate = LocalDate.parse(data, formatter);
+
+            List<Agendamento> agendamentos = agendamentoService.findByImovelAndDate(idImovel, localDate);
+            return agendamentos.stream()
+                    .map(AgendamentoMapper.INSTANCE::agendamentoToAgendamentoGetResponseDTO)
+                    .collect(Collectors.toList());
+        } catch (DateTimeParseException e) {
+            // Fallback to ISO format if Portuguese format fails
+            try {
+                LocalDate localDate = LocalDate.parse(data);
+                List<Agendamento> agendamentos = agendamentoService.findByImovelAndDate(idImovel, localDate);
+                return agendamentos.stream()
+                        .map(AgendamentoMapper.INSTANCE::agendamentoToAgendamentoGetResponseDTO)
+                        .collect(Collectors.toList());
+            } catch (DateTimeParseException ex) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato de data inválido. Use o formato '17 Abril' ou '2025-04-17'");
+            }
+        }
+    }
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)

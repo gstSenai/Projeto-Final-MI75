@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioCadastroPostDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioPostRequestDTO;
@@ -22,6 +23,7 @@ import weg.projetofinal.Imobiliaria.service.UsuarioService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/usuario")
@@ -98,8 +100,13 @@ public class UsuarioController {
 
     @GetMapping("/corretores")
     public List<UsuarioGetResponseDTO> listarCorretores() {
-        List<Usuario> usuario = service.listarCorretores();
-        return usuario.stream().map(UsuarioMapper.INSTANCE::usuarioToUsuarioGetResponseDTO).toList();
+        List<Usuario> corretores = service.listarCorretores();
+        if (corretores.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhum corretor disponível");
+        }
+        return corretores.stream()
+                .map(UsuarioMapper.INSTANCE::usuarioToUsuarioGetResponseDTO)
+                .collect(Collectors.toList());
     }
 
 

@@ -9,7 +9,7 @@ import { z } from "zod"
 import Image from "next/image"
 import { FormularioInput } from "../adicionandoUsuario/formulario/formularioInput"
 import { useForm } from "react-hook-form"
-import { Botao } from "@/components/botao"
+import { Botao } from "@/components/botao/index"
 
 // Carregando a fonte Montserrat
 const montserrat = Montserrat({
