@@ -62,7 +62,7 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
     const handleClick = () => {
         if (imovelId) {
             localStorage.setItem('currentImovelId', imovelId.toString());
-            router.push('/paginaImoveis/imovelDetalhes');
+            router.push(`/paginaImoveis/imovelDetalhes`);
         }
     };
 
@@ -91,11 +91,7 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
         <div className={`${inter.className} flex justify-center pt-12 lg:pt-0`}>
             <div className="flex flex-col w-[250px] lg:w-[320px] 2xl:w-[300px] cursor-pointer" onClick={handleClick}>
                 <div className='relative w-full'>
-                    {imovelId && (
-                        <div className="absolute top-2 right-2">
-                            <Favoritar usuarioId={1} imovelId={imovelId} />
-                        </div>
-                    )}
+                    
                     <div className="w-full overflow-hidden">
                         {isLoading ? (
                             <div className="w-full h-[324px] flex items-center justify-center bg-gray-200">
@@ -121,9 +117,9 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
                                 <Image 
                                     src={mainImage} 
                                     alt="Imagem Imovel" 
-                                    className="w-full h-[324px] object-cover rounded-t-[20px]" 
-                                    width={500} 
-                                    height={324} 
+                                    className="w-full h-[200px] object-cover rounded-t-[20px]" 
+                                    width={300} 
+                                    height={20} 
                                 />
                             </div>
                         )}

@@ -15,6 +15,7 @@ interface ImovelCompleto {
     valor_venda: number;
     codigo: number;
     tipo_transacao: string;
+    data_cadastro: string;
 }
 
 interface Imovel {
@@ -60,6 +61,10 @@ export function useImoveis(tipo: 'destaque' | 'promocao' | 'recente') {
                         if (tipo === 'promocao') return imovel.destaque === 'Promoção';
                         if (tipo === 'recente') return imovel.destaque === 'Adicionado Rec.';
                         return false;
+                    })
+                    .sort((a: ImovelCompleto, b: ImovelCompleto) => {
+                        // Ordena por data de cadastro (mais recente primeiro)
+                        return new Date(b.data_cadastro).getTime() - new Date(a.data_cadastro).getTime();
                     })
                     .map((imovel: ImovelCompleto) => ({
                         id: imovel.id || 0,

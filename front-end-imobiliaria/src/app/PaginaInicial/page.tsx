@@ -2,9 +2,9 @@
 import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
 import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
-import { PesquisaPaginaInicial } from '@/components/paginaInicial/pesquisaPaginaInicial';
+import { PesquisaPaginaInicial } from '@/components/PaginaInicial/pesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
-import Carrossel from '@/components/paginaInicial/carrossel';
+import Carrossel from '@/components/PaginaInicial/carrossel';
 import BotaoImagemTexto from '@/components/paginaInicial/botaoImageTexto/index';
 import { useLanguage } from '@/components/context/LanguageContext';
 import { Header } from '@/components/header';
@@ -179,25 +179,7 @@ export default function PaginaInicial() {
                         </div>
                     </section>
                 </section>
-                <section>
-                    <div className='flex items-center justify-center sm:items-center sm:justify-center md:justify-around pt-28 xl:pt-32 2xl:pt-40'>
-                        <div className='w-[1000px] xl:w-[800px]'>
-                            <h2 className='flex justify-center text-center text-2xl lg:text-3xl xl:text-2xl font-medium pb-2 opacity-75'>{translate('localidades')}</h2>
-                            <p className='flex justify-center text-center text-xl lg:text-2xl xl:text-xl font-medium p-3 opacity-75'>{translate('plataforma_funciona')}</p>
-                        </div>
-                    </div>
-
-                    <Carrossel type={"ajusteNormal"}>
-                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/Jaragua.png" texto="Jaraguá do Sul" />
-                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
-                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
-                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
-                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/Jaragua.png" texto="Jaraguá do Sul" />
-                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/guaramirim.png" texto="Guaramirim" />
-                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/curupa.png" texto="Corupá" />
-                        <BotaoImagemTexto src="/paginaInicial/ImagensCidade/schorder.png" texto="Schroeder" />
-                    </Carrossel>
-                </section>
+             
                 <footer className='bg-[#6d2431]'>
                     <div className="relative flex h-[600px] md:h-[400px] lg:h-[300px] xl:h-[300px] w-full mx-auto overflow-hidden pb-44 pt-0 lg:pt-14 lg:pb-44">
                         <Image src="/paginaInicial/fotosDamainEfotter/PreFotterInicial.png" alt="Fundo Vermelho" layout="fill" objectFit="cover" quality={100} className="absolute top-[-50px] lg:top-[-30px]" />
@@ -231,9 +213,7 @@ export default function PaginaInicial() {
                             </div>
                         </div>
                     </div>
-                    <div className="relative flex justify-center -mt-[8rem] lg:mt-[-6rem] xl:mt-[-6rem] z-20 max-lg:px-4 px-20">
-                        <AtualizarComponents />
-                    </div>
+        
                     <div className='relative md:-mt-[80px] lg:-mt-[60px] xl:-mt-[50px]'>
                         <Footer />
                     </div>
