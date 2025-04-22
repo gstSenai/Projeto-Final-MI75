@@ -136,7 +136,6 @@ export function ListaImoveis() {
         }
       }));
 
-      // Filtra os imóveis por cidade e bairro se necessário
       let imoveisFiltrados = imoveisFormatados;
       if (cidadePesquisa) {
         imoveisFiltrados = imoveisFiltrados.filter(imovel => 
@@ -151,7 +150,6 @@ export function ListaImoveis() {
 
       setImoveis(imoveisFiltrados);
       
-      // Se for busca por código ou endereço, não mostra paginação
       if (!codigoPesquisa && !cidadePesquisa && !bairroPesquisa) {
         setPaginationInfo({
           currentPage: data.number,
@@ -235,7 +233,6 @@ export function ListaImoveis() {
 
       setImoveis(imoveisFormatados);
     } catch (error) {
-      console.error("Erro ao buscar imóveis:", error);
       setError("Erro ao carregar imóveis. Por favor, tente novamente.");
     } finally {
       setLoading(false);
@@ -263,7 +260,6 @@ export function ListaImoveis() {
   useEffect(() => {
     if (imoveis.length > 0) {
       fetchImoveis(0);
-      console.log(imoveis);
     }
   }, [tipoTransacao]);
 
