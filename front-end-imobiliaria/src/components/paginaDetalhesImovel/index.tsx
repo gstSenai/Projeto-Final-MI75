@@ -8,7 +8,7 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { MapImovelById } from "@/components/map/mapImovelById"
 import { Card } from "../cardImovel"
-// Configurar a chave de acesso do Mapbox
+
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 
 const montserrat = Montserrat({
@@ -41,11 +41,6 @@ interface ImovelDetalhes {
     numero_banheiros: number
     numero_vagas: number
   }
-  imagens: {
-    id: number
-    nome: string
-    url: string
-  }[]
 }
 
 interface Corretor {
@@ -69,6 +64,39 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
   const [corretor, setCorretor] = useState<Corretor | null>(null)
+  const [imageUrls, setImageUrls] = useState<string[]>([])
+
+  const fetchImages = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const urls = [];
+      let index = 0;
+      let hasMoreImages = true;
+
+      while (hasMoreImages) {
+        const response = await fetch(`http://localhost:9090/imagens/download/imovel/${imovelId}/imagem/${index}`, {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          const blob = await response.blob();
+          const imageUrl = URL.createObjectURL(blob);
+          urls.push(imageUrl);
+          index++;
+        } else {
+          hasMoreImages = false;
+        }
+      }
+
+      setImageUrls(urls);
+    } catch (error) {
+      console.error('Erro ao buscar imagens:', error);
+    }
+  };
 
   const getImovelDetalhes = async () => {
     try {
@@ -98,6 +126,7 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
 
       const data = await response.json();
       setImovel(data);
+      await fetchImages();
 
       if (data.id_usuario && data.id_usuario.id) {
         getCorretor(data.id_usuario.id);
@@ -232,55 +261,88 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
 
           <div className="lg:col-span-2">
             <div className="overflow-hidden">
-              {imovel.imagens && imovel.imagens.length > 0 ? (
-                <div className="relative">
-                  <img
-                    src={imovel.imagens[currentImageIndex].url}
-                    alt={imovel.nome_propriedade}
-                    className="w-full h-[450px] lg:h-[605px] xl:h-[535px] 2xl:h-[510px] extra:h-[490px] object-cover rounded-lg"
-                  />
-                  {imovel.imagens.length > 1 && (
-                    <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-                      {imovel.imagens.map((_, index) => (
+              {imageUrls.length > 0 ? (
+                <div className="relative flex justify-center">
+                  <div className="relative w-full">
+                    <img
+                      src={imageUrls[0]}
+                      alt={imovel?.nome_propriedade}
+                      className="w-full h-[450px] lg:h-[605px] xl:h-[535px] 2xl:h-[510px] extra:h-[490px] object-cover rounded-lg"
+                      onError={(e) => {
+                        console.error('Erro ao carregar imagem:', e);
+                        e.currentTarget.src = '/placeholder-image.jpg';
+                      }}
+                    />
+                    {/* Botões de navegação */}
+                    {imageUrls.length > 1 && (
+                      <>
                         <button
-                          key={index}
-                          onClick={() => setCurrentImageIndex(index)}
-                          className={`w-3 h-3 rounded-full ${currentImageIndex === index ? "bg-vermelho" : "bg-white"
-                            }`}
-                        />
-                      ))}
-                    </div>
-                  )}
+                          onClick={() => {
+                            const newUrls = [...imageUrls];
+                            const lastImage = newUrls.pop()!;
+                            newUrls.unshift(lastImage);
+                            setImageUrls(newUrls);
+                          }}
+                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="m15 18-6-6 6-6"/>
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => {
+                            const newUrls = [...imageUrls];
+                            const firstImage = newUrls.shift()!;
+                            newUrls.push(firstImage);
+                            setImageUrls(newUrls);
+                          }}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="m9 18 6-6-6-6"/>
+                          </svg>
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
               ) : (
                 <div className="w-full h-[500px] bg-cinza-medio flex items-center justify-center rounded-lg">
                   <p className="text-cinza-escuro">Sem imagens disponíveis</p>
                 </div>
               )}
-              <div className="flex items-center justify-start gap-1 mt-4">
-                <button className="flex items-center justify-center w-8 h-8 text-cinza-medio hover:text-vermelho transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-                  </svg>
-                </button>
-                <button className="flex items-center justify-center w-8 h-8 text-cinza-medio hover:text-vermelho transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                  </svg>
-                </button>
-                <button className="flex items-center justify-center w-8 h-8 text-cinza-medio hover:text-vermelho transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                    <polyline points="16 6 12 2 8 6" />
-                    <line x1="12" y1="2" x2="12" y2="15" />
-                  </svg>
-                </button>
-              </div>
             </div>
+
+            {/* Gallery Section */}
+            {imageUrls.length > 1 && (
+              <div className="mt-4">
+                <div className="flex gap-2 overflow-x-auto pb-2">
+                  {imageUrls.map((url, index) => (
+                    <div 
+                      key={index} 
+                      className="relative cursor-pointer group flex-shrink-0"
+                      onClick={() => {
+                        const newUrls = [...imageUrls];
+                        const selectedImage = newUrls.splice(index, 1)[0];
+                        newUrls.unshift(selectedImage);
+                        setImageUrls(newUrls);
+                      }}
+                    >
+                      <img
+                        src={url}
+                        alt={`${imovel?.nome_propriedade} - Imagem ${index + 1}`}
+                        className="w-24 h-24 object-cover rounded-lg transition-opacity group-hover:opacity-80"
+                      />
+                      {index === 0 && (
+                        <div className="absolute inset-0 border-2 border-vermelho rounded-lg"></div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Right Column - Details */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex justify-between items-center mb-6">

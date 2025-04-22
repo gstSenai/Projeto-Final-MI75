@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Card } from "@/components/cardImovel"
+import { Card } from "@/components/CardImovel/index"
 import { Montserrat } from "next/font/google"
 import { FiltroImoveis } from "./botaoFiltro"
 import { ChevronLeft, ChevronRight } from "lucide-react"
@@ -16,6 +16,7 @@ const montserrat = Montserrat({
 interface ImovelProps {
   id: number
   titulo: string
+  destaque: string
   descricao: string
   preco: number 
   tipoImovel: string
@@ -28,6 +29,7 @@ interface ImovelProps {
 interface ImovelCompleto {
   id: number
   nome_propriedade: string
+  destaque: string
   id_endereco: {
     cidade: string
   }
@@ -43,6 +45,7 @@ interface ImovelCompleto {
 
 interface Imovel {
   id: number
+  destaque: string
   titulo: string
   cidade: string
   numero_quartos: number
@@ -98,6 +101,7 @@ export function ListaImoveis() {
       
       const imoveisFormatados = data.content.map((imovel: any) => ({
         id: imovel.id || 0,
+        destaque: imovel.destaque || "Não Destaque",
         titulo: imovel.nome_propriedade || "Sem título",
         cidade: imovel.id_endereco?.cidade || "Cidade não informada",
         numero_quartos: imovel.id_caracteristicasImovel?.numero_quartos || 0,
@@ -234,9 +238,10 @@ export function ListaImoveis() {
     return pageNumbers
   }
 
-  const handleSetImoveis = (imoveisCompletos: ImovelCompleto[]) => {
-    const imoveisFormatados = imoveisCompletos.map((imovel) => ({
+  const handleSetImoveis = (imoveis: ImovelCompleto[]) => {
+    const imoveisFormatados = imoveis.map((imovel) => ({
       id: imovel.id || 0,
+      destaque: imovel.destaque || "Não Destaque",
       titulo: imovel.nome_propriedade || "Sem título",
       cidade: imovel.id_endereco?.cidade || "Cidade não informada",
       numero_quartos: imovel.id_caracteristicasImovel?.numero_quartos || 0,
@@ -251,7 +256,7 @@ export function ListaImoveis() {
 
   return (
     <>
-      <div className={`${montserrat.className}`}>
+      <div className={`${montserrat.className} mx-48`}>
         <div className="flex justify-center mt-[8rem]">
           <h1 className="font-bold text-[40px]">Propriedades</h1>
         </div>
@@ -308,7 +313,7 @@ export function ListaImoveis() {
           </div>
         ) : (
           <>
-            <div className="flex flex-wrap justify-center items-start gap-6 mt-6">
+            <div className="flex flex-wrap justify-center items-start gap-6 mt-10 mb-52">
               {imoveisFiltrados.length > 0 ? (
                 imoveisFiltrados.map((imovel) => (
                   <Card
@@ -321,6 +326,7 @@ export function ListaImoveis() {
                     preco={imovel.preco}
                     codigo={imovel.codigo}
                     imovelId={imovel.id}
+                    destaque={(['Destaque', 'Promoção', 'Adicionado Rec.', 'Não Destaque'].includes(imovel.destaque) ? imovel.destaque : undefined) as "Destaque" | "Promoção" | "Adicionado Rec." | "Não Destaque" | undefined}
                   />
                 ))
               ) : (

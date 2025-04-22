@@ -3,9 +3,9 @@
 import Image from "next/image"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { Montserrat } from "next/font/google"
+import { Montserrat } from 'next/font/google'
 import Calendario from "@/components/calendario/index"
-import { FormularioInput } from "@/components/calendario/selecaoHorario"
+import { FormularioInput } from "@/components/Calendario/selecaoHorario"
 import { useForm } from "react-hook-form"
 import { useEffect, useState, useCallback } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -13,7 +13,8 @@ import { Botao } from "@/components/botao/index"
 import request from "@/routes/request"
 import { z } from "zod"
 import { LoadingWrapper } from "@/components/loading/loadingServer"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useAuth } from "@/components/context/AuthContext"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -45,14 +46,62 @@ type AgendamentoFormData = z.infer<typeof AgendamentoSchema>
 
 interface PaginaAgendamentoProps {
   imovelId: number
-
-  
 }
 
-
-
-export default function PaginaAgendamento({ imovelId }: PaginaAgendamentoProps) {
+export default function PaginaAgendamento() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const { userId, isAuthenticated } = useAuth()
+  const [imovelId, setImovelId] = useState<number | null>(null)
+
+  useEffect(() => {
+    const checkAuthAndSetup = async () => {
+      console.log("=== Verificando autenticação e configuração inicial ===")
+      
+      // Primeiro verifica autenticação
+      if (!isAuthenticated) {
+        console.log("Usuário não autenticado, verificando localStorage...")
+        const token = localStorage.getItem('token')
+        if (!token) {
+          console.log("Token não encontrado, redirecionando para login")
+          router.push('/login')
+          return
+        }
+      }
+
+      // Depois trata o ID do imóvel
+      const urlImovelId = searchParams.get('imovelId')
+      const storedImovelId = localStorage.getItem('currentImovelId')
+      
+      console.log("IDs encontrados:", {
+        urlImovelId,
+        storedImovelId
+      })
+
+      if (!urlImovelId && !storedImovelId) {
+        console.error('ID do imóvel não encontrado')
+        router.push('/PaginaInicial')
+        return
+      }
+
+      // Prioriza o ID da URL, mas usa o do localStorage se necessário
+      const finalImovelId = urlImovelId || storedImovelId
+      setImovelId(Number(finalImovelId))
+      
+      // Atualiza o localStorage com o ID atual
+      if (finalImovelId) {
+        localStorage.setItem('currentImovelId', finalImovelId)
+      }
+
+      console.log("Configuração concluída:", {
+        imovelId: finalImovelId,
+        isAuthenticated
+      })
+    }
+
+    checkAuthAndSetup()
+  }, [searchParams, router, isAuthenticated])
+
   const {
     register,
     handleSubmit,
@@ -73,92 +122,169 @@ export default function PaginaAgendamento({ imovelId }: PaginaAgendamentoProps) 
 
   const verificarHorariosOcupados = useCallback(
     async (data: string) => {
-        try {
-            setIsLoading(true);
-            setError(null);
-            const response = await request(
-                "GET", 
-                `http://localhost:9090/agendamento/imovel/${imovelId}/data/${data}`
-            );
-            
-            if (!response) {
-                throw new Error("Resposta vazia do servidor");
-            }
-            
-            if (Array.isArray(response)) {
-                const horariosOcupados = response.map((a: any) => a.horario);
-                setHorariosOcupados(horariosOcupados);
-                
-                if (horariosOcupados.length === 6) {
-                    setError("Todos os horários estão ocupados nesta data. Por favor, selecione outra data.");
-                }
-            } else {
-                throw new Error("Formato de resposta inesperado");
-            }
-        } catch (error: any) {
-            console.error("Erro ao verificar horários:", error);
-            setError(error.message || "Não foi possível carregar os horários. Tente novamente.");
-        } finally {
-            setIsLoading(false);
+      if (!imovelId) {
+        console.error('ID do imóvel não disponível para verificar horários')
+        return
+      }
+
+      try {
+        setIsLoading(true)
+        setError(null)
+        
+        console.log(`Verificando horários para imóvel ${imovelId} na data ${data}`)
+        
+        const response = await request(
+          "GET", 
+          `http://localhost:9090/agendamento/imovel/${imovelId}/data/${data}`
+        )
+        
+        if (Array.isArray(response)) {
+          const horariosOcupados = response.map((a: any) => a.horario.substring(0, 5))
+          console.log("Horários ocupados encontrados:", horariosOcupados)
+          setHorariosOcupados(horariosOcupados)
+          
+          if (horariosOcupados.length === 6) {
+            setError("Todos os horários estão ocupados nesta data. Por favor, selecione outra data.")
+          }
+        } else {
+          throw new Error("Formato de resposta inesperado")
         }
+      } catch (error: any) {
+        console.error("Erro ao verificar horários:", error)
+        setError(error.message || "Não foi possível carregar os horários. Tente novamente.")
+      } finally {
+        setIsLoading(false)
+      }
     },
     [imovelId]
-);
+  )
 
-  useEffect(() => {
-    if (dataSelecionada) {
-      verificarHorariosOcupados(dataSelecionada)
+  const handleAgendarVisita = async (data: AgendamentoFormData) => {
+    console.log("=== Iniciando agendamento ===")
+    console.log("Dados do formulário:", data)
+    console.log("Data selecionada:", dataSelecionada)
+    console.log("ID do usuário:", userId)
+    console.log("ID do imóvel:", imovelId)
+    console.log("Autenticado:", isAuthenticated)
+    console.log("Corretor selecionado:", data.corretor)
+    console.log("Horário selecionado:", data.horario)
+
+    // Validações detalhadas
+    const validacoes = {
+      data: Boolean(dataSelecionada),
+      horario: Boolean(data.horario),
+      corretor: Boolean(data.corretor?.id),
+      usuario: Boolean(userId),
+      imovel: Boolean(imovelId),
+      dataValida: dataSelecionada?.match(/^\d{4}-\d{2}-\d{2}$/),
+      horarioValido: data.horario?.match(/^\d{1,2}:\d{2}$/),
+      idCorretorNumerico: typeof data.corretor?.id === 'number',
+      idUsuarioNumerico: typeof userId === 'number',
+      idImovelNumerico: typeof imovelId === 'number'
     }
-  }, [dataSelecionada, verificarHorariosOcupados])
 
+    console.log("Validações:", validacoes)
 
- // Modifique a função handleAgendarVisita:
-const handleAgendarVisita = async (data: AgendamentoFormData) => {
-  if (!dataSelecionada || !data.horario || !data.corretor.id) {
-    setError("Preencha todos os campos obrigatórios");
-    setIsLoading(false);
-    return;
-  }
-
-  setIsLoading(true);
-  setError(null);
-
-  try {
-    // Converter data de "17 Abril" para formato ISO (yyyy-MM-dd)
-    const [day, monthName] = dataSelecionada.split(' ');
-    const monthMap: Record<string, string> = {
-      'Janeiro': '01', 'Fevereiro': '02', 'Março': '03', 'Abril': '04',
-      'Maio': '05', 'Junho': '06', 'Julho': '07', 'Agosto': '08',
-      'Setembro': '09', 'Outubro': '10', 'Novembro': '11', 'Dezembro': '12'
-    };
-    const month = monthMap[monthName];
-    const year = new Date().getFullYear();
-    const formattedDate = `${year}-${month}-${day.padStart(2, '0')}`;
-
-    // Criar payload no formato esperado pelo backend
-    const agendamentoData = {
-      data: formattedDate,
-      horario: data.horario + ":00", // Adiciona segundos
-      id_Imovel: { id: imovelId },
-      id_Corretor: { id: data.corretor.id }
-    };
-
-    const response = await request("POST", "http://localhost:9090/agendamento/create", agendamentoData);
-
-    if (response && response.id) {
-      setAgendamentoSucesso(true);
-      verificarHorariosOcupados(dataSelecionada);
-    } else {
-      setError("Erro ao processar o agendamento.");
+    if (!isAuthenticated) {
+      console.log("Erro: Usuário não autenticado")
+      setError("Você precisa estar logado para fazer um agendamento.")
+      router.push('/login')
+      return
     }
-  } catch (error: any) {
-    console.error("Erro ao agendar visita:", error);
-    setError(error.response?.data?.message || "Não foi possível agendar a visita. Tente novamente.");
-  } finally {
-    setIsLoading(false);
-  }
-};
 
+    if (Object.values(validacoes).some(v => !v)) {
+      console.log("Falha nas validações:", 
+        Object.entries(validacoes)
+          .filter(([_, value]) => !value)
+          .map(([key]) => key)
+      )
+      setError("Preencha todos os campos obrigatórios corretamente")
+      return
+    }
+
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const [hours, minutes] = data.horario.split(':')
+      console.log("Horário antes da formatação:", { hours, minutes })
+      
+      // Garante que a hora tenha dois dígitos
+      const formattedHours = hours.padStart(2, '0')
+      console.log("Horário após formatação:", formattedHours)
+      
+      // Garante que todos os IDs sejam números
+      const idImovel = Number(imovelId)
+      const idUsuario = Number(userId)
+      const idCorretor = Number(data.corretor.id)
+
+      // Validação adicional dos IDs
+      if (isNaN(idImovel) || isNaN(idUsuario) || isNaN(idCorretor)) {
+        throw new Error("IDs inválidos detectados")
+      }
+      
+      const agendamentoData = {
+        data: dataSelecionada,
+        horario: `${formattedHours}:${minutes}:00`,
+        idImovel: idImovel,
+        idUsuario: idUsuario,
+        idCorretor: idCorretor,
+        status: "PENDENTE"
+      }
+
+      console.log("=== Dados do agendamento ===")
+      console.log("Payload completo:", JSON.stringify(agendamentoData, null, 2))
+      console.log("Tipos dos campos:", {
+        data: typeof agendamentoData.data,
+        horario: typeof agendamentoData.horario,
+        idImovel: typeof agendamentoData.idImovel,
+        idUsuario: typeof agendamentoData.idUsuario,
+        idCorretor: typeof agendamentoData.idCorretor,
+        status: typeof agendamentoData.status
+      })
+      console.log("Valores numéricos:", {
+        idImovel: agendamentoData.idImovel,
+        idUsuario: agendamentoData.idUsuario,
+        idCorretor: agendamentoData.idCorretor
+      })
+
+      console.log("Enviando requisição para criar agendamento...")
+      console.log("URL:", "http://localhost:9090/agendamento/create")
+      console.log("Método:", "POST")
+      console.log("Headers:", {
+        'Content-Type': 'application/json'
+      })
+
+      const response = await request("POST", "http://localhost:9090/agendamento/create", agendamentoData)
+      console.log("Resposta do servidor:", response)
+
+      if (response) {
+        console.log("Agendamento realizado com sucesso!")
+        setAgendamentoSucesso(true)
+        verificarHorariosOcupados(dataSelecionada)
+      } else {
+        console.error("Resposta vazia do servidor")
+        throw new Error("Erro ao criar agendamento: resposta vazia do servidor")
+      }
+    } catch (error: any) {
+      console.error("=== Erro detalhado ===")
+      console.error("Mensagem de erro:", error.message)
+      console.error("Stack trace:", error.stack)
+      if (error.response) {
+        console.error("Detalhes da resposta do servidor:", {
+          status: error.response.status,
+          statusText: error.response.statusText,
+          data: error.response.data
+        })
+      }
+      setError(
+        error.message || 
+        "Não foi possível agendar a visita. Verifique se todos os campos estão preenchidos corretamente."
+      )
+    } finally {
+      setIsLoading(false)
+    }
+  }
   
   const getCorretores = useCallback(async () => {
     setIsLoading(true);
@@ -189,8 +315,9 @@ const handleAgendarVisita = async (data: AgendamentoFormData) => {
 
   const handleDateChange = (date: string) => {
     if (!isLoading) {
-      setDataSelecionada(date)
-      setValue("data", date)
+      console.log("Data selecionada:", date); // Para debug
+      setDataSelecionada(date);
+      setValue("data", date);
     }
   }
 

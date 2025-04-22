@@ -85,12 +85,12 @@ export function TipoImovelTransacao({ register, errors }: TipoImovelTransacaoPro
           />
           <FormularioInput
             placeholder="Permitir destaque:"
-            name={"imovel.test_destaque"}
+            name={"imovel.destaque"}
             register={register}
             required
             customizacaoClass="w-full"
-            options={["Sim", "Não"]}
-            errors={errors?.imovel?.test_destaque}
+            options={["Destaque", "Promoção", 'Adicionado Rec.', 'Não Destaque']}
+            errors={errors?.imovel?.destaque}
           />
         </div>
 

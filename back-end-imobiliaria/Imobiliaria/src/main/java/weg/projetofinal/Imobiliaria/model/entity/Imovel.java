@@ -33,7 +33,7 @@ public class Imovel {
 
     private Double valor_promocional;
 
-    private Boolean destaque;
+    private String destaque;
 
     private Boolean visibilidade;
 

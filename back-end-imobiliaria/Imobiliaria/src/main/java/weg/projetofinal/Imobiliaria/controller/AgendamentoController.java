@@ -33,41 +33,22 @@ public class AgendamentoController {
 
     private final AgendamentoService agendamentoService;
     private final AgendamentoMapper agendamentoMapper;
-
+    
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public AgendamentoGetResponseDTO create(@RequestBody @Valid AgendamentoPostRequestDTO agendamentoDTO) {
         try {
-            // Validação básica
-            if (agendamentoDTO.data() == null || agendamentoDTO.horario() == null ||
-                    agendamentoDTO.idImovel() == null || agendamentoDTO.idCorretor() == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Campos obrigatórios faltando");
-            }
-
-            Agendamento agendamento = new Agendamento();
-            agendamento.setData(agendamentoDTO.data());
-            agendamento.setHorario(agendamentoDTO.horario());
-
-            // Cria objetos com apenas IDs
-            Imovel imovel = new Imovel();
-            imovel.setId(agendamentoDTO.idImovel());
-            agendamento.setImovel(imovel);
-
-            Usuario corretor = new Usuario();
-            corretor.setId(agendamentoDTO.idCorretor());
-            agendamento.setCorretor(corretor);
-
-            // Usuário opcional
-            if (agendamentoDTO.idUsuario() != null) {
-                Usuario usuario = new Usuario();
-                usuario.setId(agendamentoDTO.idUsuario());
-                agendamento.setUsuario(usuario);
-            }
+            // Usar o mapper para converter DTO para entidade
+            Agendamento agendamento = agendamentoMapper.agendamentoPostRequestDtoToAgendamento(agendamentoDTO);
 
             Agendamento savedAgendamento = agendamentoService.save(agendamento);
             return agendamentoMapper.agendamentoToAgendamentoGetResponseDTO(savedAgendamento);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro ao criar agendamento: " + e.getMessage());
+            String errorMessage = e.getMessage();
+            if (errorMessage.contains("Campos obrigatórios faltando")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Por favor, preencha todos os campos obrigatórios: data, horário, ID do imóvel e ID do corretor");
+            }
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro ao criar agendamento: " + errorMessage);
         }
     }
 

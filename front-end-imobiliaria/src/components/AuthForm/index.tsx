@@ -6,6 +6,8 @@ import { Montserrat } from "next/font/google"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
 import Image from "next/image"
+import { useAuth } from "@/components/context/AuthContext"
+
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
@@ -28,6 +30,7 @@ interface UsuarioData {
 
 const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro, isCadastro = false }) => {
   const router = useRouter()
+  const { login } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -188,6 +191,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
             localStorage.setItem("tipo_conta", usuario.tipo_conta)
             localStorage.setItem("id", usuario.id.toString())
             
+            login(data.token, usuario.tipo_conta, usuario.id)
+            
             if (usuario.tipo_conta === "Usuario") {
               router.push("/PaginaInicial")
             } else if (usuario.tipo_conta === "Administrador") {
@@ -217,6 +222,19 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
     }
   }
 
+  const handleGoogleLogin = async () => {
+    try {
+      setIsLoading(true)
+      setApiError("")
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:9090"
+      window.location.href = `${apiUrl}/oauth2/authorization/google`
+    } catch (error) {
+      console.error("Erro ao iniciar login com Google:", error)
+      setApiError("Erro ao iniciar login com Google. Por favor, tente novamente.")
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className={`${montserrat.className} h-screen bg-[url('/fundoLogin.png')] bg-[center_left_-210px]`}>
       <div className="absolute inset-0 flex items-center justify-center bg-[url('/logos/simboloHAVLogin.png')] max-md:bg-[url('/')] bg-no-repeat bg-[right_-300px_top_-100px]">
@@ -231,7 +249,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
               height={144}
               className="w-36 my-4 pr-2"
             />
-            <button className="bg-white border border-gray-300 text-[#702632] text-[14px] font-bold py-2.5 px-2 w-[240px] rounded-xl flex justify-center items-center mt-4">
+            <button 
+              onClick={handleGoogleLogin}
+              className="bg-white border border-gray-300 text-[#702632] text-[14px] font-bold py-2.5 px-2 w-[240px] rounded-xl flex justify-center items-center mt-4 hover:bg-gray-50 transition-colors"
+            >
               <Image
                 src="/loginIcons/google-icon.png"
                 alt="Google"

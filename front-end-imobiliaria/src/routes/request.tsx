@@ -5,9 +5,13 @@ const request = async (
     headers: Record<string, string> = {} 
 ): Promise<unknown> => {
     try {
+        const token = localStorage.getItem("token");
         const options: RequestInit = {
             method,
-            headers: { ...headers },
+            headers: {
+                ...headers,
+                ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+            },
         };
 
         if (body instanceof FormData) {
@@ -15,25 +19,47 @@ const request = async (
         } else if (body) {
             options.headers = {
                 "Content-Type": "application/json",
+                ...(token ? { "Authorization": `Bearer ${token}` } : {}),
                 ...headers,
             };
             options.body = JSON.stringify(body);
         }
 
+        console.log("Fazendo requisição para:", url);
+        console.log("Opções da requisição:", {
+            method: options.method,
+            headers: options.headers,
+            body: options.body
+        });
+
         const response = await fetch(url, options);
+        const responseData = await response.text();
+        
+        console.log("Status da resposta:", response.status);
+        console.log("Resposta bruta:", responseData);
 
         if (!response.ok) {
-            throw new Error(`Falha na requisição: ${response.status} ${response.statusText}`);
+            let errorMessage;
+            try {
+                const errorData = JSON.parse(responseData);
+                errorMessage = errorData.message || `Erro ${response.status}: ${response.statusText}`;
+            } catch {
+                errorMessage = `Erro ${response.status}: ${response.statusText}`;
+            }
+            throw new Error(errorMessage);
         }
 
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
-            return await response.json();
-        } else {
-            return await response.text();
+        if (!responseData) {
+            return null;
+        }
+
+        try {
+            return JSON.parse(responseData);
+        } catch {
+            return responseData;
         }
     } catch (error) {
-        console.error("Erro ao fazer a requisição:", error);
+        console.error("Erro detalhado na requisição:", error);
         throw error;
     }
 };

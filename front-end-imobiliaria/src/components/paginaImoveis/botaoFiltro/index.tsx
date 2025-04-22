@@ -12,20 +12,21 @@ const montserrat = Montserrat({
 })
 
 interface ImovelCompleto {
-    id: number;
-    nome_propriedade: string;
+    id: number
+    nome_propriedade: string
+    destaque: string
     id_endereco: {
-        cidade: string;
+      cidade: string
     }
     id_caracteristicasImovel: {
-        numero_quartos: number;
-        numero_suites: number;
-        numero_banheiros: number;
+      numero_quartos: number
+      numero_suites: number
+      numero_banheiros: number
     }
-    valor_venda: number;
-    codigo: number;
-    tipo_transacao: string;
-}
+    valor_venda: number
+    codigo: number
+    tipo_transacao: string
+  }
 
 interface FiltroImoveisProps {
 
