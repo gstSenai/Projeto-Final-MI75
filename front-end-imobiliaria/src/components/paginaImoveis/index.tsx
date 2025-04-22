@@ -5,7 +5,7 @@ import { Card } from "@/components/cardImovel/index"
 import { Montserrat } from "next/font/google"
 import { FiltroImoveis } from "./botaoFiltro"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -55,10 +55,6 @@ interface Imovel {
   codigo: number
   imagemNome?: string
   tipo_transacao: string
-  id_endereco: {
-    cidade: string
-    bairro: string
-  }
 }
 
 interface PaginationInfo {
@@ -77,10 +73,7 @@ export function ListaImoveis() {
   const [mostrarFiltros, setMostrarFiltros] = useState<boolean>(false)
   const [imovelId, setImovelId] = useState<number | null>(null);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const codigoPesquisa = searchParams?.get('codigo') || null;
-  const cidadePesquisa = searchParams?.get('cidade') || null;
-  const bairroPesquisa = searchParams?.get('bairro') || null;
+
 
   const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>({
     currentPage: 0,
@@ -93,17 +86,7 @@ export function ListaImoveis() {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      
-      let url = `http://localhost:9090/imovel/getAll?page=${page}&size=${paginationInfo.size}`;
-      
-      if (codigoPesquisa) {
-        url = `http://localhost:9090/imovel/filtroCodigo?codigo=${codigoPesquisa}`;
-      } 
-      else if (cidadePesquisa || bairroPesquisa) {
-        url = `http://localhost:9090/endereco/filtroEndereco?cidade=${cidadePesquisa || ''}&bairro=${bairroPesquisa || ''}`;
-      }
-
-      const response = await fetch(url, {
+      const response = await fetch(`http://localhost:9090/imovel/getAll?page=${page}&size=${paginationInfo.size}`, {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -116,10 +99,7 @@ export function ListaImoveis() {
 
       const data = await response.json();
       
-      // Se for busca por código ou endereço, transforma o resultado em array
-      const imoveisData = (codigoPesquisa || cidadePesquisa || bairroPesquisa) ? [data] : data.content;
-      
-      const imoveisFormatados = imoveisData.map((imovel: any) => ({
+      const imoveisFormatados = data.content.map((imovel: any) => ({
         id: imovel.id || 0,
         destaque: imovel.destaque || "Não Destaque",
         titulo: imovel.nome_propriedade || "Sem título",
@@ -129,46 +109,19 @@ export function ListaImoveis() {
         numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
         preco: imovel.valor_venda || 0,
         codigo: imovel.codigo || 0,
-        tipo_transacao: imovel.tipo_transacao || "Indefinido",
-        id_endereco: {
-          cidade: imovel.id_endereco?.cidade || "Cidade não informada",
-          bairro: imovel.id_endereco?.bairro || "Bairro não informado"
-        }
+        tipo_transacao: imovel.tipo_transacao || "Indefinido"
       }));
 
-      let imoveisFiltrados = imoveisFormatados;
-      if (cidadePesquisa) {
-        imoveisFiltrados = imoveisFiltrados.filter(imovel => 
-          imovel.id_endereco.cidade.toLowerCase().includes(cidadePesquisa.toLowerCase())
-        );
-      }
-      if (bairroPesquisa) {
-        imoveisFiltrados = imoveisFiltrados.filter(imovel => 
-          imovel.id_endereco.bairro.toLowerCase().includes(bairroPesquisa.toLowerCase())
-        );
-      }
-
-      setImoveis(imoveisFiltrados);
-      
-      if (!codigoPesquisa && !cidadePesquisa && !bairroPesquisa) {
-        setPaginationInfo({
-          currentPage: data.number,
-          totalPages: data.totalPages,
-          totalElements: data.totalElements,
-          size: data.size,
-        });
-      } else {
-        setPaginationInfo({
-          currentPage: 0,
-          totalPages: 1,
-          totalElements: imoveisFiltrados.length,
-          size: imoveisFiltrados.length,
-        });
-      }
+      setImoveis(imoveisFormatados);
+      setPaginationInfo({
+        currentPage: data.number,
+        totalPages: data.totalPages,
+        totalElements: data.totalElements,
+        size: data.size,
+      });
     } catch (error) {
       console.error('Erro ao buscar imóveis:', error);
       setImoveis([]);
-      setError('Nenhum imóvel encontrado com os critérios de busca.');
     } finally {
       setLoading(false);
     }
@@ -187,8 +140,6 @@ export function ListaImoveis() {
         totalElements: 0,
         size: 10,
       });
-      
-      router.push('/paginaImoveis');
       
       const token = localStorage.getItem("token");
       const response = await fetch(`http://localhost:9090/imovel/getAll?page=0&size=10`, {
@@ -233,6 +184,7 @@ export function ListaImoveis() {
 
       setImoveis(imoveisFormatados);
     } catch (error) {
+      console.error("Erro ao buscar imóveis:", error);
       setError("Erro ao carregar imóveis. Por favor, tente novamente.");
     } finally {
       setLoading(false);
@@ -249,7 +201,7 @@ export function ListaImoveis() {
     
     setImovelId(Number(id));
     setLoading(false);
-  }, [codigoPesquisa, cidadePesquisa, bairroPesquisa]);
+  }, []);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && newPage < paginationInfo.totalPages) {
@@ -260,6 +212,7 @@ export function ListaImoveis() {
   useEffect(() => {
     if (imoveis.length > 0) {
       fetchImoveis(0);
+      console.log(imoveis);
     }
   }, [tipoTransacao]);
 
@@ -330,19 +283,12 @@ export function ListaImoveis() {
           >
             {mostrarFiltros ? "Fechar Filtros" : "Filtrar"}
           </button>
-          <button
-            className="bg-vermelho text-white px-6 py-2 rounded-lg transition duration-300 hover:opacity-80"
-            onClick={() => router.push('/mapa')}
-          >
-            <p className="text-white">Mapa</p>
-          </button>
           <button 
             className="underline decoration-vermelho px-4 py-2 rounded-lg" 
             onClick={() => refreshData()}
           >
             <p className="text-vermelho font-bold">Restaurar Padrão</p>
           </button>
-          
         </div>
 
         {mostrarFiltros && (
