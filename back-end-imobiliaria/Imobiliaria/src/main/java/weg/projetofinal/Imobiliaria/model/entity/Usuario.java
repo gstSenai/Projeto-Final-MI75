@@ -38,6 +38,9 @@ public class Usuario {
 
     private String imagem_usuario;
 
+    @Column
+    private String telefone;
+
     @Column(nullable = false)
     private boolean ativo = true;
 

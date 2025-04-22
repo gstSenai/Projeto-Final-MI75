@@ -10,6 +10,6 @@ public record UsuarioPutRequestDTO(
         @NotBlank String tipo_conta,
         @Email @NotBlank String email,
         @NotBlank @Size(min = 6) String password,
-        String imagem_usuario
-) {
-}
+        String imagem_usuario,
+        String telefone // novo aqui
+) {}
