@@ -95,6 +95,9 @@ export function ListaImoveis() {
       const valorMinParam = searchParams.get('valor_min');
       const valorMaxParam = searchParams.get('valor_max');
       const tipoImovelParam = searchParams.get('tipo_imovel');
+      const quantidadeQuartosParam = searchParams.get('quantidade_quartos');
+      const quantidadeBanheirosParam = searchParams.get('quantidade_banheiros');
+      const quantidadeVagasParam = searchParams.get('quantidade_vagas');
 
       // If we have a code parameter, use the specific endpoint
       if (codigoParam) {
@@ -135,12 +138,57 @@ export function ListaImoveis() {
         return;
       }
 
+      // If we have characteristic filters, use the caracteristicaImovel endpoint
+      if (quantidadeQuartosParam || quantidadeBanheirosParam || quantidadeVagasParam) {
+        const response = await fetch(`http://localhost:9090/caracteristicaImovel/filtro?${new URLSearchParams({
+          ...(quantidadeQuartosParam && { quantidade_quartos: quantidadeQuartosParam }),
+          ...(quantidadeBanheirosParam && { quantidade_banheiros: quantidadeBanheirosParam }),
+          ...(quantidadeVagasParam && { quantidade_vagas: quantidadeVagasParam })
+        })}`, {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao buscar imóveis');
+        }
+
+        const data = await response.json();
+        console.log('Response from caracteristicaImovel/filtro:', data);
+        
+        const imoveisFormatados = data.map((imovel: any) => ({
+          id: imovel.id,
+          destaque: imovel.destaque,
+          titulo: imovel.nome_propriedade,
+          cidade: imovel.id_endereco?.cidade || "Cidade não informada",
+          numero_quartos: imovel.id_caracteristicasImovel?.numero_quartos || 0,
+          numero_suites: imovel.id_caracteristicasImovel?.numero_suites || 0,
+          numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
+          preco: imovel.valor_venda || 0,
+          codigo: imovel.codigo,
+          tipo_transacao: imovel.tipo_transacao,
+          imagemNome: imovel.imagemNome || undefined
+        }));
+
+        console.log('Imóveis formatados (características):', imoveisFormatados);
+        setImoveis(imoveisFormatados);
+        setPaginationInfo({
+          currentPage: 0,
+          totalPages: 1,
+          totalElements: imoveisFormatados.length,
+          size: imoveisFormatados.length,
+        });
+        return;
+      }
+
       // If we have advanced filters, use the filtroImovel endpoint
       if (valorMinParam || valorMaxParam || tipoImovelParam) {
         const response = await fetch(`http://localhost:9090/imovel/filtroImovel?${new URLSearchParams({
-          ...(valorMinParam && { valor_min: decodeURIComponent(valorMinParam) }),
-          ...(valorMaxParam && { valor_max: decodeURIComponent(valorMaxParam) }),
-          ...(tipoImovelParam && { tipo_imovel: decodeURIComponent(tipoImovelParam).toLowerCase().trim() })
+          ...(valorMinParam && { valor_min: valorMinParam }),
+          ...(valorMaxParam && { valor_max: valorMaxParam }),
+          ...(tipoImovelParam && { tipo_imovel: tipoImovelParam.toLowerCase() })
         })}`, {
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -195,18 +243,20 @@ export function ListaImoveis() {
       const data = await response.json();
       
       const imoveisFormatados = data.content.map((imovel: any) => ({
-        id: imovel.id || 0,
-        destaque: imovel.destaque || "Não Destaque",
-        titulo: imovel.nome_propriedade || "Sem título",
+        id: imovel.id,
+        destaque: imovel.destaque,
+        titulo: imovel.nome_propriedade,
         cidade: imovel.id_endereco?.cidade || "Cidade não informada",
         numero_quartos: imovel.id_caracteristicasImovel?.numero_quartos || 0,
         numero_suites: imovel.id_caracteristicasImovel?.numero_suites || 0,
         numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
         preco: imovel.valor_venda || 0,
-        codigo: imovel.codigo || 0,
-        tipo_transacao: imovel.tipo_transacao || "Indefinido"
+        codigo: imovel.codigo,
+        tipo_transacao: imovel.tipo_transacao,
+        imagemNome: imovel.imagemNome || undefined
       }));
 
+      console.log('Imóveis formatados:', imoveisFormatados);
       setImoveis(imoveisFormatados);
       setPaginationInfo({
         currentPage: data.number,
