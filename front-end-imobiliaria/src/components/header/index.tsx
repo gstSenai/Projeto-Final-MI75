@@ -54,13 +54,11 @@ export function Header() {
         if (role === 'Administrador') {
             router.push('/paginaAdministrador');
         } else if (role === 'Corretor') {
-            router.push('/paginaCorretor');
+            router.push('/paginaCorretores');
         } else if (role === 'Proprietario') {
             router.push('/paginaProprietarios');
         } else if (role === 'Editor') {
             router.push('/paginaEditor');
-        } else if (role === 'Usuario') {
-            router.push('/');
         } else {
             router.push('/');
         }
@@ -109,7 +107,7 @@ export function Header() {
                                             role === 'Corretor' ? '/paginaCorretor' : 
                                             role === 'Proprietario' ? '/paginaProprietarios' : 
                                             role === 'Editor' ? '/paginaEditor' : 
-                                            '/'
+                                            '/PaginaInicial'
                                         }>
                                             {translate('inicio')}
                                         </Link>
@@ -287,7 +285,7 @@ export function Header() {
                                             role === 'Corretor' ? '/paginaCorretores' : 
                                             role === 'Proprietario' ? '/paginaProprietarios' : 
                                             role === 'Editor' ? '/paginaEditor' : 
-                                            '/PaginaInicial'
+                                            '/PaginaIncial'
                                         } 
                                         className="text-xl text-[#303030] hover:text-vermelho transition-colors"
                                     >
@@ -315,12 +313,6 @@ export function Header() {
                             </ul>
                             <div className='bg-black p-[0.2px] w-full'></div>
                             <ul className="space-y-3 text-start mt-3">
-                                <li className='flex gap-3 items-center'>
-                                    <Image src="/imagensHeader/sino.png" alt="chat corretores" width={20} height={20} className='h-full' />
-                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">
-                                        {translate('chat')}
-                                    </Link>
-                                </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/configuracoes.png" alt="configurações" width={20} height={20} className='h-full' />
                                     <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">
