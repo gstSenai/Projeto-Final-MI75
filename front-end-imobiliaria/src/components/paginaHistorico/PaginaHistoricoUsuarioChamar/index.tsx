@@ -14,7 +14,7 @@ interface Agendamento {
   id: number;
   data: string;
   horario: string;
-  status: string; // 'PENDENTE', 'CONFIRMADO', 'CANCELADO'
+  status: string;
   imovel: {
     codigo: string;
     id_endereco: {
@@ -56,12 +56,11 @@ export function PaginaHistoricoUsuarioChamar() {
       if (selectedDay !== null) {
         try {
           setLoading(true);
-          // Formatar a data no formato YYYY-MM-DD
           const currentYear = new Date().getFullYear();
           const formattedDate = `${currentYear}-${(selectedMonth + 1).toString().padStart(2, '0')}-${selectedDay.toString().padStart(2, '0')}`;
           
           const response = await request('GET', `http://localhost:9090/agendamento/usuario/data/${formattedDate}`) as Agendamento[];
-          console.log('Agendamentos recebidos:', response); // Log dos agendamentos recebidos
+          console.log('Agendamentos recebidos:', JSON.stringify(response, null, 2));
           setAgendamentos(response);
         } catch (error) {
           console.error('Erro ao buscar agendamentos:', error);
@@ -75,19 +74,22 @@ export function PaginaHistoricoUsuarioChamar() {
   }, [selectedDay, selectedMonth]);
 
   const getTipo = (status: string): 'realizado' | 'cancelado' | 'pendente' => {
-    // Log do status recebido
-    console.log('Status recebido:', status);
+    if (!status) {
+      console.warn('Status não definido, usando PENDENTE como padrão');
+      return 'pendente';
+    }
+  
+    console.log('Status recebido do banco:', status);
     
-    // Normalizar o status para maiúsculas para garantir a comparação
-    const normalizedStatus = status.toUpperCase();
-    console.log('Status normalizado:', normalizedStatus);
-    
-    switch (normalizedStatus) {
+    switch (status) {
       case 'CONFIRMADO':
         return 'realizado';
       case 'CANCELADO':
         return 'cancelado';
+      case 'PENDENTE':
+        return 'pendente';
       default:
+        console.warn('Status desconhecido:', status);
         return 'pendente';
     }
   };
@@ -109,7 +111,6 @@ export function PaginaHistoricoUsuarioChamar() {
         <div>
           {agendamentos.length > 0 ? (
             agendamentos.map(agendamento => {
-              // Log do agendamento individual e seu status
               console.log('Renderizando agendamento:', {
                 id: agendamento.id,
                 status: agendamento.status,
