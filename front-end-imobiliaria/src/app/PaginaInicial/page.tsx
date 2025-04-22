@@ -9,10 +9,11 @@ import BotaoImagemTexto from '@/components/paginaInicial/botaoImageTexto/index';
 import { useLanguage } from '@/components/context/LanguageContext';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { Card } from '@/components/CardImovel/index';
+import { Card } from '@/components/cardImovel/';
 import Image from 'next/image';
 import { LoadingWrapper } from '@/components/loading/loadingServer';
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';
+import { useImoveis } from '@/hooks/useImoveis';
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -22,6 +23,9 @@ const montserrat = Montserrat({
 
 export default function PaginaInicial() {
     const { translate } = useLanguage();
+    const { imoveis: imoveisDestaque, loading: loadingDestaque } = useImoveis('destaque');
+    const { imoveis: imoveisPromocao, loading: loadingPromocao } = useImoveis('promocao');
+    const { imoveis: imoveisRecentes, loading: loadingRecentes } = useImoveis('recente');
 
     return (
         <LoadingWrapper>
@@ -81,11 +85,31 @@ export default function PaginaInicial() {
                             </div>
                         </div>
                         <div className='flex flex-col lg:flex-row justify-center pt-4 xl:pt-16 pb-12'>
-                            <Carrossel type='ajusteTriplo'>
-                                <Card titulo="Casa com 3 quartos" cidade="Jaraguá Do Sul" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={6545644} codigo={455445} />
-                                <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={3443423} codigo={2331212} />
-                                <Card titulo="Casa com 3 quartos" cidade="Corupa" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={2121321} codigo={3323} />
-                            </Carrossel>
+                            {loadingDestaque ? (
+                                <div className="flex justify-center items-center">
+                                    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#702632]"></div>
+                                </div>
+                            ) : imoveisDestaque.length > 0 ? (
+                                <Carrossel type='ajusteTriplo'>
+                                    {imoveisDestaque.map((imovel) => (
+                                        <Card
+                                            key={imovel.id}
+                                            titulo={imovel.titulo}
+                                            cidade={imovel.cidade}
+                                            numero_quartos={imovel.numero_quartos}
+                                            numero_suites={imovel.numero_suites}
+                                            numero_banheiros={imovel.numero_banheiros}
+                                            preco={imovel.preco}
+                                            codigo={imovel.codigo}
+                                            destaque={imovel.destaque as "Destaque" | "Promoção" | "Adicionado Rec." | "Não Destaque"}
+                                        />
+                                    ))}
+                                </Carrossel>
+                            ) : (
+                                <div className="flex justify-center items-center">
+                                    <p className="text-xl font-semibold text-gray-600">Nenhum imóvel em destaque encontrado</p>
+                                </div>
+                            )}
                         </div>
                     </section>
                     <section>
@@ -95,11 +119,30 @@ export default function PaginaInicial() {
                                 <p className='flex justify-center text-center text-xl lg:text-3xl xl:text-2xl font-medium p-3 opacity-75'>{translate('propriedades_localizacao')}</p>
                             </div>
                         </div>
-                        {/* recentemente puxa por 'Adicionado Rec.' */}
                         <div className='flex flex-col lg:flex-row justify-center gap-10 pt-4 xl:pt-24 pb-12'>
-                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
-                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
-                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
+                            {loadingRecentes ? (
+                                <div className="flex justify-center items-center">
+                                    <div className="animate-spin rounded-full h-32 w-30 border-b-2 border-[#702632]"></div>
+                                </div>
+                            ) : imoveisRecentes.length > 0 ? (
+                                imoveisRecentes.slice(0, 3).map((imovel) => (
+                                    <Card
+                                        key={imovel.id}
+                                        titulo={imovel.titulo}
+                                        cidade={imovel.cidade}
+                                        numero_quartos={imovel.numero_quartos}
+                                        numero_suites={imovel.numero_suites}
+                                        numero_banheiros={imovel.numero_banheiros}
+                                        preco={imovel.preco}
+                                        codigo={imovel.codigo}
+                                        destaque={imovel.destaque as "Destaque" | "Promoção" | "Adicionado Rec." | "Não Destaque"}
+                                    />
+                                ))
+                            ) : (
+                                <div className="flex justify-center items-center">
+                                    <p className="text-xl font-semibold text-gray-600">Nenhum imóvel recente encontrado</p>
+                                </div>
+                            )}
                         </div>
                     </section>
                     <section>
@@ -110,9 +153,29 @@ export default function PaginaInicial() {
                             </div>
                         </div>
                         <div className='flex flex-col lg:flex-row justify-center gap-10 pt-4 xl:pt-24 pb-12'>
-                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
-                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
-                            <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
+                            {loadingPromocao ? (
+                                <div className="flex justify-center items-center">
+                                    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#702632]"></div>
+                                </div>
+                            ) : imoveisPromocao.length > 0 ? (
+                                imoveisPromocao.slice(0, 3).map((imovel) => (
+                                    <Card
+                                        key={imovel.id}
+                                        titulo={imovel.titulo}
+                                        cidade={imovel.cidade}
+                                        numero_quartos={imovel.numero_quartos}
+                                        numero_suites={imovel.numero_suites}
+                                        numero_banheiros={imovel.numero_banheiros}
+                                        preco={imovel.preco}
+                                        codigo={imovel.codigo}
+                                        destaque={imovel.destaque as "Destaque" | "Promoção" | "Adicionado Rec." | "Não Destaque"}
+                                    />
+                                ))
+                            ) : (
+                                <div className="flex justify-center items-center">
+                                    <p className="text-xl font-semibold text-gray-600">Nenhum imóvel em promoção encontrado</p>
+                                </div>
+                            )}
                         </div>
                     </section>
                 </section>

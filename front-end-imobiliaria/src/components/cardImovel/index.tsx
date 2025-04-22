@@ -41,12 +41,18 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
                         const blob = await response.blob();
                         const imageUrl = URL.createObjectURL(blob);
                         setMainImage(imageUrl);
+                    } else {
+                        setMainImage('/imagensImovel/fotoImovel.png');
                     }
                 } catch (error) {
                     console.error('Erro ao buscar imagem principal:', error);
+                    setMainImage('/imagensImovel/fotoImovel.png');
                 } finally {
                     setIsLoading(false);
                 }
+            } else {
+                setMainImage('/imagensImovel/fotoImovel.png');
+                setIsLoading(false);
             }
         };
 
@@ -83,8 +89,8 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
 
     return (
         <div className={`${inter.className} flex justify-center pt-12 lg:pt-0`}>
-            <div className="flex flex-col lg:w-full lg:max-w-[320px] 2xl:max-w-[300px] cursor-pointer" onClick={handleClick}>
-                <div className='relative'>
+            <div className="flex flex-col w-[250px] lg:w-[320px] 2xl:w-[300px] cursor-pointer" onClick={handleClick}>
+                <div className='relative w-full'>
                     {imovelId && (
                         <div className="absolute top-2 right-2">
                             <Favoritar usuarioId={1} imovelId={imovelId} />
@@ -92,11 +98,11 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
                     )}
                     <div className="w-full overflow-hidden">
                         {isLoading ? (
-                            <div className="w-full lg:w-full lg:max-w-[320px] 2xl:max-w-[300px] h-[324px] flex items-center justify-center bg-gray-200">
+                            <div className="w-full h-[324px] flex items-center justify-center bg-gray-200">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-vermelho"></div>
                             </div>
                         ) : (
-                            <div className="relative">
+                            <div className="relative w-full">
                                 {destaque === 'Adicionado Rec.' && (
                                     <div className={`absolute top-6 -left-8 whitespace-nowrap text-center text-black ${getLabelStyle(destaque)} py-1 px-10 transform -rotate-[30deg] z-10 font-bold text-xs shadow-md`}>
                                         {destaque.toUpperCase()}
@@ -115,7 +121,7 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
                                 <Image 
                                     src={mainImage} 
                                     alt="Imagem Imovel" 
-                                    className="lg:max-w-[320px] w-[250px] 2xl:max-w-[300px] max-h-[160px] rounded-t-[20px]" 
+                                    className="w-full h-[324px] object-cover rounded-t-[20px]" 
                                     width={500} 
                                     height={324} 
                                 />
@@ -123,7 +129,7 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
                         )}
                     </div>
                 </div>
-                <div className="w-full lg:w-full lg:max-w-[320px] 2xl:max-w-[300px] bg-white shadow-[5px_20px_100px_rgb(0,0,0,0.1)] rounded-b-[20px] py-2">
+                <div className="w-full bg-white shadow-[5px_20px_100px_rgb(0,0,0,0.1)] rounded-b-[20px] py-2">
                     <div className="flex flex-col justify-center items-center">
                         <p className="text-lg 2xl:text-2xl font-black text-[#5C5C5C] [text-shadow:1px_1px_1px_#5C5C5C]">{titulo}</p>
                         <p className="text-vermelho font-semibold text-xs 2xl:text-base">{cidade}</p>

@@ -2,7 +2,7 @@ import { Montserrat } from 'next/font/google';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import BarraStatusImovel from '@/components/barraStatusImovel';
-import { Card } from '@/components/cardImovel';
+import { Card } from '@/components/cardImovel/index';
 import AgendarCorretor from '@/components/agendarCorretor';
 import { LoadingWrapper } from '@/components/loading/loadingServer';
 
@@ -33,19 +33,13 @@ export default function PaginaImovel() {
 
                 </main>
                 <section>
-
                     <div className="flex justify-center lg:justify-start">
                         <BarraStatusImovel id={1} />
                     </div>
 
-
-
                     <div className="flex justify-center lg:justify-start">
                         <AgendarCorretor id={3} />
                     </div>
-
-
-
 
                 </section>
                 <section>
@@ -53,11 +47,7 @@ export default function PaginaImovel() {
                         <h2 className='font-bold text-xl'>Imóveis semelhantes</h2>
                         <div className='bg-vermelho w-[110px] h-[3px]'></div>
                     </div>
-                    <div className='flex flex-col lg:flex-row justify-evenly pt-12 xl:pt-12 pb-36'>
-                        <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
-                        <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
-                        <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
-                    </div>
+
                 </section>
             </div>
             <Footer />
