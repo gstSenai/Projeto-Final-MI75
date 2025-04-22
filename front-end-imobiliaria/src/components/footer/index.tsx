@@ -12,6 +12,7 @@ const montserrat = Montserrat({
 });
 
 export function Footer() {
+  const currentYear = new Date().getFullYear();
     const { translate } = useLanguage();
     const currentYear = new Date().getFullYear();
     
@@ -88,19 +89,68 @@ export function Footer() {
                 />
             </section>
 
-            {/* Footer Bottom */}
-            <section className="relative bg-[#2B2A28] text-white py-2.5 px-2.5 flex justify-center items-center z-20">
-                <p className="text-center text-[10px] md:text-xs">
-                    <span className="hidden lg:inline">
-                        © {currentYear} HAV Imobiliária. {translate('footer.direitosReservados')} <Link href="/PoliticaPrivacidade">{translate('footer.termosUso')}</Link> | <Link href="/PoliticaPrivacidade">{translate('footer.politicaPrivacidade')}</Link> | <Link href="/PoliticaPrivacidade">{translate('footer.politicaCookies')}</Link>
-                    </span>
-                    <span className="lg:hidden">
-                        © {currentYear} HAV Imobiliária. {translate('footer.direitosReservados')}
-                    </span>
-                </p>
-            </section>
-            
-            <VLibrasButton />
-        </footer>
-    );
+        {/* Bloco de Links */}
+        <div className="z-20">
+          <div className="flex flex-wrap gap-14 md:gap-12 xl:gap-20">
+            {/* Serviços */}
+            <div className="flex flex-col gap-2">
+              <p className="text-base xl:text-lg font-extrabold">Serviços</p>
+              <div className="font-light text-xs md:text-sm flex flex-col gap-1.5">
+                <Link href="#">Avaliações</Link>
+                <Link href="#">Consultoria</Link>
+                <Link href="#">Regularização</Link>
+                <Link href="#">Investimentos</Link>
+              </div>
+            </div>
+
+            {/* Contato */}
+            <div className="flex flex-col gap-2">
+              <p className="text-base xl:text-lg font-extrabold">Contato</p>
+              <div className="font-light text-xs md:text-sm flex flex-col gap-1.5">
+                <Link href="#">Suporte</Link>
+                <Link href="#">Atendimento</Link>
+                <Link href="#">FAQ</Link>
+                <Link href="#">Reclame Aqui</Link>
+              </div>
+            </div>
+
+            {/* Links Rápidos */}
+            <div className="flex flex-col gap-2">
+              <p className="text-base xl:text-lg font-extrabold">Links Rápidos</p>
+              <div className="font-light text-xs md:text-sm flex flex-col gap-1.5">
+                <Link href="/">Página Inicial</Link>
+                <Link href="/sobreNos">Sobre Nós</Link>
+                <Link href="#">Comprar</Link>
+                <Link href="#">Vender</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Imagem decorativa */}
+        <Image
+          src="/iconFooter/imagemFooterLogo.png"
+          alt="Imagem Imóvel"
+          width={300}
+          height={320}
+          className="absolute bottom-14 sm:bottom-8 md:-bottom-2 lg:-bottom-14 2xl:-bottom-14 -right-36 xl:-right-28 z-0"
+        />
+      </section>
+
+      {/* Rodapé final */}
+      <section className="relative bg-[#2B2A28] text-white py-2.5 px-2.5 flex justify-center items-center z-20 text-center">
+        <div className="text-[10px] md:text-xs space-y-1">
+          <p className="lg:hidden">
+            &copy; {currentYear} HAV Imóveis. Todos os direitos reservados.
+          </p>
+          <p className="hidden lg:inline">
+            &copy; {currentYear} HAV Imobiliária. Todos os direitos reservados. Este site é protegido por direitos autorais. Reprodução ou distribuição não autorizada é proibida.{' '}
+            <Link href="/PoliticaPrivacidade">Termos de Uso</Link> |{' '}
+            <Link href="/PoliticaPrivacidade">Política de Privacidade</Link> |{' '}
+            <Link href="/PoliticaPrivacidade">Política de Cookies</Link>.
+          </p>
+        </div>
+      </section>
+    </footer>
+  );
 }
