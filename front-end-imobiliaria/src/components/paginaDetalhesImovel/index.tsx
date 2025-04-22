@@ -409,7 +409,7 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
                   router.push(`/paginaAgendamento?imovelId=${imovel.id}`);
                 }}
               >
-                Falar com Corretor
+                Agendar sua visita
               </button>
             </div>
           </div>
@@ -446,10 +446,10 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
                   </div>
                 </div>
                 <button className="w-full mt-6 bg-vermelho text-white py-3 rounded font-bold hover:bg-opacity-90 transition-colors" onClick={() => {
-                  localStorage.setItem('currentImovelId', imovel.id.toString());
-                  router.push(`/paginaAgendamento?imovelId=${imovel.id}`);
+                  const mensagem = `Olá, estou interessado(a) no imóvel ${imovel.nome_propriedade} (Código: ${imovel.codigo}).`;
+                  window.open(`https://wa.me/5545999341270?text=${encodeURIComponent(mensagem)}`, '_blank');
                 }}>
-                 Agendar sua visita
+                  Falar com Corretor
                 </button>
               </div>
             </div>
