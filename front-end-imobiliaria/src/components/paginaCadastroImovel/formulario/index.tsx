@@ -46,7 +46,15 @@ const ImovelProps = z.object({
         .regex(/^\d{1,3}(\.\d{3})*,\d{2}$/, { message: "Formato de área inválido" })
         .transform((valor) => parseFloat(valor.replace(/\./g, '').replace(',', '.'))),
     descricao: z.string().optional(),
-})
+}).superRefine((data, ctx) => {
+    if (data.valor_promocional > data.valor_venda) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "",
+            path: ["valor_promocional"]
+        });
+    }
+});
 
 const ImovelCaracteristicas = z.object({
     id: z.number().optional(),
@@ -139,7 +147,7 @@ interface InputDadosImovelProps {
 }
 
 export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProps) {
-    const { register, handleSubmit, formState: { errors }, setValue, reset, trigger, getValues } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors }, setValue, reset, trigger, getValues, watch } = useForm<FormData>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
             imovel: {
@@ -168,7 +176,38 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
     const [adicionarAberto, setAdicionarAberto] = useState(true)
     const [proprietarioAdicionado, setProprietarioAdicionado] = useState(false)
     const [usuarioAdicionado, setUsuarioAdicionado] = useState(false)
+    const [valorPromocionalError, setValorPromocionalError] = useState("")
     const codigosGerados = new Set<number>();
+
+    const valorVenda = watch("imovel.valor_venda");
+    const valorPromocional = watch("imovel.valor_promocional");
+
+    useEffect(() => {
+        const validarValores = () => {
+            if (!valorVenda || !valorPromocional) return;
+
+            try {
+                const valorVendaStr = String(valorVenda).replace(/\./g, '').replace(',', '.');
+                const valorPromocionalStr = String(valorPromocional).replace(/\./g, '').replace(',', '.');
+                
+                const valorVendaNum = parseFloat(valorVendaStr);
+                const valorPromocionalNum = parseFloat(valorPromocionalStr);
+                
+                if (isNaN(valorVendaNum) || isNaN(valorPromocionalNum)) return;
+                
+                if (valorPromocionalNum > valorVendaNum) {
+                    setValorPromocionalError("O valor promocional não pode ser maior que o valor de venda");
+                } else {
+                    setValorPromocionalError("");
+                }
+            } catch (error) {
+                console.error("Erro ao validar valores:", error);
+                setValorPromocionalError("");
+            }
+        };
+
+        validarValores();
+    }, [valorVenda, valorPromocional]);
 
     const handleImagesChange = (files: File[]) => {
         setImages(files);
@@ -556,6 +595,8 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                                     <TipoImovelTransacao
                                         register={register}
                                         errors={errors}
+                                        valorPromocionalError={valorPromocionalError}
+                                        setValorPromocionalError={setValorPromocionalError}
                                     />
                                     <div className="flex justify-end gap-4 mt-4">
                                         <Botao
