@@ -449,7 +449,7 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
                   localStorage.setItem('currentImovelId', imovel.id.toString());
                   router.push(`/paginaAgendamento?imovelId=${imovel.id}`);
                 }}>
-                  Falar com Corretor
+                 Agendar sua visita
                 </button>
               </div>
             </div>
