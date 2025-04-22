@@ -1,3 +1,5 @@
+// src/components/Botao.tsx
+'use client'
 import { Montserrat } from 'next/font/google';
 
 const montserrat = Montserrat({
@@ -20,7 +22,7 @@ export function Botao({ texto, onClick, className, type = "button" }: BotaoProps
             <button
                 type={type}
                 onClick={onClick}
-                className={`${montserrat} ${className} 
+                className={`${montserrat.className} ${className} 
                 bg-opacity-50 hover:bg-opacity-100 transition-all
                  duration-300 ease-in-out shrink-0 text-center 
                  rounded-[20px] w-full ${className || ''}`}

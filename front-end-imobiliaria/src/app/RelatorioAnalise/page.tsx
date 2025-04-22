@@ -5,7 +5,7 @@ import RotaPrivada from '@/components/RotaPrivada';
 export default function Relatorio() {
     return (
         <LoadingWrapper>
-            <RotaPrivada userAutorizado={['Administrador', 'Corretor', 'Editor']}>
+            <RotaPrivada userAutorizado={['administrador', 'corretor', 'editor']}>
                 <RelatoriosAnalises />
             </RotaPrivada>
         </LoadingWrapper>

@@ -3,9 +3,8 @@ import { useState, useEffect } from "react"
 import type React from "react"
 import { Montserrat } from 'next/font/google'
 import { motion, AnimatePresence } from "framer-motion"
-
 import { DadosUsuarioSection } from "./dados-imovel-section"
-import { Botao } from "@/components/botao"
+import { Botao } from "@/components/botao/index"
 import request from "@/routes/request"
 import { FormularioImagem } from "./formularioImagem"
 import { useForm } from 'react-hook-form';
@@ -26,7 +25,12 @@ const UsuarioProps = z.object({
         message: "Selecione um tipo de conta válido",
     }),
     email: z.string().email({ message: "E-mail inválido" }),
-    password: z.string().min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+    password: z.string()
+        .min(8, { message: "A senha deve ter no mínimo 8 caracteres" })
+        .regex(/(?=.*[a-z])/, { message: "A senha deve conter pelo menos uma letra minúscula" })
+        .regex(/(?=.*[A-Z])/, { message: "A senha deve conter pelo menos uma letra maiúscula" })
+        .regex(/(?=.*\d)/, { message: "A senha deve conter pelo menos um número" })
+        .regex(/(?=.*[!@#$%^&*(),.?":{}|<>])/, { message: "A senha deve conter pelo menos um caractere especial" }),
 })
 
 const FormSchema = z.object({

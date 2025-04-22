@@ -1,93 +1,96 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { cn } from "@/components/Calendario/cn"
+import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/components/Calendario/cn";
+
 type CalendarProps = {
-  locale?: string
-  className?: string
-}
+  locale?: string;
+  className?: string;
+  onDateChange?: (date: string) => void; // <- aqui
+};
 
-export default function CustomCalendar({ locale = "pt-BR", className }: CalendarProps) {
-  const [currentDate, setCurrentDate] = useState(new Date())
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+export default function CustomCalendar({ locale = "pt-BR", className, onDateChange }: CalendarProps) {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-  // Get current month and year
-  const currentMonth = currentDate.getMonth()
-  const currentYear = currentDate.getFullYear()
-
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
-
-  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay()
-
-  const daysFromPrevMonth = firstDayOfMonth
-
-  const lastDayPrevMonth = new Date(currentYear, currentMonth, 0).getDate()
-
-  const monthName = currentDate.toLocaleString(locale, { month: "long" })
-
-  const weekdays = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"]
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+  const daysFromPrevMonth = firstDayOfMonth;
+  const lastDayPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
+  const monthName = currentDate.toLocaleString(locale, { month: "long" });
+  const weekdays = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
 
   const prevMonth = () => {
-    setCurrentDate(new Date(currentYear, currentMonth - 1, 1))
-  }
+    setCurrentDate(new Date(currentYear, currentMonth - 1, 1));
+  };
 
   const nextMonth = () => {
-    setCurrentDate(new Date(currentYear, currentMonth + 1, 1))
-  }
+    setCurrentDate(new Date(currentYear, currentMonth + 1, 1));
+  };
 
   const isToday = (day: number) => {
-    const today = new Date()
-    return day === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()
-  }
+    const today = new Date();
+    return (
+      day === today.getDate() &&
+      currentMonth === today.getMonth() &&
+      currentYear === today.getFullYear()
+    );
+  };
 
   const isSelected = (day: number) => {
     return (
       day === selectedDate.getDate() &&
       currentMonth === selectedDate.getMonth() &&
       currentYear === selectedDate.getFullYear()
-    )
-  }
+    );
+  };
 
   const isPast = (day: number) => {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    const date = new Date(currentYear, currentMonth, day)
-    return date < today
-  }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const date = new Date(currentYear, currentMonth, day);
+    return date < today;
+  };
 
   const handleDateClick = (day: number, isPrevMonth = false, isNextMonth = false) => {
-    let month = currentMonth
-    let year = currentYear
-
+    let month = currentMonth;
+    let year = currentYear;
+  
     if (isPrevMonth) {
-      month = month - 1
+      month = month - 1;
       if (month < 0) {
-        month = 11
-        year = year - 1
+        month = 11;
+        year = year - 1;
       }
     }
-
+  
     if (isNextMonth) {
-      month = month + 1
+      month = month + 1;
       if (month > 11) {
-        month = 0
-        year = year + 1
+        month = 0;
+        year = year + 1;
       }
     }
-
-    const newDate = new Date(year, month, day)
+  
+    const newDate = new Date(year, month, day);
+  
     if (newDate >= new Date(new Date().setHours(0, 0, 0, 0))) {
-      setSelectedDate(newDate)
+      setSelectedDate(newDate);
+      
+      // Enviar no formato ISO (YYYY-MM-DD)
+      onDateChange?.(newDate.toISOString().split('T')[0]);
     }
-  }
+  };
+  
 
   const renderCalendarDays = () => {
-    const days = []
+    const days = [];
 
-    // Previous month days
     for (let i = daysFromPrevMonth - 1; i >= 0; i--) {
-      const day = lastDayPrevMonth - i
+      const day = lastDayPrevMonth - i;
       days.push(
         <div key={`prev-${day}`} className="flex justify-center items-center py-2">
           <button
@@ -95,19 +98,18 @@ export default function CustomCalendar({ locale = "pt-BR", className }: Calendar
             disabled={isPast(day)}
             className={cn(
               "flex justify-center items-center w-8 h-8 rounded-lg text-gray-300 font-medium transition-all",
-              isPast(day) ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100",
+              isPast(day) ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100"
             )}
           >
             {day}
           </button>
-        </div>,
-      )
+        </div>
+      );
     }
 
-    // Current month days
     for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(currentYear, currentMonth, day)
-      const isWeekend = date.getDay() === 0 || date.getDay() === 6
+      const date = new Date(currentYear, currentMonth, day);
+      const isWeekend = date.getDay() === 0 || date.getDay() === 6;
 
       days.push(
         <div key={`current-${day}`} className="flex justify-center items-center py-2">
@@ -119,22 +121,21 @@ export default function CustomCalendar({ locale = "pt-BR", className }: Calendar
               isSelected(day)
                 ? "bg-[#702632] text-white"
                 : isPast(day)
-                  ? "opacity-50 cursor-not-allowed text-gray-500"
-                  : isWeekend
-                    ? "text-red-500 hover:bg-gray-100"
-                    : "text-gray-800 hover:bg-gray-100",
-              isToday(day) && !isSelected(day) && "border border-[#702632]",
+                ? "opacity-50 cursor-not-allowed text-gray-500"
+                : isWeekend
+                ? "text-red-500 hover:bg-gray-100"
+                : "text-gray-800 hover:bg-gray-100",
+              isToday(day) && !isSelected(day) && "border border-[#702632]"
             )}
           >
             {day}
           </button>
-        </div>,
-      )
+        </div>
+      );
     }
 
-    // Next month days
-    const totalDaysDisplayed = days.length
-    const remainingCells = 42 - totalDaysDisplayed // 6 rows x 7 columns
+    const totalDaysDisplayed = days.length;
+    const remainingCells = 42 - totalDaysDisplayed;
 
     for (let day = 1; day <= remainingCells; day++) {
       days.push(
@@ -145,12 +146,12 @@ export default function CustomCalendar({ locale = "pt-BR", className }: Calendar
           >
             {day}
           </button>
-        </div>,
-      )
+        </div>
+      );
     }
 
-    return days
-  }
+    return days;
+  };
 
   return (
     <div className={cn("bg-white rounded-xl p-6 xl:p-12 shadow-sm w-full h-full max-w-[955px] max-h-[827px]", className)}>
@@ -177,10 +178,8 @@ export default function CustomCalendar({ locale = "pt-BR", className }: Calendar
           </div>
         ))}
       </div>
-     
 
       <div className="grid grid-cols-7">{renderCalendarDays()}</div>
     </div>
-  )
+  );
 }
-

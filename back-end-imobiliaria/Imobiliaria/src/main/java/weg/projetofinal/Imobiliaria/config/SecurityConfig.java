@@ -18,9 +18,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import weg.projetofinal.Imobiliaria.security.filter.AuthTokenFilter;
 import weg.projetofinal.Imobiliaria.security.service.AuthEntryPointJwt;
 import weg.projetofinal.Imobiliaria.security.service.UserDetailsServiceImpl;
+import weg.projetofinal.Imobiliaria.security.service.GoogleAuthService;
 
 @Configuration
 @EnableWebSecurity
@@ -30,6 +34,7 @@ public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointJwt authEntryPointJWT;
     private final AuthTokenFilter authTokenFilter;
+    private final GoogleAuthService googleAuthService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -53,6 +58,13 @@ public class SecurityConfig {
         return authenticationManagerBuilder;
     }
 
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return (request, response, authentication) -> {
+            String token = googleAuthService.processOAuth2User(authentication);
+            response.sendRedirect("http://localhost:3000/login/success?token=" + token);
+        };
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -67,14 +79,13 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/**").permitAll()
-
                         .anyRequest().permitAll()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(authenticationSuccessHandler())
                 )
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
-
-
 }

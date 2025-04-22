@@ -26,4 +26,15 @@ public class CaracteristicasImovelSpecification {
             return criteriaBuilder.equal(root.get("numero_banheiros"), numero_banheiros);
         };
     }
+
+    public static Specification<CaracteristicaImovel> hasNumero_Vagas(Integer numero_vagas) {
+        return (root,
+                query,
+                criteriaBuilder) -> {
+            if(numero_vagas == null){
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.equal(root.get("numero_vagas"), numero_vagas);
+        };
+    }
 }

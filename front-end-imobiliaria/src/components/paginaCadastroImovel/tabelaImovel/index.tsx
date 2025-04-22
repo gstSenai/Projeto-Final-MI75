@@ -5,7 +5,7 @@ import { Montserrat } from 'next/font/google'
 import { RemoveImovel } from "../removerImovel"
 import { EditarImovel } from "../editarImovel"
 import Image from "next/image"
-import { Botao } from "@/components/botao"
+import { Botao } from "@/components/botao/index"
 import { FormularioInput } from "@/components/paginaCadastroUsuario/adicionandoUsuario/formulario/formularioInput"
 import { Formulario } from "../formulario"
 import { useForm } from 'react-hook-form'
@@ -28,7 +28,7 @@ interface ImovelProps {
   valor_promocional: number
   test_destaque?: string
   test_visibilidade?: string
-  destaque: boolean
+  destaque: string
   visibilidade: boolean
   valor_iptu: number
   condominio: number

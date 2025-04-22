@@ -14,7 +14,7 @@ export function CardHorario({ tipo, horario, codigo, corretor }: CardHorarioProp
 
     return (
         <div className='pt-12 grid justify-center md:justify-center lg:justify-normal '>
-            <div className='bg-[#702632] w-44 sm:w-44 md:w-44 lg:w-auto text-white py-4 sm:py-4 md:py-4 lg:py-1 px-8 rounded-lg shadow-md flex flex-col md:flex-col lg:flex-row justify-between items-center text-xl gap-4'>
+            <div className='bg-[#702632] w-44 sm:w-44 md:w-44 lg:w-auto text-white py-4 sm:py-4 md:py-4 lg:py-4 px-8 rounded-lg shadow-md flex flex-col md:flex-col lg:flex-row justify-between items-center text-sm md:text-base lg:text-lg gap-4'>
                 <div className='font-medium'>{horario}</div>
 
                 <div className='flex flex-col md:flex-col lg:flex-row items-center gap-7 md:gap-7 lg:gap-14 text-sm md:text-base lg:text-lg'>
@@ -23,15 +23,15 @@ export function CardHorario({ tipo, horario, codigo, corretor }: CardHorarioProp
 
                     <div className='flex items-center gap-4  text-sm md:text-base lg:text-lg'>
                         {tipo === 'realizado' && (
-                            <span className='bg-green-500 px-7 md:px-7 lg:px-10 py-[2px] rounded-full'>Realizado</span>
+                            <span className='bg-green-500 px-5 md:px-6 lg:px-7 py-[0.5px] rounded-full'>Realizado</span>
                         )}
 
                         {tipo === 'cancelado' && (
-                            <span className='bg-red-500 px-7 md:px-7 lg:px-9 py-[2px] rounded-full'>Cancelado</span>
+                            <span className='bg-red-500  px-5 md:px-6 lg:px-6 py-[0.5px] rounded-full'>Cancelado</span>
                         )}
 
                         {tipo === 'pendente' && (
-                            <span className='bg-yellow-500 px-7 md:px-7 lg:px-10 py-[2px] rounded-full'>Pendente</span>
+                            <span className='bg-yellow-500  px-5 md:px-6 lg:px-7 py-[0.5px] rounded-full'>Pendente</span>
                         )}
                     </div>
 

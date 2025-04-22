@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react';
-import { Card } from '../CardImovel';
+import { Card } from '../cardImovel';
 import { useLanguage } from '../context/LanguageContext';
 
 const imoveis = [

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import React from "react"
 
-import { Botao } from "@/components/botao"
+import { Botao } from "@/components/botao/index"
 import { FormularioEditarInput } from "../editandoUsuario/formularioEditarInput"
 import { FormularioImagemEdit } from "../editandoUsuario/formularioImagemEdit"
 import { type SubmitHandler, useForm } from "react-hook-form";

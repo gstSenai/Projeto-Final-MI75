@@ -2,10 +2,14 @@ package weg.projetofinal.Imobiliaria.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import weg.projetofinal.Imobiliaria.model.entity.Agendamento;
+import weg.projetofinal.Imobiliaria.model.entity.enums.StatusAgendamento;
 import weg.projetofinal.Imobiliaria.repository.AgendamentoRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -19,7 +23,9 @@ public class AgendamentoService {
     }
 
 
-
+    public List<Agendamento> findByImovelAndDate(Integer idImovel, LocalDate data) {
+        return agendamentoRepository.findByImovelIdAndData(idImovel, data);
+    }
 
     public Agendamento procurarPorId(int id) {
         return agendamentoRepository.findById(id)
@@ -27,6 +33,9 @@ public class AgendamentoService {
                 new EntityNotFoundException("Agendamento não encontrado com ID: " + id));
     }
 
+    public Page<Agendamento> findByCorretorAndStatus(String username, String status, Pageable pageable) {
+        return agendamentoRepository.findByCorretorUsernameAndStatus(username, StatusAgendamento.valueOf(status), pageable);
+    }
 
 
     public Agendamento save(Agendamento agendamento) {
@@ -75,10 +84,34 @@ public class AgendamentoService {
     }
 
 
+    public Page<Agendamento> findByCorretor(String username, Pageable pageable) {
+        return agendamentoRepository.findByCorretorUsername(username, pageable);
+    }
+
+    public Agendamento confirmarAgendamento(Integer id) {
+        Agendamento agendamento = procurarPorId(id);
+        agendamento.setStatus(StatusAgendamento.CONFIRMADO);
+        return agendamentoRepository.save(agendamento);
+    }
+
     public void remover(int id) {
         agendamentoRepository.deleteById(id);
     }
 
+    public List<Agendamento> findByCorretorAndDate(String username, LocalDate date) {
+        return agendamentoRepository.findByCorretorUsernameAndData(username, date);
+    }
 
+
+    public List<Agendamento> findByUsuarioAndDate(String username, LocalDate date) {
+        return agendamentoRepository.findByUsuarioUsernameAndData(username, date);
+    }
+
+
+    public Agendamento cancelarAgendamento(Integer id) {
+        Agendamento agendamento = procurarPorId(id);
+        agendamento.setStatus(StatusAgendamento.CANCELADO);
+        return agendamentoRepository.save(agendamento);
+    }
 
 }

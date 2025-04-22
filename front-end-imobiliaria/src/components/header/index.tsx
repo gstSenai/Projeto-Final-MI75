@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
 import { Inter } from 'next/font/google';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
 import { useLanguage } from '@/components/context/LanguageContext';
+import { useAuth } from '@/components/context/AuthContext';
 
-// Carregando a fonte Inter
 const inter = Inter({
     subsets: ['latin'],
     weight: ['400', '600'],
@@ -15,59 +15,69 @@ const inter = Inter({
 });
 
 export function Header() {
-    const router = useRouter()
-    const [hamburguerMobile, setHambuguerMobile] = useState(false)
-    const [showProfileModal, setShowProfileModal] = useState(false)
-    const [showLanguageModal, setShowLanguageModal] = useState(false)
+    const router = useRouter();
+    const [hamburguerMobile, setHamburguerMobile] = useState(false);
+    const [showProfileModal, setShowProfileModal] = useState(false);
+    const [showLanguageModal, setShowLanguageModal] = useState(false);
     const { translate, currentLanguage, setCurrentLanguage } = useLanguage();
-    const [currentImageBrasil, setCurrentImageBrasil] = useState('/imagensHeader/Brasil.png')
-    const [currentImageEUA, setCurrentImageEUA] = useState('/imagensHeader/eua.png')
-    const [currentImageEspanha, setCurrentImageEspanha] = useState('/imagensHeader/espanha.png')
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
-    const [username, setUsername] = useState('')
-    const [userRole, setUserRole] = useState('')
-    const [id, setId] = useState('')
+    const [currentImageBrasil] = useState('/imagensHeader/Brasil.png');
+    const [currentImageEUA] = useState('/imagensHeader/eua.png');
+    const [currentImageEspanha] = useState('/imagensHeader/espanha.png');
+    const { isAuthenticated, logout, role, userId } = useAuth();
+    const [username, setUsername] = useState('');
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const storedUsername = localStorage.getItem('username');
-        const storedRole = localStorage.getItem('tipo_conta');
-        const storedId = localStorage.getItem('id');
-        console.log("ID armazenado:", storedId);
-        if (token && storedUsername) {
-            setIsLoggedIn(true);
-            setUsername(storedUsername);
-            setUserRole(storedRole || '');
-            setId(storedId || '');
-        }
-    }, []);
+        const fetchUserData = async () => {
+            if (isAuthenticated && userId) {
+                try {
+                    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:9090"
+                    const response = await fetch(`${apiUrl}/api/auth/user-info`, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        const userData = await response.json();
+                        console.log('Dados do usuário recebidos:', userData);
+                        console.log('Tipo de conta recebido:', userData.tipo_conta);
+                        setUsername(userData.username);
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar dados do usuário:', error);
+                }
+            }
+        };
+
+        fetchUserData();
+    }, [isAuthenticated, userId]);
 
     const handleLogoClick = () => {
-        if (userRole === 'Administrador') {
+        console.log('Tipo de conta atual:', role);
+        if (role === 'administrador') {
+            console.log('Redirecionando para Administrador');
             router.push('/paginaAdministrador');
-        } else if (userRole === 'Corretor') {
-            router.push('/paginaCorretores');
-        } else if (userRole === 'Proprietario') {
+        } else if (role === 'corretor') {
+            console.log('Redirecionando para Corretor');
+            router.push('/paginaCorretor');
+        } else if (role === 'proprietario') {
+            console.log('Redirecionando para Proprietario');
             router.push('/paginaProprietarios');
-        } else if (userRole === 'Editor') {
+        } else if (role === 'editor') {
+            console.log('Redirecionando para Editor');
             router.push('/paginaEditor');
-        } else if (userRole === 'Usuario') {
-            router.push('/paginaInicial');
         } else {
-            router.push('/paginaInicial');
+            router.push('/PaginaInicial');
+
         }
     };
 
     const handleLogout = () => {
-        setIsLoggedIn(false);
+        logout();
         setUsername('');
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        localStorage.removeItem('tipo_conta');
-        localStorage.removeItem('id');
         setShowProfileModal(false);
         router.push('/login');
-    }
+    };
 
     const handleLanguageChange = (lang: 'Português' | 'English' | 'Español') => {
         console.log('Mudando idioma para:', lang);
@@ -99,11 +109,17 @@ export function Header() {
                         <div>
                             <nav>
                                 <ul className="flex flex-row max-lg:text-base text-xl whitespace-nowrap md:gap-4 lg:gap-6 text-[#303030] max-md:hidden">
-                                    <li><Link href={userRole === 'Administrador' ? '/paginaAdministrador' : 
-                                                  userRole === 'Corretor' ? '/paginaCorretores' : 
-                                                  userRole === 'Proprietario' ? '/paginaProprietarios' : 
-                                                  userRole === 'Editor' ? '/paginaEditor' : 
-                                                  '/paginaInicial'}>{translate('inicio')}</Link></li>
+                                    <li>
+                                        <Link href={
+                                            role === 'administrador' ? '/paginaAdministrador' : 
+                                            role === 'corretor' ? '/paginaCorretor' : 
+                                            role === 'proprietario' ? '/paginaProprietarios' : 
+                                            role === 'editor' ? '/paginaEditor' : 
+                                            '/'
+                                        }>
+                                            {translate('inicio')}
+                                        </Link>
+                                    </li>
                                     <li><Link href="/paginaImoveis">{translate('imoveis')}</Link></li>
                                     <li><Link href="/paginaCorretores">{translate('corretores')}</Link></li>
                                     <li><Link href="/sobreNos">{translate('sobre')}</Link></li>
@@ -121,9 +137,11 @@ export function Header() {
                         <div className="flex flex-row items-center md:gap-1 lg:gap-2 md:px-3 lg:px-6 max-md:hidden relative">
                             <div className='flex flex-row items-center gap-2 cursor-pointer' onClick={() => setShowLanguageModal(!showLanguageModal)}>
                                 <Image
-                                    src={currentLanguage === 'Português' ? currentImageBrasil :
+                                    src={
+                                        currentLanguage === 'Português' ? currentImageBrasil :
                                         currentLanguage === 'English' ? currentImageEUA :
-                                            currentImageEspanha}
+                                        currentImageEspanha
+                                    }
                                     alt="Idioma"
                                     width={20}
                                     height={20}
@@ -168,15 +186,15 @@ export function Header() {
                         <div className="flex flex-row items-center max-md:hidden relative">
                             <Image
                                 onClick={() => setShowProfileModal(!showProfileModal)}
-                                src={isLoggedIn ? "/imagensHeader/PERFIL SEM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"}
-                                alt={isLoggedIn ? "Perfil com login" : "Perfil sem login"}
+                                src={isAuthenticated ? "/imagensHeader/PERFIL SEM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"}
+                                alt={isAuthenticated ? "Perfil com login" : "Perfil sem login"}
                                 width={50}
                                 height={50}
                                 className="w-12 md:w-[40px] lg:w-[50px] cursor-pointer"
                             />
                             {showProfileModal && (
                                 <div className="absolute top-[calc(100%+0.5rem)] right-0 w-40 bg-[#702632] rounded-lg shadow-lg py-1 z-50">
-                                    {!isLoggedIn ? (
+                                    {!isAuthenticated ? (
                                         <>
                                             <Link
                                                 href="/login"
@@ -199,9 +217,8 @@ export function Header() {
                                             </div>
                                             <div className="w-full h-[1px] bg-white opacity-50"></div>
                                             <Link
-                                                href={`/perfilUsuario/${id}`}
+                                                href="/perfilUsuario/meu-perfil"
                                                 className="block px-4 py-2 text-white hover:bg-[#8a2e3d] transition-colors text-center"
-                                                onClick={() => console.log("ID ao clicar no link:", id)}
                                             >
                                                 Perfil
                                             </Link>
@@ -219,8 +236,8 @@ export function Header() {
                         </div>
                         <div className="flex flex-row items-center md:hidden">
                             <Image
-                                onClick={() => setHambuguerMobile(!hamburguerMobile)}
-                                src={hamburguerMobile ? "/imagensHeader/HAMBURGUER.png" : "/imagensHeader/HAMBURGUER.png"}
+                                onClick={() => setHamburguerMobile(!hamburguerMobile)}
+                                src={hamburguerMobile ? "/imagensHeader/HAMBURGUER-ABERTO.png" : "/imagensHeader/HAMBURGUER.png"}
                                 alt={hamburguerMobile ? "Fechar menu" : "Abrir menu"}
                                 width={30}
                                 height={30}
@@ -228,7 +245,7 @@ export function Header() {
                             />
                         </div>
                     </div>
-                </section >
+                </section>
             </header>
 
             {hamburguerMobile && (
@@ -238,21 +255,23 @@ export function Header() {
                             <div className="flex justify-between items-center mb-4">
                                 <div className="flex items-center gap-3">
                                     <Image
-                                        src={isLoggedIn ? "/imagensHeader/PERFIL COM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"}
+                                        src={isAuthenticated ? "/imagensHeader/PERFIL COM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"}
                                         alt="Perfil"
                                         width={40}
                                         height={40}
                                         className="rounded-full cursor-pointer"
                                     />
-                                    {isLoggedIn ? (
+                                    {isAuthenticated ? (
                                         <span className="text-xl text-[#303030]">{username}</span>
                                     ) : (
-                                        <Link href="/login" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('login')}</Link>
+                                        <Link href="/login" className="text-xl text-[#303030] hover:text-vermelho transition-colors">
+                                            {translate('login')}
+                                        </Link>
                                     )}
                                 </div>
                                 <Image
-                                    onClick={() => setHambuguerMobile(false)}
-                                    src="/imagensHeader/HAMBURGUER.png"
+                                    onClick={() => setHamburguerMobile(false)}
+                                    src="/imagensHeader/HAMBURGUER-FECHAR.png"
                                     alt="Fechar menu"
                                     width={30}
                                     height={30}
@@ -263,35 +282,57 @@ export function Header() {
                             <ul className="space-y-3 text-start my-3">
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/logoMinuscula.png" alt="simbolo HAV" width={20} height={20} className='h-full' />
-                                    <Link href="/paginaInicial" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('inicio')}</Link>
+                                    <Link 
+                                        href={
+                                            role === 'administrador' ? '/paginaAdministrador' : 
+                                            role === 'corretor' ? '/paginaCorretor' : 
+                                            role === 'proprietario' ? '/paginaProprietarios' : 
+                                            role === 'editor' ? '/paginaEditor' : 
+                                            '/PaginaIncial'
+                                        } 
+                                        className="text-xl text-[#303030] hover:text-vermelho transition-colors"
+                                    >
+                                        {translate('inicio')}
+                                    </Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/casa.png" alt="simbolo casas" width={20} height={20} className='h-full' />
-                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('imoveis')}</Link>
+                                    <Link href="/paginaImoveis" className="text-xl text-[#303030] hover:text-vermelho transition-colors">
+                                        {translate('imoveis')}
+                                    </Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/corretores.png" alt="simbolo corretores" width={20} height={20} className='h-full' />
-                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('corretores')}</Link>
+                                    <Link href="/paginaCorretores" className="text-xl text-[#303030] hover:text-vermelho transition-colors">
+                                        {translate('corretores')}
+                                    </Link>
                                 </li>
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/informacao.png" alt="simbolo Sobre nos" width={20} height={20} className='h-full' />
-                                    <Link href="/sobreNos" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('sobre')}</Link>
+                                    <Link href="/sobreNos" className="text-xl text-[#303030] hover:text-vermelho transition-colors">
+                                        {translate('sobre')}
+                                    </Link>
                                 </li>
                             </ul>
                             <div className='bg-black p-[0.2px] w-full'></div>
                             <ul className="space-y-3 text-start mt-3">
                                 <li className='flex gap-3 items-center'>
-                                    <Image src="/imagensHeader/sino.png" alt="chat corretores" width={20} height={20} className='h-full' />
-                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('chat')}</Link>
-                                </li>
-                                <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/configuracoes.png" alt="configurações" width={20} height={20} className='h-full' />
-                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('configuracoes')}</Link>
+                                    <Link href="#" className="text-xl text-[#303030] hover:text-vermelho transition-colors">
+                                        {translate('configuracoes')}
+                                    </Link>
                                 </li>
-                                <li className='flex gap-3 items-center'>
-                                    <Image src="/imagensHeader/logout.png" alt="logout" width={20} height={20} className='h-full' />
-                                    <button onClick={handleLogout} className="text-xl text-[#303030] hover:text-vermelho transition-colors">{translate('logout')}</button>
-                                </li>
+                                {isAuthenticated && (
+                                    <li className='flex gap-3 items-center'>
+                                        <Image src="/imagensHeader/logout.png" alt="logout" width={20} height={20} className='h-full' />
+                                        <button 
+                                            onClick={handleLogout} 
+                                            className="text-xl text-[#303030] hover:text-vermelho transition-colors"
+                                        >
+                                            {translate('logout')}
+                                        </button>
+                                    </li>
+                                )}
                             </ul>
                         </div>
                     </div>

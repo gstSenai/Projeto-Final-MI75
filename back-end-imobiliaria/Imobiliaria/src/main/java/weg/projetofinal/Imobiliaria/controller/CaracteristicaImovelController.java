@@ -64,9 +64,10 @@ CaracteristicaImovelController {
     @ResponseStatus(HttpStatus.OK)
     public List<CaracteristicaImovelGetResponseDTO> getAll(
             @RequestParam(required = false) Integer quantidade_quartos,
-            @RequestParam(required = false) Integer quantidade_banheiros
+            @RequestParam(required = false) Integer quantidade_banheiros,
+            @RequestParam(required = false) Integer quantidade_vagas
     ) {
-        List<CaracteristicaImovel> caracteristicaImovels = service.filtrarPorCaracteristicas(quantidade_quartos,quantidade_banheiros);
+        List<CaracteristicaImovel> caracteristicaImovels = service.filtrarPorCaracteristicas(quantidade_quartos,quantidade_banheiros, quantidade_vagas);
         return caracteristicaImovels.stream().map(CaracteristicaImovelMapper.INSTANCE::caracteristicaImovelToCaracteristicaImovelGetResponseDTO).toList();
     }
 }

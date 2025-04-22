@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import weg.projetofinal.Imobiliaria.security.model.entity.Role;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +38,9 @@ public class Usuario {
 
     private String imagem_usuario;
 
+    @Column
+    private String telefone;
+
     @Column(nullable = false)
     private boolean ativo = true;
 
@@ -60,6 +64,10 @@ public class Usuario {
                 inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    private String resetPasswordToken;
+    private LocalDateTime resetPasswordTokenExpiry;
+    private String resetPasswordCode;
+    private LocalDateTime resetPasswordCodeExpiry;
 
     public void atualizarTipoContaPelaRole() {
         for (Role role : roles) {
@@ -81,5 +89,4 @@ public class Usuario {
             }
         }
     }
-
 }

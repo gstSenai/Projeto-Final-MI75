@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState, useCallback } from "react"
-import request from "@/routes/request"
+import { useEffect, useState, useCallback } from "react";
+import request from "@/routes/request";
 import { useLanguage } from '@/components/context/LanguageContext';
 
 interface ApiResponse {
@@ -14,9 +14,9 @@ export function ImoveisAlugados() {
 
     const fetchTotalImoveis = useCallback(async () => {
         try {
-            const response = await request.get<ApiResponse>('/imoveis/alugados');
-            if (response.data && response.data.totalElements !== undefined) {
-                setTotalImoveis(response.data.totalElements);
+            const response = await request("GET", "http://localhost:9090/imovel/getAll/alugados");
+            if (response && response.totalElements !== undefined) {
+                setTotalImoveis(response.totalElements);
             }
         } catch (error) {
             console.error('Erro ao buscar total de imóveis alugados:', error);

@@ -8,7 +8,7 @@ import { z } from "zod"
 import Image from "next/image"
 import { FormularioInput } from "../adicionandoUsuario/formulario/formularioInput"
 import { useForm } from "react-hook-form"
-import { Botao } from "@/components/botao"
+import { Botao } from "@/components/botao/index"
 import { FormularioUsuarioModal } from "@/components/modal/FormularioUsuarioModal"
 
 // Carregando a fonte Montserrat

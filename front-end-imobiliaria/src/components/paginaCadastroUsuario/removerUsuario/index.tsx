@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { Botao } from "@/components/botao"
+import { Botao } from "@/components/botao/index"
 import request from "@/routes/request"
 import { z } from "zod"
 import { motion, AnimatePresence } from "framer-motion"

@@ -2,7 +2,7 @@
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { LoadingWrapper } from '@/components/loading/loadingServer';
-import { PaginaHistoricoUsuarioChamar } from '@/components/paginaHistorico';
+import { PaginaHistoricoUsuarioChamar } from '@/components/paginaHistorico/PaginaHistoricoUsuarioChamar';
 import Image from 'next/image';
 
 export default function PaginaHistoricoUsuario() {

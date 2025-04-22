@@ -6,6 +6,8 @@ import { Montserrat } from "next/font/google"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
 import Image from "next/image"
+import { useAuth } from "@/components/context/AuthContext"
+
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
@@ -28,6 +30,7 @@ interface UsuarioData {
 
 const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro, isCadastro = false }) => {
   const router = useRouter()
+  const { login } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -66,6 +69,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
         newErrors.senha = "A senha é obrigatória."
       } else if (formData.senha.length < 8) {
         newErrors.senha = "A senha deve ter no mínimo 8 caracteres."
+      } else if (!/(?=.*[a-z])/.test(formData.senha)) {
+        newErrors.senha = "A senha deve conter pelo menos uma letra minúscula."
+      } else if (!/(?=.*[A-Z])/.test(formData.senha)) {
+        newErrors.senha = "A senha deve conter pelo menos uma letra maiúscula."
+      } else if (!/(?=.*\d)/.test(formData.senha)) {
+        newErrors.senha = "A senha deve conter pelo menos um número."
+      } else if (!/(?=.*[!@#$%^&*(),.?":{}|<>])/.test(formData.senha)) {
+        newErrors.senha = "A senha deve conter pelo menos um caractere especial."
       }
 
       if (!formData.confirmarSenha) {
@@ -160,7 +171,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
         localStorage.setItem("username", data.username)
 
         try {
-          const userResponse = await fetch(`${apiUrl}/usuario/getAll`, {
+          const userResponse = await fetch(`${apiUrl}/usuario/getById/${data.id}`, {
             headers: {
               "Authorization": `Bearer ${data.token}`,
               "Content-Type": "application/json"
@@ -171,28 +182,30 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
             throw new Error("Erro ao buscar informações do usuário")
           }
 
-          const userData = await userResponse.json()
-          
-          const usuario = userData.content.find((u: UsuarioData) => u.username === data.username)
+          const usuario = await userResponse.json()
           
           if (usuario) {
-            console.log("ID do usuário encontrado:", usuario.id)
+            console.log("Dados do usuário:", usuario)
             localStorage.setItem("tipo_conta", usuario.tipo_conta)
             localStorage.setItem("id", usuario.id.toString())
             
-            if (usuario.tipo_conta === "Usuario") {
-              router.push("/paginaInicial")
-            } else if (usuario.tipo_conta === "Administrador") {
+            login(data.token, usuario.tipo_conta, usuario.id)
+            
+            const tipoConta = usuario.tipo_conta.toLowerCase()
+            
+            if (tipoConta === "usuario") {
+              router.push("/PaginaInicial")
+            } else if (tipoConta === "administrador") {
               router.push("/paginaAdministrador")
-            } else if (usuario.tipo_conta === "Corretor") {
+            } else if (tipoConta === "corretor") {
               router.push("/paginaCorretor")
-            } else if (usuario.tipo_conta === "Editor") {
+            } else if (tipoConta === "editor") {
               router.push("/paginaEditor")
             } else {
               throw new Error("Tipo de conta inválido")
             }
           } else {
-            throw new Error("Tipo de conta não encontrado")
+            throw new Error("Usuário não encontrado")
           }
         } catch (error) {
           console.error("Erro ao buscar tipo de conta do usuário:", error)
@@ -205,6 +218,19 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
     } catch (error) {
       setApiError((error as Error).message || "Ocorreu um erro durante a autenticação")
     } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleGoogleLogin = async () => {
+    try {
+      setIsLoading(true)
+      setApiError("")
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:9090"
+      window.location.href = `${apiUrl}/oauth2/authorization/google`
+    } catch (error) {
+      console.error("Erro ao iniciar login com Google:", error)
+      setApiError("Erro ao iniciar login com Google. Por favor, tente novamente.")
       setIsLoading(false)
     }
   }
@@ -223,7 +249,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
               height={144}
               className="w-36 my-4 pr-2"
             />
-            <button className="bg-white border border-gray-300 text-[#702632] text-[14px] font-bold py-2.5 px-2 w-[240px] rounded-xl flex justify-center items-center mt-4">
+            <button 
+              onClick={handleGoogleLogin}
+              className="bg-white border border-gray-300 text-[#702632] text-[14px] font-bold py-2.5 px-2 w-[240px] rounded-xl flex justify-center items-center mt-4 hover:bg-gray-50 transition-colors"
+            >
               <Image
                 src="/loginIcons/google-icon.png"
                 alt="Google"
@@ -272,6 +301,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                   className={`block w-full px-4 py-2 border rounded-lg ${errors.email ? "border-red-500" : "border-gray-300"}`}
                   placeholder="Digite seu email"
                   disabled={isLoading}
+                  autoComplete="username"
                 />
                 {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
               </div>
@@ -287,6 +317,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                     className={`block w-full px-4 py-2 border rounded-lg ${errors.senha ? "border-red-500" : "border-gray-300"}`}
                     placeholder="Digite sua senha"
                     disabled={isLoading}
+                    autoComplete="current-password"
                   />
                   <button
                     type="button"
@@ -298,6 +329,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                   </button>
                 </div>
                 {errors.senha && <p className="mt-1 text-sm text-red-600">{errors.senha}</p>}
+                {!isCadastro && (
+                  <a
+                    href="/recuperar-senha"
+                    className="text-[12px] text-[#702632] hover:underline mt-1 block text-right"
+                  >
+                    Esqueceu a senha?
+                  </a>
+                )}
               </div>
 
               {isCadastro && (
@@ -312,6 +351,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
                       className={`block w-full px-4 py-2 border rounded-lg ${errors.confirmarSenha ? "border-red-500" : "border-gray-300"}`}
                       placeholder="Confirme sua senha"
                       disabled={isLoading}
+                      autoComplete="new-password"
                     />
                     <button
                       type="button"

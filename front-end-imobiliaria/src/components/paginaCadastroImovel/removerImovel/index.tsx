@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { Botao } from "@/components/botao"
+import { Botao } from "@/components/botao/index"
 import request from "@/routes/request"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -13,9 +13,8 @@ interface ImovelProps {
     tipo_imovel: string
     status_imovel: string
     valor_promocional: number
-    test_destaque?: string
+    destaque?: string
     test_visibilidade?: string
-    destaque: boolean
     visibilidade: boolean
     valor_iptu: number
     condominio: number

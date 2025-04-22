@@ -1,16 +1,16 @@
-import PaginaImovel from '@/components/paginaImoveis';
+import { LoadingWrapper } from '@/components/loading/loadingServer';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { LoadingWrapper } from '@/components/loading/loadingServer';
-
+import PaginaImovel from '@/components/paginaImoveis';
 export default function PaginaImoveis() {
+
     return (
         <LoadingWrapper>
             <Header />
-            <PaginaImovel />
-            <div className='mt-[10rem]'>
-                <Footer />
+            <div className='min-h-screen pb-2'>
+                <PaginaImovel />
             </div>
+            <Footer />
         </LoadingWrapper>
     );
-}
+} 

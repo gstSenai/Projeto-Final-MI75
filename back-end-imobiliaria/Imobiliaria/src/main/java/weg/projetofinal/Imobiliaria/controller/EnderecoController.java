@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import weg.projetofinal.Imobiliaria.model.dto.endereco.EnderecoGetResponseDTO;
 import weg.projetofinal.Imobiliaria.model.dto.endereco.EnderecoPostRequestDTO;
 import weg.projetofinal.Imobiliaria.model.entity.Endereco;
+import weg.projetofinal.Imobiliaria.model.mapper.ImovelMapper;
 import weg.projetofinal.Imobiliaria.service.EnderecoService;
 import weg.projetofinal.Imobiliaria.model.mapper.EnderecoMapper;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/endereco")
@@ -57,5 +60,11 @@ public class EnderecoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarEndereco(@PathVariable Integer id) {
         service.delete(id);
+    }
+
+    @GetMapping("/filtroEndereco")
+    public List<EnderecoGetResponseDTO> filtroEndereco(@RequestParam String cidade, @RequestParam String bairro) {
+        List<Endereco> enderecos = service.filtroEndereco(cidade, bairro);
+        return enderecos.stream().map(EnderecoMapper.INSTANCE::enderecoToEnderecoGetResponseDTO).toList();
     }
 }

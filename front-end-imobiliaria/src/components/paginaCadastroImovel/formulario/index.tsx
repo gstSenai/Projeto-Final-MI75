@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import { EnderecoSection } from "../formulario/endereco-section"
 import { DadosImovelSection } from "./dados-imovel-section"
 import request from "@/routes/request"
-import { Botao } from "@/components/botao"
+import { Botao } from "@/components/botao/index"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { motion, AnimatePresence } from "framer-motion"
@@ -26,9 +26,8 @@ const ImovelProps = z.object({
         .min(1, { message: "Valor promocional é obrigatório" })
         .regex(/^\d{1,3}(\.\d{3})*,\d{2}$/, { message: "Formato de valor inválido" })
         .transform((valor) => parseFloat(valor.replace(/\./g, '').replace(',', '.'))),
-    test_destaque: z.string().min(1, { message: "Destaque é obrigatório" }).optional(),
     test_visibilidade: z.string().min(1, { message: "Visibilidade é obrigatória" }).optional(),
-    destaque: z.boolean().default(false),
+    destaque: z.string().min(1, { message: "Destaque é obrigatório" }).optional(),
     visibilidade: z.boolean().default(false),
     valor_iptu: z.string()
         .min(1, { message: "Valor do IPTU é obrigatório" })
@@ -148,7 +147,6 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                 tipo_imovel: "",
                 codigo: 0,
                 tipo_transacao: "",
-                test_destaque: "",
                 status_imovel: "",
                 test_visibilidade: "",
             },
@@ -303,7 +301,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                 }
 
                 isValid = await trigger(['imovel', 'imovel.tipo_transacao', 'imovel.tipo_imovel',
-                    'imovel.test_visibilidade', 'imovel.test_destaque', 'imovel.area_construida', 'imovel.area_terreno']);
+                    'imovel.test_visibilidade', 'imovel.destaque', 'imovel.area_construida', 'imovel.area_terreno']);
                 if (!isValid) {
                     setErrorMessage("Por favor, preencha todos os campos de tipo de transação corretamente");
                     setShowErrorModal(true);
@@ -322,7 +320,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
 
                     if (!formData.imovel.tipo_transacao) camposFaltantes.push("tipo de transação");
                     if (!formData.imovel.tipo_imovel) camposFaltantes.push("tipo de imóvel");
-                    if (!formData.imovel.test_destaque) camposFaltantes.push("destaque");
+                    if (!formData.imovel.destaque) camposFaltantes.push("destaque");
                     if (!formData.imovel.test_visibilidade) camposFaltantes.push("visibilidade");;
 
                     if (camposFaltantes.length > 0) {
@@ -416,7 +414,7 @@ export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProp
                 tipo_imovel: imovel.tipo_imovel,
                 status_imovel: imovel.status_imovel,
                 valor_promocional: imovel.valor_promocional || 0,
-                destaque: imovel.test_destaque === "Sim",
+                destaque: imovel.destaque,
                 visibilidade: imovel.test_visibilidade === "Público",
                 valor_iptu: imovel.valor_iptu || 0,
                 condominio: imovel.condominio || 0,

@@ -2,8 +2,7 @@
 import { useState, useEffect } from "react"
 import React from "react"
 import { AnimatePresence, motion } from "framer-motion"
-
-import { Botao } from "@/components/botao"
+import { Botao } from "@/components/botao/index"
 import { FormularioEditarInput } from "./formularioEditarInput"
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";

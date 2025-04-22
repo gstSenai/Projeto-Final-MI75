@@ -9,7 +9,7 @@ public record ImovelImagemGetResponseDTO(
         String tipo_imovel,
         String status_imovel,
         Double valor_promocional,
-        Boolean destaque,
+        String destaque,
         Boolean visibilidade,
         Double valor_iptu,
         Double condominio,

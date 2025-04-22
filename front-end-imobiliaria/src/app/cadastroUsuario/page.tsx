@@ -17,7 +17,7 @@ const montserrat = Montserrat({
 export default function CadastroUsuario() {
     return (
         <LoadingWrapper>
-            <RotaPrivada userAutorizado={['Administrador', 'Editor']}>
+            <RotaPrivada userAutorizado={['administrador', 'editor']}>
                 <Header />
 
                 <div className="flex flex-col min-h-screen">

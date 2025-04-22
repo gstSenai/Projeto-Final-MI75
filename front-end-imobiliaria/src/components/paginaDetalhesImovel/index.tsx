@@ -2,13 +2,14 @@
 
 import { useEffect, useState, useRef } from "react"
 import { Montserrat } from "next/font/google"
-import { useParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Bed, Bath, Ruler, Car } from "lucide-react"
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import { MapImovelById } from "@/components/map/mapImovelById"
+import { Card } from "../cardImovel"
 
-// Configurar a chave de acesso do Mapbox
-mapboxgl.accessToken = 'pk.eyJ1IjoibHVhbmFuaWNoZWxhdHRpIiwiYSI6ImNtOWFqcDY3ZDA2eTkyaXE0b3Z4eW40eDUifQ.gYlUt6PtfGgkap3L2KEiow'
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -23,6 +24,10 @@ interface ImovelDetalhes {
   valor_venda: number
   codigo: number
   tipo_transacao: string
+  area_construida: number
+  area_terreno: number
+  id_corretor: number
+  tipo_imovel: string
   id_endereco: {
     rua: string
     numero: string
@@ -35,78 +40,140 @@ interface ImovelDetalhes {
     numero_quartos: number
     numero_suites: number
     numero_banheiros: number
-    area_total: number
-    area_construida: number
-    numero_vagas_garagem: number
+    numero_vagas: number
   }
-  imagens: {
-    id: number
-    nome: string
-    url: string
-  }[]
 }
 
-// Dados mockados para teste
-const mockImovel: ImovelDetalhes = {
-  id: 1,
-  nome_propriedade: "Casa Moderna com Piscina",
-  descricao: "Excelente casa moderna com 3 quartos, sendo 1 suíte, sala ampla, cozinha planejada, área de serviço, garagem para 2 carros e piscina. Localizada em bairro nobre, próximo a escolas, shoppings e com fácil acesso às principais vias da cidade.",
-  valor_venda: 850000,
-  codigo: 1234,
-  tipo_transacao: "Venda",
-  id_endereco: {
-    rua: "Rua das Flores",
-    numero: "123",
-    bairro: "Jardim América",
-    cidade: "São Paulo",
-    estado: "SP",
-    cep: "01234-567"
-  },
-  id_caracteristicasImovel: {
-    numero_quartos: 3,
-    numero_suites: 1,
-    numero_banheiros: 2,
-    area_total: 250,
-    area_construida: 180,
-    numero_vagas_garagem: 2
-  },
-  imagens: [
-    {
-      id: 1,
-      nome: "fachada",
-      url: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-    },
-    {
-      id: 2,
-      nome: "sala",
-      url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1453&q=80"
-    },
-    {
-      id: 3,
-      nome: "cozinha",
-      url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-    }
-  ]
+interface Corretor {
+  id: number
+  username: string
+  email: string
+  telefone: string
+  cpf: string
 }
 
-export function DetalhesImovel() {
+interface DetalhesImovelProps {
+  imovelId: number;
+}
+
+export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
   const mapContainer = useRef(null);
+  const router = useRouter();
   const [imovel, setImovel] = useState<ImovelDetalhes | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
-  const params = useParams()
+  const [corretor, setCorretor] = useState<Corretor | null>(null)
+  const [imageUrls, setImageUrls] = useState<string[]>([])
+
+  const fetchImages = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const urls = [];
+      let index = 0;
+      let hasMoreImages = true;
+
+      while (hasMoreImages) {
+        const response = await fetch(`http://localhost:9090/imagens/download/imovel/${imovelId}/imagem/${index}`, {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          const blob = await response.blob();
+          const imageUrl = URL.createObjectURL(blob);
+          urls.push(imageUrl);
+          index++;
+        } else {
+          hasMoreImages = false;
+        }
+      }
+
+      setImageUrls(urls);
+    } catch (error) {
+      console.error('Erro ao buscar imagens:', error);
+    }
+  };
+
+  const getImovelDetalhes = async () => {
+    try {
+      if (typeof window === 'undefined') return;
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
+      const response = await fetch(`http://localhost:9090/imovel/getById/${imovelId}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (response.status === 404) {
+        router.push('/paginaImoveis');
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error('Erro ao buscar detalhes do imóvel');
+      }
+
+      const data = await response.json();
+      setImovel(data);
+      await fetchImages();
+
+      if (data.id_usuario && data.id_usuario.id) {
+        getCorretor(data.id_usuario.id);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar detalhes do imóvel:", error);
+      setError("Erro ao carregar detalhes do imóvel. Por favor, tente novamente.");
+      router.push('/paginaImoveis');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getCorretor = async (corretorId: number) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
+      const response = await fetch(`http://localhost:9090/usuario/getById/${corretorId}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao buscar informações do corretor');
+      }
+
+      const data = await response.json();
+      setCorretor(data);
+    } catch (error) {
+      console.error("Erro ao buscar informações do corretor:", error);
+    }
+  }
 
   useEffect(() => {
-    // Simulando um delay de carregamento
-    const timer = setTimeout(() => {
-      setImovel(mockImovel)
-      setLoading(false)
-    }, 1000)
-
-    return () => clearTimeout(timer)
-  }, [])
+    if (!imovelId) {
+      router.push('/paginaImoveis');
+      return;
+    }
+    getImovelDetalhes();
+  }, [imovelId]);
 
   useEffect(() => {
     if (!map && imovel && mapContainer.current) {
@@ -195,59 +262,95 @@ export function DetalhesImovel() {
 
           <div className="lg:col-span-2">
             <div className="overflow-hidden">
-              {imovel.imagens && imovel.imagens.length > 0 ? (
-                <div className="relative">
-                  <img
-                    src={imovel.imagens[currentImageIndex].url}
-                    alt={imovel.nome_propriedade}
-                    className="w-full h-[450px] lg:h-[605px] xl:h-[535px] 2xl:h-[510px] extra:h-[490px] object-cover rounded-lg"
-                  />
-                  {imovel.imagens.length > 1 && (
-                    <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-                      {imovel.imagens.map((_, index) => (
+              {imageUrls.length > 0 ? (
+                <div className="relative flex justify-center">
+                  <div className="relative w-full">
+                    <img
+                      src={imageUrls[0]}
+                      alt={imovel?.nome_propriedade}
+                      className="w-full h-[450px] lg:h-[605px] xl:h-[535px] 2xl:h-[510px] extra:h-[490px] object-cover rounded-lg"
+                      onError={(e) => {
+                        console.error('Erro ao carregar imagem:', e);
+                        e.currentTarget.src = '/placeholder-image.jpg';
+                      }}
+                    />
+                    {/* Botões de navegação */}
+                    {imageUrls.length > 1 && (
+                      <>
                         <button
-                          key={index}
-                          onClick={() => setCurrentImageIndex(index)}
-                          className={`w-3 h-3 rounded-full ${currentImageIndex === index ? "bg-vermelho" : "bg-white"
-                            }`}
-                        />
-                      ))}
-                    </div>
-                  )}
+                          onClick={() => {
+                            const newUrls = [...imageUrls];
+                            const lastImage = newUrls.pop()!;
+                            newUrls.unshift(lastImage);
+                            setImageUrls(newUrls);
+                          }}
+                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="m15 18-6-6 6-6"/>
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => {
+                            const newUrls = [...imageUrls];
+                            const firstImage = newUrls.shift()!;
+                            newUrls.push(firstImage);
+                            setImageUrls(newUrls);
+                          }}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="m9 18 6-6-6-6"/>
+                          </svg>
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
               ) : (
                 <div className="w-full h-[500px] bg-cinza-medio flex items-center justify-center rounded-lg">
                   <p className="text-cinza-escuro">Sem imagens disponíveis</p>
                 </div>
               )}
-              <div className="flex items-center justify-start gap-1 mt-4">
-                <button className="flex items-center justify-center w-8 h-8 text-cinza-medio hover:text-vermelho transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-                  </svg>
-                </button>
-                <button className="flex items-center justify-center w-8 h-8 text-cinza-medio hover:text-vermelho transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                  </svg>
-                </button>
-                <button className="flex items-center justify-center w-8 h-8 text-cinza-medio hover:text-vermelho transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                    <polyline points="16 6 12 2 8 6" />
-                    <line x1="12" y1="2" x2="12" y2="15" />
-                  </svg>
-                </button>
-              </div>
             </div>
+
+            {/* Gallery Section */}
+            {imageUrls.length > 1 && (
+              <div className="mt-4">
+                <div className="flex gap-2 overflow-x-auto pb-2">
+                  {imageUrls.map((url, index) => (
+                    <div 
+                      key={index} 
+                      className="relative cursor-pointer group flex-shrink-0"
+                      onClick={() => {
+                        const newUrls = [...imageUrls];
+                        const selectedImage = newUrls.splice(index, 1)[0];
+                        newUrls.unshift(selectedImage);
+                        setImageUrls(newUrls);
+                      }}
+                    >
+                      <img
+                        src={url}
+                        alt={`${imovel?.nome_propriedade} - Imagem ${index + 1}`}
+                        className="w-24 h-24 object-cover rounded-lg transition-opacity group-hover:opacity-80"
+                      />
+                      {index === 0 && (
+                        <div className="absolute inset-0 border-2 border-vermelho rounded-lg"></div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Right Column - Details */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-vermelho">{formatCurrency(imovel.valor_venda)}</h2>
+                <span className="px-4 py-1 bg-vermelho text-white rounded-full text-sm">
+                  {imovel.tipo_imovel}
+                </span>
                 <span className="px-4 py-1 bg-vermelho text-white rounded-full text-sm">
                   {imovel.tipo_transacao}
                 </span>
@@ -255,45 +358,45 @@ export function DetalhesImovel() {
 
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="flex items-center gap-4">
-                <img src="/imagePropriedades/quarto.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
+                  <img src="/imagePropriedades/quarto.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Quartos</p>
                     <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_quartos}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                <img src="/imagePropriedades/suite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
+                  <img src="/imagePropriedades/suite.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Suites</p>
                     <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_suites}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                <img src="/imagePropriedades/banheiro.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
+                  <img src="/imagePropriedades/banheiro.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Banheiros</p>
                     <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_banheiros}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                <img src="/imagePropriedades/carro.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
+                  <img src="/imagePropriedades/carro.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Vagas</p>
-                    <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_vagas_garagem}</p>
+                    <p className="font-semibold">{imovel.id_caracteristicasImovel.numero_vagas}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                <img src="/imagePropriedades/regua.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
+                  <img src="/imagePropriedades/regua.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
                   <div>
                     <p className="text-sm text-cinza-medio">Área total</p>
-                    <p className="font-semibold">{imovel.id_caracteristicasImovel.area_total}m²</p>
+                    <p className="font-semibold">{imovel.area_terreno}m²</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                <img src="/imagePropriedades/regua.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
-                <div>
+                  <img src="/imagePropriedades/regua.png" alt="Imagem Suite" className="min-w-[20px] max-w-[40px] lg:min-w-[25px] 2xl:min-w-[30px]" width={25} height={25} />
+                  <div>
                     <p className="text-sm text-cinza-medio">Área Construída</p>
-                    <p className="font-semibold">{imovel.id_caracteristicasImovel.area_construida}m²</p>
+                    <p className="font-semibold">{imovel.area_construida}m²</p>
                   </div>
                 </div>
               </div>
@@ -303,8 +406,14 @@ export function DetalhesImovel() {
                 <p className="text-cinza-mediom text-[1rem]">{imovel.descricao}</p>
               </div>
 
-              <button className="w-full bg-vermelho text-white py-2 rounded-lg font-semibold hover:bg-vermelho-escuro transition-colors">
-                Agendar Visita
+              <button
+                className="w-full mt-6 bg-vermelho text-white py-3 rounded font-bold hover:bg-opacity-90 transition-colors"
+                onClick={() => {
+                  localStorage.setItem('currentImovelId', imovel.id.toString());
+                  router.push(`/paginaAgendamento?imovelId=${imovel.id}`);
+                }}
+              >
+                Agendar sua visita
               </button>
             </div>
           </div>
@@ -320,35 +429,30 @@ export function DetalhesImovel() {
               {imovel.id_endereco.rua}, {imovel.id_endereco.numero} - {imovel.id_endereco.bairro}, {imovel.id_endereco.cidade} - {imovel.id_endereco.estado}, CEP: {imovel.id_endereco.cep}
             </p>
           </div>
-          <div className="flex max-md:flex-col gap-6">
+          <div className="flex max-md:flex-col gap-6 items-center">
             <div className="w-3/5 max-md:w-full">
               <div className="h-[400px] rounded-lg overflow-hidden shadow-lg">
-                <div ref={mapContainer} className="w-full h-full" />
+                <MapImovelById markersId={imovelId} />
               </div>
             </div>
             <div className="w-2/5 max-md:w-full">
               <div className="bg-white rounded-lg shadow-lg p-10">
-                <h4 className="text-xl font-bold mb-4">Corretor Responsável</h4>
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 rounded-full bg-[#702632] flex items-center justify-center">
-                    <span className="text-white text-2xl font-bold">JV</span>
-                  </div>
+                <h4 className="text-xl font-bold mb-1">Corretor Responsável</h4>
+                <div className="flex items-center gap-4 mb-4">
                   <div>
-                    <p className="text-xl font-bold">Jessica Vieira</p>
-                    <p className="text-gray-600">CRECI: 123456-SP</p>
+                    <p className="text-xl font-medium">{corretor?.username}</p>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <div>
                     <p className="font-bold mb-1">Email:</p>
-                    <p className="text-gray-600">jessica.vieira@gmail.com</p>
-                  </div>
-                  <div>
-                    <p className="font-bold mb-1">Telefone:</p>
-                    <p className="text-gray-600">(11) 98765-4321</p>
+                    <p className="text-gray-600">{corretor?.email}</p>
                   </div>
                 </div>
-                <button className="w-full mt-6 bg-[#702632] text-white py-3 rounded font-bold hover:bg-opacity-90 transition-colors">
+                <button className="w-full mt-6 bg-vermelho text-white py-3 rounded font-bold hover:bg-opacity-90 transition-colors" onClick={() => {
+                  const mensagem = `Olá, estou interessado(a) no imóvel ${imovel.nome_propriedade} (Código: ${imovel.codigo}).`;
+                  window.open(`https://wa.me/5545999341270?text=${encodeURIComponent(mensagem)}`, '_blank');
+                }}>
                   Falar com Corretor
                 </button>
               </div>
