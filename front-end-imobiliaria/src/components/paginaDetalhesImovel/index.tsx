@@ -27,6 +27,7 @@ interface ImovelDetalhes {
   area_construida: number
   area_terreno: number
   id_corretor: number
+  tipo_imovel: string
   id_endereco: {
     rua: string
     numero: string
@@ -347,6 +348,9 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-vermelho">{formatCurrency(imovel.valor_venda)}</h2>
+                <span className="px-4 py-1 bg-vermelho text-white rounded-full text-sm">
+                  {imovel.tipo_imovel}
+                </span>
                 <span className="px-4 py-1 bg-vermelho text-white rounded-full text-sm">
                   {imovel.tipo_transacao}
                 </span>

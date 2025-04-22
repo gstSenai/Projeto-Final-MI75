@@ -29,7 +29,12 @@ interface ResponseProps {
     content: Imovel[];
 }
 
-export function ImovelMap({ markersId }: { markersId?: number }) {
+interface ImovelMapProps {
+    markersId?: number;
+    onMarkerClick?: (id: number) => void;
+}
+
+export function ImovelMap({ markersId, onMarkerClick }: ImovelMapProps) {
     const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
     const [markers, setMarkers] = useState<ResponseProps | null>(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -130,7 +135,11 @@ export function ImovelMap({ markersId }: { markersId?: number }) {
     }, []);
 
     function handleMarkerClick(id: number) {
-        router.push(`/imovel/${id}`);
+        if (onMarkerClick) {
+            onMarkerClick(id);
+        } else {
+            router.push(`/imovel/${id}`);
+        }
     }
 
     return (

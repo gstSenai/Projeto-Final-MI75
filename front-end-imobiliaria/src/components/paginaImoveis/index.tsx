@@ -5,7 +5,7 @@ import { Card } from "@/components/cardImovel/index"
 import { Montserrat } from "next/font/google"
 import { FiltroImoveis } from "./botaoFiltro"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -73,7 +73,7 @@ export function ListaImoveis() {
   const [mostrarFiltros, setMostrarFiltros] = useState<boolean>(false)
   const [imovelId, setImovelId] = useState<number | null>(null);
   const router = useRouter();
-
+  const searchParams = useSearchParams();
 
   const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>({
     currentPage: 0,
@@ -86,7 +86,102 @@ export function ListaImoveis() {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:9090/imovel/getAll?page=${page}&size=${paginationInfo.size}`, {
+      let url = `http://localhost:9090/imovel/getAll?page=${page}&size=${paginationInfo.size}`;
+      
+      // Add filter parameters from URL
+      const codigoParam = searchParams.get('codigo');
+      const cidadeParam = searchParams.get('cidade');
+      const bairroParam = searchParams.get('bairro');
+      const valorMinParam = searchParams.get('valor_min');
+      const valorMaxParam = searchParams.get('valor_max');
+      const tipoImovelParam = searchParams.get('tipo_imovel');
+
+      // If we have a code parameter, use the specific endpoint
+      if (codigoParam) {
+        const response = await fetch(`http://localhost:9090/imovel/filtroCodigo?codigo=${codigoParam}`, {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao buscar imóvel');
+        }
+
+        const data = await response.json();
+        
+        // Format the single imóvel response
+        const imovelFormatado = {
+          id: data.id || 0,
+          destaque: data.destaque || "Não Destaque",
+          titulo: data.nome_propriedade || "Sem título",
+          cidade: data.id_endereco?.cidade || "Cidade não informada",
+          numero_quartos: data.id_caracteristicasImovel?.numero_quartos || 0,
+          numero_suites: data.id_caracteristicasImovel?.numero_suites || 0,
+          numero_banheiros: data.id_caracteristicasImovel?.numero_banheiros || 0,
+          preco: data.valor_venda || 0,
+          codigo: data.codigo || 0,
+          tipo_transacao: data.tipo_transacao || "Indefinido"
+        };
+
+        setImoveis([imovelFormatado]);
+        setPaginationInfo({
+          currentPage: 0,
+          totalPages: 1,
+          totalElements: 1,
+          size: 1,
+        });
+        return;
+      }
+
+      // If we have advanced filters, use the filtroImovel endpoint
+      if (valorMinParam || valorMaxParam || tipoImovelParam) {
+        const response = await fetch(`http://localhost:9090/imovel/filtroImovel?${new URLSearchParams({
+          ...(valorMinParam && { valor_min: decodeURIComponent(valorMinParam) }),
+          ...(valorMaxParam && { valor_max: decodeURIComponent(valorMaxParam) }),
+          ...(tipoImovelParam && { tipo_imovel: decodeURIComponent(tipoImovelParam).toLowerCase().trim() })
+        })}`, {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao buscar imóveis');
+        }
+
+        const data = await response.json();
+        
+        const imoveisFormatados = data.map((imovel: any) => ({
+          id: imovel.id || 0,
+          destaque: imovel.destaque || "Não Destaque",
+          titulo: imovel.nome_propriedade || "Sem título",
+          cidade: imovel.id_endereco?.cidade || "Cidade não informada",
+          numero_quartos: imovel.id_caracteristicasImovel?.numero_quartos || 0,
+          numero_suites: imovel.id_caracteristicasImovel?.numero_suites || 0,
+          numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
+          preco: imovel.valor_venda || 0,
+          codigo: imovel.codigo || 0,
+          tipo_transacao: imovel.tipo_transacao || "Indefinido"
+        }));
+
+        setImoveis(imoveisFormatados);
+        setPaginationInfo({
+          currentPage: 0,
+          totalPages: 1,
+          totalElements: imoveisFormatados.length,
+          size: imoveisFormatados.length,
+        });
+        return;
+      }
+
+      // Otherwise, use the regular endpoint with basic filters
+      if (cidadeParam) url += `&cidade=${cidadeParam}`;
+      if (bairroParam) url += `&bairro=${bairroParam}`;
+
+      const response = await fetch(url, {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -126,6 +221,19 @@ export function ListaImoveis() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // Get filters from URL parameters
+    const tipoTransacaoParam = searchParams.get('tipoTransacao');
+    
+    // Apply filters
+    if (tipoTransacaoParam) {
+      setTipoTransacao(tipoTransacaoParam);
+    }
+
+    // Fetch initial data with filters
+    fetchImoveis(0);
+  }, [searchParams]);
 
   const refreshData = async () => {
     try {

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Montserrat } from 'next/font/google';
 import Image from 'next/image';
-import PlaceFilter from '@/components/PaginaInicial/botaoselecao';
+import PlaceFilter from '@/components/paginaInicial/botaoselecao';
 import { useLanguage } from '@/components/context/LanguageContext';
 import { useRouter } from 'next/navigation';
 
@@ -20,6 +20,12 @@ export function PesquisaPaginaInicial() {
     const [cidade, setCidade] = useState('');
     const [bairro, setBairro] = useState('');
     const [enderecos, setEnderecos] = useState<any[]>([]);
+    const [minValor, setMinValor] = useState('');
+    const [maxValor, setMaxValor] = useState('');
+    const [tipoImovel, setTipoImovel] = useState('');
+    const [quantidadeQuartos, setQuantidadeQuartos] = useState('');
+    const [quantidadeBanheiros, setQuantidadeBanheiros] = useState('');
+    const [quantidadeVagas, setQuantidadeVagas] = useState('');
     const { translate } = useLanguage();
     const router = useRouter();
 
@@ -27,51 +33,61 @@ export function PesquisaPaginaInicial() {
         setErro('');
         try {
             if (codigo.trim()) {
-                console.log('Fazendo requisição para:', `http://localhost:9090/imovel/filtroCodigo?codigo=${codigo}`);
                 const response = await fetch(`http://localhost:9090/imovel/filtroCodigo?codigo=${codigo}`);
-                console.log('Resposta recebida:', response.status);
                 
                 if (!response.ok) {
                     throw new Error('Imóvel não encontrado');
                 }
+                
                 const data = await response.json();
-                console.log('Dados recebidos:', data);
                 
                 if (data && data.id) {
-                    console.log('Redirecionando para página de imóveis com código:', codigo);
+                    // Navigate to the imóveis page with the code filter
                     router.push(`/paginaImoveis?codigo=${codigo}`);
                 } else {
-                    console.log('Imóvel não encontrado nos dados');
                     setErro('Imóvel não encontrado');
                 }
             } else {
-                // Se não houver código, redireciona para a página de imóveis sem filtro
+                // If no code is provided, redirect to imóveis page without filter
                 router.push('/paginaImoveis');
             }
         } catch (error) {
-            console.error('Erro completo:', error);
+            console.error('Erro ao buscar imóvel:', error);
             setErro('Imóvel não encontrado');
         }
     };
 
     const handlePesquisaEndereco = async () => {
-        if (!codigo.trim() && !cidade.trim() && !bairro.trim()) {
-            setErro('Por favor, preencha pelo menos um campo');
-            return;
-        }
-
         try {
             let url = '/paginaImoveis?';
             const params = [];
 
             if (codigo.trim()) {
-                params.push(`codigo=${codigo}`);
+                params.push(`codigo=${encodeURIComponent(codigo.trim())}`);
             }
             if (cidade.trim()) {
-                params.push(`cidade=${cidade}`);
+                params.push(`cidade=${encodeURIComponent(cidade.trim())}`);
             }
             if (bairro.trim()) {
-                params.push(`bairro=${bairro}`);
+                params.push(`bairro=${encodeURIComponent(bairro.trim())}`);
+            }
+            if (minValor.trim()) {
+                params.push(`valor_min=${encodeURIComponent(minValor.trim())}`);
+            }
+            if (maxValor.trim()) {
+                params.push(`valor_max=${encodeURIComponent(maxValor.trim())}`);
+            }
+            if (tipoImovel) {
+                params.push(`tipo_imovel=${encodeURIComponent(tipoImovel.toLowerCase().trim())}`);
+            }
+            if (quantidadeQuartos) {
+                params.push(`quantidade_quartos=${encodeURIComponent(quantidadeQuartos)}`);
+            }
+            if (quantidadeBanheiros) {
+                params.push(`quantidade_banheiros=${encodeURIComponent(quantidadeBanheiros)}`);
+            }
+            if (quantidadeVagas) {
+                params.push(`quantidade_vagas=${encodeURIComponent(quantidadeVagas)}`);
             }
 
             url += params.join('&');
@@ -120,20 +136,14 @@ export function PesquisaPaginaInicial() {
                     <div className='py-2 w-64'>
                         <p className='font-medium lg:font-bold text-2xl pb-2'>Localização:</p>
                         <div className='rounded-md bg-[#DFDAD0] flex flex-col p-1 gap-2'>
-                            <input 
-                                className='rounded-md w-full bg-[#DFDAD0] text-vermelho' 
-                                type="text" 
-                                placeholder='Cidade' 
-                                value={cidade}
-                                onChange={(e) => setCidade(e.target.value)}
-                            />
-                            <input 
-                                className='rounded-md w-full bg-[#DFDAD0] text-vermelho' 
-                                type="text" 
-                                placeholder='Bairro' 
-                                value={bairro}
-                                onChange={(e) => setBairro(e.target.value)}
-                            />
+                            <div 
+                                className='rounded-md w-full bg-[#DFDAD0] cursor-pointer hover:opacity-90 transition-opacity duration-200 flex items-center justify-center'
+                                onClick={() => router.push('/mapa')}
+                            >
+                                <div className='flex flex-col items-center gap-2'>
+                                    <p className='text-vermelho text-sm font-medium'>Ver no Mapa</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -171,8 +181,10 @@ export function PesquisaPaginaInicial() {
                                     <Image src="/paginaInicial/paginasInicialDetalhes/cifrao.png" alt="Ícone de cifrão" width={24} height={24} />
                                     <input 
                                         className='rounded-md w-full bg-[#DFDAD0] text-vermelho outline-none' 
-                                        type="value" 
-                                        placeholder={translate('filtro.min_valor_placeholder')} 
+                                        type="number" 
+                                        placeholder={translate('filtro.min_valor_placeholder')}
+                                        value={minValor}
+                                        onChange={(e) => setMinValor(e.target.value)}
                                     />
                                 </div>
                             </div>
@@ -182,19 +194,37 @@ export function PesquisaPaginaInicial() {
                                     <Image src="/paginaInicial/paginasInicialDetalhes/cifrao.png" alt="Ícone de cifrão" width={24} height={24} />
                                     <input 
                                         className='rounded-md w-full bg-[#DFDAD0] text-vermelho outline-none' 
-                                        type="value" 
-                                        placeholder={translate('filtro.max_valor_placeholder')} 
+                                        type="number" 
+                                        placeholder={translate('filtro.max_valor_placeholder')}
+                                        value={maxValor}
+                                        onChange={(e) => setMaxValor(e.target.value)}
                                     />
                                 </div>
                             </div>
                         </div>
                         <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between gap-4'>
-                            <PlaceFilter tipo="TipoLocal" texto={translate('filtro.tipo_local')} />
-                            <PlaceFilter tipo="NumLocal" texto={translate('filtro.quartos')} />
+                            <PlaceFilter 
+                                tipo="TipoLocal" 
+                                texto={translate('filtro.tipo_local')} 
+                                onSelect={setTipoImovel}
+                            />
+                            <PlaceFilter 
+                                tipo="NumLocal" 
+                                texto={translate('filtro.quartos')} 
+                                onSelect={setQuantidadeQuartos}
+                            />
                         </div>
                         <div className='py-4 flex flex-col lg:flex-row 2xl:flex-row justify-between gap-4'>
-                            <PlaceFilter tipo="NumLocal" texto={translate('filtro.garagem')} />
-                            <PlaceFilter tipo="NumLocal" texto={translate('filtro.banheiros')} />
+                            <PlaceFilter 
+                                tipo="NumLocal" 
+                                texto={translate('filtro.banheiros')} 
+                                onSelect={setQuantidadeBanheiros}
+                            />
+                            <PlaceFilter 
+                                tipo="NumLocal" 
+                                texto={translate('filtro.garagem')} 
+                                onSelect={setQuantidadeVagas}
+                            />
                         </div>
                     </div>
                 )}
