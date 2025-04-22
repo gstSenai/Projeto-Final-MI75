@@ -28,19 +28,25 @@ interface Agendamento {
   };
 }
 
+// Convertendo o nome do mês para número (0-11)
+const monthNames = [
+  "Janeiro", "Fevereiro", "Março", "Abril",
+  "Maio", "Junho", "Julho", "Agosto",
+  "Setembro", "Outubro", "Novembro", "Dezembro"
+];
+
 export function PaginaHistoricoCorretorChamar() {
-  const { register, watch } = useForm<FormData>();
+  const { register, watch } = useForm<FormData>({
+    defaultValues: {
+      mes: monthNames[new Date().getMonth()]
+    }
+  });
   const selectedMonthName = watch("mes");
-  const [selectedDay, setSelectedDay] = useState<number | null>(null);
+  const [selectedDay, setSelectedDay] = useState<number | null>(new Date().getDate());
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
   const [loading, setLoading] = useState(false);
 
   // Convertendo o nome do mês para número (0-11)
-  const monthNames = [
-    "Janeiro", "Fevereiro", "Março", "Abril",
-    "Maio", "Junho", "Julho", "Agosto",
-    "Setembro", "Outubro", "Novembro", "Dezembro"
-  ];
   const selectedMonth = monthNames.indexOf(selectedMonthName || "Janeiro");
 
   const handleDaySelect = (day: number) => {

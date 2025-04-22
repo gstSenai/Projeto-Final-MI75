@@ -4,7 +4,7 @@ import Image from "next/image"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Montserrat } from 'next/font/google'
-import Calendario from "@/components/calendario/index"
+import Calendario from "@/components/Calendario/index"
 import { FormularioInput } from "@/components/Calendario/selecaoHorario"
 import { useForm } from "react-hook-form"
 import { useEffect, useState, useCallback } from "react"
@@ -130,6 +130,8 @@ export default function PaginaAgendamento() {
   const [corretores, setCorretores] = useState<UserProps[]>([])
   const [dataSelecionada, setDataSelecionada] = useState<string>("")
   const [error, setError] = useState<string | null>(null)
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false)
+  const [showErrorNotification, setShowErrorNotification] = useState(false)
 
   const verificarHorariosOcupados = useCallback(
     async (data: string) => {
@@ -272,7 +274,13 @@ export default function PaginaAgendamento() {
       if (response) {
         console.log("Agendamento realizado com sucesso!")
         setAgendamentoSucesso(true)
+        setShowSuccessNotification(true)
         verificarHorariosOcupados(dataSelecionada)
+        
+        // Hide success notification after 5 seconds
+        setTimeout(() => {
+          setShowSuccessNotification(false)
+        }, 5000)
       } else {
         console.error("Resposta vazia do servidor")
         throw new Error("Erro ao criar agendamento: resposta vazia do servidor")
@@ -292,6 +300,12 @@ export default function PaginaAgendamento() {
         error.message || 
         "Não foi possível agendar a visita. Verifique se todos os campos estão preenchidos corretamente."
       )
+      setShowErrorNotification(true)
+      
+      // Hide error notification after 5 seconds
+      setTimeout(() => {
+        setShowErrorNotification(false)
+      }, 5000)
     } finally {
       setIsLoading(false)
     }
@@ -420,8 +434,14 @@ export default function PaginaAgendamento() {
                     disabled={agendamentoSucesso || isLoading || !dataSelecionada}
                   />
 
-                  {agendamentoSucesso && (
-                    <div className="text-green-600 text-center mt-4">
+                  {showErrorNotification && (
+                    <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg z-50">
+                      {error}
+                    </div>
+                  )}
+
+                  {showSuccessNotification && (
+                    <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-lg z-50">
                       Visita agendada com sucesso! Este horário não estará mais disponível.
                     </div>
                   )}

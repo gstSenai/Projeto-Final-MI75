@@ -31,7 +31,7 @@ export default function LoginSuccess() {
                         // Redirecionar baseado no tipo de conta
                         switch (userData.tipo_conta) {
                             case 'Usuario':
-                                router.push('/PaginaInicial')
+                                router.push('/paginaInicial')
                                 break
                             case 'Administrador':
                                 router.push('/paginaAdministrador')

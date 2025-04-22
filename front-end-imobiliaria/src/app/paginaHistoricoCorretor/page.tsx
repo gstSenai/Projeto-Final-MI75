@@ -23,9 +23,6 @@ export default function PaginaHistoricoUsuario() {
                         </div>
                     </section>
                 </div>
-                <footer>
-                    <Footer />
-                </footer>
             </LoadingWrapper>
         </>
     );

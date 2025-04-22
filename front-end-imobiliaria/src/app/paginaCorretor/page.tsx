@@ -56,7 +56,7 @@ export default function paginaCorretor() {
                                 <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6'>Agenda</p>
 
 
-                                <Botao className='w-[300px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroImovel")} texto="Histórico da Agenda" />
+                                <Botao className='w-[300px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/paginaHistoricoCorretor")} texto="Histórico da Agenda" />
 
                                 <div className='pt-6'>
                                     <Botao className='w-[300px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/paginaAgendaCorretor")} texto="Agenda" />

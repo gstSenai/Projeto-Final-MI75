@@ -109,9 +109,6 @@ export default function PaginaAgendaCorretor() {
             </div>
           </section>
         </div>
-        <footer>
-          <Footer />
-        </footer>
       </LoadingWrapper>
     </>
   );

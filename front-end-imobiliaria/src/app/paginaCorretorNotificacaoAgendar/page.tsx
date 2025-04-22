@@ -75,7 +75,13 @@ export default function PaginaCorretorNotificacaoAgendar() {
             const response = await request('GET', `http://localhost:9090/agendamento/corretor?page=${page}&size=5`) as ApiResponse;
             console.log('Resposta inicial agendamentos:', response);
             
-            setAgendamentos(prev => [...prev, ...response.content]);
+            if (page === 0) {
+                // If it's the first page, replace the entire state
+                setAgendamentos(response.content);
+            } else {
+                // If it's not the first page, append to existing state
+                setAgendamentos(prev => [...prev, ...response.content]);
+            }
             setHasMore(!response.last);
         } catch (error) {
             console.error('Erro ao buscar agendamentos:', error);
@@ -156,9 +162,6 @@ export default function PaginaCorretorNotificacaoAgendar() {
                         )}
                     </section>
                 </div>
-                <footer>
-                    <Footer />
-                </footer>
             </LoadingWrapper>
         </>
     );

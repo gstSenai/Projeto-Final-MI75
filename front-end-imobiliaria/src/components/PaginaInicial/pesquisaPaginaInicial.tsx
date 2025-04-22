@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Montserrat } from 'next/font/google';
 import Image from 'next/image';
-import PlaceFilter from '@/components/paginaInicial/botaoselecao';
+import PlaceFilter from '@/components/PaginaInicial/botaoselecao';
 import { useLanguage } from '@/components/context/LanguageContext';
 import { useRouter } from 'next/navigation';
 
