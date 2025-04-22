@@ -1,11 +1,22 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 interface Selectfavoritar {
     usuarioId: number,
     imovelId: number
+}
+
+interface Favorito {
+    id: number;
+    favorito: boolean;
+    usuario: {
+        id: number;
+    };
+    imovel: {
+        id: number;
+    };
 }
 
 export default function ConfirmarFavorito({ usuarioId, imovelId }: Selectfavoritar) {
@@ -14,35 +25,62 @@ export default function ConfirmarFavorito({ usuarioId, imovelId }: Selectfavorit
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleClick = () => {
+    useEffect(() => {
+        const verificarFavorito = async () => {
+            try {
+                const response = await fetch(`http://localhost:9090/favorito/getAll`);
+                if (response.ok) {
+                    const favoritos: Favorito[] = await response.json();
+                    const favoritoAtual = favoritos.find(f => 
+                        f.usuario?.id === usuarioId && f.imovel?.id === imovelId
+                    );
+                    setFavorito(favoritoAtual?.favorito || false);
+                }
+            } catch (error) {
+                console.error("Erro ao verificar favorito:", error);
+            }
+        };
+
+        verificarFavorito();
+    }, [usuarioId, imovelId]);
+
+    const handleClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
         setMostrarMensagem(true);
         setError(null);
     };
 
-    const confirmarAcao = async () => {
+    const confirmarAcao = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
         setIsLoading(true);
         setError(null);
         
         try {
             if (!favorito) {
-                const response = await fetch("http://localhost:9090/favoritos", {
+                const response = await fetch("http://localhost:9090/favorito/favoritar", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ usuarioId, imovelId }),
+                    body: JSON.stringify({ 
+                        usuarioId: usuarioId,
+                        imovelId: imovelId,
+                        favorito: true
+                    }),
                 });
                 
                 if (!response.ok) {
-                    throw new Error('Failed to add favorite');
+                    throw new Error('Falha ao adicionar favorito');
                 }
             } else {
-                const response = await fetch(`http://localhost:9090/favoritos/${usuarioId}/${imovelId}`, {
+                const response = await fetch(`http://localhost:9090/favorito/delete/${usuarioId}/${imovelId}`, {
                     method: "DELETE",
                 });
                 
                 if (!response.ok) {
-                    throw new Error('Failed to remove favorite');
+                    throw new Error('Falha ao remover favorito');
                 }
             }
             setFavorito(!favorito);
@@ -55,7 +93,9 @@ export default function ConfirmarFavorito({ usuarioId, imovelId }: Selectfavorit
         }
     };
 
-    const cancelarAcao = () => {
+    const cancelarAcao = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
         setMostrarMensagem(false);
         setError(null);
     };
@@ -66,7 +106,7 @@ export default function ConfirmarFavorito({ usuarioId, imovelId }: Selectfavorit
                 <div className="bg-[#DFDAD0] rounded-full h-10 w-10 xl:h-12 xl:w-12 2xl:h-14 2xl:w-14 flex items-center justify-center">
                     <button
                         onClick={handleClick}
-                        aria-label={favorito ? "Remove from favorites" : "Add to favorites"}
+                        aria-label={favorito ? "Remover dos favoritos" : "Adicionar aos favoritos"}
                         className="cursor-pointer"
                     >
                         <Image

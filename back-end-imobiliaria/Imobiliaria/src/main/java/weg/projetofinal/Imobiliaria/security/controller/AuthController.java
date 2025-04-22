@@ -127,4 +127,23 @@ public class AuthController {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
+
+    @GetMapping("/user-info")
+    public ResponseEntity<?> getUserInfo(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Usuario usuario = usuarioDetailsRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", usuario.getId());
+        response.put("username", usuario.getUsername());
+        response.put("email", usuario.getEmail());
+        response.put("tipo_conta", usuario.getTipo_conta());
+
+        return ResponseEntity.ok(response);
+    }
 }

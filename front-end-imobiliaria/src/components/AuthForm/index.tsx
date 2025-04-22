@@ -222,6 +222,19 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
     }
   }
 
+  const handleGoogleLogin = async () => {
+    try {
+      setIsLoading(true)
+      setApiError("")
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:9090"
+      window.location.href = `${apiUrl}/oauth2/authorization/google`
+    } catch (error) {
+      console.error("Erro ao iniciar login com Google:", error)
+      setApiError("Erro ao iniciar login com Google. Por favor, tente novamente.")
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className={`${montserrat.className} h-screen bg-[url('/fundoLogin.png')] bg-[center_left_-210px]`}>
       <div className="absolute inset-0 flex items-center justify-center bg-[url('/logos/simboloHAVLogin.png')] max-md:bg-[url('/')] bg-no-repeat bg-[right_-300px_top_-100px]">
@@ -236,7 +249,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
               height={144}
               className="w-36 my-4 pr-2"
             />
-            <button className="bg-white border border-gray-300 text-[#702632] text-[14px] font-bold py-2.5 px-2 w-[240px] rounded-xl flex justify-center items-center mt-4">
+            <button 
+              onClick={handleGoogleLogin}
+              className="bg-white border border-gray-300 text-[#702632] text-[14px] font-bold py-2.5 px-2 w-[240px] rounded-xl flex justify-center items-center mt-4 hover:bg-gray-50 transition-colors"
+            >
               <Image
                 src="/loginIcons/google-icon.png"
                 alt="Google"

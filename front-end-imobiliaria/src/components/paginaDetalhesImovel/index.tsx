@@ -8,7 +8,7 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { MapImovelById } from "@/components/map/mapImovelById"
 import { Card } from "../cardImovel"
-// Configurar a chave de acesso do Mapbox
+
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 
 const montserrat = Montserrat({
@@ -280,7 +280,6 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
             </div>
           </div>
 
-          {/* Right Column - Details */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex justify-between items-center mb-6">
