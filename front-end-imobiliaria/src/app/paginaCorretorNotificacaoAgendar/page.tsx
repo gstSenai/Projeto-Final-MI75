@@ -71,7 +71,7 @@ export default function PaginaCorretorNotificacaoAgendar() {
     const fetchAgendamentos = async () => {
         try {
             setLoading(true);
-            console.log('Buscando agendamentos, página:', page);
+            console.log('Iniciando busca de agendamentos...');
             const response = await request('GET', `http://localhost:9090/agendamento/corretor?page=${page}&size=5`) as ApiResponse;
             console.log('Resposta inicial agendamentos:', response);
             

@@ -44,25 +44,15 @@ export const CompromissoCard: React.FC<CompromissoCardProps> = ({
 
 interface ListaCompromissosProps {
   compromissos: Compromisso[];
-  selectedDate?: string | null;
   mensagemSemCompromissos?: string;
   className?: string;
 }
 
-const ListaCompromissos: React.FC<ListaCompromissosProps> = ({
+export const ListaCompromissos: React.FC<ListaCompromissosProps> = ({
   compromissos,
-  selectedDate,
   mensagemSemCompromissos = "Nenhum compromisso agendado.",
   className = ""
 }) => {
-  if (!selectedDate) {
-    return (
-      <div className={`text-center py-8 text-gray-500 ${className}`}>
-        Selecione uma data para ver os compromissos.
-      </div>
-    );
-  }
-
   if (compromissos.length === 0) {
     return (
       <div className={`text-center py-8 text-gray-500 ${className}`}>
@@ -82,5 +72,3 @@ const ListaCompromissos: React.FC<ListaCompromissosProps> = ({
     </div>
   );
 };
-
-export default ListaCompromissos;

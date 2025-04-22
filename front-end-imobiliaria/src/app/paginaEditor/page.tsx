@@ -49,7 +49,7 @@ export default function paginaEditor() {
                                 <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6 lg:whitespace-nowrap'>Gerenciamento de
                                     Imovéis</p>
 
-                                <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroImovel")} texto="Gerenciar" />
+                                <Botao className='w-[300px] bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroImovel")} texto="Gerenciar" />
                             </div>
 
                             <div className='flex flex-col items-center p-6 rounded-xl'>
@@ -60,7 +60,7 @@ export default function paginaEditor() {
                                 <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6'>Gerenciamento de
                                     proprietários</p>
 
-                                <Botao className=' bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroProprietario")} texto="Gerenciar" />
+                                <Botao className='w-[300px] bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroProprietario")} texto="Gerenciar" />
                             </div>
 
                         </div>

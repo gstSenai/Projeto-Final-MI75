@@ -53,15 +53,15 @@ export default function paginaCorretor() {
                                     <Image src="/imagensPaginaEditor-Adm/IconAgenda.png" alt="Gerenciamento de Imóveis" width={75} height={75} className="transition-transform duration-300 hover:scale-110" />
                                 </div>
 
-                                <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6'>Cadastro Imóveis</p>
+                                <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6'>Agenda</p>
 
-                           
-                                <Botao className='w-[200px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroImovel")} texto="Gerenciar" />
-                         
+
+                                <Botao className='w-[300px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroImovel")} texto="Histórico da Agenda" />
+
                                 <div className='pt-6'>
-                                    <Botao className='w-[200px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroProprietario")} texto="Gerenciar" />
+                                    <Botao className='w-[300px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/paginaAgendaCorretor")} texto="Agenda" />
                                 </div>
-                         
+
                             </div>
 
                             <div className='flex flex-col items-center p-6 rounded-xl w-full sm:w-auto'>
@@ -69,17 +69,31 @@ export default function paginaCorretor() {
                                     <Image src="/imagensPaginaEditor-Adm/IconPerfil.png" alt="Cadastro de Proprietários" width={75} height={75} className="transition-transform duration-300 hover:scale-110" />
                                 </div>
 
-                                <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6'>Cadastro Proprietários</p>
+                                <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6'>Perfil</p>
 
 
 
-                                <Botao className='w-[200px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroProprietario")} texto="Gerenciar" />
+                                <Botao className='w-[300px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/perfilUsuario/meu-perfil")} texto="Verificar Perfil" />
 
 
-                                <div className='pt-6'>
-                                    <Botao className='w-[200px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroProprietario")} texto="Gerenciar" />
+                                <div className='pt-6 opacity-0'>
+                                    <Botao className='w-[300px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroProprietario")} texto="Chat" />
                                 </div>
 
+                            </div>
+                            <div className='flex flex-col items-center p-6 rounded-xl w-full sm:w-auto'>
+                                <div className="p-4 rounded-full mb-4">
+                                    <Image src="/imagensPaginaEditor-Adm/iconNotificao.png" alt="Cadastro de Proprietários" width={75} height={75} className="transition-transform duration-300 hover:scale-110" />
+                                </div>
+
+                                <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6'>Notificações</p>
+
+                                <Botao className='w-[300px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/paginaCorretorNotificacaoAgendar")} texto="Notificação" />
+
+                                {/* Div vazia para manter a mesma altura dos outros cards */}
+                                <div className='pt-6 opacity-0'>
+                                    <Botao className='w-[300px] h-12' texto="Notificação" onClick={() => router.push("/paginaCorretorNotificacaoAgendar")}  />
+                                </div>
                             </div>
                         </div>
                     </section>
