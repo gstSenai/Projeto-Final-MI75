@@ -18,9 +18,9 @@ public interface AgendamentoMapper {
     @Mapping(source = "corretor", target = "corretorDTO")
     AgendamentoGetResponseDTO agendamentoToAgendamentoGetResponseDTO(Agendamento agendamento);
 
-    @Mapping(source = "id_Imovel", target = "imovel")
-    @Mapping(source = "id_Usuario", target = "usuario")
-    @Mapping(source = "id_Corretor", target = "corretor")
+    @Mapping(target = "imovel.id", source = "idImovel")
+    @Mapping(target = "usuario.id", source = "idUsuario")
+    @Mapping(target = "corretor.id", source = "idCorretor")
     @Mapping(target = "status", expression = "java(dto.status() != null ? dto.status() : weg.projetofinal.Imobiliaria.model.entity.enums.StatusAgendamento.PENDENTE)")
     Agendamento agendamentoPostRequestDtoToAgendamento(AgendamentoPostRequestDTO dto);
 }
