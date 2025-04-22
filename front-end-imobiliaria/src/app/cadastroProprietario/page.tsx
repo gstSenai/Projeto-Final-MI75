@@ -16,7 +16,7 @@ const montserrat = Montserrat({
 export default function CadastroProprietario() {
     return (
         <LoadingWrapper>
-            <RotaPrivada userAutorizado={['Administrador', 'Editor']}>
+            <RotaPrivada userAutorizado={['administrador', 'editor']}>
                 <Header />
                 <div className="flex flex-col min-h-screen">
                     <div className={`flex-grow bg-[#DFDAD0] ${montserrat.className}`}>

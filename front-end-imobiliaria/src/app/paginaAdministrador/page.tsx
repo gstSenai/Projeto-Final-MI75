@@ -19,7 +19,7 @@ export default function PaginaAdministrador() {
     const router = useRouter();
     return (
         <LoadingWrapper>
-            <RotaPrivada userAutorizado={['Administrador']}>
+            <RotaPrivada userAutorizado={['administrador']}>
                 <Header />
 
                 <div className={`${montserrat.className} pt-3 pb-24 lg:pt-14 lg:pb-52`}>

@@ -1,116 +1,96 @@
-import { Footer } from '@/components/footer';
-import { Header } from '@/components/header';
+'use client'
+
 import { Montserrat } from 'next/font/google';
 import { LoadingWrapper } from '@/components/loading/loadingServer';
 
 const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['400', '800'],
-  display: 'swap',
+    subsets: ['latin'],
+    weight: ['400', '800'],
+    display: 'swap',
 });
 
-
-import Image from "next/image";
+import { Botao } from '@/components/botao/index';
+import Image from 'next/image';
+import { Header } from '@/components/header';
+import { useRouter } from 'next/navigation';
 import RotaPrivada from '@/components/RotaPrivada';
 
-const equipe = [
-  {
-    nome: "Paula Bein",
-    creci: "12345-6",
-    telefone: "+55 (41) 98765-4321",
-    email: "paula.bein@hav.com.br",
-    imagem: "/iconsPaginaCorretores/corretor1.png",
-  },
-  {
-    nome: "Gustavo Costa",
-    creci: "98765-6",
-    telefone: "+55 (47) 98765-5432",
-    email: "gustavo.costa@hav.com.br",
-    imagem: "/iconsPaginaCorretores/corretor2.png",
-  },
-  {
-    nome: "André Silva",
-    creci: "45612-7",
-    telefone: "+55 (42) 98234-4567",
-    email: "andre.silva@hav.com.br",
-    imagem: "/iconsPaginaCorretores/corretor3.png",
-  },
-  {
-    nome: "Lucas Oliveira",
-    creci: "65432-7",
-    telefone: "+55 (49) 99234-5678",
-    email: "lucas.oliveira@hav.com.br",
-    imagem: "/iconsPaginaCorretores/corretor4.png",
-  },
-];
+export default function PaginaAdministrador() {
+    const router = useRouter();
+    return (
+        <LoadingWrapper>
+            <RotaPrivada userAutorizado={['administrador', 'corretor']}>
+                <Header />
 
-export default function Equipe() {
-  return (
-    <LoadingWrapper>
-        <Header />
+                <div className={`${montserrat.className} pt-3 pb-24 lg:pt-14 lg:pb-52`}>
+                    <main className="relative flex h-[500px] xl:h-[450px]  rounded-[20px] mx-auto overflow-hidden pb-24 lg:pt-14 lg:pb-52 w-11/12 shadow-lg transition-all duration-300 hover:shadow-xl">
+                        <Image 
+                            src="/imagensPaginaEditor-Adm/montanhaPaginaAdministrador.png" 
+                            alt="cidade da Pagina do Editor" 
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                            priority
+                            className="object-cover transition-transform duration-700 hover:scale-105" 
+                        />
 
-        <div className={`bg-[#DFDAD0] p-8 rounded-lg shadow-lg text-center ${montserrat.className}`}>
+                        <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32 bg-gradient-to-r from-black/20 to-transparent">
+                            <h1 className="text-xl lg:text-2xl text-center 2xl:text-start font-bold mb-4">Bem-vindo à Área do Administrador!</h1>
 
-          <div className="p-2 max-w-5xl mx-auto">
+                            <div className="border-t-4 border-vermelho w-[265px] md:w-[405px] 2xl:w-[405px] my-6 transform transition-all duration-300 hover:w-[300px] md:hover:w-[450px]"></div>
 
-            <h2 className="ml-3 text-xl font-bold text-gray-800 text-left mb-10 border-b-2 border-[#702632] pb-2 w-32">
-              Corretores
-            </h2>
+                            <p className="text-lg lg:text-xl font-normal text-center 2xl:text-start max-w-4xl leading-relaxed">
+                                Aqui você encontra todas as ferramentas necessárias para gerenciar todos os imóveis, usuários, cadastro de imóveis e Relatórios e Análises de dados.
+                            </p>
+                        </div>
+                    </main>
 
+                    <section className="mt-16">
+                        <h2 className='flex justify-center text-center text-2xl lg:text-3xl font-medium py-10 text-gray-800'>Explore nossos recursos:</h2>
 
-            <div className="flex justify-center items-center">
-              <Image
-                src="/iconsPaginaCorretores/corretores.png"
-                alt="Equipe de corretores"
-                className="rounded-lg w-[40rem] h-full"
-                width={1920}
-                height={1080}
-                quality={100}
-              />
-            </div>
-          </div>
-          <div className='border-b border-[#000000] pb-2 w-2/4 mx-auto opacity-30 mb-8'></div>
-          <h2 className="text-2xl font-light uppercase tracking-wider">
-            Equipe <span className="block text-lg font-bold">HAV</span>
-          </h2>
-          <p className="text-gray-700 mt-4 max-w-2xl mx-auto">
-            Na HAV Imobiliária, nossa equipe é mais do que uma força de vendas, somos profissionais dedicados a entender as necessidades de cada cliente, oferecendo um atendimento personalizado e soluções inteligentes para transformar seus projetos em realidade. Juntos, buscamos sempre o melhor para você!
-          </p>
+                        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-4 md:px-8'>
+                            <div className='flex flex-col items-center p-6 rounded-xl'>
+                                <div className="p-4 rounded-full mb-4">
+                                    <Image src="/imagensPaginaEditor-Adm/gerenciamentoImoveis.png" alt="Gerenciamento de Imóveis" width={75} height={75} className="transition-transform duration-300 hover:scale-110" />
+                                </div>
 
+                                <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6 lg:whitespace-nowrap'>Cadastro Imóveis</p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2  mt-16">
-            {equipe.map((corretor, index) => (
-              <div key={index} className="flex flex-col items-center">
+                                <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroImovel")} texto="Gerenciar" />
+                            </div>
 
-                <div className="w-52 h-64 relative rounded-lg overflow-hidden">
-                  <Image
-                    src={corretor.imagem}
-                    alt={corretor.nome}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-lg"
-                  />
+                            <div className='flex flex-col items-center p-6 rounded-xl'>
+                                <div className="p-4 rounded-full mb-4">
+                                    <Image src="/imagensPaginaEditor-Adm/gerenciamentoProprietarios.png" alt="Cadastro de Proprietários" width={75} height={75} className="transition-transform duration-300 hover:scale-110" />
+                                </div>
+
+                                <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6'>Cadastro Proprietários</p>
+
+                                <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroProprietario")} texto="Gerenciar" />
+                            </div>
+
+                            <div className='flex flex-col items-center p-6 rounded-xl'>
+                                <div className="p-4 rounded-full mb-4">
+                                    <Image src="/imagensPaginaEditor-Adm/gerenciamentoUsuarios.png" alt="Gerenciamento de Usúarios" width={75} height={75} className="transition-transform duration-300 hover:scale-110" />
+                                </div>
+
+                                <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6'>Cadastro Usúarios</p>
+
+                                <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroUsuario")} texto="Gerenciar" />
+                            </div>
+
+                            <div className='flex flex-col items-center p-6 rounded-xl'>
+                                <div className="p-4 rounded-full mb-4">
+                                    <Image src="/imagensPaginaEditor-Adm/cadastroImoveis.png" alt="Relatório de analise" width={75} height={75} className="transition-transform duration-300 hover:scale-110" />
+                                </div>
+
+                                <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6'>Relatórios e Análises</p>
+
+                                <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/paginaRelatoriosAnalises")} texto="Gerenciar" />
+                            </div>
+                        </div>
+                    </section>
                 </div>
-
-                <div className='text-left ml-4'>
-                  <h3 className="mt-4">{corretor.nome}</h3>
-                  <p className="mt-2">CRECI: {corretor.creci}</p>
-                  <div className='flex gap-3 mt-2'>
-                    <Image src="/iconsPaginaCorretores/iconTelefone.png" alt="Telefone" width={20} height={20} className="w-5 h-5" />
-                    <p className="">{corretor.telefone}</p>
-                  </div>
-                  <div className='flex gap-4 mt-2 mb-20'>
-                    <Image src="/iconsPaginaCorretores/iconEmail.png" alt="Telefone" width={20} height={20} className="w-5 h-5" />
-                    <p className="">{corretor.email}</p>
-                  </div>
-
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <Footer />
-    </LoadingWrapper>
-  );
+            </RotaPrivada>
+        </LoadingWrapper>
+    );
 }

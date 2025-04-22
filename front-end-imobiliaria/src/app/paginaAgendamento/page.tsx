@@ -51,7 +51,8 @@ interface PaginaAgendamentoProps {
 export default function PaginaAgendamento() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { userId, isAuthenticated } = useAuth()
+  const { isAuthenticated } = useAuth()
+  const [userId, setUserId] = useState<number | null>(null)
   const [imovelId, setImovelId] = useState<number | null>(null)
 
   useEffect(() => {
@@ -67,6 +68,16 @@ export default function PaginaAgendamento() {
           router.push('/login')
           return
         }
+      }
+
+      // Pega o ID do usuário do localStorage
+      const storedUserId = localStorage.getItem('id')
+      if (storedUserId) {
+        setUserId(Number(storedUserId))
+      } else {
+        console.error('ID do usuário não encontrado')
+        router.push('/login')
+        return
       }
 
       // Depois trata o ID do imóvel
@@ -174,12 +185,12 @@ export default function PaginaAgendamento() {
       data: Boolean(dataSelecionada),
       horario: Boolean(data.horario),
       corretor: Boolean(data.corretor?.id),
-      usuario: Boolean(userId),
+      usuario: userId !== null,
       imovel: Boolean(imovelId),
       dataValida: dataSelecionada?.match(/^\d{4}-\d{2}-\d{2}$/),
       horarioValido: data.horario?.match(/^\d{1,2}:\d{2}$/),
       idCorretorNumerico: typeof data.corretor?.id === 'number',
-      idUsuarioNumerico: typeof userId === 'number',
+      idUsuarioNumerico: userId !== null,
       idImovelNumerico: typeof imovelId === 'number'
     }
 

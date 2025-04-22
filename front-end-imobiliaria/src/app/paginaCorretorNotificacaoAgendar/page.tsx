@@ -13,21 +13,53 @@ const montserrat = Montserrat({
     display: 'swap',
 });
 
+interface Usuario {
+    id: number;
+    username: string;
+    email: string;
+    tipo_conta: string;
+    sobrenome: string | null;
+    ativo: boolean;
+}
+
+interface Imovel {
+    id: number;
+    codigo: number;
+    nome_propriedade: string;
+    tipo_transacao: string;
+    tipo_imovel: string;
+    status_imovel: string;
+    valor_venda: number;
+    valor_promocional: number;
+    destaque: string;
+    visibilidade: boolean;
+    valor_iptu: number;
+    condominio: number;
+    area_construida: number;
+    area_terreno: number;
+    descricao: string;
+}
+
 interface Agendamento {
     id: number;
     data: string;
     horario: string;
-    imovel: {
-        codigo: string;
-        id_endereco: {
-            bairro: string;
-            cidade: string;
-        };
+    status: string;
+    usuarioDTO: Usuario;
+    imovelDTO: Imovel;
+    corretorDTO: {
+        id: number;
+        username: string;
     };
-    usuario: {
-        nome: string;
-        sobrenome: string;
-    };
+}
+
+interface ApiResponse {
+    content: Agendamento[];
+    last: boolean;
+    totalElements: number;
+    totalPages: number;
+    size: number;
+    number: number;
 }
 
 export default function PaginaCorretorNotificacaoAgendar() {
@@ -39,7 +71,10 @@ export default function PaginaCorretorNotificacaoAgendar() {
     const fetchAgendamentos = async () => {
         try {
             setLoading(true);
-            const response = await request('GET', `http://localhost:9090/agendamento/corretor?page=${page}&size=5`);
+            console.log('Buscando agendamentos, página:', page);
+            const response = await request('GET', `http://localhost:9090/agendamento/corretor?page=${page}&size=5`) as ApiResponse;
+            console.log('Resposta inicial agendamentos:', response);
+            
             setAgendamentos(prev => [...prev, ...response.content]);
             setHasMore(!response.last);
         } catch (error) {
@@ -64,7 +99,7 @@ export default function PaginaCorretorNotificacaoAgendar() {
 
     const handleCancel = async (id: number) => {
         try {
-            await request('DELETE', `http://localhost:9090/agendamento/cancelar/${id}`);
+            await request('PUT', `http://localhost:9090/agendamento/cancelar/${id}`);
             setAgendamentos(prev => prev.filter(ag => ag.id !== id));
         } catch (error) {
             console.error('Erro ao cancelar agendamento:', error);
@@ -97,10 +132,11 @@ export default function PaginaCorretorNotificacaoAgendar() {
                                     id={agendamento.id}
                                     data={agendamento.data}
                                     horario={agendamento.horario}
-                                    bairro={agendamento.imovel.id_endereco.bairro}
-                                    cidade={agendamento.imovel.id_endereco.cidade}
-                                    codigoImovel={agendamento.imovel.codigo}
-                                    nomeUsuario={`${agendamento.usuario.nome} ${agendamento.usuario.sobrenome}`}
+                                    tipoImovel={agendamento.imovelDTO.tipo_imovel}
+                                    cidade={agendamento.imovelDTO.nome_propriedade}
+                                    codigoImovel={String(agendamento.imovelDTO.codigo)}
+                                    nomeUsuario={agendamento.usuarioDTO.username}
+                                    status={agendamento.status || 'PENDENTE'}
                                     onConfirm={handleConfirm}
                                     onCancel={handleCancel}
                                 />

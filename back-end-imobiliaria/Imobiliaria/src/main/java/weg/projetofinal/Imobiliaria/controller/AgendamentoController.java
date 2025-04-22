@@ -101,7 +101,7 @@ public class AgendamentoController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        Page<Agendamento> agendamentos = agendamentoService.findByCorretor(username, PageRequest.of(page, size));
+        Page<Agendamento> agendamentos = agendamentoService.findByCorretorAndStatus(username, "PENDENTE", PageRequest.of(page, size));
         return agendamentos.map(AgendamentoMapper.INSTANCE::agendamentoToAgendamentoGetResponseDTO);
     }
 
