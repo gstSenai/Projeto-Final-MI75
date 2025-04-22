@@ -54,7 +54,7 @@ export default function EditProfile({ id }: EditProfileProps) {
         try {
             const response = await fetch(`http://localhost:9090/usuario/getById/${id}`)
             const data = await response.json()
-
+            
             const dadosFormatados = {
                 username: data.username || '',
                 tipo_conta: data.tipo_conta || '',
@@ -63,14 +63,14 @@ export default function EditProfile({ id }: EditProfileProps) {
                 password: data.password || '',
                 imagem_usuario: data.imagem_usuario || '',
                 twoFactorEnabled: data.twoFactorEnabled || false,
-                telefone: data.telefone || '',
+                telefone: data.telefone || ''
             }
-
+            
             setProfileData(dadosFormatados)
             Object.entries(dadosFormatados).forEach(([key, value]) => {
                 setValue(key as keyof UsuarioData, value);
             });
-
+            
             if (data.imagem_usuario) {
                 setImagem(data.imagem_usuario)
             }
@@ -82,20 +82,16 @@ export default function EditProfile({ id }: EditProfileProps) {
     const onSubmit = async (data: UsuarioData) => {
         try {
             setProfileData(data);
-
-            console.log("Dados a serem enviados:", data);
-            console.log("Valor da biografia:", data.biografia);
-
+            
             const formData = new FormData();
             const usuarioData = {
                 ...data,
                 id: id,
                 ativo: true,
-                password: data.password
+                password: data.password,
+                telefone: data.telefone || ''
             };
-
-            console.log("Dados formatados para envio:", usuarioData);
-
+            
             formData.append("usuario", JSON.stringify(usuarioData));
 
             if (imagem) {
