@@ -38,31 +38,33 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token")
-    const storedRole = localStorage.getItem("role")
-    const storedUserId = localStorage.getItem("userId")
+    const storedRole = localStorage.getItem("tipo_conta")
+    const storedUserId = localStorage.getItem("id")
 
     if (storedToken && storedRole && storedUserId) {
       setToken(storedToken)
-      setRole(storedRole)
+      setRole(storedRole.toLowerCase())
       setUserId(Number(storedUserId))
       setIsAuthenticated(true)
     }
   }, [])
 
   const login = (newToken: string, newRole: string, newUserId: number) => {
+    const normalizedRole = newRole.toLowerCase()
     localStorage.setItem("token", newToken)
-    localStorage.setItem("role", newRole)
-    localStorage.setItem("userId", newUserId.toString())
+    localStorage.setItem("tipo_conta", normalizedRole)
+    localStorage.setItem("id", newUserId.toString())
     setToken(newToken)
-    setRole(newRole)
+    setRole(normalizedRole)
     setUserId(newUserId)
     setIsAuthenticated(true)
   }
 
   const logout = () => {
     localStorage.removeItem("token")
-    localStorage.removeItem("role")
-    localStorage.removeItem("userId")
+    localStorage.removeItem("tipo_conta")
+    localStorage.removeItem("id")
+    localStorage.removeItem("username")
     setToken(null)
     setRole(null)
     setUserId(null)

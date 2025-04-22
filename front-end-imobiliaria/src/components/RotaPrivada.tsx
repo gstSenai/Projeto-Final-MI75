@@ -1,9 +1,10 @@
 'use client';
 
 import { LoadingWrapper } from './loading/loadingServer';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Montserrat } from 'next/font/google';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -17,9 +18,43 @@ interface RotaPrivadaProps {
 }
 
 export default function RotaPrivada({ children, userAutorizado }: RotaPrivadaProps) {
-  const tipoConta = localStorage.getItem('tipo_conta');
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
+  const router = useRouter();
 
-  if (tipoConta && userAutorizado.includes(tipoConta)) {
+  useEffect(() => {
+    try {
+      const tipoConta = localStorage.getItem('tipo_conta');
+      console.log('Tipo de conta atual:', tipoConta);
+      console.log('Tipos autorizados:', userAutorizado);
+
+      if (!tipoConta) {
+        console.log('Nenhum tipo de conta encontrado, redirecionando para login');
+        router.push('/login');
+        return;
+      }
+
+      // Normalize both the user type and authorized types to lowercase
+      const tipoContaNormalizado = tipoConta.toLowerCase();
+      const tiposAutorizadosNormalizados = userAutorizado.map(tipo => tipo.toLowerCase());
+      
+      console.log('Tipo de conta normalizado:', tipoContaNormalizado);
+      console.log('Tipos autorizados normalizados:', tiposAutorizadosNormalizados);
+      
+      const autorizado = tiposAutorizadosNormalizados.includes(tipoContaNormalizado);
+      console.log('Usuário está autorizado?', autorizado);
+      
+      setIsAuthorized(autorizado);
+    } catch (error) {
+      console.error('Erro ao verificar autorização:', error);
+      setIsAuthorized(false);
+    }
+  }, [userAutorizado, router]);
+
+  if (isAuthorized === null) {
+    return <LoadingWrapper><div>Carregando...</div></LoadingWrapper>;
+  }
+
+  if (isAuthorized) {
     return <LoadingWrapper>{children}</LoadingWrapper>;
   }
 
@@ -29,10 +64,10 @@ export default function RotaPrivada({ children, userAutorizado }: RotaPrivadaPro
         <Image
           src="/paginaInicial/fotosDamainEfotter/PaginaCasaPaginaInicial.png"
           alt="Fundo da página de acesso negado"
-          layout="fill"
-          objectFit="cover"
-          quality={100}
-          className="brightness-50"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+          priority
+          className="brightness-50 object-cover"
         />
         <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-8 gap-8">
           <h1 className="text-4xl lg:text-5xl font-bold text-center">

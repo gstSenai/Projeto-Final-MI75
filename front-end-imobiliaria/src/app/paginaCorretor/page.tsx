@@ -19,12 +19,19 @@ export default function PaginaAdministrador() {
     const router = useRouter();
     return (
         <LoadingWrapper>
-            <RotaPrivada userAutorizado={['Administrador', 'Corretor']}>
+            <RotaPrivada userAutorizado={['administrador', 'corretor']}>
                 <Header />
 
                 <div className={`${montserrat.className} pt-3 pb-24 lg:pt-14 lg:pb-52`}>
                     <main className="relative flex h-[500px] xl:h-[450px]  rounded-[20px] mx-auto overflow-hidden pb-24 lg:pt-14 lg:pb-52 w-11/12 shadow-lg transition-all duration-300 hover:shadow-xl">
-                        <Image src="/imagensPaginaEditor-Adm/montanhaPaginaAdministrador.png" alt="cidade da Pagina do Editor" layout="fill" objectFit="cover" quality={100} className="transition-transform duration-700 hover:scale-105" />
+                        <Image 
+                            src="/imagensPaginaEditor-Adm/montanhaPaginaAdministrador.png" 
+                            alt="cidade da Pagina do Editor" 
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                            priority
+                            className="object-cover transition-transform duration-700 hover:scale-105" 
+                        />
 
                         <div className="absolute inset-0 flex flex-col justify-center items-center 2xl:items-start text-white p-8 md:pl-16 2xl:pl-32 bg-gradient-to-r from-black/20 to-transparent">
                             <h1 className="text-xl lg:text-2xl text-center 2xl:text-start font-bold mb-4">Bem-vindo à Área do Administrador!</h1>
@@ -86,6 +93,4 @@ export default function PaginaAdministrador() {
             </RotaPrivada>
         </LoadingWrapper>
     );
-
-
 }

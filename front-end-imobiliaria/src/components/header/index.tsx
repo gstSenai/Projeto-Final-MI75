@@ -39,6 +39,8 @@ export function Header() {
 
                     if (response.ok) {
                         const userData = await response.json();
+                        console.log('Dados do usuário recebidos:', userData);
+                        console.log('Tipo de conta recebido:', userData.tipo_conta);
                         setUsername(userData.username);
                     }
                 } catch (error) {
@@ -51,15 +53,21 @@ export function Header() {
     }, [isAuthenticated, userId]);
 
     const handleLogoClick = () => {
-        if (role === 'Administrador') {
+        console.log('Tipo de conta atual:', role);
+        if (role === 'administrador') {
+            console.log('Redirecionando para Administrador');
             router.push('/paginaAdministrador');
-        } else if (role === 'Corretor') {
+        } else if (role === 'corretor') {
+            console.log('Redirecionando para Corretor');
             router.push('/paginaCorretor');
-        } else if (role === 'Proprietario') {
+        } else if (role === 'proprietario') {
+            console.log('Redirecionando para Proprietario');
             router.push('/paginaProprietarios');
-        } else if (role === 'Editor') {
+        } else if (role === 'editor') {
+            console.log('Redirecionando para Editor');
             router.push('/paginaEditor');
         } else {
+            console.log('Redirecionando para página inicial');
             router.push('/');
         }
     };
@@ -103,10 +111,10 @@ export function Header() {
                                 <ul className="flex flex-row max-lg:text-base text-xl whitespace-nowrap md:gap-4 lg:gap-6 text-[#303030] max-md:hidden">
                                     <li>
                                         <Link href={
-                                            role === 'Administrador' ? '/paginaAdministrador' : 
-                                            role === 'Corretor' ? '/paginaCorretor' : 
-                                            role === 'Proprietario' ? '/paginaProprietarios' : 
-                                            role === 'Editor' ? '/paginaEditor' : 
+                                            role === 'administrador' ? '/paginaAdministrador' : 
+                                            role === 'corretor' ? '/paginaCorretor' : 
+                                            role === 'proprietario' ? '/paginaProprietarios' : 
+                                            role === 'editor' ? '/paginaEditor' : 
                                             '/'
                                         }>
                                             {translate('inicio')}
@@ -281,10 +289,10 @@ export function Header() {
                                     <Image src="/imagensHeader/logoMinuscula.png" alt="simbolo HAV" width={20} height={20} className='h-full' />
                                     <Link 
                                         href={
-                                            role === 'Administrador' ? '/paginaAdministrador' : 
-                                            role === 'Corretor' ? '/paginaCorretor' : 
-                                            role === 'Proprietario' ? '/paginaProprietarios' : 
-                                            role === 'Editor' ? '/paginaEditor' : 
+                                            role === 'administrador' ? '/paginaAdministrador' : 
+                                            role === 'corretor' ? '/paginaCorretor' : 
+                                            role === 'proprietario' ? '/paginaProprietarios' : 
+                                            role === 'editor' ? '/paginaEditor' : 
                                             '/PaginaIncial'
                                         } 
                                         className="text-xl text-[#303030] hover:text-vermelho transition-colors"
