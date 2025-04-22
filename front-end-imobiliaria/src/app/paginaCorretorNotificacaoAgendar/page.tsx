@@ -17,6 +17,7 @@ interface Agendamento {
     id: number;
     data: string;
     horario: string;
+    status: string;
     imovel: {
         codigo: string;
         id_endereco: {
@@ -30,6 +31,15 @@ interface Agendamento {
     };
 }
 
+interface ApiResponse {
+    content: Agendamento[];       // Lista de agendamentos
+    last: boolean;                // Se é a última página
+    totalElements: number;        // Total de elementos em todas as páginas
+    totalPages: number;           // Total de páginas
+    size: number;                 // Tamanho da página
+    number: number;               // Número da página atual
+}
+
 export default function PaginaCorretorNotificacaoAgendar() {
     const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
     const [loading, setLoading] = useState(true);
@@ -39,7 +49,7 @@ export default function PaginaCorretorNotificacaoAgendar() {
     const fetchAgendamentos = async () => {
         try {
             setLoading(true);
-            const response = await request('GET', `http://localhost:9090/agendamento/corretor?page=${page}&size=5`);
+            const response = await request('GET', `http://localhost:9090/agendamento/corretor?page=${page}&size=5`) as ApiResponse;
             setAgendamentos(prev => [...prev, ...response.content]);
             setHasMore(!response.last);
         } catch (error) {
@@ -64,7 +74,7 @@ export default function PaginaCorretorNotificacaoAgendar() {
 
     const handleCancel = async (id: number) => {
         try {
-            await request('DELETE', `http://localhost:9090/agendamento/cancelar/${id}`);
+            await request('PUT', `http://localhost:9090/agendamento/cancelar/${id}`);
             setAgendamentos(prev => prev.filter(ag => ag.id !== id));
         } catch (error) {
             console.error('Erro ao cancelar agendamento:', error);
@@ -97,10 +107,11 @@ export default function PaginaCorretorNotificacaoAgendar() {
                                     id={agendamento.id}
                                     data={agendamento.data}
                                     horario={agendamento.horario}
-                                    bairro={agendamento.imovel.id_endereco.bairro}
-                                    cidade={agendamento.imovel.id_endereco.cidade}
-                                    codigoImovel={agendamento.imovel.codigo}
-                                    nomeUsuario={`${agendamento.usuario.nome} ${agendamento.usuario.sobrenome}`}
+                                    bairro={agendamento.imovel?.id_endereco?.bairro || 'N/A'}
+                                    cidade={agendamento.imovel?.id_endereco?.cidade || 'N/A'}
+                                    codigoImovel={agendamento.imovel?.codigo || 'N/A'}
+                                    nomeUsuario={`${agendamento.usuario?.nome || ''} ${agendamento.usuario?.sobrenome || ''}`}
+                                    status={agendamento.status || 'PENDENTE'}
                                     onConfirm={handleConfirm}
                                     onCancel={handleCancel}
                                 />

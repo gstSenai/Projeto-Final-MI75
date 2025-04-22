@@ -8,6 +8,7 @@ interface CardHorarioAgendarProps {
     cidade: string;
     codigoImovel: string;
     nomeUsuario: string;
+    status: string;
     onConfirm: (id: number) => void;
     onCancel: (id: number) => void;
 }
@@ -20,6 +21,7 @@ export function CorretorNotificacaoAgendar({
     cidade, 
     codigoImovel,
     nomeUsuario,
+    status,
     onConfirm,
     onCancel 
 }: CardHorarioAgendarProps) {
@@ -41,6 +43,15 @@ export function CorretorNotificacaoAgendar({
             <div className="text-xs md:text-sm lg:text-base flex flex-col text-center md:text-left">
                 <span>Cód: {codigoImovel}</span>
                 <span>Cliente: {nomeUsuario}</span>
+                <span className={`px-2 py-1 rounded-full text-white ${
+                    status === 'CONFIRMADO' ? 'bg-green-500' :
+                    status === 'CANCELADO' ? 'bg-red-500' :
+                    'bg-yellow-500'
+                }`}>
+                    {status === 'CONFIRMADO' ? 'Confirmado' :
+                     status === 'CANCELADO' ? 'Cancelado' :
+                     'Pendente'}
+                </span>
             </div>
 
             {/* Botões */}
