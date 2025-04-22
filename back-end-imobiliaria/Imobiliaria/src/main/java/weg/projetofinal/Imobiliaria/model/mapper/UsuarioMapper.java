@@ -17,8 +17,10 @@ public interface UsuarioMapper {
     @Mapping(source = "imovel", target = "imovel")
     UsuarioGetResponseDTO usuarioToUsuarioGetResponseDTO(Usuario usuario);
 
+    @Mapping(source = "telefone", target = "telefone")
     Usuario usuarioPostRequestDTOToUsuario(UsuarioPostRequestDTO usuarioPostRequestDTO);
 
+    @Mapping(source = "telefone", target = "telefone")
     Usuario usuarioPutRequestDTOToUsuario(UsuarioPutRequestDTO usuarioPutRequestDTO);
 
     Usuario usuarioCadastroRequestDTOToUsuario(UsuarioCadastroPostDTO usuarioRequestDTO);

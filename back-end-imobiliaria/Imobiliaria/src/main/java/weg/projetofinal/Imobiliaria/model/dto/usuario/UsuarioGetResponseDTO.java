@@ -13,6 +13,6 @@ public record UsuarioGetResponseDTO(
         String password,
         boolean ativo,
         String imagem_usuario,
+        String telefone,  // novo aqui
         List<ImovelUsuarioGetResponseDTO> imovel
-) {
-}
+) {}

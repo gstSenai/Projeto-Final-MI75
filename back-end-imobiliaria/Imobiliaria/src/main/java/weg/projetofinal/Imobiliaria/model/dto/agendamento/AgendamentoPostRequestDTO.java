@@ -1,5 +1,4 @@
 package weg.projetofinal.Imobiliaria.model.dto.agendamento;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import weg.projetofinal.Imobiliaria.model.entity.Imovel;
