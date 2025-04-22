@@ -87,7 +87,7 @@ public class AgendamentoService {
 
     public Agendamento confirmarAgendamento(Integer id) {
         Agendamento agendamento = procurarPorId(id);
-        // Aqui você pode adicionar lógica adicional de confirmação
+        agendamento.setStatus(StatusAgendamento.CONFIRMADO);
         return agendamentoRepository.save(agendamento);
     }
 

@@ -6,6 +6,8 @@ import { Montserrat } from "next/font/google"
 import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
 import Image from "next/image"
+import { useAuth } from "@/components/context/AuthContext"
+
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
@@ -28,6 +30,7 @@ interface UsuarioData {
 
 const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro, isCadastro = false }) => {
   const router = useRouter()
+  const { login } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -187,6 +190,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, loginOuCadastro,
             console.log("ID do usuário encontrado:", usuario.id)
             localStorage.setItem("tipo_conta", usuario.tipo_conta)
             localStorage.setItem("id", usuario.id.toString())
+            
+            login(data.token, usuario.tipo_conta, usuario.id)
             
             if (usuario.tipo_conta === "Usuario") {
               router.push("/PaginaInicial")
