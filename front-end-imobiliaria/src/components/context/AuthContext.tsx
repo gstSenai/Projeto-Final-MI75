@@ -32,12 +32,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [role, setRole] = useState<string | null>(null)
   const [userId, setUserId] = useState<number | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [token, setToken] = useState<string | null>(null)
   const [userRole, setUserRole] = useState<string | null>(null)
   const [username, setUsername] = useState<string | null>(null)
   const router = useRouter()
 
-  // Carrega o estado inicial do localStorage
   useEffect(() => {
     const storedToken = localStorage.getItem("token")
     const storedRole = localStorage.getItem("role")
@@ -79,10 +77,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   )
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext)
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider")
-  }
-  return context
-}
+
