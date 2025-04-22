@@ -2,10 +2,13 @@
 import { UseFormRegister, FieldErrors } from "react-hook-form"
 import { FormularioInput } from "../formularioInput"
 import { FormData } from "../index"
+import { useState } from "react"
 
 interface TipoImovelTransacaoProps {
   register: UseFormRegister<FormData>
   errors: FieldErrors<FormData>
+  valorPromocionalError?: string
+  setValorPromocionalError?: (error: string) => void
 }
 
 const formatarValor = (value: string) => {
@@ -22,7 +25,32 @@ const formatarArea = (value: string) => {
   return `${formatted}`;
 };
 
-export function TipoImovelTransacao({ register, errors }: TipoImovelTransacaoProps) {
+export function TipoImovelTransacao({ register, errors, valorPromocionalError, setValorPromocionalError }: TipoImovelTransacaoProps) {
+  const [valorVenda, setValorVenda] = useState("");
+
+  const validarValorPromocional = (valorPromocional: string) => {
+    if (!valorVenda || !valorPromocional) return;
+
+    try {
+      const valorVendaStr = valorVenda.replace(/\./g, '').replace(',', '.');
+      const valorPromocionalStr = valorPromocional.replace(/\./g, '').replace(',', '.');
+      
+      const valorVendaNum = parseFloat(valorVendaStr);
+      const valorPromocionalNum = parseFloat(valorPromocionalStr);
+      
+      if (isNaN(valorVendaNum) || isNaN(valorPromocionalNum)) return;
+      
+      if (valorPromocionalNum > valorVendaNum) {
+        setValorPromocionalError?.("O valor promocional não pode ser maior que o valor de venda");
+      } else {
+        setValorPromocionalError?.("");
+      }
+    } catch (error) {
+      console.error("Erro ao validar valores:", error);
+      setValorPromocionalError?.("");
+    }
+  };
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-col lg:gap-6">
@@ -68,21 +96,30 @@ export function TipoImovelTransacao({ register, errors }: TipoImovelTransacaoPro
             customizacaoClass="w-full"
             errors={errors?.imovel?.valor_venda}
             onChange={(e) => {
-              e.target.value = formatarValor(e.target.value);
+              const valor = formatarValor(e.target.value);
+              e.target.value = valor;
+              setValorVenda(valor);
             }}
           />
-          <FormularioInput
-            placeholder="Preço Promocional (R$):"
-            name={"imovel.valor_promocional"}
-            interName="R$ "
-            register={register}
-            required
-            customizacaoClass="w-full"
-            errors={errors?.imovel?.valor_promocional}
-            onChange={(e) => {
-              e.target.value = formatarValor(e.target.value);
-            }}
-          />
+          <div className="w-full">
+            <FormularioInput
+              placeholder="Preço Promocional (R$):"
+              name={"imovel.valor_promocional"}
+              interName="R$ "
+              register={register}
+              required
+              customizacaoClass="w-full"
+              errors={errors?.imovel?.valor_promocional}
+              onChange={(e) => {
+                const valor = formatarValor(e.target.value);
+                e.target.value = valor;
+                validarValorPromocional(valor);
+              }}
+            />
+            {valorPromocionalError && (
+              <p className="text-red-500 text-sm mt-1">{valorPromocionalError}</p>
+            )}
+          </div>
           <FormularioInput
             placeholder="Permitir destaque:"
             name={"imovel.destaque"}
