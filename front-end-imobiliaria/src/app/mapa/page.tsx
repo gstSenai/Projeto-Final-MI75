@@ -5,6 +5,7 @@ import { ImovelMap } from '@/components/map';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { LoadingWrapper } from '@/components/loading/loadingServer';
+import { useRouter } from 'next/navigation';
 
 interface Imovel {
   id: number;
@@ -25,6 +26,7 @@ const getAllImoveis = async () => {
 
 export default function MapPage() {
   const [markers, setMarkers] = useState<Imovel[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchImoveis = async () => {
@@ -34,13 +36,18 @@ export default function MapPage() {
     fetchImoveis();
   }, []);
 
+  const handleMarkerClick = (id: number) => {
+    localStorage.setItem('currentImovelId', id.toString());
+    router.push('/paginaImoveis/imovelDetalhes');
+  };
+
   const markerId = markers.length > 0 ? markers[0].id : 0;
 
   return (
     <LoadingWrapper>
       <Header />
       <div className='mt-10 mb-20'>
-        <ImovelMap markersId={markerId} />
+        <ImovelMap onMarkerClick={handleMarkerClick} />
       </div>
       <Footer />
     </LoadingWrapper>

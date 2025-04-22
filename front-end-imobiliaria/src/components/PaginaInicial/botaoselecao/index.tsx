@@ -59,8 +59,8 @@ export default function PlaceFilter({ tipo, texto, onSelect }: PlaceFilterProps)
                         <button
                             key={index}
                             className={`flex p-2 justify-center items-center border overflow-hidden flex-grow transition-all duration-200 
-                                ${selected.includes(img.alt) ? "border-[#702632]" : "border-transparent"}`}
-                            onClick={() => handleSelection(img.alt)}
+                                ${selected.includes(img.label) ? "border-[#702632]" : "border-transparent"}`}
+                            onClick={() => handleSelection(img.label)}
                         >
                             <Image
                                 src={img.src}

@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6a19b67c-7436-4fa1-8d76-d7f35d209a8e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Imobiliaria/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Imobiliaria/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Imobiliaria/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Imobiliaria/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/PaginaInicial/pesquisaPaginaInicial.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/PaginaInicial/pesquisaPaginaInicial.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaDetalhesImovel/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaDetalhesImovel/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaImoveis/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end-imobiliaria/src/components/paginaImoveis/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -112,7 +116,7 @@
       <updated>1743023587217</updated>
       <workItem from="1744983978308" duration="14000" />
       <workItem from="1745110999940" duration="4375000" />
-      <workItem from="1745334008393" duration="300000" />
+      <workItem from="1745334008393" duration="1926000" />
     </task>
     <servers />
   </component>

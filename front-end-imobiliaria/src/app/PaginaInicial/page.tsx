@@ -101,6 +101,7 @@ export default function PaginaInicial() {
                                             numero_banheiros={imovel.numero_banheiros}
                                             preco={imovel.preco}
                                             codigo={imovel.codigo}
+                                            imovelId={imovel.id}
                                             destaque={imovel.destaque as "Destaque" | "Promoção" | "Adicionado Rec." | "Não Destaque"}
                                         />
                                     ))}
@@ -135,6 +136,7 @@ export default function PaginaInicial() {
                                         numero_banheiros={imovel.numero_banheiros}
                                         preco={imovel.preco}
                                         codigo={imovel.codigo}
+                                        imovelId={imovel.id}
                                         destaque={imovel.destaque as "Destaque" | "Promoção" | "Adicionado Rec." | "Não Destaque"}
                                     />
                                 ))
@@ -168,6 +170,7 @@ export default function PaginaInicial() {
                                         numero_banheiros={imovel.numero_banheiros}
                                         preco={imovel.preco}
                                         codigo={imovel.codigo}
+                                        imovelId={imovel.id}
                                         destaque={imovel.destaque as "Destaque" | "Promoção" | "Adicionado Rec." | "Não Destaque"}
                                     />
                                 ))
