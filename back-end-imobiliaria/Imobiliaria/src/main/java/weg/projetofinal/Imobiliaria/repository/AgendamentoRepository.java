@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import weg.projetofinal.Imobiliaria.model.entity.Agendamento;
+import weg.projetofinal.Imobiliaria.model.entity.enums.StatusAgendamento;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,5 +18,5 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
     List<Agendamento> findByCorretorUsernameAndData(String username, LocalDate data);
     List<Agendamento> findByUsuarioUsernameAndData(String username, LocalDate data);
     List<Agendamento> findByImovelIdAndData(Integer imovelId, LocalDate data);
-
+    Page<Agendamento> findByCorretorUsernameAndStatus(String username, StatusAgendamento status, Pageable pageable);
 }

@@ -54,7 +54,7 @@ export function Header() {
         if (role === 'Administrador') {
             router.push('/paginaAdministrador');
         } else if (role === 'Corretor') {
-            router.push('/paginaCorretores');
+            router.push('/paginaCorretor');
         } else if (role === 'Proprietario') {
             router.push('/paginaProprietarios');
         } else if (role === 'Editor') {
@@ -107,13 +107,13 @@ export function Header() {
                                             role === 'Corretor' ? '/paginaCorretor' : 
                                             role === 'Proprietario' ? '/paginaProprietarios' : 
                                             role === 'Editor' ? '/paginaEditor' : 
-                                            '/PaginaInicial'
+                                            '/'
                                         }>
                                             {translate('inicio')}
                                         </Link>
                                     </li>
                                     <li><Link href="/paginaImoveis">{translate('imoveis')}</Link></li>
-                                    <li><Link href="/paginaCorretor">{translate('corretores')}</Link></li>
+                                    <li><Link href="/paginaCorretores">{translate('corretores')}</Link></li>
                                     <li><Link href="/sobreNos">{translate('sobre')}</Link></li>
                                 </ul>
                             </nav>
@@ -282,7 +282,7 @@ export function Header() {
                                     <Link 
                                         href={
                                             role === 'Administrador' ? '/paginaAdministrador' : 
-                                            role === 'Corretor' ? '/paginaCorretores' : 
+                                            role === 'Corretor' ? '/paginaCorretor' : 
                                             role === 'Proprietario' ? '/paginaProprietarios' : 
                                             role === 'Editor' ? '/paginaEditor' : 
                                             '/PaginaIncial'

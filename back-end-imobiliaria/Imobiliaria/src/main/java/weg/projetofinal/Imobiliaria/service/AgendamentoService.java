@@ -33,6 +33,9 @@ public class AgendamentoService {
                 new EntityNotFoundException("Agendamento não encontrado com ID: " + id));
     }
 
+    public Page<Agendamento> findByCorretorAndStatus(String username, String status, Pageable pageable) {
+        return agendamentoRepository.findByCorretorUsernameAndStatus(username, StatusAgendamento.valueOf(status), pageable);
+    }
 
 
     public Agendamento save(Agendamento agendamento) {
