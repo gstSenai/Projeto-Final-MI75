@@ -27,12 +27,12 @@ interface Agendamento {
     sobrenome: string;
   };
 }
+
 const monthNames = [
   "Janeiro", "Fevereiro", "Março", "Abril",
   "Maio", "Junho", "Julho", "Agosto",
   "Setembro", "Outubro", "Novembro", "Dezembro"
 ];
-
 
 export function PaginaHistoricoUsuarioChamar() {
   const { register, watch } = useForm<FormData>({
@@ -44,7 +44,6 @@ export function PaginaHistoricoUsuarioChamar() {
   const [selectedDay, setSelectedDay] = useState<number | null>(new Date().getDate());
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
   const [loading, setLoading] = useState(false);
-
 
   const selectedMonth = monthNames.indexOf(selectedMonthName || "Janeiro");
 
@@ -61,7 +60,8 @@ export function PaginaHistoricoUsuarioChamar() {
           const currentYear = new Date().getFullYear();
           const formattedDate = `${currentYear}-${(selectedMonth + 1).toString().padStart(2, '0')}-${selectedDay.toString().padStart(2, '0')}`;
           
-          const response = await request('GET', `http://localhost:9090/agendamento/usuario/data/${formattedDate}`);
+          const response = await request('GET', `http://localhost:9090/agendamento/usuario/data/${formattedDate}`) as Agendamento[];
+          console.log('Agendamentos recebidos:', response); // Log dos agendamentos recebidos
           setAgendamentos(response);
         } catch (error) {
           console.error('Erro ao buscar agendamentos:', error);
@@ -74,8 +74,15 @@ export function PaginaHistoricoUsuarioChamar() {
     fetchAgendamentos();
   }, [selectedDay, selectedMonth]);
 
-  const getTipo = (status: string) => {
-    switch (status) {
+  const getTipo = (status: string): 'realizado' | 'cancelado' | 'pendente' => {
+    // Log do status recebido
+    console.log('Status recebido:', status);
+    
+    // Normalizar o status para maiúsculas para garantir a comparação
+    const normalizedStatus = status.toUpperCase();
+    console.log('Status normalizado:', normalizedStatus);
+    
+    switch (normalizedStatus) {
       case 'CONFIRMADO':
         return 'realizado';
       case 'CANCELADO':
@@ -101,15 +108,24 @@ export function PaginaHistoricoUsuarioChamar() {
       ) : selectedDay ? (
         <div>
           {agendamentos.length > 0 ? (
-            agendamentos.map(agendamento => (
-              <CardHorario 
-                key={agendamento.id}
-                tipo={getTipo(agendamento.status)}
-                horario={agendamento.horario}
-                codigo={agendamento.imovel.codigo.toString()}
-                corretor={`${agendamento.corretor.nome} ${agendamento.corretor.sobrenome}`}
-              />
-            ))
+            agendamentos.map(agendamento => {
+              // Log do agendamento individual e seu status
+              console.log('Renderizando agendamento:', {
+                id: agendamento.id,
+                status: agendamento.status,
+                tipo: getTipo(agendamento.status)
+              });
+              
+              return (
+                <CardHorario 
+                  key={agendamento.id}
+                  tipo={getTipo(agendamento.status)}
+                  horario={agendamento.horario}
+                  codigo={agendamento.imovel.codigo.toString()}
+                  corretor={`${agendamento.corretor.nome} ${agendamento.corretor.sobrenome}`}
+                />
+              );
+            })
           ) : (
             <p className="text-gray-400">Nenhum agendamento encontrado para este dia.</p>
           )}

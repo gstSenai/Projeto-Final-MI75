@@ -62,11 +62,22 @@ interface ApiResponse {
     number: number;
 }
 
+interface AgendamentoPostRequestDTO {
+    data: string;
+    horario: string;
+    idImovel: number;
+    idUsuario: number;
+    idCorretor: number;
+    status: string;
+}
+
 export default function PaginaCorretorNotificacaoAgendar() {
     const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
+    const [showNotification, setShowNotification] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState('');
 
     const fetchAgendamentos = async () => {
         try {
@@ -98,6 +109,15 @@ export default function PaginaCorretorNotificacaoAgendar() {
         try {
             await request('PUT', `http://localhost:9090/agendamento/confirmar/${id}`);
             setAgendamentos(prev => prev.filter(ag => ag.id !== id));
+            
+            // Mostrar notificação
+            setNotificationMessage('Agendamento confirmado com sucesso!');
+            setShowNotification(true);
+            
+            // Esconder notificação após 3 segundos
+            setTimeout(() => {
+                setShowNotification(false);
+            }, 3000);
         } catch (error) {
             console.error('Erro ao confirmar agendamento:', error);
         }
@@ -109,6 +129,33 @@ export default function PaginaCorretorNotificacaoAgendar() {
             setAgendamentos(prev => prev.filter(ag => ag.id !== id));
         } catch (error) {
             console.error('Erro ao cancelar agendamento:', error);
+        }
+    };
+
+    const handleTimeChange = async (id: number, newTime: string) => {
+        try {
+            // Buscar o agendamento atual
+            const agendamentoAtual = await request('GET', `http://localhost:9090/agendamento/getById/${id}`) as Agendamento;
+            
+            // Criar o objeto de atualização com o novo horário
+            const agendamentoAtualizado: AgendamentoPostRequestDTO = {
+                data: agendamentoAtual.data,
+                horario: newTime + ":00" as any, // Adiciona os segundos para o formato HH:mm:ss
+                idImovel: agendamentoAtual.imovelDTO.id,
+                idUsuario: agendamentoAtual.usuarioDTO.id,
+                idCorretor: agendamentoAtual.corretorDTO.id,
+                status: agendamentoAtual.status as any
+            };
+
+            // Fazer a requisição de atualização
+            await request('PUT', `http://localhost:9090/agendamento/update/${id}`, agendamentoAtualizado);
+            
+            // Atualizar o estado local
+            setAgendamentos(prev => prev.map(ag => 
+                ag.id === id ? { ...ag, horario: newTime } : ag
+            ));
+        } catch (error) {
+            console.error('Erro ao alterar horário:', error);
         }
     };
 
@@ -145,6 +192,7 @@ export default function PaginaCorretorNotificacaoAgendar() {
                                     status={agendamento.status || 'PENDENTE'}
                                     onConfirm={handleConfirm}
                                     onCancel={handleCancel}
+                                    onTimeChange={handleTimeChange}
                                 />
                             ))}
                         </div>
@@ -161,6 +209,18 @@ export default function PaginaCorretorNotificacaoAgendar() {
                             </div>
                         )}
                     </section>
+                </div>
+
+                {/* Notificação lateral */}
+                <div className={`fixed top-4 right-4 transform transition-transform duration-500 ease-in-out z-50 ${
+                    showNotification ? 'translate-x-0' : 'translate-x-full'
+                }`}>
+                    <div className="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center">
+                        <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        {notificationMessage}
+                    </div>
                 </div>
             </LoadingWrapper>
         </>

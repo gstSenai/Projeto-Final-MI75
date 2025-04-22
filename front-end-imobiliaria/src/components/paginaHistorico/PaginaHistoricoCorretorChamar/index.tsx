@@ -14,17 +14,43 @@ interface Agendamento {
   id: number;
   data: string;
   horario: string;
-  status: string; // 'pendente', 'confirmado', 'cancelado'
-  imovel: {
-    codigo: string;
-    id_endereco: {
-      bairro: string;
-      cidade: string;
-    };
+  status: string;
+  imovelDTO: {
+    id: number;
+    codigo: number;
+    nome_propriedade: string;
+    tipo_transacao: string;
+    valor_venda: number;
+    tipo_imovel: string;
+    status_imovel: string;
+    valor_promocional: number;
+    destaque: string;
+    visibilidade: boolean;
+    valor_iptu: number;
+    condominio: number;
+    area_construida: number;
+    area_terreno: number;
+    descricao: string;
   };
-  usuario: {
-    nome: string;
-    sobrenome: string;
+  usuarioDTO: {
+    id: number;
+    username: string;
+    sobrenome: string | null;
+    tipo_conta: string;
+    email: string;
+    password: string;
+    ativo: boolean;
+    imagem_usuario: string;
+  };
+  corretorDTO: {
+    id: number;
+    username: string;
+    sobrenome: string | null;
+    tipo_conta: string;
+    email: string;
+    password: string;
+    ativo: boolean;
+    imagem_usuario: string;
   };
 }
 
@@ -107,8 +133,8 @@ export function PaginaHistoricoCorretorChamar() {
                 key={agendamento.id}
                 tipo={getStatus(agendamento.status)}
                 horario={agendamento.horario}
-                codigo={agendamento.imovel.codigo}
-                cliente={`${agendamento.usuario.nome} ${agendamento.usuario.sobrenome}`}
+                codigo={agendamento.imovelDTO.codigo.toString()}
+                cliente={`${agendamento.usuarioDTO.username} ${agendamento.usuarioDTO.sobrenome || ''}`}
               />
             ))
           ) : (
