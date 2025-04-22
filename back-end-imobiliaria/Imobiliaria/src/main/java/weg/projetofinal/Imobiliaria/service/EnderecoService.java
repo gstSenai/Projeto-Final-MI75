@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import weg.projetofinal.Imobiliaria.model.entity.Endereco;
 import weg.projetofinal.Imobiliaria.repository.EnderecoRepository;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class EnderecoService {
@@ -28,6 +30,10 @@ public class EnderecoService {
     public Endereco update(Integer id, Endereco endereco) {
         endereco.setId(id);
         return enderecoRepository.save(endereco);
+    }
+
+    public List<Endereco> filtroEndereco(String cidade, String estado) {
+        return enderecoRepository.findByCidadeOrBairro(cidade, estado);
     }
 
     public void delete(Integer id) {

@@ -99,4 +99,10 @@ public class ImovelController {
         return imovel.stream().map(ImovelMapper.INSTANCE::imovelToImovelGetResponseDTO).toList();
     }
 
+    @GetMapping("/filtroCodigo")
+    @ResponseStatus(HttpStatus.OK)
+    public ImovelGetResponseDTO filtroCodigo(@RequestParam Integer codigo){
+        Imovel imovel = service.filtroCodigoImovel(codigo);
+        return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(imovel);
+    }
 }

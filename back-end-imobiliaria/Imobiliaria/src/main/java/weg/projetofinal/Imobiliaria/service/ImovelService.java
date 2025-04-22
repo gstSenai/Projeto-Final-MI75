@@ -65,6 +65,10 @@ public class ImovelService {
         return repository.findAll(imovelSpecification);
     }
 
+    public Imovel filtroCodigoImovel(Integer codigoImovel){
+        return repository.findByCodigo(codigoImovel);
+    }
+
 
     public Page<Imovel> imovelsAlugados(String status_imoveis, Pageable pageable) {
         Specification<Imovel> spec = Specification
