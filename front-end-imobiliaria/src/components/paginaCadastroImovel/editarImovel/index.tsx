@@ -23,9 +23,8 @@ const ImovelProps = z.object({
     tipo_imovel: z.string().min(1, { message: "Tipo de imóvel é obrigatório" }),
     status_imovel: z.string().min(1, { message: "Status do imóvel é obrigatório" }),
     valor_promocional: z.coerce.number().min(1, { message: "Valor promocional é obrigatório" }),
-    test_destaque: z.string().optional(),
     test_visibilidade: z.string().optional(),
-    destaque: z.boolean().default(false),
+    destaque: z.string().optional(),
     visibilidade: z.boolean().default(false),
     valor_iptu: z.coerce.number().min(1, { message: "Valor do IPTU é obrigatório" }),
     condominio: z.coerce.number().min(1, { message: "Valor do condomínio é obrigatório" }),
@@ -103,10 +102,8 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
             imovel: {
                 tipo_imovel: "",
                 tipo_transacao: "",
-                test_destaque: "",
                 status_imovel: "",
                 test_visibilidade: "",
-                destaque: false,
                 visibilidade: false,
                 valor_venda: 0,
                 valor_promocional: 0,
@@ -216,7 +213,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                 tipo_imovel: imovel.tipo_imovel,
                 status_imovel: imovel.status_imovel,
                 valor_promocional: imovel.valor_promocional,
-                destaque: imovel.test_destaque === "Sim",
+                destaque: imovel.destaque,
                 visibilidade: imovel.test_visibilidade === "Público",
                 valor_iptu: imovel.valor_iptu || 0,
                 condominio: imovel.condominio || 0,
@@ -278,7 +275,7 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
 
             setValue("imovel", {
                 ...imovel,
-                test_destaque: imovel.destaque ? "Sim" : "Não",
+                destaque: imovel.destaque,
                 test_visibilidade: imovel.visibilidade ? "Pública" : "Privada",
                 id_caracteristicasImovel: imovel.id_caracteristicasImovel
             });
@@ -410,13 +407,13 @@ export function EditarImovel({ selectedImoveis, onComplete }: EditarImovelProps)
                                                                 <FormularioEditarInput
                                                                     label="Permitir destaque:"
                                                                     placeholder="Permitir destaque:"
-                                                                    name="imovel.test_destaque"
-                                                                    value={imovel.destaque ? "Sim" : "Não"}
+                                                                    name="imovel.destaque"
+                                                                    value={imovel.destaque}
                                                                     register={register}
-                                                                    errors={errors?.imovel?.test_destaque}
+                                                                    errors={errors?.imovel?.destaque}
                                                                     required
                                                                     custumizacaoClass="w-full p-2  border border-gray-500 rounded"
-                                                                    options={["Sim", "Não"]}
+                                                                    options={["Destaque", "Promoção", 'Adicionado Rec.', 'Não Destaque']}
                                                                 />
                                                             </div>
 

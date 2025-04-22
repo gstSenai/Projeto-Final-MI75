@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Favoritar from '@/components/favoritar/index'
 import { useLanguage } from '@/components/context/LanguageContext';
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 const inter = Inter({
     subsets: ['latin'],
@@ -20,11 +21,37 @@ interface CardProps {
     numero_banheiros: number,
     preco: number,
     codigo: number,
-    imovelId?: number
+    imovelId?: number,
+    imagemPrincipal?: string,
+    destaque?: 'Destaque' | 'Promoção' | 'Adicionado Rec.' | 'Não Destaque' 
 }
 
-export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_banheiros, preco, codigo, imovelId }: CardProps) {
+export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_banheiros, preco, codigo, imovelId, imagemPrincipal, destaque }: CardProps) {
     const router = useRouter();
+    const [mainImage, setMainImage] = useState<string>('/imagensImovel/fotoImovel.png');
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchMainImage = async () => {
+            if (imovelId) {
+                setIsLoading(true);
+                try {
+                    const response = await fetch(`http://localhost:9090/imagens/download/imovel/${imovelId}/imagem/0`);
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        const imageUrl = URL.createObjectURL(blob);
+                        setMainImage(imageUrl);
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar imagem principal:', error);
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        fetchMainImage();
+    }, [imovelId]);
 
     const handleClick = () => {
         if (imovelId) {
@@ -41,6 +68,19 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
 
     const formattedPrice = preco ? preco.toLocaleString('pt-BR') : '0';
 
+    const getLabelStyle = (tipo: string) => {
+        switch (tipo) {
+            case 'Destaque':
+                return 'bg-[#702632]';
+            case 'Promoção':
+                return 'bg-[#FFA500]';
+            case 'Adicionado Rec.':
+                return 'bg-white';
+            default:
+                return '';
+        }
+    };
+
     return (
         <div className={`${inter.className} flex justify-center pt-12 lg:pt-0`}>
             <div className="flex flex-col lg:w-full lg:max-w-[320px] 2xl:max-w-[300px] cursor-pointer" onClick={handleClick}>
@@ -50,8 +90,37 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
                             <Favoritar usuarioId={1} imovelId={imovelId} />
                         </div>
                     )}
-                    <div className="w-full">
-                        <Image src="/imagensImovel/fotoImovel.png" alt="Imagem Imovel" className="w-full lg:w-full lg:max-w-[320px] 2xl:max-w-[300px]" width={500} height={324} />
+                    <div className="w-full overflow-hidden">
+                        {isLoading ? (
+                            <div className="w-full lg:w-full lg:max-w-[320px] 2xl:max-w-[300px] h-[324px] flex items-center justify-center bg-gray-200">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-vermelho"></div>
+                            </div>
+                        ) : (
+                            <div className="relative">
+                                {destaque === 'Adicionado Rec.' && (
+                                    <div className={`absolute top-6 -left-8 whitespace-nowrap text-center text-black ${getLabelStyle(destaque)} py-1 px-10 transform -rotate-[30deg] z-10 font-bold text-xs shadow-md`}>
+                                        {destaque.toUpperCase()}
+                                    </div>
+                                )}
+                                {destaque === 'Destaque'  && (
+                                    <div className={`absolute top-5 -left-4 text-white ${getLabelStyle(destaque)} py-1 px-12 transform -rotate-[31deg] z-10 font-bold text-xs shadow-md`}>
+                                        {destaque?.toUpperCase()}
+                                    </div>
+                                )}
+                                {destaque === 'Promoção' && (
+                                    <div className={`absolute top-4 -left-4 text-white ${getLabelStyle(destaque)} py-1 px-10 transform -rotate-[30deg] z-10 font-bold text-xs shadow-md`}>
+                                        {destaque?.toUpperCase()}
+                                    </div>
+                                )}
+                                <Image 
+                                    src={mainImage} 
+                                    alt="Imagem Imovel" 
+                                    className="lg:max-w-[320px] w-[250px] 2xl:max-w-[300px] max-h-[160px] rounded-t-[20px]" 
+                                    width={500} 
+                                    height={324} 
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="w-full lg:w-full lg:max-w-[320px] 2xl:max-w-[300px] bg-white shadow-[5px_20px_100px_rgb(0,0,0,0.1)] rounded-b-[20px] py-2">

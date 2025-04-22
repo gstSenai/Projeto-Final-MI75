@@ -5,6 +5,7 @@ import weg.projetofinal.Imobiliaria.model.dto.usuario.UsuarioAgendamentoGetRespo
 
 public record FavoritoGetResponseDTO (
     Integer id,
+    Boolean favorito,
     UsuarioAgendamentoGetResponseDTO usuarioDto,
     ImovelAgendamentoGetResponseDTO imovelDto
 ){

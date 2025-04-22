@@ -15,6 +15,8 @@ public class Favorito {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private Boolean favorito;
+
     @ManyToOne
     private Usuario usuario;
 

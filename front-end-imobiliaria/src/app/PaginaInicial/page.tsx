@@ -5,11 +5,11 @@ import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos
 import { PesquisaPaginaInicial } from '@/components/paginaInicial/pesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
 import Carrossel from '@/components/paginaInicial/carrossel';
-import BotaoImagemTexto from '@/components/paginaInicial/botaoImageTexto';
+import BotaoImagemTexto from '@/components/paginaInicial/botaoImageTexto/index';
 import { useLanguage } from '@/components/context/LanguageContext';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { Card } from '@/components/cardImovel/index';
+import { Card } from '@/components/CardImovel/index';
 import Image from 'next/image';
 import { LoadingWrapper } from '@/components/loading/loadingServer';
 import AtualizarComponents from '@/components/blocoDeAtualizacoes';
@@ -95,6 +95,7 @@ export default function PaginaInicial() {
                                 <p className='flex justify-center text-center text-xl lg:text-3xl xl:text-2xl font-medium p-3 opacity-75'>{translate('propriedades_localizacao')}</p>
                             </div>
                         </div>
+                        {/* recentemente puxa por 'Adicionado Rec.' */}
                         <div className='flex flex-col lg:flex-row justify-center gap-10 pt-4 xl:pt-24 pb-12'>
                             <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />
                             <Card titulo="Casa com 3 quartos" cidade="São Paulo" numero_quartos={3} numero_suites={1} numero_banheiros={2} preco={750000} codigo={12131} />

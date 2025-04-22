@@ -91,7 +91,4 @@ public class ImagemController {
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(imagens.get(index));
     }
-
-
-
 }

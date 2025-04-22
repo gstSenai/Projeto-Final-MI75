@@ -28,7 +28,7 @@ interface ImovelProps {
   valor_promocional: number
   test_destaque?: string
   test_visibilidade?: string
-  destaque: boolean
+  destaque: string
   visibilidade: boolean
   valor_iptu: number
   condominio: number

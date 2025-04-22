@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import { useLanguage } from '@/components/context/LanguageContext';
-import { LanguageProvider } from '@/components/context/LanguageContext';
+import { useAuth } from '@/components/context/AuthContext';
 
 const inter = Inter({
     subsets: ['latin'],
@@ -23,35 +23,43 @@ export function Header() {
     const [currentImageBrasil] = useState('/imagensHeader/Brasil.png');
     const [currentImageEUA] = useState('/imagensHeader/eua.png');
     const [currentImageEspanha] = useState('/imagensHeader/espanha.png');
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { isAuthenticated, logout, role, userId } = useAuth();
     const [username, setUsername] = useState('');
-    const [userRole, setUserRole] = useState('');
-    const [id, setId] = useState('');
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const storedUsername = localStorage.getItem('username');
-        const storedRole = localStorage.getItem('tipo_conta');
-        const storedId = localStorage.getItem('id');
-        console.log("ID armazenado:", storedId);
-        if (token && storedUsername) {
-            setIsLoggedIn(true);
-            setUsername(storedUsername);
-            setUserRole(storedRole || '');
-            setId(storedId || '');
-        }
-    }, []);
+        const fetchUserData = async () => {
+            if (isAuthenticated && userId) {
+                try {
+                    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:9090"
+                    const response = await fetch(`${apiUrl}/api/auth/user-info`, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        const userData = await response.json();
+                        setUsername(userData.username);
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar dados do usuário:', error);
+                }
+            }
+        };
+
+        fetchUserData();
+    }, [isAuthenticated, userId]);
 
     const handleLogoClick = () => {
-        if (userRole === 'Administrador') {
+        if (role === 'Administrador') {
             router.push('/paginaAdministrador');
-        } else if (userRole === 'Corretor') {
+        } else if (role === 'Corretor') {
             router.push('/paginaCorretor');
-        } else if (userRole === 'Proprietario') {
+        } else if (role === 'Proprietario') {
             router.push('/paginaProprietarios');
-        } else if (userRole === 'Editor') {
+        } else if (role === 'Editor') {
             router.push('/paginaEditor');
-        } else if (userRole === 'Usuario') {
+        } else if (role === 'Usuario') {
             router.push('/');
         } else {
             router.push('/');
@@ -59,12 +67,8 @@ export function Header() {
     };
 
     const handleLogout = () => {
-        setIsLoggedIn(false);
+        logout();
         setUsername('');
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        localStorage.removeItem('tipo_conta');
-        localStorage.removeItem('id');
         setShowProfileModal(false);
         router.push('/login');
     };
@@ -101,10 +105,10 @@ export function Header() {
                                 <ul className="flex flex-row max-lg:text-base text-xl whitespace-nowrap md:gap-4 lg:gap-6 text-[#303030] max-md:hidden">
                                     <li>
                                         <Link href={
-                                            userRole === 'Administrador' ? '/paginaAdministrador' : 
-                                            userRole === 'Corretor' ? '/paginaCorretor' : 
-                                            userRole === 'Proprietario' ? '/paginaProprietarios' : 
-                                            userRole === 'Editor' ? '/paginaEditor' : 
+                                            role === 'Administrador' ? '/paginaAdministrador' : 
+                                            role === 'Corretor' ? '/paginaCorretor' : 
+                                            role === 'Proprietario' ? '/paginaProprietarios' : 
+                                            role === 'Editor' ? '/paginaEditor' : 
                                             '/'
                                         }>
                                             {translate('inicio')}
@@ -181,15 +185,15 @@ export function Header() {
                         <div className="flex flex-row items-center max-md:hidden relative">
                             <Image
                                 onClick={() => setShowProfileModal(!showProfileModal)}
-                                src={isLoggedIn ? "/imagensHeader/PERFIL SEM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"}
-                                alt={isLoggedIn ? "Perfil com login" : "Perfil sem login"}
+                                src={isAuthenticated ? "/imagensHeader/PERFIL SEM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"}
+                                alt={isAuthenticated ? "Perfil com login" : "Perfil sem login"}
                                 width={50}
                                 height={50}
                                 className="w-12 md:w-[40px] lg:w-[50px] cursor-pointer"
                             />
                             {showProfileModal && (
                                 <div className="absolute top-[calc(100%+0.5rem)] right-0 w-40 bg-[#702632] rounded-lg shadow-lg py-1 z-50">
-                                    {!isLoggedIn ? (
+                                    {!isAuthenticated ? (
                                         <>
                                             <Link
                                                 href="/login"
@@ -250,13 +254,13 @@ export function Header() {
                             <div className="flex justify-between items-center mb-4">
                                 <div className="flex items-center gap-3">
                                     <Image
-                                        src={isLoggedIn ? "/imagensHeader/PERFIL COM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"}
+                                        src={isAuthenticated ? "/imagensHeader/PERFIL COM LOGIN.png" : "/imagensHeader/PERFIL SEM LOGIN.png"}
                                         alt="Perfil"
                                         width={40}
                                         height={40}
                                         className="rounded-full cursor-pointer"
                                     />
-                                    {isLoggedIn ? (
+                                    {isAuthenticated ? (
                                         <span className="text-xl text-[#303030]">{username}</span>
                                     ) : (
                                         <Link href="/login" className="text-xl text-[#303030] hover:text-vermelho transition-colors">
@@ -279,10 +283,10 @@ export function Header() {
                                     <Image src="/imagensHeader/logoMinuscula.png" alt="simbolo HAV" width={20} height={20} className='h-full' />
                                     <Link 
                                         href={
-                                            userRole === 'Administrador' ? '/paginaAdministrador' : 
-                                            userRole === 'Corretor' ? '/paginaCorretores' : 
-                                            userRole === 'Proprietario' ? '/paginaProprietarios' : 
-                                            userRole === 'Editor' ? '/paginaEditor' : 
+                                            role === 'Administrador' ? '/paginaAdministrador' : 
+                                            role === 'Corretor' ? '/paginaCorretores' : 
+                                            role === 'Proprietario' ? '/paginaProprietarios' : 
+                                            role === 'Editor' ? '/paginaEditor' : 
                                             '/PaginaInicial'
                                         } 
                                         className="text-xl text-[#303030] hover:text-vermelho transition-colors"
@@ -323,7 +327,7 @@ export function Header() {
                                         {translate('configuracoes')}
                                     </Link>
                                 </li>
-                                {isLoggedIn && (
+                                {isAuthenticated && (
                                     <li className='flex gap-3 items-center'>
                                         <Image src="/imagensHeader/logout.png" alt="logout" width={20} height={20} className='h-full' />
                                         <button 
