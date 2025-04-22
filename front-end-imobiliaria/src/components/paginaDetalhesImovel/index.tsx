@@ -27,6 +27,7 @@ interface ImovelDetalhes {
   area_construida: number
   area_terreno: number
   id_corretor: number
+  tipo_imovel: string
   id_endereco: {
     rua: string
     numero: string
@@ -348,6 +349,9 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-vermelho">{formatCurrency(imovel.valor_venda)}</h2>
                 <span className="px-4 py-1 bg-vermelho text-white rounded-full text-sm">
+                  {imovel.tipo_imovel}
+                </span>
+                <span className="px-4 py-1 bg-vermelho text-white rounded-full text-sm">
                   {imovel.tipo_transacao}
                 </span>
               </div>
@@ -409,7 +413,7 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
                   router.push(`/paginaAgendamento?imovelId=${imovel.id}`);
                 }}
               >
-                Falar com Corretor
+                Agendar sua visita
               </button>
             </div>
           </div>
@@ -446,10 +450,10 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
                   </div>
                 </div>
                 <button className="w-full mt-6 bg-vermelho text-white py-3 rounded font-bold hover:bg-opacity-90 transition-colors" onClick={() => {
-                  localStorage.setItem('currentImovelId', imovel.id.toString());
-                  router.push(`/paginaAgendamento?imovelId=${imovel.id}`);
+                  const mensagem = `Olá, estou interessado(a) no imóvel ${imovel.nome_propriedade} (Código: ${imovel.codigo}).`;
+                  window.open(`https://wa.me/5545999341270?text=${encodeURIComponent(mensagem)}`, '_blank');
                 }}>
-                 Agendar sua visita
+                  Falar com Corretor
                 </button>
               </div>
             </div>

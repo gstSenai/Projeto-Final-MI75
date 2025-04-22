@@ -78,7 +78,8 @@ const Chatbot = () => {
   };
 
   const handleChatWithBroker = () => {
-    router.push('/chatOnline');
+    // Abre o WhatsApp com o número do primeiro corretor da lista
+    window.open('https://wa.me/5547987654321', '_blank');
   };
 
   const handleFeedback = (wasHelpful: boolean) => {
@@ -122,7 +123,7 @@ const Chatbot = () => {
                     '• João Silva: (47) 98765-4321\n' +
                     '• Maria Santos: (47) 98765-4322\n' +
                     '• Pedro Oliveira: (47) 98765-4323\n\n' +
-                    'Ou clique no botão abaixo para iniciar um chat online com um corretor disponível:',
+                    'Clique no botão abaixo para iniciar uma conversa no WhatsApp com um de nossos corretores:',
           timestamp: new Date(),
           hasAction: true
         };

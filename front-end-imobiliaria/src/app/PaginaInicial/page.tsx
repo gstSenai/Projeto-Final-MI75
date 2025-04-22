@@ -2,9 +2,9 @@
 import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
 import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
-import { PesquisaPaginaInicial } from '@/components/PaginaInicial/pesquisaPaginaInicial';
+import { PesquisaPaginaInicial } from '@/components/paginaInicial/pesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
-import Carrossel from '@/components/PaginaInicial/carrossel';
+import Carrossel from '@/components/paginaInicial/carrossel';
 import BotaoImagemTexto from '@/components/paginaInicial/botaoImageTexto/index';
 import { useLanguage } from '@/components/context/LanguageContext';
 import { Header } from '@/components/header';
@@ -101,6 +101,7 @@ export default function PaginaInicial() {
                                             numero_banheiros={imovel.numero_banheiros}
                                             preco={imovel.preco}
                                             codigo={imovel.codigo}
+                                            imovelId={imovel.id}
                                             destaque={imovel.destaque as "Destaque" | "Promoção" | "Adicionado Rec." | "Não Destaque"}
                                         />
                                     ))}
@@ -135,6 +136,7 @@ export default function PaginaInicial() {
                                         numero_banheiros={imovel.numero_banheiros}
                                         preco={imovel.preco}
                                         codigo={imovel.codigo}
+                                        imovelId={imovel.id}
                                         destaque={imovel.destaque as "Destaque" | "Promoção" | "Adicionado Rec." | "Não Destaque"}
                                     />
                                 ))
@@ -168,6 +170,7 @@ export default function PaginaInicial() {
                                         numero_banheiros={imovel.numero_banheiros}
                                         preco={imovel.preco}
                                         codigo={imovel.codigo}
+                                        imovelId={imovel.id}
                                         destaque={imovel.destaque as "Destaque" | "Promoção" | "Adicionado Rec." | "Não Destaque"}
                                     />
                                 ))
