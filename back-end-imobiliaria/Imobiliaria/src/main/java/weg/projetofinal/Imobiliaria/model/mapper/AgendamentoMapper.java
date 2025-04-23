@@ -19,6 +19,7 @@ public interface AgendamentoMapper {
     @Mapping(source = "imovel", target = "imovelDTO")
     @Mapping(source = "usuario", target = "usuarioDTO")
     @Mapping(source = "corretor", target = "corretorDTO")
+    @Mapping(source = "status", target = "status")
     AgendamentoGetResponseDTO agendamentoToAgendamentoGetResponseDTO(Agendamento agendamento);
 
     @Mapping(target = "imovel.id", source = "idImovel")
