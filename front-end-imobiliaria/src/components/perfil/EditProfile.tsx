@@ -153,17 +153,22 @@ export default function EditProfile({ id }: EditProfileProps) {
         if (profileData.imagem_usuario && profileData.imagem_usuario.trim() !== '') {
             const fetchImage = async () => {
                 try {
-                    const fileName = profileData.imagem_usuario.split('/').pop();
-                    if (!fileName) {
-                        console.error("Nome do arquivo não encontrado na URL");
-                        return;
-                    }
+                    // Verifica se é uma URL do Google
+                    if (profileData.imagem_usuario.startsWith('http')) {
+                        setImagePreview(profileData.imagem_usuario);
+                    } else {
+                        const fileName = profileData.imagem_usuario.split('/').pop();
+                        if (!fileName) {
+                            console.error("Nome do arquivo não encontrado na URL");
+                            return;
+                        }
 
-                    const response = await fetch(`http://localhost:9090/usuario/imagem/${fileName}`);
-                    if (response.ok) {
-                        const blob = await response.blob();
-                        const imageUrl = URL.createObjectURL(blob);
-                        setImagePreview(imageUrl);
+                        const response = await fetch(`http://localhost:9090/usuario/imagem/${fileName}`);
+                        if (response.ok) {
+                            const blob = await response.blob();
+                            const imageUrl = URL.createObjectURL(blob);
+                            setImagePreview(imageUrl);
+                        }
                     }
                 } catch (error) {
                     console.error("Erro ao carregar imagem:", error);

@@ -35,7 +35,8 @@ public class GoogleAuthService {
                 .orElseGet(() -> {
                     Usuario newUser = new Usuario();
                     newUser.setEmail(email);
-                    newUser.setUsername(email.split("@")[0]);
+                    newUser.setUsername(name);
+                    newUser.setImagem_usuario(picture);
                     newUser.setPassword("");
 
                     Set<Role> roles = new HashSet<>();

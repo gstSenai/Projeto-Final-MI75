@@ -25,8 +25,34 @@ export default function LoginSuccess() {
                         const userData = await response.json()
                         console.log('Dados do usuário:', userData)
                         
+                        // Busca a imagem do perfil do Google
+                        if (userData.googleImageUrl) {
+                            try {
+                                const imageResponse = await fetch(userData.googleImageUrl)
+                                const imageBlob = await imageResponse.blob()
+                                
+                                const formData = new FormData()
+                                formData.append('imagem', imageBlob)
+                                
+                                // Salva a imagem no banco de dados
+                                const saveImageResponse = await fetch(`${apiUrl}/usuario/update/${userData.id}`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Authorization': `Bearer ${token}`
+                                    },
+                                    body: formData
+                                })
+                                
+                                if (!saveImageResponse.ok) {
+                                    console.error('Erro ao salvar imagem do Google')
+                                }
+                            } catch (error) {
+                                console.error('Erro ao processar imagem do Google:', error)
+                            }
+                        }
+                        
                         // Atualiza o contexto de autenticação
-                        login(token, userData.tipo_conta, userData.username)
+                        login(token, userData.tipo_conta, userData.id)
                         
                         // Redirecionar baseado no tipo de conta
                         switch (userData.tipo_conta) {
