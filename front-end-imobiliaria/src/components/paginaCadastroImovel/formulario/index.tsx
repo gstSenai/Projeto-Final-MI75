@@ -146,6 +146,7 @@ interface InputDadosImovelProps {
     isOpen: boolean;
 }
 
+
 export function Formulario({ isOpen, onClose, onComplete }: InputDadosImovelProps) {
     const { register, handleSubmit, formState: { errors }, setValue, reset, trigger, getValues, watch } = useForm<FormData>({
         resolver: zodResolver(FormSchema),

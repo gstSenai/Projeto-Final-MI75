@@ -18,9 +18,6 @@ public class EmailService {
 
     public void sendVerificationCode(String toEmail, String code) {
         try {
-            System.out.println("=== ENVIANDO CÓDIGO DE VERIFICAÇÃO ===");
-            System.out.println("Para: " + toEmail);
-            System.out.println("Código: " + code);
 
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(systemEmail);
@@ -29,11 +26,8 @@ public class EmailService {
             message.setText("Olá,\n\nSeu código de verificação é: " + code + "\n\nUse este código para redefinir sua senha.\n\nAtenciosamente,\nEquipe HAV Imobiliária");
 
             mailSender.send(message);
-            System.out.println("E-mail enviado com sucesso!");
 
         } catch (Exception e) {
-            System.out.println("=== ERRO AO ENVIAR E-MAIL ===");
-            System.out.println("Erro: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Erro ao enviar e-mail: " + e.getMessage());
         }
