@@ -99,6 +99,7 @@ export function PaginaHistoricoCorretorChamar() {
             console.log('Nova data selecionada:', date);
             setSelectedDate(date);
           }}
+          className="scale-75"
         />
       </div>
 
