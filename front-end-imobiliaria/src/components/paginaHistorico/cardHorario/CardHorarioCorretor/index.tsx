@@ -21,17 +21,17 @@ export function CardHorario({ tipo, horario, codigo, cliente }: CardHorarioProps
                     <p>Código: <span>{codigo}</span></p>
                     <p>Cliente: <span>{cliente}</span></p>
 
-                    <div className='flex items-center gap-3 text-xs md:text-sm lg:text-base'>
+                    <div className='flex items-center gap-4 text-xs md:text-sm lg:text-base'>
                         {tipo === 'realizado' && (
-                            <span className='bg-green-500 px-3 md:px-4 lg:px-5 py-[0.5px] rounded-full text-xs'>Realizado</span>
+                            <span className='bg-green-500 px-4 md:px-4 lg:px-5 py-[0.5px] rounded-full text-xs'>Realizado</span>
                         )}
 
                         {tipo === 'cancelado' && (
-                            <span className='bg-red-500 px-3 md:px-4 lg:px-5 py-[0.5px] rounded-full text-xs'>Cancelado</span>
+                            <span className='bg-red-500 px-4 md:px-4 lg:px-4 py-[0.5px] rounded-full text-xs'>Cancelado</span>
                         )}
 
                         {tipo === 'pendente' && (
-                            <span className='bg-yellow-500 px-3 md:px-4 lg:px-5 py-[0.5px] rounded-full text-xs'>Pendente</span>
+                            <span className='bg-yellow-500 px-4 md:px-4 lg:px-5 py-[0.5px] rounded-full text-xs'>Pendente</span>
                         )}
                     </div>
 
@@ -51,7 +51,7 @@ export function CardHorario({ tipo, horario, codigo, cliente }: CardHorarioProps
                     <div className="relative">
                         <button 
                             onClick={() => setMostrarCardCasa(false)}
-                            className="absolute -top-8 -right-8 bg-[#DFDAD0] rounded-full p-2 shadow-lg"
+                            className="absolute -top-10 -right-10 bg-[#DFDAD0] rounded-full p-2 shadow-lg"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#702632]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

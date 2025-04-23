@@ -12,6 +12,7 @@ const request = async (
                 ...headers,
                 ...(token ? { "Authorization": `Bearer ${token}` } : {}),
             },
+            mode: 'cors'
         };
 
         if (body instanceof FormData) {
@@ -33,31 +34,17 @@ const request = async (
         });
 
         const response = await fetch(url, options);
-        const responseData = await response.text();
         
-        console.log("Status da resposta:", response.status);
-        console.log("Resposta bruta:", responseData);
-
         if (!response.ok) {
-            let errorMessage;
-            try {
-                const errorData = JSON.parse(responseData);
-                errorMessage = errorData.message || `Erro ${response.status}: ${response.statusText}`;
-            } catch {
-                errorMessage = `Erro ${response.status}: ${response.statusText}`;
-            }
-            throw new Error(errorMessage);
+            throw new Error(`Erro ${response.status}: ${response.statusText}`);
         }
 
-        if (!responseData) {
-            return null;
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            return await response.json();
         }
-
-        try {
-            return JSON.parse(responseData);
-        } catch {
-            return responseData;
-        }
+        
+        return await response.text();
     } catch (error) {
         console.error("Erro detalhado na requisição:", error);
         throw error;

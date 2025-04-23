@@ -3,7 +3,7 @@ import { AuthProvider } from "@/components/context/AuthContext"
 import { LanguageProvider } from "@/components/context/LanguageContext"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import { AccessibilityButton } from "@/components/accessibilityButton"
+import { AccessibilityButton } from "@/components/AccessibilityButton"
 import { VLibrasScript } from "@/components/VLibrasScript"
 
 const inter = Inter({ subsets: ["latin"] })
