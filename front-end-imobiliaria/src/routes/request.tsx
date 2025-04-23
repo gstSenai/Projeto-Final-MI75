@@ -2,7 +2,8 @@ const request = async (
     method: "GET" | "POST" | "PUT" | "DELETE",
     url: string,
     body?: unknown,
-    headers: Record<string, string> = {} 
+    headers: Record<string, string> = {},
+    signal?: AbortSignal
 ): Promise<unknown> => {
     try {
         const token = localStorage.getItem("token");
@@ -12,7 +13,7 @@ const request = async (
                 ...headers,
                 ...(token ? { "Authorization": `Bearer ${token}` } : {}),
             },
-            mode: 'cors'
+            signal
         };
 
         if (body instanceof FormData) {
@@ -34,17 +35,31 @@ const request = async (
         });
 
         const response = await fetch(url, options);
+        const responseData = await response.text();
         
+        console.log("Status da resposta:", response.status);
+        console.log("Resposta bruta:", responseData);
+
         if (!response.ok) {
-            throw new Error(`Erro ${response.status}: ${response.statusText}`);
+            let errorMessage;
+            try {
+                const errorData = JSON.parse(responseData);
+                errorMessage = errorData.message || `Erro ${response.status}: ${response.statusText}`;
+            } catch {
+                errorMessage = `Erro ${response.status}: ${response.statusText}`;
+            }
+            throw new Error(errorMessage);
         }
 
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
-            return await response.json();
+        if (!responseData) {
+            return null;
         }
-        
-        return await response.text();
+
+        try {
+            return JSON.parse(responseData);
+        } catch {
+            return responseData;
+        }
     } catch (error) {
         console.error("Erro detalhado na requisição:", error);
         throw error;

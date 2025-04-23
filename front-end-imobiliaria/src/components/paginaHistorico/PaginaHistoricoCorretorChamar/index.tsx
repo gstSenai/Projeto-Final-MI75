@@ -1,14 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
 import { CardHorario } from "../cardHorario/CardHorarioCorretor";
 import HistoryCalendar from "../../Calendario/HistoryCalendar";
 import request from "@/routes/request";
-
-interface FormData {
-  mes: string;
-}
 
 interface Agendamento {
   id: number;
@@ -26,13 +21,6 @@ interface Agendamento {
   };
 }
 
-// Convertendo o nome do mês para número (0-11)
-const monthNames = [
-  "Janeiro", "Fevereiro", "Março", "Abril",
-  "Maio", "Junho", "Julho", "Agosto",
-  "Setembro", "Outubro", "Novembro", "Dezembro"
-];
-
 export function PaginaHistoricoCorretorChamar() {
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
@@ -42,11 +30,30 @@ export function PaginaHistoricoCorretorChamar() {
     const fetchAgendamentos = async () => {
       try {
         setLoading(true);
-        const response = await request('GET', `http://localhost:9090/agendamento/corretor/data/${selectedDate}`) as Agendamento[];
-        console.log('Agendamentos recebidos:', JSON.stringify(response, null, 2));
-        setAgendamentos(response);
+        console.log('Buscando agendamentos para a data:', selectedDate);
+        
+        // Pegando o token do localStorage
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error('Token não encontrado');
+          return;
+        }
+
+        const response = await request(
+          'GET', 
+          `http://localhost:9090/agendamento/corretor/data/${selectedDate}`,
+          undefined,
+          {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        ) as Agendamento[];
+
+        console.log('Agendamentos recebidos:', response);
+        setAgendamentos(Array.isArray(response) ? response : []);
       } catch (error) {
         console.error('Erro ao buscar agendamentos:', error);
+        setAgendamentos([]);
       } finally {
         setLoading(false);
       }
@@ -76,28 +83,40 @@ export function PaginaHistoricoCorretorChamar() {
     }
   };
 
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
   return (
     <div className="flex flex-col lg:flex-row gap-8 p-6">
       <div className="lg:w-1/2">
         <HistoryCalendar 
-          onDateChange={(date) => setSelectedDate(date)}
-          className="scale-75 max-w-[500px] max-h-[550px] mx-auto"
+          onDateChange={(date) => {
+            console.log('Nova data selecionada:', date);
+            setSelectedDate(date);
+          }}
         />
       </div>
 
       <div className="lg:w-1/2">
         <div className="bg-white rounded-xl p-6 shadow-sm h-full">
           <h2 className="text-xl font-semibold mb-4 text-[#702632]">
-            Agendamentos do dia {new Date(selectedDate).toLocaleDateString('pt-BR')}
+            Agendamentos do dia {formatDate(selectedDate)}
           </h2>
           
           <div className="border-t-2 border-[#702632] mt-1 mb-4"></div>
 
           {loading ? (
-            <p className="text-gray-400">Carregando...</p>
+            <div className="flex justify-center items-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#702632]"></div>
+            </div>
           ) : (
             <div className="space-y-4">
-              {agendamentos.length > 0 ? (
+              {agendamentos && agendamentos.length > 0 ? (
                 agendamentos.map(agendamento => (
                   <CardHorario 
                     key={agendamento.id}
@@ -108,7 +127,7 @@ export function PaginaHistoricoCorretorChamar() {
                   />
                 ))
               ) : (
-                <p className="text-gray-400">Nenhum agendamento encontrado para este dia.</p>
+                <p className="text-gray-400 text-center py-4">Nenhum agendamento encontrado para este dia.</p>
               )}
             </div>
           )}

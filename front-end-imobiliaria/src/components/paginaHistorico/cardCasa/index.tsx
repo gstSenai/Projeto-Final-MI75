@@ -26,32 +26,62 @@ export function CardCasa({ codigo }: CardCasaProps) {
     const [imovel, setImovel] = useState<ImovelDetalhes | null>(null);
     const [mainImage, setMainImage] = useState<string>("/imagensImovel/fotoImovel.png");
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        const controller = new AbortController();
+        let imageUrl: string;
+
         const fetchImovelDetails = async () => {
             try {
                 setLoading(true);
-                // Convertendo o código para número, já que a API espera um número
-                const codigoNumerico = parseInt(codigo);
-                const response = await request('GET', `http://localhost:9090/imovel/filtroCodigo?codigo=${codigoNumerico}`) as ImovelDetalhes;
-                console.log('Dados do imóvel recebidos:', response);
+                setError(null);
+
+                if (!codigo || isNaN(parseInt(codigo))) {
+                    throw new Error("Código do imóvel inválido");
+                }
+
+                const codigoNumero = parseInt(codigo);
+                const response = await request(
+                    'GET', 
+                    `http://localhost:9090/imovel/filtroCodigo?codigo=${codigoNumero}`,
+                    undefined,
+                    {},
+                    controller.signal
+                ) as ImovelDetalhes;
+
+                if (!response) {
+                    throw new Error("Imóvel não encontrado");
+                }
+
+                console.log('Detalhes do imóvel recebidos:', response);
                 setImovel(response);
 
-                // Tentar carregar a imagem apenas se tivermos um ID válido
-                if (response?.id) {
+                if (response.id) {
                     try {
-                        const imageUrl = `http://localhost:9090/imagens/download/imovel/${response.id}/imagem/0`;
-                        const imageResponse = await fetch(imageUrl);
+                        const imageResponse = await fetch(
+                            `http://localhost:9090/imagens/download/imovel/${response.id}/imagem/0`,
+                            { signal: controller.signal }
+                        );
+
                         if (imageResponse.ok) {
                             const blob = await imageResponse.blob();
-                            setMainImage(URL.createObjectURL(blob));
+                            imageUrl = URL.createObjectURL(blob);
+                            setMainImage(imageUrl);
+                        } else {
+                            console.log('Imagem não encontrada, usando imagem padrão');
                         }
-                    } catch (imageError) {
-                        console.log('Erro ao carregar imagem, usando imagem padrão:', imageError);
+                    } catch (error) {
+                        if (error instanceof Error && error.name !== 'AbortError') {
+                            console.error('Erro ao carregar imagem:', error);
+                        }
                     }
                 }
             } catch (error) {
-                console.error('Erro ao buscar detalhes do imóvel:', error);
+                if (error instanceof Error && error.name !== 'AbortError') {
+                    console.error('Erro ao buscar detalhes do imóvel:', error);
+                    setError(error.message);
+                }
             } finally {
                 setLoading(false);
             }
@@ -60,6 +90,14 @@ export function CardCasa({ codigo }: CardCasaProps) {
         if (codigo) {
             fetchImovelDetails();
         }
+
+        return () => {
+            controller.abort();
+            // Limpar URL da imagem ao desmontar
+            if (imageUrl) {
+                URL.revokeObjectURL(imageUrl);
+            }
+        };
     }, [codigo]);
 
     if (loading) {
@@ -67,27 +105,52 @@ export function CardCasa({ codigo }: CardCasaProps) {
             <div className="z-10">
                 <div className="bg-[#DFDAD0] rounded-2xl px-5 pt-8 flex flex-col z-20 items-center justify-center min-h-[400px]">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#702632]"></div>
+                    <p className="mt-4 text-gray-600">Carregando informações do imóvel...</p>
                 </div>
             </div>
         );
     }
 
+    if (error) {
+        return (
+            <div className="z-10">
+                <div className="bg-[#DFDAD0] rounded-2xl px-5 pt-8 flex flex-col z-20 items-center justify-center min-h-[400px]">
+                    <div className="text-red-600 text-center">
+                        <p className="font-semibold">Erro ao carregar imóvel</p>
+                        <p className="mt-2">{error}</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    const endereco = imovel?.id_endereco;
+    const enderecoCompleto = endereco
+        ? `${endereco.rua}, ${endereco.numero} - ${endereco.bairro}`
+        : "Endereço não informado";
+    const localizacao = endereco
+        ? `${endereco.cidade}/${endereco.uf}`
+        : "Localização não informada";
+
     return (
         <div className="z-10">
             <div className="bg-[#DFDAD0] rounded-2xl px-5 pt-8 flex flex-col z-20">
-                <Image
-                    src={mainImage}
-                    alt="Imagem Imóvel"
-                    className="w-full md:w-full lg:w-[400px] h-[250px] object-cover rounded-2xl"
-                    width={600}
-                    height={400}
-                    priority
-                />
+                <div className="relative">
+                    <Image
+                        src={mainImage}
+                        alt={`Imagem do imóvel ${imovel?.codigo || codigo}`}
+                        className="w-full md:w-full lg:w-[400px] h-[250px] object-cover rounded-2xl"
+                        width={600}
+                        height={400}
+                        priority
+                        onError={() => setMainImage("/imagensImovel/fotoImovel.png")}
+                    />
+                </div>
                 <div className="flex flex-col font-medium text-base text-left py-5 space-y-3">
                     <p className="text-lg font-semibold">Código: {imovel?.codigo || codigo}</p>
-                    <p>{imovel?.id_endereco?.cidade || "Não informada"}/{imovel?.id_endereco?.uf || "UF"}</p>
+                    <p>{localizacao}</p>
                     <p className="font-semibold">{imovel?.nome_propriedade || "Nome não informado"}</p>
-                    <p>{imovel?.id_endereco?.rua || "Rua"}, {imovel?.id_endereco?.numero || "N/A"} - {imovel?.id_endereco?.bairro || "Bairro não informado"}</p>
+                    <p>{enderecoCompleto}</p>
                 </div>
             </div>
         </div>
