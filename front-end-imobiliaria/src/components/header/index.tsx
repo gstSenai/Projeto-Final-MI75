@@ -67,7 +67,7 @@ export function Header() {
             console.log('Redirecionando para Editor');
             router.push('/paginaEditor');
         } else {
-            router.push('/PaginaInicial');
+            router.push('/paginaInicial');
 
         }
     };
@@ -110,19 +110,44 @@ export function Header() {
                             <nav>
                                 <ul className="flex flex-row max-lg:text-base text-xl whitespace-nowrap md:gap-4 lg:gap-6 text-[#303030] max-md:hidden">
                                     <li>
-                                        <Link href={
-                                            role === 'administrador' ? '/paginaAdministrador' : 
-                                            role === 'corretor' ? '/paginaCorretor' : 
-                                            role === 'proprietario' ? '/paginaProprietarios' : 
-                                            role === 'editor' ? '/paginaEditor' : 
-                                            '/'
-                                        }>
+                                        <Link
+                                            href={
+                                                role === 'administrador' ? '/paginaAdministrador' :
+                                                    role === 'corretor' ? '/paginaCorretor' :
+                                                        role === 'proprietario' ? '/paginaProprietarios' :
+                                                            role === 'editor' ? '/paginaEditor' :
+                                                                '/paginaInicial'
+                                            }
+                                            className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-vermelho hover:after:w-full after:transition-all after:duration-300"
+                                        >
                                             {translate('inicio')}
                                         </Link>
                                     </li>
-                                    <li><Link href="/paginaImoveis">{translate('imoveis')}</Link></li>
-                                    <li><Link href="/paginaCorretores">{translate('corretores')}</Link></li>
-                                    <li><Link href="/sobreNos">{translate('sobre')}</Link></li>
+                                    <li>
+                                        <Link
+                                            href="/paginaImoveis"
+                                            className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-vermelho hover:after:w-full after:transition-all after:duration-300"
+                                        >
+                                            {translate('imoveis')}
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link
+                                            href="/paginaCorretores"
+                                            className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-vermelho hover:after:w-full after:transition-all after:duration-300"
+                                        >
+                                            {translate('corretores')}
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link
+                                            href="/sobreNos"
+                                            className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-vermelho hover:after:w-full after:transition-all after:duration-300"
+                                        >
+                                            {translate('sobre')}
+                                        </Link>
+                                    </li>
+
                                 </ul>
                             </nav>
                         </div>
@@ -131,7 +156,7 @@ export function Header() {
                     <div className="flex flex-row items-center font-medium">
                         <div className="flex flex-row items-center gap-4 max-md:hidden">
                             <div className="flex flex-row items-center md:pl-2 lg:pl-12">
-                            <Image src="/imagensHeader/token_chat.png" alt="Tema" width={30} height={2} />
+                                <Image src="/imagensHeader/token_chat.png" alt="Tema" width={30} height={2} />
                             </div>
                         </div>
                         <div className="flex flex-row items-center md:gap-1 lg:gap-2 md:px-3 lg:px-6 max-md:hidden relative">
@@ -139,8 +164,8 @@ export function Header() {
                                 <Image
                                     src={
                                         currentLanguage === 'Português' ? currentImageBrasil :
-                                        currentLanguage === 'English' ? currentImageEUA :
-                                        currentImageEspanha
+                                            currentLanguage === 'English' ? currentImageEUA :
+                                                currentImageEspanha
                                     }
                                     alt="Idioma"
                                     width={20}
@@ -282,14 +307,14 @@ export function Header() {
                             <ul className="space-y-3 text-start my-3">
                                 <li className='flex gap-3 items-center'>
                                     <Image src="/imagensHeader/logoMinuscula.png" alt="simbolo HAV" width={20} height={20} className='h-full' />
-                                    <Link 
+                                    <Link
                                         href={
-                                            role === 'administrador' ? '/paginaAdministrador' : 
-                                            role === 'corretor' ? '/paginaCorretor' : 
-                                            role === 'proprietario' ? '/paginaProprietarios' : 
-                                            role === 'editor' ? '/paginaEditor' : 
-                                            '/PaginaIncial'
-                                        } 
+                                            role === 'administrador' ? '/paginaAdministrador' :
+                                                role === 'corretor' ? '/paginaCorretor' :
+                                                    role === 'proprietario' ? '/paginaProprietarios' :
+                                                        role === 'editor' ? '/paginaEditor' :
+                                                            '/PaginaIncial'
+                                        }
                                         className="text-xl text-[#303030] hover:text-vermelho transition-colors"
                                     >
                                         {translate('inicio')}
@@ -325,8 +350,8 @@ export function Header() {
                                 {isAuthenticated && (
                                     <li className='flex gap-3 items-center'>
                                         <Image src="/imagensHeader/logout.png" alt="logout" width={20} height={20} className='h-full' />
-                                        <button 
-                                            onClick={handleLogout} 
+                                        <button
+                                            onClick={handleLogout}
                                             className="text-xl text-[#303030] hover:text-vermelho transition-colors"
                                         >
                                             {translate('logout')}
