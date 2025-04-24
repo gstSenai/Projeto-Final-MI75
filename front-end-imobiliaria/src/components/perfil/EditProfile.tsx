@@ -185,23 +185,7 @@ export default function EditProfile({ id }: EditProfileProps) {
         }
     }, [profileData.imagem_usuario]);
 
-    useEffect(() => {
-        const fetchAgendamentos = async () => {
-            try {
-                setLoadingAgendamentos(true);
-                const response = await request('GET', `http://localhost:9090/agendamento/usuario/${id}`);
-                if (Array.isArray(response)) {
-                    setAgendamentos(response as Agendamento[]);
-                }
-            } catch (error) {
-                console.error('Erro ao buscar agendamentos:', error);
-            } finally {
-                setLoadingAgendamentos(false);
-            }
-        };
 
-        fetchAgendamentos();
-    }, [id]);
 
     const handleImageClick = () => {
         fileInputRef.current?.click();
