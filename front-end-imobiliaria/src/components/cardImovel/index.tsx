@@ -29,7 +29,7 @@ interface CardProps {
     valorPromocional?: number
 }
 
-export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_banheiros, preco, codigo, imovelId, imagemPrincipal, destaque, valorPromocional }: CardProps) {
+export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_banheiros, preco, codigo, imovelId, destaque, valorPromocional }: CardProps) {
     const router = useRouter();
     const [mainImage, setMainImage] = useState<string>('/imagensImovel/fotoImovel.png');
     const [isLoading, setIsLoading] = useState(true);
