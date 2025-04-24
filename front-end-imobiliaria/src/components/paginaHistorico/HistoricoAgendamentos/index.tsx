@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { CardHorario } from "../cardHorario/CardHorarioCorretor";
 import HistoryCalendar from "../../Calendario/HistoryCalendar";
 import request from "@/routes/request";
+import { useSearchParams } from 'next/navigation';
+import { useAuth } from '@/components/context/AuthContext';
 
 interface Agendamento {
   id: number;
@@ -21,27 +23,39 @@ interface Agendamento {
   };
 }
 
-export function PaginaHistoricoCorretorChamar() {
+export function HistoricoAgendamentos() {
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const userId = searchParams.get('userId');
+  const { role } = useAuth();
 
   useEffect(() => {
     const fetchAgendamentos = async () => {
+      if (!userId) return;
+
       try {
         setLoading(true);
         console.log('Buscando agendamentos para a data:', selectedDate);
         
-        // Pegando o token do localStorage
         const token = localStorage.getItem("token");
         if (!token) {
           console.error('Token não encontrado');
           return;
         }
 
+        // Define o endpoint baseado no tipo de usuário
+        const endpoint = role === 'corretor' 
+          ? `http://localhost:9090/agendamento/corretor/data/${selectedDate}`
+          : `http://localhost:9090/agendamento/usuario/data/${selectedDate}`;
+
+        console.log('Usando endpoint:', endpoint);
+        console.log('Tipo de usuário:', role);
+
         const response = await request(
           'GET', 
-          `http://localhost:9090/agendamento/corretor/data/${selectedDate}`,
+          endpoint,
           undefined,
           {
             'Authorization': `Bearer ${token}`,
@@ -60,7 +74,7 @@ export function PaginaHistoricoCorretorChamar() {
     };
 
     fetchAgendamentos();
-  }, [selectedDate]);
+  }, [selectedDate, userId, role]);
 
   const getStatus = (status: string): 'realizado' | 'cancelado' | 'pendente' => {
     if (!status) {
@@ -136,4 +150,4 @@ export function PaginaHistoricoCorretorChamar() {
       </div>
     </div>
   );
-}
+} 

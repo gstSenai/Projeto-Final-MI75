@@ -5,8 +5,9 @@ import { FaCamera } from 'react-icons/fa';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
-import AppointmentCard from '../agendamentosPerfil/card/AppointmentCard';
 import request from '@/routes/request';
+import { useRouter } from 'next/navigation';
+import { Botao } from '@/components/botao/index';
 
 const UsuarioProps = z.object({
     id: z.number().optional(),
@@ -42,6 +43,7 @@ interface Agendamento {
 }
 
 export default function EditProfile({ id }: EditProfileProps) {
+    const router = useRouter();
     const { register, handleSubmit, setValue } = useForm<UsuarioData>({
         resolver: zodResolver(UsuarioProps)
     });
@@ -72,7 +74,7 @@ export default function EditProfile({ id }: EditProfileProps) {
         try {
             const response = await fetch(`http://localhost:9090/usuario/getById/${id}`)
             const data = await response.json()
-            
+
             const dadosFormatados = {
                 username: data.username || '',
                 tipo_conta: data.tipo_conta || '',
@@ -83,12 +85,12 @@ export default function EditProfile({ id }: EditProfileProps) {
                 twoFactorEnabled: data.twoFactorEnabled || false,
                 telefone: data.telefone || ''
             }
-            
+
             setProfileData(dadosFormatados)
             Object.entries(dadosFormatados).forEach(([key, value]) => {
                 setValue(key as keyof UsuarioData, value);
             });
-            
+
             if (data.imagem_usuario) {
                 setImagem(data.imagem_usuario)
             }
@@ -100,7 +102,7 @@ export default function EditProfile({ id }: EditProfileProps) {
     const onSubmit = async (data: UsuarioData) => {
         try {
             setProfileData(data);
-            
+
             const formData = new FormData();
             const usuarioData = {
                 ...data,
@@ -109,7 +111,7 @@ export default function EditProfile({ id }: EditProfileProps) {
                 password: data.password,
                 telefone: data.telefone || ''
             };
-            
+
             formData.append("usuario", JSON.stringify(usuarioData));
 
             if (imagem) {
@@ -390,22 +392,10 @@ export default function EditProfile({ id }: EditProfileProps) {
             <div className="flex font-montserrat bg-[#E5E1DB] p-4 sm:p-6 rounded-2xl shadow-lg mx-auto w-[98%] sm:w-[95%] max-w-5xl">
                 <div className="w-full">
                     <h2 className="text-lg sm:text-xl font-bold text-[#702632] mb-4">Meus Agendamentos</h2>
-                    {loadingAgendamentos ? (
-                        <p className="text-gray-600">Carregando agendamentos...</p>
-                    ) : agendamentos.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {agendamentos.map((agendamento) => (
-                                <AppointmentCard
-                                    key={agendamento.id}
-                                    corretor={`${agendamento.corretor.nome} ${agendamento.corretor.sobrenome}`}
-                                    data={agendamento.data}
-                                    horario={agendamento.horario}
-                                />
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-gray-600">Nenhum agendamento encontrado.</p>
-                    )}
+                    <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push(`/paginaHistorico?userId=${id}`)} texto="Histórico da Agenda" />
+                    <div className='mt-4'>
+                        <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push(`/paginaAgendaCorretor?userId=${id}`)} texto="Agenda" />
+                    </div>
                 </div>
             </div>
         </div>

@@ -89,43 +89,7 @@ export function Footer() {
           />
         </section>
 
-        {/* Bloco de Links */}
-        <div className="z-20">
-          <div className="flex flex-wrap gap-14 md:gap-12 xl:gap-20">
-            {/* Serviços */}
-            <div className="flex flex-col gap-2">
-              <p className="text-base xl:text-lg font-extrabold">Serviços</p>
-              <div className="font-light text-xs md:text-sm flex flex-col gap-1.5">
-                <Link href="#">Avaliações</Link>
-                <Link href="#">Consultoria</Link>
-                <Link href="#">Regularização</Link>
-                <Link href="#">Investimentos</Link>
-              </div>
-            </div>
 
-            {/* Contato */}
-            <div className="flex flex-col gap-2">
-              <p className="text-base xl:text-lg font-extrabold">Contato</p>
-              <div className="font-light text-xs md:text-sm flex flex-col gap-1.5">
-                <Link href="#">Suporte</Link>
-                <Link href="#">Atendimento</Link>
-                <Link href="#">FAQ</Link>
-                <Link href="#">Reclame Aqui</Link>
-              </div>
-            </div>
-
-            {/* Links Rápidos */}
-            <div className="flex flex-col gap-2">
-              <p className="text-base xl:text-lg font-extrabold">Links Rápidos</p>
-              <div className="font-light text-xs md:text-sm flex flex-col gap-1.5">
-                <Link href="/">Página Inicial</Link>
-                <Link href="/sobreNos">Sobre Nós</Link>
-                <Link href="#">Comprar</Link>
-                <Link href="#">Vender</Link>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Imagem decorativa */}
         <Image

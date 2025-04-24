@@ -14,9 +14,28 @@ import Image from 'next/image';
 import { Header } from '@/components/header';
 import { useRouter } from 'next/navigation';
 import RotaPrivada from '@/components/RotaPrivada';
+import { useAuth } from '@/components/context/AuthContext';
 
 export default function paginaCorretor() {
     const router = useRouter();
+    const { userId } = useAuth();
+
+    const handleAgendaClick = () => {
+        if (userId) {
+            router.push(`/paginaAgendaCorretor?userId=${userId}`);
+        } else {
+            console.error('ID do usuário não encontrado');
+        }
+    };
+
+    const handleHistoricoClick = () => {
+        if (userId) {
+            router.push(`/paginaHistorico?userId=${userId}`);
+        } else {
+            console.error('ID do usuário não encontrado');
+        }
+    };
+
     return (
         <LoadingWrapper>
             <RotaPrivada userAutorizado={['administrador', 'corretor']}>
@@ -47,52 +66,43 @@ export default function paginaCorretor() {
                     <section className="mt-16">
                         <h2 className='flex justify-center text-center text-2xl lg:text-3xl font-medium py-10 text-gray-800'>Explore nossos recursos:</h2>
 
-                        <div className='flex flex-col sm:flex-row justify-center items-center gap-8 px-4 md:px-8'>
-                            <div className='flex flex-col items-center p-6 rounded-xl w-full sm:w-auto'>
+                        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8'>
+                            <div className='flex flex-col items-center p-6 rounded-xl'>
                                 <div className="p-4 rounded-full mb-4">
                                     <Image src="/imagensPaginaEditor-Adm/IconAgenda.png" alt="Gerenciamento de Imóveis" width={75} height={75} className="transition-transform duration-300 hover:scale-110" />
                                 </div>
 
                                 <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6'>Agenda</p>
 
-
-                                <Botao className='w-[300px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/paginaHistoricoCorretor")} texto="Histórico da Agenda" />
-
-                                <div className='pt-6'>
-                                    <Botao className='w-[300px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/paginaAgendaCorretor")} texto="Agenda" />
+                                <div className="w-full space-y-4">
+                                    <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={handleHistoricoClick} texto="Histórico da Agenda" />
+                                    <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={handleAgendaClick} texto="Agenda" />
                                 </div>
-
                             </div>
 
-                            <div className='flex flex-col items-center p-6 rounded-xl w-full sm:w-auto'>
+                            <div className='flex flex-col items-center p-6 rounded-xl'>
                                 <div className="p-4 rounded-full mb-4">
                                     <Image src="/imagensPaginaEditor-Adm/IconPerfil.png" alt="Cadastro de Proprietários" width={75} height={75} className="transition-transform duration-300 hover:scale-110" />
                                 </div>
 
                                 <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6'>Perfil</p>
 
-
-
-                                <Botao className='w-[300px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/perfilUsuario/meu-perfil")} texto="Verificar Perfil" />
-
-
-                                <div className='pt-6 opacity-0'>
-                                    <Botao className='w-[300px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/cadastroProprietario")} texto="Chat" />
+                                <div className="w-full space-y-4">
+                                    <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/perfilUsuario/meu-perfil")} texto="Verificar Perfil" />
+                                    <div className="h-10"></div>
                                 </div>
-
                             </div>
-                            <div className='flex flex-col items-center p-6 rounded-xl w-full sm:w-auto'>
+
+                            <div className='flex flex-col items-center p-6 rounded-xl'>
                                 <div className="p-4 rounded-full mb-4">
                                     <Image src="/imagensPaginaEditor-Adm/iconNotificao.png" alt="Cadastro de Proprietários" width={75} height={75} className="transition-transform duration-300 hover:scale-110" />
                                 </div>
 
                                 <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6'>Notificações</p>
 
-                                <Botao className='w-[300px] bg-vermelho h-12 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/paginaCorretorNotificacaoAgendar")} texto="Notificação" />
-
-                                {/* Div vazia para manter a mesma altura dos outros cards */}
-                                <div className='pt-6 opacity-0'>
-                                    <Botao className='w-[300px] h-12' texto="Notificação" onClick={() => router.push("/paginaCorretorNotificacaoAgendar")}  />
+                                <div className="w-full space-y-4">
+                                    <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/paginaCorretorNotificacaoAgendar")} texto="Notificação" />
+                                    <div className="h-10"></div>
                                 </div>
                             </div>
                         </div>

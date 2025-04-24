@@ -28,9 +28,6 @@ export default function PaginaRelatoriosAnalises() {
             <TabelaRelatoriosAnalises tipo="ServicosCorretores" />
           </section>
         </div>
-        <footer>
-          <Footer />
-        </footer>
       </LoadingWrapper>
     </>
   );
