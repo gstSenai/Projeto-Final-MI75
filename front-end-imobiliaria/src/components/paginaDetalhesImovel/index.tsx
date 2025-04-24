@@ -22,12 +22,14 @@ interface ImovelDetalhes {
   nome_propriedade: string
   descricao: string
   valor_venda: number
+  valor_promocional: number
   codigo: number
   tipo_transacao: string
   area_construida: number
   area_terreno: number
   id_corretor: number
   tipo_imovel: string
+  destaque: string
   id_endereco: {
     rua: string
     numero: string
@@ -347,13 +349,24 @@ export function DetalhesImovel({ imovelId }: DetalhesImovelProps) {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-vermelho">{formatCurrency(imovel.valor_venda)}</h2>
-                <span className="px-4 py-1 bg-vermelho text-white rounded-full text-sm">
-                  {imovel.tipo_imovel}
-                </span>
-                <span className="px-4 py-1 bg-vermelho text-white rounded-full text-sm">
-                  {imovel.tipo_transacao}
-                </span>
+                <div className="flex flex-col min-h-[60px]">
+                  {imovel.destaque === 'Promoção' && imovel.valor_promocional ? (
+                    <>
+                      <p className="text-gray-500 text-sm line-through">{formatCurrency(imovel.valor_venda)}</p>
+                      <h2 className="text-2xl font-bold text-vermelho">{formatCurrency(imovel.valor_promocional)}</h2>
+                    </>
+                  ) : (
+                    <h2 className="text-2xl font-bold text-vermelho">{formatCurrency(imovel.valor_venda)}</h2>
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <span className="px-4 py-1 bg-vermelho text-white rounded-full text-sm">
+                    {imovel.tipo_imovel}
+                  </span>
+                  <span className="px-4 py-1 bg-vermelho text-white rounded-full text-sm">
+                    {imovel.tipo_transacao}
+                  </span>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 mb-6">
