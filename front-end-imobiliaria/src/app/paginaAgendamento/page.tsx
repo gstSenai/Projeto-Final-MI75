@@ -399,7 +399,7 @@ export default function PaginaAgendamento() {
     <LoadingWrapper>
       <Header />
       <Image
-        className="absolute opacity-[7%] mt-auto xl:mt-[40%] ml-auto xl:ml-[2.5%] -z-10 invisible sm:invisible md:invisible lg:visible"
+        className="absolute opacity-[7%] mt-auto xl:mt-[20%] ml-auto xl:ml-[2.5%] -z-10 invisible sm:invisible md:invisible lg:visible"
         src="/formularios/logoGrande.png"
         alt="Gerenciamento de Imóveis"
         width={686}
@@ -495,7 +495,6 @@ export default function PaginaAgendamento() {
           </div>
         </section>
       </div>
-      <Footer />
     </LoadingWrapper>
   )
 }

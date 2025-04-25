@@ -49,13 +49,13 @@ export function HistoricoAgendamentos() {
           return;
         }
 
-        // Define o endpoint baseado no tipo de usuário
-        const endpoint = role === 'corretor' 
+        // Define a URL baseada no tipo de usuário
+        const endpoint = role?.toUpperCase() === 'CORRETOR'
           ? `http://localhost:9090/agendamento/corretor/data/${selectedDate}`
           : `http://localhost:9090/agendamento/usuario/data/${selectedDate}`;
 
-        console.log('Usando endpoint:', endpoint);
-        console.log('Tipo de usuário:', role);
+        console.log('Role atual:', role);
+        console.log('Endpoint usado:', endpoint);
 
         const response = await request(
           'GET', 
@@ -109,16 +109,6 @@ export function HistoricoAgendamentos() {
     });
   };
 
-  const getPessoaLabel = (agendamento: Agendamento) => {
-    const isCorretor = role === 'corretor';
-    const pessoa = isCorretor 
-      ? agendamento.usuarioDTO 
-      : agendamento.corretorDTO;
-    const label = isCorretor ? 'Cliente' : 'Corretor';
-    
-    return `${label}: ${pessoa?.username || 'Desconhecido'} ${pessoa?.sobrenome || ''}`.trim();
-  };
-
   return (
     <div className="flex flex-col lg:flex-row gap-8 p-6">
       <div className="lg:w-1/2">
@@ -146,15 +136,26 @@ export function HistoricoAgendamentos() {
           ) : (
             <div className="space-y-4">
               {agendamentos && agendamentos.length > 0 ? (
-                agendamentos.map(agendamento => (
-                  <CardHorario 
-                    key={agendamento.id}
-                    tipo={getStatus(agendamento.status)}
-                    horario={agendamento.horario}
-                    codigo={agendamento.imovelDTO.codigo.toString()}
-                    cliente={getPessoaLabel(agendamento)}
-                  />
-                ))
+                agendamentos.map(agendamento => {
+                  // Determina quem será mostrado baseado no role
+                  const pessoa = role?.toUpperCase() === 'CORRETOR'
+                    ? agendamento.usuarioDTO // Se for corretor, mostra o usuário
+                    : agendamento.corretorDTO; // Se for usuário, mostra o corretor
+
+                  const nomePessoa = pessoa
+                    ? `${pessoa.username} ${pessoa.sobrenome || ''}`
+                    : 'Nome não disponível';
+
+                  return (
+                    <CardHorario 
+                      key={agendamento.id}
+                      tipo={getStatus(agendamento.status)}
+                      horario={agendamento.horario}
+                      codigo={agendamento.imovelDTO.codigo.toString()}
+                      cliente={nomePessoa}
+                    />
+                  );
+                })
               ) : (
                 <p className="text-gray-400 text-center py-4">Nenhum agendamento encontrado para este dia.</p>
               )}

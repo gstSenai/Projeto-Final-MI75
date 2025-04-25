@@ -71,7 +71,6 @@ export default function PaginaAgenda() {
       
       if (Array.isArray(response)) {
         const compromissosPromises = response
-          .filter((item: any) => item.status === "CONFIRMADO") // Filtra apenas agendamentos confirmados
           .map(async (item: any) => {
             const endereco = await getEnderecoImovel(item.imovelDTO.id);
             
@@ -87,7 +86,8 @@ export default function PaginaAgenda() {
               nomeImovel: item.imovelDTO?.nome_propriedade ?? "N/A",
               endereco: endereco ? `${endereco.rua}, ${endereco.numero} - ${endereco.bairro}` : 'Endereço não disponível',
               cidadeUF: endereco ? `${endereco.cidade}/${endereco.uf}` : 'Localização não disponível',
-              pessoa: `${labelText}: ${nome ?? "Desconhecido"}`
+              pessoa: `${labelText}: ${nome ?? "Desconhecido"}`,
+              status: item.status
             };
           });
 
@@ -106,21 +106,19 @@ export default function PaginaAgenda() {
   };
 
   useEffect(() => {
-    if (selectedDate) {
-      fetchAgendamentosPorData(selectedDate);
-    }
-  }, [role]); // Recarrega quando o role mudar
+    const today = new Date().toISOString().split('T')[0];
+    setSelectedDate(today);
+    fetchAgendamentosPorData(today);
+  }, [role]); // Mantém a dependência do role
 
   const compromissosFiltrados = compromissos;
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col bg-[#DFDAD0]">
+      <Header />
       <LoadingWrapper>
-        <header>
-          <Header />
-        </header>
-        <div className="pt-10 px-6 max-lg:px-6 lg:px-20 xl:px-16">
-          <div className="flex-1">
+        <main className="flex-1 pt-10 px-6 max-lg:px-6 lg:px-20 xl:px-16 mb-auto">
+          <div>
             <h1 className="font-bold text-lg md:text-xl lg:text-2xl">Minha Agenda</h1>
             <div className="border-t-2 border-[#702632] w-[130px] mt-1 mb-4"></div>
           </div>
@@ -137,8 +135,9 @@ export default function PaginaAgenda() {
               />
             </div>
           </section>
-        </div>
+        </main>
       </LoadingWrapper>
-    </>
+      <Footer />
+    </div>
   );
 } 

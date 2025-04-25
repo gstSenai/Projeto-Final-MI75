@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { CardHorario } from "../cardHorario";
-import DayCarousel from "../../paginaInicial/carrossel/dayCarousel";
+import DayCarousel from "../../PaginaInicial/carrossel/dayCarousel";
 import request from "@/routes/request";
+import { useAuth } from '@/components/context/AuthContext';
 
 interface FormData {
   mes: string;
@@ -15,16 +16,18 @@ interface Agendamento {
   data: string;
   horario: string;
   status: string;
-  imovel: {
-    codigo: string;
-    id_endereco: {
-      bairro: string;
-      cidade: string;
-    };
+  imovelDTO: {
+    id: number;
+    codigo: number;
+    nome_propriedade: string;
   };
-  corretor: {
-    nome: string;
-    sobrenome: string;
+  usuarioDTO: {
+    username: string;
+    sobrenome: string | null;
+  };
+  corretorDTO: {
+    username: string;
+    sobrenome: string | null;
   };
 }
 
@@ -44,6 +47,7 @@ export function PaginaHistoricoUsuarioChamar() {
   const [selectedDay, setSelectedDay] = useState<number | null>(new Date().getDate());
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
   const [loading, setLoading] = useState(false);
+  const { role } = useAuth();
 
   const selectedMonth = monthNames.indexOf(selectedMonthName || "Janeiro");
 
@@ -59,11 +63,29 @@ export function PaginaHistoricoUsuarioChamar() {
           const currentYear = new Date().getFullYear();
           const formattedDate = `${currentYear}-${(selectedMonth + 1).toString().padStart(2, '0')}-${selectedDay.toString().padStart(2, '0')}`;
           
-          const response = await request('GET', `http://localhost:9090/agendamento/usuario/data/${formattedDate}`) as Agendamento[];
+          const endpoint = role?.toUpperCase() === 'CORRETOR'
+            ? `http://localhost:9090/agendamento/corretor/data/${formattedDate}`
+            : `http://localhost:9090/agendamento/usuario/data/${formattedDate}`;
+
+          console.log('Role atual:', role);
+          console.log('Endpoint usado:', endpoint);
+
+          const token = localStorage.getItem('token');
+          if (!token) {
+            console.error('Token não encontrado');
+            return;
+          }
+
+          const response = await request('GET', endpoint, undefined, {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }) as Agendamento[];
+
           console.log('Agendamentos recebidos:', JSON.stringify(response, null, 2));
           setAgendamentos(response);
         } catch (error) {
           console.error('Erro ao buscar agendamentos:', error);
+          setAgendamentos([]);
         } finally {
           setLoading(false);
         }
@@ -71,7 +93,7 @@ export function PaginaHistoricoUsuarioChamar() {
     };
 
     fetchAgendamentos();
-  }, [selectedDay, selectedMonth]);
+  }, [selectedDay, selectedMonth, role]);
 
   const getTipo = (status: string): 'realizado' | 'cancelado' | 'pendente' => {
     if (!status) {
@@ -111,19 +133,21 @@ export function PaginaHistoricoUsuarioChamar() {
         <div>
           {agendamentos.length > 0 ? (
             agendamentos.map(agendamento => {
-              console.log('Renderizando agendamento:', {
-                id: agendamento.id,
-                status: agendamento.status,
-                tipo: getTipo(agendamento.status)
-              });
-              
+              const pessoa = role?.toUpperCase() === 'CORRETOR'
+                ? agendamento.usuarioDTO
+                : agendamento.corretorDTO;
+
+              const nomePessoa = pessoa
+                ? `${pessoa.username} ${pessoa.sobrenome || ''}`
+                : 'Nome não disponível';
+
               return (
                 <CardHorario 
                   key={agendamento.id}
                   tipo={getTipo(agendamento.status)}
                   horario={agendamento.horario}
-                  codigo={agendamento.imovel.codigo.toString()}
-                  corretor={`${agendamento.corretor.nome} ${agendamento.corretor.sobrenome}`}
+                  codigo={agendamento.imovelDTO.codigo.toString()}
+                  corretor={nomePessoa}
                 />
               );
             })

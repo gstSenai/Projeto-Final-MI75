@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Notification } from '../Notification';
 
 interface CardHorarioAgendarProps {
     id: number;
@@ -36,6 +37,8 @@ export function CorretorNotificacaoAgendar({
     const [showTimeModal, setShowTimeModal] = useState(false);
     const [newTime, setNewTime] = useState(horario);
     const [timeError, setTimeError] = useState('');
+    const [showNotification, setShowNotification] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState('');
 
     const handleTimeChange = () => {
         // Validar o formato do horário (HH:MM)
@@ -49,15 +52,39 @@ export function CorretorNotificacaoAgendar({
             onTimeChange(id, newTime);
             setShowTimeModal(false);
             setTimeError('');
+            setNotificationMessage('Horário alterado com sucesso!');
+            setShowNotification(true);
         }
     };
 
     const handleVerImovel = () => {
-        router.push(`/paginaImovel?id=${imovelId}`);
+        localStorage.setItem('currentImovelId', imovelId.toString());
+        router.push('/paginaImoveis/imovelDetalhes');
+    };
+
+    const handleConfirm = () => {
+        onConfirm(id);
+        setNotificationMessage('Agendamento confirmado com sucesso!');
+        setShowNotification(true);
+    };
+
+    const handleCancel = () => {
+        onCancel(id);
+        setNotificationMessage('Agendamento cancelado com sucesso!');
+        setShowNotification(true);
     };
 
     return (
         <div className="pt-12 grid justify-center md:justify-center lg:justify-normal">
+            {showNotification && (
+                <Notification 
+                    message={notificationMessage}
+                    type="success"
+                    duration={3000}
+                    onClose={() => setShowNotification(false)}
+                />
+            )}
+            
             <div className="bg-[#F4F1EA] w-full px-10 py-4 rounded-lg flex flex-col md:flex-row md:justify-between md:items-center gap-4 mt-4">
                 {/* Data e Horário */}
                 <div className="text-base md:text-md lg:text-lg font-medium text-center md:text-left">
@@ -86,15 +113,15 @@ export function CorretorNotificacaoAgendar({
                 </div>
 
                 {/* Botões */}
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                     <button
                         onClick={handleVerImovel}
-                        className="bg-[#4A90E2] hover:brightness-110 transition text-white rounded-lg px-6 py-2"
+                        className="bg-[#702632] hover:brightness-110 transition text-white rounded-lg px-6 py-2"
                     >
-                        Ver Imóvel
+                        Ver Detalhes
                     </button>
                     <button
-                        onClick={() => onConfirm(id)}
+                        onClick={handleConfirm}
                         className="bg-[#27AE60] hover:brightness-110 transition text-white rounded-lg px-6 py-2"
                     >
                         Confirmar
@@ -106,7 +133,7 @@ export function CorretorNotificacaoAgendar({
                         Alterar Horário
                     </button>
                     <button
-                        onClick={() => onCancel(id)}
+                        onClick={handleCancel}
                         className="bg-[#702632] hover:brightness-110 transition text-white rounded-lg px-6 py-2"
                     >
                         Cancelar

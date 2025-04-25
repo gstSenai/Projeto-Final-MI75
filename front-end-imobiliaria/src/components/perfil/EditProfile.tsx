@@ -91,8 +91,12 @@ export default function EditProfile({ id }: EditProfileProps) {
                 setValue(key as keyof UsuarioData, value);
             });
 
-            if (data.imagem_usuario) {
-                setImagem(data.imagem_usuario)
+            if (data.imagem_usuario && typeof data.imagem_usuario === 'string') {
+                if (data.imagem_usuario.startsWith('http')) {
+                    setImagePreview(data.imagem_usuario);
+                } else {
+                    setImagem(data.imagem_usuario);
+                }
             }
         } catch (error) {
             console.error("Erro ao buscar usuário:", error)
@@ -152,14 +156,14 @@ export default function EditProfile({ id }: EditProfileProps) {
     }, [id])
 
     useEffect(() => {
-        if (profileData.imagem_usuario && profileData.imagem_usuario.trim() !== '') {
+        if (profileData?.imagem_usuario && profileData.imagem_usuario.trim() !== '') {
             const fetchImage = async () => {
                 try {
                     // Verifica se é uma URL do Google
-                    if (profileData.imagem_usuario.startsWith('http')) {
+                    if (profileData.imagem_usuario?.startsWith('http')) {
                         setImagePreview(profileData.imagem_usuario);
                     } else {
-                        const fileName = profileData.imagem_usuario.split('/').pop();
+                        const fileName = profileData.imagem_usuario?.split('/').pop();
                         if (!fileName) {
                             console.error("Nome do arquivo não encontrado na URL");
                             return;
@@ -185,7 +189,23 @@ export default function EditProfile({ id }: EditProfileProps) {
         }
     }, [profileData.imagem_usuario]);
 
+    useEffect(() => {
+        const fetchAgendamentos = async () => {
+            try {
+                setLoadingAgendamentos(true);
+                const response = await request('GET', `http://localhost:9090/agendamento/usuario/${id}`);
+                if (Array.isArray(response)) {
+                    setAgendamentos(response as Agendamento[]);
+                }
+            } catch (error) {
+                console.error('Erro ao buscar agendamentos:', error);
+            } finally {
+                setLoadingAgendamentos(false);
+            }
+        };
 
+        fetchAgendamentos();
+    }, [id]);
 
     const handleImageClick = () => {
         fileInputRef.current?.click();
@@ -376,10 +396,9 @@ export default function EditProfile({ id }: EditProfileProps) {
             <div className="flex font-montserrat bg-[#E5E1DB] p-4 sm:p-6 rounded-2xl shadow-lg mx-auto w-[98%] sm:w-[95%] max-w-5xl">
                 <div className="w-full">
                     <h2 className="text-lg sm:text-xl font-bold text-[#702632] mb-4">Meus Agendamentos</h2>
-                    <div className='flex flex-col lg:flex-row'>
-                        <Botao className='w-auto md:w-[400px] bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push(`/paginaHistorico?userId=${id}`)} texto="Histórico da Agenda" />
-
-                            <Botao className='w-auto md:w-[400px] bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push(`/paginaAgenda?userId=${id}`)} texto="Agenda" />
+                    <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push(`/paginaHistorico?userId=${id}`)} texto="Histórico da Agenda" />
+                    <div className='mt-4'>
+                        <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push(`/paginaAgenda?userId=${id}`)} texto="Agenda" />
                     </div>
                 </div>
             </div>

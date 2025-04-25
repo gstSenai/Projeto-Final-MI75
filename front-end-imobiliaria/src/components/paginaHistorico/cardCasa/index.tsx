@@ -154,7 +154,10 @@ export function CardCasa({ codigo }: CardCasaProps) {
                     <p className="font-semibold">{imovel?.nome_propriedade || "Nome não informado"}</p>
                     <p>{enderecoCompleto}</p>
                     <button
-                        onClick={() => router.push(`/paginaImoveis/imovelDetalhes?id=${imovel?.id}`)}
+                        onClick={() => {
+                            localStorage.setItem('currentImovelId', imovel?.id.toString() || '');
+                            router.push('/paginaImoveis/imovelDetalhes');
+                        }}
                         className="bg-[#702632] hover:brightness-110 transition text-white rounded-lg px-6 py-2 mt-4"
                     >
                         Ver Detalhes

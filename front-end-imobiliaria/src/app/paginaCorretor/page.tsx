@@ -2,6 +2,8 @@
 
 import { Montserrat } from 'next/font/google';
 import { LoadingWrapper } from '@/components/loading/loadingServer';
+import { useEffect, useState } from 'react';
+import request from '@/routes/request';
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -16,9 +18,46 @@ import { useRouter } from 'next/navigation';
 import RotaPrivada from '@/components/RotaPrivada';
 import { useAuth } from '@/components/context/AuthContext';
 
+interface Agendamento {
+    id: number;
+    status: string;
+    // Add other properties as needed
+}
+
+interface ApiResponse {
+    content: Agendamento[];
+    last: boolean;
+    totalElements: number;
+    totalPages: number;
+    size: number;
+    number: number;
+}
+
 export default function paginaCorretor() {
     const router = useRouter();
     const { userId } = useAuth();
+    const [hasNewNotifications, setHasNewNotifications] = useState(false);
+
+    useEffect(() => {
+        const checkNewNotifications = async () => {
+            try {
+                const response = await request('GET', `http://localhost:9090/agendamento/corretor?page=0&size=1`) as ApiResponse;
+                if (response && response.content && response.content.length > 0) {
+                    const hasPendingNotifications = response.content.some(
+                        (agendamento) => agendamento.status === 'PENDENTE'
+                    );
+                    setHasNewNotifications(hasPendingNotifications);
+                }
+            } catch (error) {
+                console.error('Erro ao verificar notificações:', error);
+            }
+        };
+
+        checkNewNotifications();
+        // Check for new notifications every 30 seconds
+        const interval = setInterval(checkNewNotifications, 30000);
+        return () => clearInterval(interval);
+    }, []);
 
     const handleAgendaClick = () => {
         if (userId) {
@@ -101,7 +140,20 @@ export default function paginaCorretor() {
                                 <p className='text-lg lg:text-xl font-medium text-gray-700 text-center leading-tight mb-6'>Notificações</p>
 
                                 <div className="w-full space-y-4">
-                                    <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push("/paginaCorretorNotificacaoAgendar")} texto="Notificação" />
+                                    <div className="relative">
+                                        <Botao 
+                                            className={`w-full h-10 transition-colors duration-300 ${
+                                                hasNewNotifications 
+                                                    ? 'bg-vermelho hover:bg-vermelho/90 animate-pulse' 
+                                                    : 'bg-vermelho hover:bg-vermelho/90'
+                                            }`} 
+                                            onClick={() => router.push("/paginaCorretorNotificacaoAgendar")} 
+                                            texto="Notificação"
+                                        />
+                                        {hasNewNotifications && (
+                                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
+                                        )}
+                                    </div>
                                     <div className="h-10"></div>
                                 </div>
                             </div>
