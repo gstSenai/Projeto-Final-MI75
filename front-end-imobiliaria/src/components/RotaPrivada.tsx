@@ -5,6 +5,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { Montserrat } from 'next/font/google';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -79,12 +80,12 @@ export default function RotaPrivada({ children, userAutorizado }: RotaPrivadaPro
           <p className="text-xl lg:text-2xl text-center max-w-2xl opacity-90">
             Você não tem permissão para acessar esta página.
           </p>
-          <a
+          <Link
             href="/"
             className="mt-8 bg-[#6d2431] hover:bg-[#8a2c3d] text-white font-medium py-3 px-8 rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
           >
             Voltar para a página inicial
-          </a>
+          </Link>
         </div>
       </div>
     </div>

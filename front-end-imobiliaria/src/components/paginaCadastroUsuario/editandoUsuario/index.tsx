@@ -226,20 +226,6 @@ export function EditarUsuario({ selectedUsuarios, onComplete }: EditarUsuarioDat
                                                                         errors={errors?.usuario?.email}
                                                                     />
                                                                 </div>
-
-                                                                <div className="w-full">
-                                                                    <FormularioEditarInput
-                                                                        label="Senha"
-                                                                        placeholder=""
-                                                                        name="usuario.password"
-                                                                        value={usuario.password}
-                                                                        register={register}
-                                                                        required
-                                                                        custumizacaoClass="w-full p-2 border border-gray-500 rounded"
-                                                                        errors={errors?.usuario?.password}
-                                                                    />
-                                                                </div>
-
                                                             </div>
                                                         </div>
                                                     </React.Fragment>

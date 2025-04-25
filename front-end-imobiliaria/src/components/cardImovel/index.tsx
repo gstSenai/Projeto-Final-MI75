@@ -2,7 +2,6 @@
 
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
-import Favoritar from '@/components/favoritar/index'
 import { useLanguage } from '@/components/context/LanguageContext';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
@@ -26,7 +25,7 @@ interface CardProps {
     destaque?: 'Destaque' | 'Promoção' | 'Adicionado Rec.' | 'Não Destaque' 
 }
 
-export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_banheiros, preco, codigo, imovelId, imagemPrincipal, destaque }: CardProps) {
+export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_banheiros, preco, codigo, imovelId, destaque }: CardProps) {
     const router = useRouter();
     const [mainImage, setMainImage] = useState<string>('/imagensImovel/fotoImovel.png');
     const [isLoading, setIsLoading] = useState(true);
