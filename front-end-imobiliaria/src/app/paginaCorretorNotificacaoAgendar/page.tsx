@@ -179,25 +179,31 @@ export default function PaginaCorretorNotificacaoAgendar() {
                         </div>
 
                         <div className='flex flex-col pt-8'>
-                            {agendamentos.map(agendamento => (
-                                <CorretorNotificacaoAgendar 
-                                    key={agendamento.id}
-                                    id={agendamento.id}
-                                    data={agendamento.data}
-                                    horario={agendamento.horario}
-                                    tipoImovel={agendamento.imovelDTO.tipo_imovel}
-                                    cidade={agendamento.imovelDTO.nome_propriedade}
-                                    codigoImovel={String(agendamento.imovelDTO.codigo)}
-                                    nomeUsuario={agendamento.usuarioDTO.username}
-                                    status={agendamento.status || 'PENDENTE'}
-                                    onConfirm={handleConfirm}
-                                    onCancel={handleCancel}
-                                    onTimeChange={handleTimeChange}
-                                />
-                            ))}
+                            {agendamentos.length === 0 ? (
+                                <div className="text-center py-8">
+                                    <p className="text-gray-600 text-lg">Nenhum agendamento pendente no momento.</p>
+                                </div>
+                            ) : (
+                                agendamentos.map(agendamento => (
+                                    <CorretorNotificacaoAgendar 
+                                        key={agendamento.id}
+                                        id={agendamento.id}
+                                        data={agendamento.data}
+                                        horario={agendamento.horario}
+                                        tipoImovel={agendamento.imovelDTO.tipo_imovel}
+                                        cidade={agendamento.imovelDTO.nome_propriedade}
+                                        codigoImovel={String(agendamento.imovelDTO.codigo)}
+                                        nomeUsuario={agendamento.usuarioDTO.username}
+                                        status={agendamento.status || 'PENDENTE'}
+                                        onConfirm={handleConfirm}
+                                        onCancel={handleCancel}
+                                        onTimeChange={handleTimeChange}
+                                    />
+                                ))
+                            )}
                         </div>
                         
-                        {hasMore && (
+                        {hasMore && agendamentos.length > 0 && (
                             <div className="flex justify-center py-10">
                                 <button 
                                     onClick={loadMore}

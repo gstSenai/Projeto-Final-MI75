@@ -2,13 +2,13 @@
 import { ImoveisDisponiveis } from '@/components/numeroAtualizaveis/ImoveisDisponiveis';
 import { ImoveisAlugados } from '@/components/numeroAtualizaveis/ImoveisAlugados';
 import { ImoveisVendidos } from '@/components/numeroAtualizaveis/ImoveisVendidos';
-import { PesquisaPaginaInicial } from '@/components/paginaInicial/pesquisaPaginaInicial';
+import { PesquisaPaginaInicial } from '@/components/PaginaInicial/pesquisaPaginaInicial';
 import { Montserrat } from 'next/font/google';
-import Carrossel from '@/components/paginaInicial/carrossel';
+import Carrossel from '@/components/PaginaInicial/carrossel';
 import { useLanguage } from '@/components/context/LanguageContext';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { Card } from '@/components/cardImovel';
+import { Card } from '@/components/cardImovel/index';
 import Image from 'next/image';
 import { LoadingWrapper } from '@/components/loading/loadingServer';
 import { useImoveis } from '@/hooks/useImoveis';
@@ -169,6 +169,7 @@ export default function PaginaInicial() {
                                         preco={imovel.preco}
                                         codigo={imovel.codigo}
                                         imovelId={imovel.id}
+                                        valorPromocional={imovel.valor_promocional}
                                         destaque={imovel.destaque as "Destaque" | "Promoção" | "Adicionado Rec." | "Não Destaque"}
                                     />
                                 ))
@@ -223,4 +224,3 @@ export default function PaginaInicial() {
         </LoadingWrapper>
     );
 }
-

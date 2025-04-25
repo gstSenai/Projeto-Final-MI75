@@ -16,6 +16,7 @@ interface ImovelCompleto {
     codigo: number;
     tipo_transacao: string;
     data_cadastro: string;
+    valor_promocional: number;
 }
 
 interface Imovel {
@@ -29,6 +30,7 @@ interface Imovel {
     preco: number;
     codigo: number;
     tipo_transacao: string;
+    valor_promocional: number;
 }
 
 export function useImoveis(tipo: 'destaque' | 'promocao' | 'recente') {
@@ -76,6 +78,7 @@ export function useImoveis(tipo: 'destaque' | 'promocao' | 'recente') {
                         numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
                         preco: imovel.valor_venda || 0,
                         codigo: imovel.codigo || 0,
+                        valor_promocional: imovel.valor_promocional || 0,
                         tipo_transacao: imovel.tipo_transacao || "Indefinido"
                     }));
 

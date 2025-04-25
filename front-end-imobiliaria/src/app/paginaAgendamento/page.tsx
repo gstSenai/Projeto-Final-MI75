@@ -154,7 +154,30 @@ export default function PaginaAgendamento() {
         if (Array.isArray(response)) {
           const horariosOcupados = response.map((a: any) => a.horario.substring(0, 5))
           console.log("Horários ocupados encontrados:", horariosOcupados)
-          setHorariosOcupados(horariosOcupados)
+
+          // Verifica se é o dia atual
+          const hoje = new Date()
+          const dataSelecionadaObj = new Date(data)
+          const ehHoje = dataSelecionadaObj.toDateString() === hoje.toDateString()
+
+          if (ehHoje) {
+            // Adiciona aos horários ocupados todos os horários que já passaram
+            const horaAtual = hoje.getHours()
+            const minutosAtual = hoje.getMinutes()
+            
+            const todosHorarios = ["08:00", "10:00", "12:00", "14:00", "15:00", "16:00"]
+            const horariosPassados = todosHorarios.filter(horario => {
+              const [hora, minutos] = horario.split(':').map(Number)
+              return hora < horaAtual || (hora === horaAtual && minutos <= minutosAtual)
+            })
+            
+            horariosOcupados.push(...horariosPassados)
+            // Remove duplicatas
+            const horariosOcupadosUnicos = [...new Set(horariosOcupados)]
+            setHorariosOcupados(horariosOcupadosUnicos)
+          } else {
+            setHorariosOcupados(horariosOcupados)
+          }
           
           if (horariosOcupados.length === 6) {
             setError("Todos os horários estão ocupados nesta data. Por favor, selecione outra data.")
@@ -346,6 +369,32 @@ export default function PaginaAgendamento() {
     }
   }
 
+  const getHorariosDisponiveis = () => {
+    const todosHorarios = ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00"];
+    
+    // Se não tiver data selecionada, retorna lista vazia
+    if (!dataSelecionada) return [];
+
+    // Verifica se é o dia atual
+    const hoje = new Date();
+    const dataSelecionadaObj = new Date(dataSelecionada);
+    const ehHoje = dataSelecionadaObj.toDateString() === hoje.toDateString();
+
+    if (ehHoje) {
+      const horaAtual = hoje.getHours();
+      const minutosAtual = hoje.getMinutes();
+      
+      // Filtra horários que já passaram
+      return todosHorarios.filter(horario => {
+        const [hora, minutos] = horario.split(':').map(Number);
+        return hora > horaAtual || (hora === horaAtual && minutos > minutosAtual);
+      }).filter(horario => !horariosOcupados.includes(horario));
+    }
+
+    // Para datas futuras, retorna todos os horários não ocupados
+    return todosHorarios.filter(horario => !horariosOcupados.includes(horario));
+  };
+
   return (
     <LoadingWrapper>
       <Header />
@@ -408,19 +457,14 @@ export default function PaginaAgendamento() {
                       customizacaoClass="w-full p-2 bg-white text-black border border-gray-500 rounded"
                       required
                       disabled={!dataSelecionada}
-                      options={["8:00", "10:00", "12:00", "14:00", "16:00", "18:00"].filter(
-                        (horario) => !horariosOcupados.includes(horario),
-                      )}
+                      options={getHorariosDisponiveis()}
                     />
                     {errors.horario && <p className="text-red-500 text-sm mt-1">Selecione um horário</p>}
-                    {dataSelecionada &&
-                      ["8:00", "10:00", "12:00", "14:00", "16:00", "18:00"].filter(
-                        (horario) => !horariosOcupados.includes(horario),
-                      ).length === 0 && (
-                        <p className="text-amber-600 text-sm mt-1">
-                          Não há horários disponíveis nesta data. Por favor, selecione outra data.
-                        </p>
-                      )}
+                    {dataSelecionada && getHorariosDisponiveis().length === 0 && (
+                      <p className="text-amber-600 text-sm mt-1">
+                        Não há horários disponíveis nesta data. Por favor, selecione outra data.
+                      </p>
+                    )}
                   </div>
 
                   <input type="hidden" {...register("data")} />

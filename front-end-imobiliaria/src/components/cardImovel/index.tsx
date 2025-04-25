@@ -12,6 +12,8 @@ const inter = Inter({
     display: 'swap',
 });
 
+
+
 interface CardProps {
     titulo: string,
     cidade: string,
@@ -22,10 +24,11 @@ interface CardProps {
     codigo: number,
     imovelId?: number,
     imagemPrincipal?: string,
-    destaque?: 'Destaque' | 'Promoção' | 'Adicionado Rec.' | 'Não Destaque' 
+    destaque?: 'Destaque' | 'Promoção' | 'Adicionado Rec.' | 'Não Destaque',
+    valorPromocional?: number
 }
 
-export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_banheiros, preco, codigo, imovelId, destaque }: CardProps) {
+export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_banheiros, preco, codigo, imovelId, destaque, valorPromocional }: CardProps) {
     const router = useRouter();
     const [mainImage, setMainImage] = useState<string>('/imagensImovel/fotoImovel.png');
     const [isLoading, setIsLoading] = useState(true);
@@ -71,7 +74,9 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
     const banheirosText = translate('banheiros');
     const codigoText = translate('codigo');
 
-    const formattedPrice = preco ? preco.toLocaleString('pt-BR') : '0';
+    const formattedPrice = destaque === 'Promoção' && valorPromocional
+        ? valorPromocional.toLocaleString('pt-BR')
+        : preco ? preco.toLocaleString('pt-BR') : '0';
 
     const getLabelStyle = (tipo: string) => {
         switch (tipo) {
@@ -90,7 +95,7 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
         <div className={`${inter.className} flex justify-center pt-12 lg:pt-0`}>
             <div className="flex flex-col w-[250px] lg:w-[320px] 2xl:w-[300px] cursor-pointer" onClick={handleClick}>
                 <div className='relative w-full'>
-                    
+
                     <div className="w-full overflow-hidden">
                         {isLoading ? (
                             <div className="w-full h-[324px] flex items-center justify-center bg-gray-200">
@@ -103,7 +108,7 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
                                         {destaque.toUpperCase()}
                                     </div>
                                 )}
-                                {destaque === 'Destaque'  && (
+                                {destaque === 'Destaque' && (
                                     <div className={`absolute top-5 -left-4 text-white ${getLabelStyle(destaque)} py-1 px-12 transform -rotate-[31deg] z-10 font-bold text-xs shadow-md`}>
                                         {destaque?.toUpperCase()}
                                     </div>
@@ -113,12 +118,12 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
                                         {destaque?.toUpperCase()}
                                     </div>
                                 )}
-                                <Image 
-                                    src={mainImage} 
-                                    alt="Imagem Imovel" 
-                                    className="w-full h-[200px] object-cover rounded-t-[20px]" 
-                                    width={300} 
-                                    height={20} 
+                                <Image
+                                    src={mainImage}
+                                    alt="Imagem Imovel"
+                                    className="w-full h-[200px] object-cover rounded-t-[20px]"
+                                    width={300}
+                                    height={20}
                                 />
                             </div>
                         )}
@@ -147,8 +152,20 @@ export function Card({ titulo, cidade, numero_quartos, numero_suites, numero_ban
                         </div>
                     </div>
                     <div className="flex flex-col items-center justify-center pt-2">
-                        <p className="text-vermelho text-lg 2xl:text-2xl font-black [text-shadow:1px_1px_1px_#702632]">R${formattedPrice},00</p>
-                        <p className="text-[#5C5C5C] text-xs font-black">{codigoText}: {codigo}</p>
+                        {destaque === 'Promoção' && valorPromocional ? (
+                            <>
+                                <div className="flex flex-col items-center min-h-[60px]">
+                                    <p className="text-gray-500 text-sm line-through">R${preco.toLocaleString('pt-BR')},00</p>
+                                    <p className="text-vermelho text-xl 2xl:text-2xl font-black [text-shadow:1px_1px_1px_#702632]">R${formattedPrice},00</p>
+                                    <p className="text-[#5C5C5C] text-xs font-black">{codigoText}: {codigo}</p>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="flex flex-col items-center mt-5">
+                                <p className="text-vermelho text-xl 2xl:text-2xl font-black [text-shadow:1px_1px_1px_#702632]">R${formattedPrice},00</p>
+                                <p className="text-[#5C5C5C] text-xs font-black">{codigoText}: {codigo}</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

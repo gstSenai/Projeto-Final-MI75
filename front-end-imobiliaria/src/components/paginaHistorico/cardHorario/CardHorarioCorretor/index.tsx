@@ -19,7 +19,7 @@ export function CardHorario({ tipo, horario, codigo, cliente }: CardHorarioProps
 
                 <div className='flex flex-col md:flex-col lg:flex-row items-center gap-4 md:gap-4 lg:gap-8 text-xs md:text-sm lg:text-base'>
                     <p>Código: <span>{codigo}</span></p>
-                    <p>Cliente: <span>{cliente}</span></p>
+                    <p><span>{cliente}</span></p>
 
                     <div className='flex items-center gap-4 text-xs md:text-sm lg:text-base'>
                         {tipo === 'realizado' && (

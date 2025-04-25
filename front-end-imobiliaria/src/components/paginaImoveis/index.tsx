@@ -39,6 +39,7 @@ interface ImovelCompleto {
     numero_banheiros: number
   }
   valor_venda: number
+  valor_promocional: number
   codigo: number
   tipo_transacao: string
 }
@@ -52,6 +53,7 @@ interface Imovel {
   numero_suites: number
   numero_banheiros: number
   preco: number
+  valorPromocional: number
   codigo: number
   imagemNome?: string
   tipo_transacao: string
@@ -124,6 +126,7 @@ export function ListaImoveis() {
           numero_suites: data.id_caracteristicasImovel?.numero_suites || 0,
           numero_banheiros: data.id_caracteristicasImovel?.numero_banheiros || 0,
           preco: data.valor_venda || 0,
+          valorPromocional: data.valor_promocional || 0,
           codigo: data.codigo || 0,
           tipo_transacao: data.tipo_transacao || "Indefinido"
         };
@@ -167,6 +170,7 @@ export function ListaImoveis() {
           numero_suites: imovel.id_caracteristicasImovel?.numero_suites || 0,
           numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
           preco: imovel.valor_venda || 0,
+          valorPromocional: imovel.valor_promocional || 0,
           codigo: imovel.codigo,
           tipo_transacao: imovel.tipo_transacao,
           imagemNome: imovel.imagemNome || undefined
@@ -211,6 +215,7 @@ export function ListaImoveis() {
           numero_suites: imovel.id_caracteristicasImovel?.numero_suites || 0,
           numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
           preco: imovel.valor_venda || 0,
+          valorPromocional: imovel.valor_promocional || 0,
           codigo: imovel.codigo || 0,
           tipo_transacao: imovel.tipo_transacao || "Indefinido"
         }));
@@ -251,6 +256,7 @@ export function ListaImoveis() {
         numero_suites: imovel.id_caracteristicasImovel?.numero_suites || 0,
         numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
         preco: imovel.valor_venda || 0,
+        valorPromocional: imovel.valor_promocional || 0,
         codigo: imovel.codigo,
         tipo_transacao: imovel.tipo_transacao,
         imagemNome: imovel.imagemNome || undefined
@@ -336,6 +342,7 @@ export function ListaImoveis() {
         numero_suites: imovel.id_caracteristicasImovel?.numero_suites || 0,
         numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
         preco: imovel.valor_venda || 0,
+        valorPromocional: imovel.valor_promocional || 0,
         codigo: imovel.codigo || 0,
         tipo_transacao: imovel.tipo_transacao || "Indefinido",
       }));
@@ -406,6 +413,7 @@ export function ListaImoveis() {
       numero_suites: imovel.id_caracteristicasImovel?.numero_suites || 0,
       numero_banheiros: imovel.id_caracteristicasImovel?.numero_banheiros || 0,
       preco: imovel.valor_venda || 0,
+      valorPromocional: imovel.valor_promocional || 0,
       codigo: imovel.codigo || 0,
       tipo_transacao: imovel.tipo_transacao || "Indefinido"
     }));
@@ -482,6 +490,7 @@ export function ListaImoveis() {
                     numero_suites={imovel.numero_suites}
                     numero_banheiros={imovel.numero_banheiros}
                     preco={imovel.preco}
+                    valorPromocional={imovel.valorPromocional}
                     codigo={imovel.codigo}
                     imovelId={imovel.id}
                     destaque={(['Destaque', 'Promoção', 'Adicionado Rec.', 'Não Destaque'].includes(imovel.destaque) ? imovel.destaque : undefined) as "Destaque" | "Promoção" | "Adicionado Rec." | "Não Destaque" | undefined}
