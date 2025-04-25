@@ -2,7 +2,6 @@
 
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
-import Favoritar from '@/components/favoritar/index'
 import { useLanguage } from '@/components/context/LanguageContext';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
