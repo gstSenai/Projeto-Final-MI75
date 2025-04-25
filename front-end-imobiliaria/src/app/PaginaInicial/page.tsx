@@ -169,6 +169,7 @@ export default function PaginaInicial() {
                                         preco={imovel.preco}
                                         codigo={imovel.codigo}
                                         imovelId={imovel.id}
+                                        valorPromocional={imovel.valor_promocional}
                                         destaque={imovel.destaque as "Destaque" | "Promoção" | "Adicionado Rec." | "Não Destaque"}
                                     />
                                 ))
