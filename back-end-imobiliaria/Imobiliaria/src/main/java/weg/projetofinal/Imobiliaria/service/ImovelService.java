@@ -57,6 +57,10 @@ public class ImovelService {
         }
     }
 
+    public List<Imovel> getAllImoveis() {
+        return repository.findAll();
+    }
+
     public List<Imovel> filtroImovel(String tipo_imovel, Double valor_min, Double valor_max){
         Specification<Imovel> imovelSpecification =
                 Specification.where(ImovelSpecification.hasTipo(tipo_imovel))

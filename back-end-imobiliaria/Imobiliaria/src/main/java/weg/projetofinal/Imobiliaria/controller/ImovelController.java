@@ -14,7 +14,10 @@ import weg.projetofinal.Imobiliaria.model.entity.Imovel;
 import weg.projetofinal.Imobiliaria.model.mapper.ImovelMapper;
 import weg.projetofinal.Imobiliaria.service.ImovelService;
 
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -105,4 +108,74 @@ public class ImovelController {
         Imovel imovel = service.filtroCodigoImovel(codigo);
         return ImovelMapper.INSTANCE.imovelToImovelGetResponseDTO(imovel);
     }
+
+    @GetMapping("/analytics/vendas")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Map<String, Object>> getVendasAnalytics() {
+        Map<String, Object> analytics = new HashMap<>();
+
+        // Calcular estatísticas
+        List<Imovel> todosImoveis = service.getAllImoveis();
+
+        double valorTotal = todosImoveis.stream()
+                .mapToDouble(Imovel::getValor_venda)
+                .sum();
+
+        long totalImoveis = todosImoveis.size();
+        double valorMedio = totalImoveis > 0 ? valorTotal / totalImoveis : 0;
+
+        analytics.put("valorTotalImoveis", valorTotal);
+        analytics.put("totalImoveis", totalImoveis);
+        analytics.put("valorMedioImoveis", valorMedio);
+
+        return ResponseEntity.ok(analytics);
+    }
+
+
+    @GetMapping("/analytics/mensal")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<int[]> getImoveisPorMes() {
+        List<Imovel> todosImoveis = service.getAllImoveis();
+        int[] imoveisPorMes = new int[12]; // Array para contar imóveis por mês (0-11 para jan-dez)
+
+        // Agrupa os imóveis por mês de criação
+        todosImoveis.forEach(imovel -> {
+            // Assumindo que você tem um campo de data de criação no seu modelo Imovel
+            // Se não tiver, você precisará adicionar um
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(imovel.getDataCriacao()); // Você precisa ter este campo no seu modelo
+            int mes = cal.get(Calendar.MONTH);
+            imoveisPorMes[mes]++;
+        });
+
+        return ResponseEntity.ok(imoveisPorMes);
+    }
+
+    @GetMapping("/analytics/usuarios")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Map<String, Object>> getUsuariosAnalytics() {
+        Map<String, Object> analytics = new HashMap<>();
+
+        List<Imovel> todosImoveis = service.getAllImoveis();
+
+        long imoveisDisponiveis = todosImoveis.stream()
+                .filter(imovel -> "DISPONIVEL".equals(imovel.getStatus_imovel()))
+                .count();
+
+        long imoveisAlugados = todosImoveis.stream()
+                .filter(imovel -> "ALUGADO".equals(imovel.getStatus_imovel()))
+                .count();
+
+        long imoveisVendidos = todosImoveis.stream()
+                .filter(imovel -> "VENDIDO".equals(imovel.getStatus_imovel()))
+                .count();
+
+        analytics.put("imoveisDisponiveis", imoveisDisponiveis);
+        analytics.put("imoveisAlugados", imoveisAlugados);
+        analytics.put("imoveisVendidos", imoveisVendidos);
+
+        return ResponseEntity.ok(analytics);
+    }
+
+
 }

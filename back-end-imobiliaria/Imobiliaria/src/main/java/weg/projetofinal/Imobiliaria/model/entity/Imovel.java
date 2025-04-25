@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -66,4 +68,14 @@ public class Imovel {
     @ManyToOne
     private Usuario id_usuario;
 
+
+    @Column(name = "data_criacao")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataCriacao;
+
+    // No construtor ou antes de salvar, defina a data
+    @PrePersist
+    protected void onCreate() {
+        dataCriacao = new Date();
+    }
 }

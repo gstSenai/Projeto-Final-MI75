@@ -1,8 +1,7 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { LoadingWrapper } from "@/components/loading/loadingServer";
-import TabelaRelatoriosAnalises from "@/components/tabelaRelatoriosAnalises/index"
-
+import { AnalyticsDashboard } from "@/components/quadrosRelatorios/analytics";
 
 export default function PaginaRelatoriosAnalises() {
   return (
@@ -15,17 +14,7 @@ export default function PaginaRelatoriosAnalises() {
           <h1 className="text-xl">Relatórios e Análises</h1>
           <div className="border-t-2 border-[#702632] w-[130px] mt-1 mb-4"></div>
           <section>
-            <TabelaRelatoriosAnalises tipo="RelatorioAnalise"/>
-          </section>
-          <section>
-            <h1 className="text-xl">Serviços de corretores</h1>
-            <div className="border-t-2 border-[#702632] w-[130px] mt-1 mb-4"></div>
-            <TabelaRelatoriosAnalises tipo="EstatisticaUsuarios" />
-          </section>
-          <section>
-            <h1 className="text-xl">Relatórios e Análises</h1>
-            <div className="border-t-2 border-[#702632] w-[130px] mt-1 mb-4"></div>
-            <TabelaRelatoriosAnalises tipo="ServicosCorretores" />
+            <AnalyticsDashboard />
           </section>
         </div>
       </LoadingWrapper>
