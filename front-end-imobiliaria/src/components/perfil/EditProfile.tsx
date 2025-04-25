@@ -376,9 +376,10 @@ export default function EditProfile({ id }: EditProfileProps) {
             <div className="flex font-montserrat bg-[#E5E1DB] p-4 sm:p-6 rounded-2xl shadow-lg mx-auto w-[98%] sm:w-[95%] max-w-5xl">
                 <div className="w-full">
                     <h2 className="text-lg sm:text-xl font-bold text-[#702632] mb-4">Meus Agendamentos</h2>
-                    <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push(`/paginaHistorico?userId=${id}`)} texto="Histórico da Agenda" />
-                    <div className='mt-4'>
-                        <Botao className='w-full bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push(`/paginaAgendaCorretor?userId=${id}`)} texto="Agenda" />
+                    <div className='flex flex-col lg:flex-row'>
+                        <Botao className='w-auto md:w-[400px] bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push(`/paginaHistorico?userId=${id}`)} texto="Histórico da Agenda" />
+
+                            <Botao className='w-auto md:w-[400px] bg-vermelho h-10 hover:bg-vermelho/90 transition-colors duration-300' onClick={() => router.push(`/paginaAgenda?userId=${id}`)} texto="Agenda" />
                     </div>
                 </div>
             </div>

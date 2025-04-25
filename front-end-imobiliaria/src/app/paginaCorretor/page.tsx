@@ -22,7 +22,7 @@ export default function paginaCorretor() {
 
     const handleAgendaClick = () => {
         if (userId) {
-            router.push(`/paginaAgendaCorretor?userId=${userId}`);
+            router.push(`/paginaAgenda?userId=${userId}`);
         } else {
             console.error('ID do usuário não encontrado');
         }

@@ -33,7 +33,6 @@ export default function MeuPerfil() {
             <div className='my-20'>
                 <EditProfile id={userId} />
             </div>
-            <Footer />
         </LoadingWrapper>
     );
 } 

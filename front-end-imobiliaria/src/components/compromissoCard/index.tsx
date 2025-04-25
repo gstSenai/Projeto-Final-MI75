@@ -8,7 +8,7 @@ export interface Compromisso {
   nomeImovel: string;
   endereco: string;
   cidadeUF: string;
-  cliente: string;
+  pessoa: string;
 }
 
 interface CompromissoCardProps {
@@ -35,7 +35,7 @@ export const CompromissoCard: React.FC<CompromissoCardProps> = ({
         <div className="font-semibold text-lg">{compromisso.nomeImovel}</div>
         <div className="text-sm mt-1 opacity-90">{compromisso.endereco}</div>
         <div className="mt-2 text-sm">
-          <span className="opacity-75">Cliente:</span> {compromisso.cliente}
+          {compromisso.pessoa}
         </div>
       </div>
     </div>

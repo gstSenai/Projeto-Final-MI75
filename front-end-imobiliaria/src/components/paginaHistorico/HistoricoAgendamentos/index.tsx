@@ -21,6 +21,10 @@ interface Agendamento {
     username: string;
     sobrenome: string | null;
   };
+  corretorDTO: {
+    username: string;
+    sobrenome: string | null;
+  };
 }
 
 export function HistoricoAgendamentos() {
@@ -105,6 +109,16 @@ export function HistoricoAgendamentos() {
     });
   };
 
+  const getPessoaLabel = (agendamento: Agendamento) => {
+    const isCorretor = role === 'corretor';
+    const pessoa = isCorretor 
+      ? agendamento.usuarioDTO 
+      : agendamento.corretorDTO;
+    const label = isCorretor ? 'Cliente' : 'Corretor';
+    
+    return `${label}: ${pessoa?.username || 'Desconhecido'} ${pessoa?.sobrenome || ''}`.trim();
+  };
+
   return (
     <div className="flex flex-col lg:flex-row gap-8 p-6">
       <div className="lg:w-1/2">
@@ -138,7 +152,7 @@ export function HistoricoAgendamentos() {
                     tipo={getStatus(agendamento.status)}
                     horario={agendamento.horario}
                     codigo={agendamento.imovelDTO.codigo.toString()}
-                    cliente={`${agendamento.usuarioDTO.username} ${agendamento.usuarioDTO.sobrenome || ''}`}
+                    cliente={getPessoaLabel(agendamento)}
                   />
                 ))
               ) : (
