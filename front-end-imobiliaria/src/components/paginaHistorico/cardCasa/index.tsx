@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import request from "@/routes/request";
 
 interface CardCasaProps {
@@ -23,6 +24,7 @@ interface ImovelDetalhes {
 }
 
 export function CardCasa({ codigo }: CardCasaProps) {
+    const router = useRouter();
     const [imovel, setImovel] = useState<ImovelDetalhes | null>(null);
     const [mainImage, setMainImage] = useState<string>("/imagensImovel/fotoImovel.png");
     const [loading, setLoading] = useState(true);
@@ -151,6 +153,12 @@ export function CardCasa({ codigo }: CardCasaProps) {
                     <p>{localizacao}</p>
                     <p className="font-semibold">{imovel?.nome_propriedade || "Nome não informado"}</p>
                     <p>{enderecoCompleto}</p>
+                    <button
+                        onClick={() => router.push(`/paginaImoveis/imovelDetalhes?id=${imovel?.id}`)}
+                        className="bg-[#702632] hover:brightness-110 transition text-white rounded-lg px-6 py-2 mt-4"
+                    >
+                        Ver Detalhes
+                    </button>
                 </div>
             </div>
         </div>

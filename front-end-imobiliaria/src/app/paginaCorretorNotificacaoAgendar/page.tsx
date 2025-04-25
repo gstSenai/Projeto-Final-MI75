@@ -195,6 +195,7 @@ export default function PaginaCorretorNotificacaoAgendar() {
                                         codigoImovel={String(agendamento.imovelDTO.codigo)}
                                         nomeUsuario={agendamento.usuarioDTO.username}
                                         status={agendamento.status || 'PENDENTE'}
+                                        imovelId={agendamento.imovelDTO.id}
                                         onConfirm={handleConfirm}
                                         onCancel={handleCancel}
                                         onTimeChange={handleTimeChange}

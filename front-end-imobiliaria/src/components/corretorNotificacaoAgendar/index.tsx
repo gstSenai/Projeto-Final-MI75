@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface CardHorarioAgendarProps {
     id: number;
@@ -11,6 +12,7 @@ interface CardHorarioAgendarProps {
     codigoImovel: string;
     nomeUsuario: string;
     status: string;
+    imovelId: number;
     onConfirm: (id: number) => void;
     onCancel: (id: number) => void;
     onTimeChange?: (id: number, newTime: string) => void;
@@ -25,10 +27,12 @@ export function CorretorNotificacaoAgendar({
     codigoImovel,
     nomeUsuario,
     status,
+    imovelId,
     onConfirm,
     onCancel,
     onTimeChange
 }: CardHorarioAgendarProps) {
+    const router = useRouter();
     const [showTimeModal, setShowTimeModal] = useState(false);
     const [newTime, setNewTime] = useState(horario);
     const [timeError, setTimeError] = useState('');
@@ -46,6 +50,10 @@ export function CorretorNotificacaoAgendar({
             setShowTimeModal(false);
             setTimeError('');
         }
+    };
+
+    const handleVerImovel = () => {
+        router.push(`/paginaImovel?id=${imovelId}`);
     };
 
     return (
@@ -79,6 +87,12 @@ export function CorretorNotificacaoAgendar({
 
                 {/* Botões */}
                 <div className="flex flex-col gap-2">
+                    <button
+                        onClick={handleVerImovel}
+                        className="bg-[#4A90E2] hover:brightness-110 transition text-white rounded-lg px-6 py-2"
+                    >
+                        Ver Imóvel
+                    </button>
                     <button
                         onClick={() => onConfirm(id)}
                         className="bg-[#27AE60] hover:brightness-110 transition text-white rounded-lg px-6 py-2"

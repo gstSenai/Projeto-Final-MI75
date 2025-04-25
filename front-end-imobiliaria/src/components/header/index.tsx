@@ -154,11 +154,7 @@ export function Header() {
                     </div>
 
                     <div className="flex flex-row items-center font-medium">
-                        <div className="flex flex-row items-center gap-4 max-md:hidden">
-                            <div className="flex flex-row items-center md:pl-2 lg:pl-12">
-                                <Image src="/imagensHeader/token_chat.png" alt="Tema" width={30} height={2} />
-                            </div>
-                        </div>
+            
                         <div className="flex flex-row items-center md:gap-1 lg:gap-2 md:px-3 lg:px-6 max-md:hidden relative">
                             <div className='flex flex-row items-center gap-2 cursor-pointer' onClick={() => setShowLanguageModal(!showLanguageModal)}>
                                 <Image
